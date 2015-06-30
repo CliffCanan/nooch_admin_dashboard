@@ -1,0 +1,831 @@
+@using noochAdminNew.Classes.ModelClasses
+@{
+    ViewBag.Title = "Member Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    MemberDetailsClass mdc = Model;
+
+    SynapseDetailOFMember synpsDetail = new SynapseDetailOFMember();
+    if (mdc.IsSynapseDetailAvailable)
+    {
+        synpsDetail = mdc.SynapseDetails;
+    }
+    List<MemberIpAddrreses> MemIpAddr = new List<MemberIpAddrreses>();
+    MemIpAddr = mdc.MemberIpAddr;
+
+    List<MemberDetailsTrans> Transactionsss = new List<MemberDetailsTrans>();
+
+    foreach (MemberDetailsTrans mdtt in mdc.Transactions)
+    {
+        MemberDetailsTrans ms = new MemberDetailsTrans();
+        ms.TransID = mdtt.TransID;
+        ms.TransactionType = mdtt.TransactionType;
+        ms.TransactionStatus = mdtt.TransactionStatus;
+        ms.TransDateTime = mdtt.TransDateTime;
+        ms.AmountNew = mdtt.AmountNew;
+        ms.Latitude = mdtt.Latitude;
+        ms.Longitude = mdtt.Longitude;
+        ms.GeoLocation = mdtt.GeoLocation;
+        ms.RecepientId = mdtt.RecepientId;
+        ms.RecepientUserName = mdtt.RecepientUserName;
+        Transactionsss.Add(ms);
+    }
+
+    List<MemberDetailsDisputeTrans> DisputeTransactions = Model.DisputeTransactions;
+    MemberDetailsStats stats = Model.MemberStats;
+}
+
+<link href="../css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<!-- Custom and plugin javascript -->
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>@mdc.FirstName @mdc.LastName</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="../Admin/Dashboard">Dashboard</a>
+            </li>
+            <li>
+                <a href="ListAll">Members</a>
+            </li>
+            <li class="active">
+                <strong>Search Admin</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight" id="memberDetail">
+
+    <div class="row" id="memDetailsTopSec">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>MEMBER DETAILS | <small>@mdc.FirstName @mdc.LastName</small></h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+
+                        <div class="col-xs-12 col-md-4 m-b">
+                            <div class="form-group">
+                                <span class="col-xs-3 col-sm-4 col-md-5 control-label" style="padding-left: 0">
+                                    <img src="@mdc.ImageURL" class="img-circle" alt="image">
+                                </span>
+                                <div class="col-xs-9 col-sm-8 col-md-7 nopad">
+                                    <h2>@mdc.FirstName @mdc.LastName</h2>
+                                    <span class="help-block">Registered:  <span class="text-bold">@mdc.DateCreatedFormatted</span> </span>
+                                    <span class="help-block">
+                                        Status:  @{
+                                            if (mdc.Status == "Suspended" || mdc.Status == "Temporarily_Blocked")
+                                            {
+                                                <span class="label label-danger"><strong>Suspended</strong></span>
+                                            }
+                                            else if (mdc.Status == "Registered")
+                                            {
+                                                <span class="label label-info">Registered</span>
+                                            }
+                                            else if (mdc.Status == "Active")
+                                            {
+                                                <span class="text-navy">Active</span>
+                                            }
+                                        }
+                                    </span>
+                                    <span class="help-block">
+                                        Phone Verified:   @{
+                                            if (mdc.IsPhoneVerified == true)
+                                            {
+                                                <span class="label label-success">Verified</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-danger">Not Verified</span>
+                                            }
+                                        }
+                                    </span>
+                                    <span class="help-block">
+                                        Facebook:  @{
+                                            if (mdc.FBID == null)
+                                            {
+                                                <span href="" class="text-danger">FB Not Linked</span>
+                                            }
+                                            else
+                                            {
+                                                <a href="https://www.facebook.com/@mdc.FBID" class="text-navy" target="_blank">FBID</a>
+                                            }
+                                        }
+                                    </span>
+                                    <span class="help-block">Nooch ID:  <span>@mdc.Nooch_ID </span></span>
+                                    @if (!String.IsNullOrEmpty(mdc.ReferCodeUsed))
+                                    {
+                                        <span class="help-block m-b-none">Refer Code Used:  <a href="../Referrals/JoinningsWithGivenReferralCode?RefCode=@mdc.ReferCodeUsed" class="text-navy">@mdc.ReferCodeUsed.ToUpper()</a></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="help-block m-b-none">Refer Code Used: <em>None</em></span>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-6 col-md-4">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>Transfer Activity</h5>
+                                </div>
+                                <div class="ibox-content text-center">
+                                    <div class="row">
+                                        <div class="col-xs-5 col-xs-offset-1">
+                                            <small class="stats-label">Total Transfers</small>
+                                            <h4>@stats.TotalTransfer</h4>
+                                        </div>
+
+                                        <div class="col-xs-5">
+                                            <small class="stats-label">Transfers / Wk</small>
+                                            @if (mdc.WeeksSinceJoined > 0 && mdc.MemberStats.TotalTransfer != "0")
+                                            {
+                                                double d = (Convert.ToDouble(mdc.MemberStats.TotalTransfer)) / mdc.WeeksSinceJoined;
+                                                string transPerWeek = string.Format("{0:0.00}", d);
+                                                <h4>@transPerWeek</h4>
+                                            }
+                                            else
+                                            {
+                                                <h4>-</h4>}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ibox-content text-center">
+                                    <div class="row">
+
+                                        <div class="col-xs-4">
+                                            <small class="stats-label">Sent</small>
+                                            <h4>$ @stats.TotalSent</h4>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <small class="stats-label">Received</small>
+                                            <h4>$ @stats.TotalReceived</h4>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <small class="stats-label">Largest Sent</small>
+                                            <h4>
+                                                @if (stats.LargestSent != "0.00")
+                                                {
+                                                    <span>$ @stats.LargestSent</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>-</span>
+                                                }
+                                            </h4>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs 12 col-sm-6 col-md-4">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>Referred Users</h5>
+                                    <!--
+                                           <div class="ibox-tools">
+                                               <a class="collapse-link">
+                                                   <i class="fa fa-chevron-up"></i>
+                                               </a>
+                                           </div>
+                                    -->
+                                </div>
+                                <div class="ibox-content no-padding">
+                                    <ul class="list-group list-group-condensed">
+                                        @*if (mdc.Referrals.Count > 0)
+                                            {
+
+                                                foreach (ReferredMembers memref in mdc.Referrals)
+                                                {
+                                                <li class="list-group-item">
+                                                    <span class="memDetails_ReferredFriendIcon">
+                                                        <img src="@memref.ImageUrl" class="img-circle" alt="image"/>
+                                                    </span>
+                                                    @memref.MemberName.First().ToString().ToUpper()@memref.MemberName.Substring(1)
+                                                </li>
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                <li class="list-group-item">No Referrals
+                                                </li>
+                                            }*@
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-10">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Other Admin Functions</h5>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <di class="form-group">
+                                    <span class="col-xs-4 col-sm-3 control-label">
+                                        <b>Change Member Status</b>
+                                    </span>
+                                    <div class="col-xs-2 col-sm-3 form-control-static">
+                                        <p style="margin-bottom: 0;">
+                                            @{
+                                                if (mdc.Status == "Registered")
+                                                {
+                                                    <a href="#" class="btn btn-sm btn-default" onclick=" Member.ApplyChoosenOperation(4) ">Verify Email</a>
+                                                }
+
+                                                if (!mdc.IsPhoneVerified && mdc.ContactNumber != null)
+                                                {
+                                                    <a href="#" class="btn btn-sm btn-primary" onclick=" Member.ApplyChoosenOperation(3) "> Verify Phone</a>
+                                                }
+
+                                                if (mdc.Status == "Active")
+                                                {
+                                                    <a href="#" class="btn btn-sm btn-danger btn-rounded" onclick=" Member.ApplyChoosenOperation(1) ">Suspend</a>
+                                                }
+
+                                                if (mdc.Status == "Suspended")
+                                                {
+                                                    <a href="#" class="btn btn-sm btn-primary" onclick=" Member.ApplyChoosenOperation(4)">Activate (Un-Suspend)</a>
+                                                }
+                                            }
+                                            @*<a href="#" class="btn btn-warning btn-rounded">Warning</a>*@
+                                            @*<a href="#" class="btn btn-danger btn-rounded">Block</a>*@
+
+                                        </p>
+                                    </div>
+
+                                    <div class="col-xs-2 col-sm-2 form-control-static">
+                                        <a href="#" id="MarkSDNSafeUser" class="btn btn-sm btn-default" onclick=" Member.ApplyChoosenOperation(2) ">SDN Safe</a>
+                                    </div>
+                                    <div class="col-xs-2 col-sm-2 form-control-static">
+                                        <a href="#" id="DeleteUser" class="btn btn-sm btn-default  btn-danger">Delete User</a>
+
+                                    </div>
+                                    <div class="col-xs-2 col-sm-2 form-control-static">
+                                        <a href="#" class="btn btn-sm btn-default" onclick="Member.OpenPopupForAdminNote();">Add Note</a>
+                                    </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <span class="col-xs-4 col-sm-3 control-label">
+                                        <b>PIN</b>
+                                    </span>
+                                    <div class="col-xs-8 col-sm-9 form-control-static">
+                                        <p style="margin-bottom: 0; max-width: 116px;">
+                                            <span class="text-navy font-bold" id="pinNumber">@mdc.PinNumber</span>
+                                            <button type="button" class="btn btn-link btn-xs pull-right" onclick="Member.ResetPin();">Reset PIN</button>
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-10">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Knox Details</h5>
+                    <i class="fa fa-bank" style="position: relative; top: -2px; left: 10px;"></i>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <span class="col-xs-4 col-sm-3 control-label">
+                                        <b>Status</b>
+                                    </span>
+                                    <div class="col-xs-8 col-sm-9 form-control-static">
+                                        @{
+                                        if (mdc.IsKnocAvailable == true)
+                                        {
+                                    <div style="display: inline-block">
+                                        <span class="text-success" style="display: inline-block">Available</span>
+                                        <img src="@mdc.KnoxBankIcon" class="img-circle" id="details_bankLogo" alt="Bank Icon">
+                                    </div>
+                                        }
+                                        else
+                                        {
+                                    <div class="col-sm-5">
+                                        <span class="text-danger">No Bank Linked</span>
+                                    </div>
+                                        }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @{
+                        if (mdc.IsKnocAvailable == true)
+                        {
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <span class="col-sm-3 control-label">
+                                    <b>Trans ID</b>
+                                </span>
+                                <div class="col-sm-9 form-control-static">
+                                    <span class="text-muted" id="knoxTransId"><a href="https://knoxpayments.com/admin/api/get_payment_details.php?API_key=7068_59cd5c1f5a75c31&API_pass=7068_da64134cc66a5f0&trans_id=@mdc.KnoxTransId" target="_blank"> @mdc.KnoxTransId</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        }
+                        }
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-lg-10">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Synapse Details</h5>
+                    <i class="fa fa-bank" style="position:relative;top:-2px;left:10px;"></i>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <span class="col-xs-4 col-sm-3 control-label">
+                                        <b>Status</b>
+                                    </span>
+                                    <div class="col-xs-8 col-sm-9 form-control-static">
+                                        @if (mdc.IsSynapseDetailAvailable)
+                                        {
+                                            <div style="display: inline-block">
+
+                                                @if (synpsDetail.SynpaseBankStatus == "Verified")
+                                                {
+                                                    <span class="text-success" style="display: inline-block"> @synpsDetail.SynpaseBankStatus   </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-danger" style="display: inline-block"> @synpsDetail.SynpaseBankStatus   </span>
+                                                }
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-sm-5">
+                                                <span class="text-danger">No Bank Linked</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @if (mdc.IsSynapseDetailAvailable)
+                        {
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <span class="col-sm-3 control-label">
+                                            <b>Bank Name</b>
+                                        </span>
+                                        <div class="col-sm-9 form-control-static">
+                                            <span> @synpsDetail.SynpaseBankName</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Contact Info</h5>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal" method="get">
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <span class="col-xs-3 col-sm-4 control-label">
+                                        <b>Contact Number</b>
+                                    </span>
+                                    <div class="col-xs-9 col-sm-6">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-fw fa-phone"></i></span>
+                                            <input type="tel" placeholder="(XXX) XXX-XXXX" id="contactNumber" class="form-control" data-mask="(999) 999-9999" value="@mdc.ContactNumber">
+                                        </div>
+                                        @{
+                                            if (mdc.IsPhoneVerified == true)
+                                            {
+                                                <i class="fa fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fa fa-remove text-danger"></i>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <span class="col-xs-3 col-sm-4 control-label">
+                                        <b>Primary Email</b>
+                                    </span>
+                                    <div class="col-xs-9 col-sm-6">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span>
+                                            <input type="email" disabled="" value="@mdc.UserName" class="form-control">
+                                        </div>
+                                        @{
+                                            if (mdc.Status != "Suspended")
+                                            {
+                                                <i class="fa fa-check text-success"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fa fa-remove text-danger"></i>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <span class="col-xs-3 col-sm-4 control-label">
+                                        <b>Street Address</b>
+                                    </span>
+                                    <div class="col-xs-9 col-sm-6">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-fw fa-road"></i></span>
+                                            <input type="text" value="@mdc.Address" class="form-control" id="streetaddress">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <span class="col-xs-3 col-sm-4 control-label">
+                                        <b>Secondary Email</b>
+                                    </span>
+                                    <div class="col-xs-9 col-sm-6">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-fw fa-envelope-o"></i></span>
+                                            @if (!String.IsNullOrEmpty(mdc.SecondaryEmail.Trim()) && mdc.SecondaryEmail != " " && mdc.SecondaryEmail != "")
+                                            {
+                                                <input type="email" value="@mdc.SecondaryEmail" class="form-control" id="secondaryemail1">
+                                            }
+                                            else
+                                            {
+                                                <input type="email" class="form-control" id="secondaryemail2">
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <span class="col-xs-3 col-sm-4 control-label">
+                                        <b>City</b>
+                                    </span>
+                                    <div class="col-xs-9 col-sm-6">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-fw fa-map-marker"></i></span>
+                                            <input type="text" value="@mdc.City" class="form-control" id="city">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <span class="col-xs-3 col-sm-4 control-label">
+                                        <b>Recovery Email</b>
+                                    </span>
+                                    <div class="col-xs-9 col-sm-6">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><i class="fa fa-fw fa-envelope-o"></i></span>
+                                            <input type="email" class="form-control" id="recoveryemail" value="@mdc.RecoveryEmail">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <span class="col-xs-3 col-sm-4 control-label">
+                                        <b>State</b>
+                                    </span>
+                                    <div class="col-xs-9 col-sm-8">
+                                        <div class="col-xs-4 col-sm-3" style="padding-left: 0;">
+                                            <input type="text" value="@mdc.State" class="form-control" id="stateinput">
+                                        </div>
+                                        <div class="col-xs-8 col-sm-6" style="padding-left: 10px; ">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">ZIP</span>
+                                                <input type="text" value="@mdc.Zipcode" class="form-control" id="zipcodeinput" data-mask="99999">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+                                <a class="btn btn-danger center-block" onclick="Member.EditMember()"><i class="fa fa-save"></i>  Save Changes to Profile</a>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Recent Transactions</h5>
+                </div>
+                <div class="ibox-content">
+                    @{
+                        if (Transactionsss.Count > 0)
+                        {
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Transaction ID</th>
+                                        <th>Transaction Type</th>
+                                        <th>Status</th>
+                                        <th>Date / Time</th>
+                                        <th>Amount ($)</th>
+                                        <th>Recipient ID</th>
+                                        <th>Recipient User Name</th>
+                                        <th>Location</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (MemberDetailsTrans mn in Transactionsss)
+                                    {
+                                        <tr>
+                                            <td>@mn.TransID</td>
+                                            <td>@mn.TransactionType</td>
+                                            <td>
+                                                @{
+                                        if (@mn.TransactionStatus == "Rejected" || @mn.TransactionStatus == "Cancelled")
+                                        {
+                                            <b class="text-danger">@mn.TransactionStatus</b>
+                                        }
+                                        else if (@mn.TransactionStatus == "Success")
+                                        {
+                                            <b class="text-success">Success</b>
+                                        }
+                                        else if (@mn.TransactionStatus == "Pending")
+                                        {
+                                            <b class="text-primary">Pending</b>
+                                        }
+                                        else
+                                        {
+                                            @mn.TransactionStatus
+                                        }
+                                                }
+                                            </td>
+                                            <td>@mn.TransDateTime</td>
+                                            <td>
+                                                @if (mn.AmountNew != "0")
+                                                {
+                                                    double d = (Convert.ToDouble(mn.AmountNew));
+                                                    string transAmountFormatted = string.Format("{0:0.00}", d);
+                                                    <h4>$ @transAmountFormatted</h4>
+                                                }
+                                            </td>
+                                            <td><a href="@Url.Action("Detail", "Member", new { NoochId = @mn.RecepientId })">@mn.RecepientId</a></td>
+                                            <td><a href="@Url.Action("Detail", "Member", new {NoochId = @mn.RecepientId})">@mn.RecepientUserName</a></td>
+                                            @if (!String.IsNullOrEmpty(@mn.GeoLocation))
+                                            {
+                                                <td><button class="btn btn-link locLink" data-lat="@mn.Latitude" data-long="@mn.Longitude" data-loctext="@mn.GeoLocation.Trim().TrimEnd(',').Trim()">@mn.GeoLocation.Trim().TrimEnd(',').Trim()</button></td>
+                                            }
+                                            else
+                                            {
+                                                <td><span class="text-muted"> - </span></td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p class="text-danger text-center"><em>@mdc.FirstName @mdc.LastName</em> has not made any payments yet.</p>
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Disputed Transactions</h5>
+                </div>
+                <div class="ibox-content">
+                    @{
+                        if (DisputeTransactions.Count > 0)
+                        {
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Dispute ID</th>
+                                        <th>Subject</th>
+                                        <th>Admin Notes</th>
+                                        <th>Dispute Date</th>
+                                        <th>Review Date</th>
+                                        <th>Resolved Date</th>
+                                        <th>Transaction Id</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (MemberDetailsDisputeTrans m in DisputeTransactions)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @{
+                                        if (@m.Status == "Resolved")
+                                        {
+                                            <b class="text-success">@m.Status</b>
+                                        }
+                                        else
+                                        {
+                                            <b class="text-danger">@m.Status</b>
+                                        }
+                                                }
+                                            </td>
+                                            <td>@m.Dispute_ID</td>
+                                            <td>@m.Subject</td>
+                                            <td>@m.Admin_Notes</td>
+                                            <td>@m.Dispute_Date</td>
+                                            <td>@m.Review_Date</td>
+                                            <td>@m.Resolved_Date</td>
+                                            <td>@m.Transaction_ID</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p class="text-danger text-center">There are no Disputed Transactions for <em>@mdc.FirstName @mdc.LastName</em>.</p>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="modal-transferLocation" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span class="fa fa-map-marker pull-left"></span>Transfer Location</h4>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:14px;text-align:center; margin-bottom:5px;">This transfer was sent from: <strong><span id="citystate"></span></strong>.</p>
+                <iframe width="100%" id="googleFrame"
+                        height="420"
+                        frameborder="0"
+                        style="border:0;margin:10px auto 0;"
+                        src=''></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="Modal-AdminNotes" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <input type="hidden" id="DisputeId" value="">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span class="fa fa-pencil-square-o pull-left"></span>Add Note</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <span class="col-sm-3 control-label"><b>Admin Notes</b></span>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="3" id="AmdinNotesAboutUser"></textarea>
+                                <p><small>Provide some important fact or info about a user .</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <button type="button" id="btnSaveAdminNoteForUser" onclick="Member.AdminNoteForUser();" class="btn btn-primary">Save Note</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Confirm Delete  -->
+<div id="myModalConfirmDelete" class="modal fade" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span class="fa fa-times pull-left"></span>Delete This User?</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this Nooch Member?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="btnYes" class="btn btn-danger" onclick="Member.ApplyChoosenOperation(5)">Yes - Delete</button>
+                <button data-dismiss="modal" class="btn btn-primary">No - Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/App/MemberDetail.js"></script>
+
+<!-- Input Mask-->
+<script src="../js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<script>
+    window.paceOptions = {
+        ajax: {
+            trackMethods: ['GET', 'POST', 'PUT', 'DELETE', 'REMOVE']
+        }
+    };
+</script>

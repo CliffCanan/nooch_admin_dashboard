@@ -1,0 +1,642 @@
+@using noochAdminNew.Classes.ModelClasses;
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    DashboardDataClass dd = new DashboardDataClass();
+    dd = Model;
+    List<NoOfUsersInEachBank>
+  BankUserCount = new List<NoOfUsersInEachBank>
+      ();
+    BankUserCount = dd.UserCountInEachBank;
+    List<MemberRecentLiveTransactionData> LiveTrans = new List<MemberRecentLiveTransactionData>();
+    // LiveTrans = dd.RecentLiveTransaction;
+}
+
+<link href="~/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet" />
+<!-- Gritter -->
+<link href="~/js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Dashboard</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="#">Dashboard</a>
+            </li>
+            <li class="active">
+                <strong>Home</strong>
+            </li>
+        </ol>
+    </div>
+
+    <div class="col-lg-2">
+    </div>
+</div>
+
+<div class="row wrapper wrapper-content">
+
+    <div class="col-lg-9 nopad">
+
+        <div class="panel panel-primary" id="dash_UsersPanel">
+            <div class="panel-heading">Users</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="widget blue-bg" id="totalUsersWidg">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-users fa-3x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <span> Total Users </span>
+                                    <h2 class="font-bold">@dd.TotalActiveUsers</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="widget navy-bg">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-mobile fa-4x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right nopad">
+                                    <span> w/ Verified Phone </span>
+                                    <h2 class="font-bold">@dd.TotalVerifiedPhoneUsers</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="widget lazur-bg">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-at fa-3x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right nopad">
+                                    <span> w/ Verified Email</span>
+                                    <h2 class="font-bold">@dd.TotalVerifiedEmailUsers</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="widget red-bg">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-institution fa-3x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right nopad">
+                                    <span> w/ Bank Account </span>
+                                    <h2 class="font-bold">@dd.TotalActiveBankAccountUsers</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-lg-3">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5># of NEW Users:</h5>
+                            </div>
+                            <div class="ibox-content no-padding">
+                                <ul class="list-group list-group-condensed clear-list">
+                                    <li class="list-group-item">
+                                        <span class="">
+                                            Today
+                                        </span>
+                                        <span class="pull-right text-navy">
+                                            @dd.TotalNoOfActiveUser_Today
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="">
+                                            This week
+                                        </span>
+                                        <span class="pull-right text-danger">
+                                            @dd.TotalNoOfActiveUser_Week
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="">
+                                            This month
+                                        </span>
+                                        <span class="pull-right text-navy">
+                                            @dd.TotalNoOfActiveUser_Month
+                                        </span>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5># of NEW Verified Phones:</h5>
+                            </div>
+                            <div class="ibox-content no-padding">
+                                <ul class="list-group list-group-condensed clear-list">
+                                    <li class="list-group-item">
+                                        <span class="">
+                                            Today
+                                        </span>
+                                        <span class="pull-right text-navy">
+                                            @dd.TotalNoOfVerifiedPhoneUsers_Today
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="">
+                                            This week
+                                        </span>
+                                        <span class="pull-right text-danger">
+                                            @dd.TotalNoOfVerifiedPhoneUsers_Week
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="">
+                                            This month
+                                        </span>
+                                        <span class="pull-right text-navy">
+                                            @dd.TotalNoOfVerifiedPhoneUsers_Month
+                                        </span>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5># of NEW Verified Email:</h5>
+                            </div>
+                            <div class="ibox-content no-padding">
+                                <ul class="list-group list-group-condensed clear-list">
+                                    <li class="list-group-item">
+                                        <span class="">
+                                            Today
+                                        </span>
+                                        <span class="pull-right text-navy">
+                                            @dd.TotalNoOfVerifiedEmailUsers_Today @*<span class=""><small><i class="fa fa-level-up"></i>28%</small></span>*@
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="">
+                                            This week
+                                        </span>
+                                        <span class="pull-right text-danger">
+                                            @dd.TotalNoOfVerifiedEmailUsers_Week
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="">
+                                            This month
+                                        </span>
+                                        <span class="pull-right text-navy">
+                                            @dd.TotalNoOfVerifiedEmailUsers_Month
+                                        </span>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5># of NEW Banks:</h5>
+                            </div>
+                            <div class="ibox-content no-padding">
+                                <ul class="list-group list-group-condensed clear-list">
+                                    <li class="list-group-item">
+                                        <span class="">
+                                            Today
+                                        </span>
+                                        <span class="pull-right text-navy">
+                                            2
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="">
+                                            This week
+                                        </span>
+                                        <span class="pull-right text-danger">
+                                            20
+                                        </span>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <span class="">
+                                            This month
+                                        </span>
+                                        <span class="pull-right text-navy">
+                                            55
+                                        </span>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="panel panel-success" id="dash_TransPanel">
+            <div class="panel-heading">Transactions - Summary</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="widget lazur-bg">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <i class="fa fa-money fa-3x"></i>
+                                </div>
+                                <div class="col-xs-8 text-right nopad">
+                                    <span>Total Volume</span>
+                                    @{
+                                        double d = (Convert.ToDouble(dd.TotalAmountOfDollars));
+                                        string transPerWeek = string.Format("{0:#,###0.00}", d);
+                                        <h3 class="font-bold">$@transPerWeek</h3>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="widget navy-bg">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <i class="fa fa-check-circle fa-3x"></i>
+                                </div>
+                                <div class="col-xs-8 text-right nopad">
+                                    <span>Transactions Completed</span>
+                                    <h2 class="font-bold">@dd.TotalNoOfPaymentsCompleted</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="widget lazur-bg">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <i class="fa fa-reply fa-3x"></i>
+                                </div>
+                                <div class="col-xs-8 text-right nopad">
+                                    <span>Total Requests</span>
+                                    <h2 class="font-bold">@dd.totalRequestTypeTrans</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3">
+                        <div class="widget red-bg">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <i class="fa fa-clock-o fa-3x"></i>
+                                </div>
+                                <div class="col-xs-8 text-right nopad">
+                                    <span>Pending Requests</span>
+                                    <h2 class="font-bold">@dd.TransactionsPendi</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+
+
+        <div class="panel panel-primary" id="dash_TransPanel">
+            <div class="panel-heading">Recent Transactions </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="ibox float-e-margins" id="transIbox">
+                        <div class="ibox-title">
+                            <h5>Transactions</h5>
+                            <div class="pull-right">
+                                <div class="ibox-tools">
+                                    <a class="collapse-link">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-xs-12 m-b-sm">
+                                    <div class="btn-group pull-right" data-toggle="buttons">
+                                        <label class="btn btn-white active" for="option1"> <input type="radio" name="options" id="option1" value="0"> Day </label>
+                                        <label class="btn btn-white" for="option2"> <input type="radio" name="options" id="option2" value="1"> Week </label>
+                                        <label class="btn btn-white" for="option3"> <input type="radio" name="options" id="option3" value="2"> Month </label>
+                                    </div>
+                                </div>
+
+
+                                <table class="table table-striped table-bordered table-hover" id="AllTrans">
+                                    <thead>
+                                        <tr>
+                                            <th>Transaction ID</th>
+                                            <th>Transaction Type</th>
+                                            <th>Status</th>
+                                            <th>Date / Time</th>
+                                            <th>Sender</th>
+                                            <th>Recipient</th>
+                                            <th>Amount</th>
+                                            <th>Disputed?</th>
+                                            <th>Location</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody id="TBOdy">
+
+                                        @foreach (var M in LiveTrans)
+                                        {
+                                            <tr class="gradeX">
+                                                <td>@M.TransID</td>
+                                                <td>@M.TransactionType</td>
+                                                <td>@M.TransactionStatus</td>
+                                                <td>@M.TransDateTime</td>
+                                                <td><a href="@Url.Action("Detail", "Member", new {NoochId = @M.SenderId})">@M.SenderUserName</a></td>
+                                                <td><a href="@Url.Action("Detail", "Member", new {NoochId = @M.RecepientId})">@M.RecepientUserName</a></td>
+                                                <td>@M.Amount</td>
+
+                                                @if (String.IsNullOrEmpty(@M.DisputeStatus))
+                                                {
+                                                    <td>No</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>Yes</td>
+                                                }
+
+                                                @if (!String.IsNullOrEmpty(@M.GeoStateCityLocation))
+                                                {
+                                                    <td><a href="#" onclick="showlocationmodal('@M.Latitude', '@M.Longitude' , '@M.GeoStateCityLocation.Trim().TrimEnd(',')' ) " class=" btn btn-link" data-loctext="@M.GeoStateCityLocation.Trim().TrimEnd(',').Trim()">@M.GeoStateCityLocation.Trim().TrimEnd(',').Trim()</a></td>
+                                                }
+                                                else
+                                                {
+                                                    <td><span class="text-muted"> - </span></td>
+                                                }
+                                            </tr>
+                                        }
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="panel panel-success" id="dash_TransPanel22">
+            <div class="panel-heading"># of Users in Banks </div>
+            <div class="panel-body table-scroll">
+                <div class="row">
+
+
+                    <table class="table table-striped table-bordered table-hover" id="AllTrans22">
+                        <thead>
+                            <tr>
+                                <th>Bank</th>
+                                <th>No Of User</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (NoOfUsersInEachBank M in BankUserCount)
+                            {
+                                <tr class="gradeX">
+                                    <td>@M.BankName</td>
+                                    <td>@M.NoOfUsers</td>
+
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="col-lg-3">
+
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Pie </h5>
+                <div ibox-tools></div>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <div>
+                        <canvas id="doughnutChart" height="140"></canvas>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <ul class="list-group list-group-condensed clear-list">
+                            <li class="list-group-item">
+                                <span class="">Downloads</span>
+                                <span class="pull-right font-bold">@dd.TotalActiveUsers</span>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="">Signups</span>
+                                <span class="pull-right font-bold">20</span> @*All Users w/ Status of "Registered" + "Active" + "Suspended" + "Temporary_blocked"*@
+                            </li>
+                            <li class="list-group-item">
+                                <span class="">Verified Phone</span>
+                                <span class="pull-right font-bold">@dd.TotalVerifiedPhoneUsers</span> @*All Users w/ BOTH Verified Phone AND Status of "Active"*@
+                            </li>
+                            <li class="list-group-item">
+                                <span class="">Bank Added</span>
+                                <span class="pull-right font-bold">@dd.TotalActiveBankAccountUsers</span> @*All Users w/ BOTH Verified Phone AND Status of "Active"*@
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Transfer Data</h5>
+            </div>
+            <div class="ibox-content">
+                <ul class="stat-list">
+                    <li>
+                        <h2 class="no-margins">2,346</h2>
+                        <small>Total orders in period</small>
+                        <div class="stat-percent">48% <i class="fa fa-level-up text-navy"></i></div>
+                        <div class="progress progress-mini">
+                            <div style="width: 48%;" class="progress-bar"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <h2 class="no-margins ">4,422</h2>
+                        <small>Orders in last month</small>
+                        <div class="stat-percent">60% <i class="fa fa-level-down text-navy"></i></div>
+                        <div class="progress progress-mini">
+                            <div style="width: 60%;" class="progress-bar"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <h2 class="no-margins ">9,180</h2>
+                        <small>Monthly income from orders</small>
+                        <div class="stat-percent">22% <i class="fa fa-bolt text-navy"></i></div>
+                        <div class="progress progress-mini">
+                            <div style="width: 22%;" class="progress-bar"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="TransData" style="display:block">@dd.TransData</div>
+
+</div>
+<script type="text/javascript">
+    function showLocationModal(lati, longi, stte) {
+        var v = 'https://www.google.com/maps/embed/v1/place?q=' + lati + ',' + longi + '&center=' + lati + ',' + longi + '&key=AIzaSyDrUnX1gGpPL9fWmsWfhOxIDIy3t7YjcEY&zoom=13';
+        $('#googleFrame').attr('src', v);
+
+        $("#citystate").text(stte);
+
+        $('#modal-transferLocation').modal();
+        return false;
+    }
+</script>
+
+<div class="modal fade" id="modal-transferLocation" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span class="fa fa-map-marker pull-left"></span>Transfer Location</h4>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:16px;text-align:center;" class="m-b-sm">This transfer was sent from: <strong><span id="citystate"></span></strong>.</p>
+                <iframe width="100%" id="googleFrame"
+                        height="420"
+                        frameborder="0"
+                        style="border:0;margin:10px auto 0;"
+                        src=''></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ChartJS-->
+<script src="~/js/plugins/chartJs/Chart.min.js"></script>
+<script src="~/scripts/app/dashboardlivetransaction.js"></script>
+<script type="text/ecmascript">
+    $(document).ready(function () {
+        $('#DashboardMenu').addClass('active');
+    });
+
+    $('#totalUsersWidg').click(function () {
+        var url = window.location.protocol + "//" + window.location.host + "/noochnewadmin/Member/ListAll";
+        window.location.href = url;
+    });
+</script>
+
+<script>
+    $(function () { // Pie Chart
+        var doughnutData = [
+        /*{
+            value: 300,
+            color: "#a3e1d4",
+            highlight: "#1ab394",
+            label: "Downloads"
+        },*/
+        {
+            value: Number(@dd.TotalVerifiedEmailUsers) / Number(@dd.TotalActiveUsers),  // No. of Users w/ Status of "Registered" + "Active" + "Suspended" + "Temporary_blocked"
+            color: "#dedede",
+            highlight: "#1ab394",
+            label: "Signups"
+        },
+        {
+            value: Number(@dd.TotalVerifiedPhoneUsers) / Number(@dd.TotalActiveUsers),  // No. of Users w/ BOTH Verified Phone AND Status of "Active"
+            color: "rgba(63,171,225,1)",
+            highlight: "rgba(63,171,225,.7)",
+            label: "Verified"
+        },
+        {
+            value: Number(@dd.TotalActiveBankAccountUsers) / Number(@dd.TotalActiveUsers),
+            color: "rgba(114,191,68,1)",
+            highlight: "rgba(114,191,68,.7)",
+            label: "Bank Added"
+        }
+        ];
+
+        var doughnutOptions = {
+            segmentShowStroke: true,
+            segmentStrokeColor: "#fff",
+            segmentStrokeWidth: 1,
+            percentageInnerCutout: 25, // This is 0 for Pie charts
+            animationSteps: 150,
+            animationEasing: "easeOutBounce",
+            animateRotate: true,
+            animateScale: true,
+            responsive: true,
+            scaleShowLabels: true,
+            //String - A legend template
+            legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+
+        };
+
+        var ctx = document.getElementById("doughnutChart").getContext("2d");
+        var myNewChart = new Chart(ctx).Doughnut(doughnutData, doughnutOptions);
+    });
+</script>

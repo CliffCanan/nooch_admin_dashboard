@@ -1,0 +1,117 @@
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>3rd Party Platforms  Tools</h2>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-lg-11">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Plugins, Tools, Services</h5>
+            </div>
+            <div class="ibox-content">
+
+                <table class="table table-striped table-bordered table-hover" id="thirdPartyTable">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>URL</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><img src="~/img/knox_logo.png" class="platform_Logos" alt="Knox Payments"></td>
+                            <td>Knox Payments</td>
+                            <td><a href="https://knoxpayments.com/login" target="_blank">Link</a></td>
+                            <td>Nooch users connect their bank accounts via Knox's API.</td>
+                        </tr>
+                        <tr>
+                            <td><img src="~/img/evolveip_logo.png" class="platform_Logos" alt="Evolve IP"></td>
+                            <td>Evolve IP</td>
+                            <td><a class="text-muted" href="" target="_blank">Link</a></td>
+                            <td>Currently used for the Webserver and Development server.</td>
+                        </tr>
+                        <tr>
+                            <td><img src="~/img/amazonwebservices.png" class="platform_Logos" alt="Amazon Web Services"></td>
+                            <td>Amazon Web Services</td>
+                            <td><a hrel="https://602444274081.signin.aws.amazon.com/console" target="_blank">Link</a></td>
+                            <td>Currently used for the Production server only</td>
+                        </tr>
+                        <tr>
+                            <td><img src="~/img/GameThrive.png" class="platform_Logos" alt="Gamethrive"></td>
+                            <td>Gamethrive</td>
+                            <td><a href="https://gamethrive.com/" target="_blank">Link</a></td>
+                            <td>Nooch users connect their bank accounts via Knox's API.</td>
+                        </tr>
+                        <tr>
+                            <td><img src="~/img/twilio.png" class="platform_Logos" alt="Twilio"></td>
+                            <td>Twilio</td>
+                            <td><a href="https://www.twilio.com/login" target="_blank">Link</a></td>
+                            <td>For 2-factor authentication to verify phone ownership.</td>
+                        </tr>
+                        <tr>
+                            <td><img src="~/img/mandrill.png" class="platform_Logos" alt="Mandrill"></td>
+                            <td>Mandrill</td>
+                            <td><a href="https://mandrillapp.com/" target="_blank">Link</a></td>
+                            <td>Transactional Email System.	Free up until 12,000 emails per month</td>
+                        </tr>
+                        <tr>
+                            <td><img src="~/img/pingdom.png" class="platform_Logos" alt="Pingdom"></td>
+                            <td>Pingdom</td>
+                            <td><a href="https://my.pingdom.com/" target="_blank">Link</a></td>
+                            <td>Server Monitoring, Real User Monitoring (RUM) Analytics	Continuously checks Nooch's Production Server for downtime; analytics for website.</td>
+                        </tr>
+                        <tr>
+                            <td><img src="~/img/google.png" class="platform_Logos" alt="Google"></td>
+                            <td>Google</td>
+                            <td><a href="https://google.com/analytics/" target="_blank">Link</a></td>
+                            <td>Web & App Analytics; Maps (in app); URL Shortener API.</td>
+                        </tr>
+                        <tr>
+                            <td><img src="~/img/godaddy.png" class="platform_Logos" alt="GoDaddy"></td>
+                            <td>GoDaddy</td>
+                            <td><a href="https://www.godaddy.com/" target="_blank">Link</a></td>
+                            <td>SSL Certificates. 2 Premium SSLs: nooch.com & noochme.com.</td>
+                        </tr>
+                        <tr>
+                            <td><img src="~/img/artisan.png" class="platform_Logos" alt="Artisan"></td>
+                            <td>Artisan Mobile</td>
+                            <td><a href="https://www.artisantools.com/organizations/5487d0342b2220436100000d" target="_blank">Link</a></td>
+                            <td>In-app marketing/analytics tools. Allows Nooch to customize certain in-app variables in real-time.</td>
+                        </tr>
+                        <tr>
+                            <td><img src="~/img/pixate.png" class="platform_Logos" alt="Pixate"></td>
+                            <td>Pixate</td>
+                            <td><a href="http://www.freestyle.org/" target="_blank">Link</a></td>
+                            <td>CSS for Mobile Apps	Nooch's iOS code has a 'default.css' file with classes and id's just like HTML.</td>
+                        </tr>
+                        <tr>
+                            <td><img src="~/img/mobileapptracking.jpg" class="platform_Logos" alt="Mobile App Tracking"></td>
+                            <td>Mobile App Tracking</td>
+                            <td><a href="https://platform.mobileapptracking.com/login" target="_blank">Link</a></td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+        $(document).ready(function () {
+            $("#platformsMaster").addClass('active');
+        });
+    </script>

@@ -1,0 +1,187 @@
+@{
+    ViewBag.Title = "OFAC";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-9">
+        <h2>OFAC List Manager</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="Dashboard">Dashboard</a>
+            </li>
+            <li class="active">
+                <strong>File Manager</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<form enctype="multipart/form-data" id="formOfac" method="post" action="SaveOFACListInDb">
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content">
+                        <div class="file-manager">
+                            <h5>Upload New OFAC Lists:</h5>
+                            <a href="#" class="file-control active">All</a>
+                            <a href="#" class="file-control">Documents</a>
+                            <div class="hr-line-dashed"></div>
+                            <div class="row">
+                                <div class="col-lg-6"><span><strong>Choose SDN File :</strong></span></div>
+                                <div class="col-lg-6">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <span class="btn btn-default btn-file">
+                                            <span class="fileinput-new">Select file</span>
+                                            <span class="fileinput-exists">Change</span>
+                                            <input type="file" required name="...">
+                                        </span>
+                                        <span class="fileinput-filename"></span>
+                                        <a href="#" class="close fileinput-exists" data-dismiss="fileinput">&times;</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6"><span><strong>Choose ADD File :</strong></span></div>
+                                <div class="col-lg-6">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <span class="btn btn-default btn-file">
+                                            <span class="fileinput-new">Select file</span>
+                                            <span class="fileinput-exists">Change</span>
+                                            <input type="file"  name="...">
+                                        </span>
+                                        <span class="fileinput-filename"></span>
+                                        <a href="#" class="close fileinput-exists" data-dismiss="fileinput">&times;</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6"><span><strong>Choose ALT File :</strong></span></div>
+                                <div class="col-lg-6">
+                                    <div class="fileinput fileinput-new" data-provides="fileinput">
+                                        <span class="btn btn-default btn-file">
+                                            <span class="fileinput-new">Select file</span>
+                                            <span class="fileinput-exists">Change</span>
+                                            <input type="file"  name="...">
+                                        </span>
+                                        <span class="fileinput-filename"></span>
+                                        <a href="#" class="close fileinput-exists" data-dismiss="fileinput">&times;</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <button class="btn btn-primary" style="width:100%" type="submit" onclick="">Save</button>
+                                </div>
+                            </div>
+
+
+                            <div class="hr-line-dashed"></div>
+                            <h5>Folders</h5>
+                            <ul class="folder-list" style="padding: 0">
+                                <li><a><i class="fa fa-folder"></i> OFAC SDN</a></li>
+                                <li><a><i class="fa fa-folder"></i> Other</a></li>
+                            </ul>
+                            <h5 class="tag-title">Tags</h5>
+                            <ul class="tag-list" style="padding: 0">
+                                <li><a>OFAC</a></li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8 animated fadeInRight">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="file-box">
+                            <div class="file">
+                                <a href="#">
+                                    <span class="corner"></span>
+                                    <div class="icon">
+                                        <i class="fa fa-file"></i>
+                                    </div>
+                                    <div class="file-name">
+                                        OFACsdn1.doc
+                                        <br />
+                                        <small>Added: March 15, 2015</small>
+                                    </div>
+                                </a>
+                            </div>
+
+                        </div>
+                        <div class="file-box">
+                            <a href="#">
+                                <div class="file">
+                                    <span class="corner"></span>
+                                    <div class="icon">
+                                        <i class="fa fa-bar-chart-o"></i>
+                                    </div>
+                                    <div class="file-name">
+                                        OFACsdn2.xls
+                                        <br />
+                                        <small>Added: March 14, 2015</small>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="file-box">
+                            <div class="file">
+                                <a href="#">
+                                    <span class="corner"></span>
+
+                                    <div class="icon">
+                                        <i class="fa fa-bar-chart-o"></i>
+                                    </div>
+                                    <div class="file-name">
+                                        OFACsdn3.xls
+                                        <br />
+                                        <small>Added: Jan 11, 2014</small>
+                                    </div>
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!-- Mainly scripts -->
+<script src="../js/jquery-2.1.1.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="../js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="../js/inspinia.js"></script>
+<script src="../js/plugins/pace/pace.min.js"></script>
+<script src="../js/plugins/jasny/jasny-bootstrap.min.js"></script>
+<link href="../css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+<script>
+    $(document).ready(function () {
+        $("#admintasks").trigger("click");
+        $('#adminofac').addClass('active');
+        $('.file-box').each(function () {
+            animationHover(this, 'pulse');
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#formOfac").submit(function () {
+            setTimeout(function () {
+                $("#formOfac :submit").prop("disabled", true);
+            }, 100);
+        });
+    });
+</script>

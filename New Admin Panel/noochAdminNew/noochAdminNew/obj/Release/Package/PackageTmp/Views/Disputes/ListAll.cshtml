@@ -1,0 +1,284 @@
+@using noochAdminNew.Classes.ModelClasses;
+@{
+    //ViewBag.Title = "ListAll";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    DisputesListAllDetails mdc = Model;
+    List<DisputeClassDetails> DisputeData = new List<DisputeClassDetails>();
+    DisputeData = mdc.DisputeClassDetails;
+}
+
+<link href="~/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/dataTables.responsive.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/dataTables.tableTools.min.css" rel="stylesheet">
+
+<!-- Data Tables -->
+<script src="~/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="~/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="~/js/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="~/js/plugins/dataTables/dataTables.tableTools.min.js"></script>
+<script src="~/Scripts/App/Utility.js"></script>
+<script src="~/Scripts/App/DisputeList.js"></script>
+<script src="~/Scripts/App/DisputeSelectedListChangeStatus.js"></script>
+
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>All Disputes</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="../Admin/Dashboard">Dashboard</a>
+            </li>
+            <li class="active">
+                <strong>All Disputes</strong>
+            </li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+
+    <div class="row">
+        <div class="col-sm-6 col-md-3">
+            <div class="widget style1 red-bg">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <i class="fa fa-warning fa-4x"></i>
+                    </div>
+                    <div class="col-xs-8 text-right">
+                        <span> New Disputes </span>
+                        <h2 class="font-bold">@mdc.NoOFDisputeUnderReview</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="widget style1 yellow-bg">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="fa fa-clock-o fa-4x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <span> Disputes Under Review </span>
+                        <h2 class="font-bold">@mdc.NoOfTransactionUnderReview</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-11">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Manage Disputes</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="ibox-content">
+
+                    <div class="row">
+                        <div class="col-sm-3 m-b-xs">
+                            <select class="input-sm form-control input-s-sm inline" id="opDisputeMaster">
+                                <option value="0"> -- Select Action -- </option>
+                                <option value="1"> Take For Review </option>
+                                <option value="2"> Resolve </option>
+                            </select>
+                        </div>
+                        @* <div class="col-sm-4 m-b-xs">
+                              <div class="btn-group" data-toggle="buttons">
+                                          <label class="btn btn-sm btn-white active"> <input type="radio" name="options" id="option1"> Day </label>
+                                          <label class="btn btn-sm btn-white"> <input type="radio" name="options" id="option2"> Week </label>
+                                          <label class="btn btn-sm btn-white"> <input type="radio" name="options" id="option3"> Month </label>
+                                      </div>
+                            </div>*@
+                        <div class="col-sm-3">
+                            <div class="input-group">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-primary" type="button" onclick="DisputeDetailsList.ApplyChoosenDisputeOperation();">Apply Changes</button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-striped table-bordered table-hover" id="AllDisputes">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="selecctAllForDisputeStatus" name="chkMaster">
+                                </th>
+                                <th>Status</th>
+                                <th>Dispute ID</th>
+                                <th>Transaction ID</th>
+                                <th>Sender</th>
+                                <th>Resolved Date</th>
+                                <th>Review Date</th>
+                                <th>Recipient</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="TBOdy">
+
+                            @foreach (var M in DisputeData)
+                            {
+                                <tr class="gradeX">
+                                    <td><input type="checkbox" class="checkbox1" name="chk" value="@M.DisputeId" onclick="chkboxClick(this)"></td>
+                                    <td>@M.status</td>
+                                    <td><a href="#" id="SelectDisputeId" onclick="DisputeDetails.DisputePopUp('@M.DisputeId');" class="btn btn-link" data-dispstatus="@M.status">@M.DisputeId</a></td>
+                                    <td>@M.TransactionId</td>
+                                    <td>@M.Sender</td>
+                                    <td>@M.ResolveDate</td>
+                                    <td>@M.ReviewDate</td>
+                                    <td>@M.Recipient</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal inmodal" id="selectedDispute" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content modal-lg animated bounceInDown">
+
+            <div class="modal-header" style="padding-bottom:0;">
+                <input type="hidden" id="DisputeId" value="">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Dispute</h4>
+                <p>Manage this dispute.</p>
+
+                <div class="row" id="dispDetailContent">
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <h2><span id="SenderName"></span></h2>
+                            <div class="m-b-sm">
+                                <img alt="image" class="img-circle" id="SenderImg">
+                            </div>
+                            <p class="font-bold">SENDER</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="padding:0;">
+                        <div class="text-center">
+                            <h3>PAID</h3>
+                            <div class="m-b-sm">
+                                <i class="fa fa-fw fa-arrow-right fa-3x text-success"></i>
+                            </div>
+                            <h2 class="font-bold text-danger"><span id="AmountDispute"></span></h2>
+                            <ul class="fa-ul text-left">
+                                <li><i class="fa fa-li fa-comment-o"></i><em><span id="TransactionFor"></span></em></li>
+                                <li id="locationLi"><i class="fa fa-li fa-map-marker"></i><span id="TransactionLocation"></span></li>
+                                <li><i class="fa fa-li fa-calendar"></i><span id="TransactinDate"></span></li>
+                                <li><i class="fa fa-li fa-flag"></i><span id="DisputeDate"></span> </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <h2><span id="RecipName"></span></h2>
+                            <div class="m-b-sm">
+                                <img alt="image" class="img-circle" id="RecipImg">
+                            </div>
+                            <p class="font-bold">RECIPIENT</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <span class="col-sm-3 control-label"><b>Admin Notes</b><br /><small><em>Required</em></small></span>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" rows="3" id="AmdinNotesProvided"></textarea>
+                                <p><small>Provide a desciption of the steps taken to resolve this dispute.</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <span class="col-sm-3 control-label"><b>Update Status</b><br /><small><em>Required</em></small></span>
+                            <div class="col-sm-9">
+                                <select class="form-control" id="DisputeStatus">
+                                    <option value="1"> Take For Review </option>
+                                    <option value="2"> Resolve </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <button type="button" id="btnSaveDiputedStatusOnTransaction" onclick="DisputeDetails.SaveDisputeStatus();" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#DisputesMaster").addClass('active');
+
+        $('#AllMembers').dataTable({
+            responsive: true,
+            "dom": 'T<"clear">lfrtip',
+            "columnDefs": [
+                   { "orderable": false, "targets": 0 }
+            ]
+        });
+    });
+
+
+    window.paceOptions = {
+        ajax: {
+            trackMethods: ['GET', 'POST', 'PUT', 'DELETE', 'REMOVE']
+        }
+    };
+
+</script>
+
+
+<style>
+    body.DTTT_Print {
+        background: #fff;
+    }
+
+    .DTTT_Print #page-wrapper {
+        margin: 0;
+        background: #fff;
+    }
+
+    button.DTTT_button, div.DTTT_button, a.DTTT_button {
+        border: 1px solid #e7eaec;
+        background: #fff;
+        color: #676a6c;
+        box-shadow: none;
+        padding: 6px 8px;
+    }
+
+        button.DTTT_button:hover, div.DTTT_button:hover, a.DTTT_button:hover {
+            border: 1px solid #d2d2d2;
+            background: #fff;
+            color: #676a6c;
+            box-shadow: none;
+            padding: 6px 8px;
+        }
+
+    .dataTables_filter label {
+        margin-right: 5px;
+    }
+</style>

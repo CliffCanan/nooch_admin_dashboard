@@ -1,0 +1,111 @@
+@{
+    ViewBag.Title = "CreateAdmin";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<link href="../css/plugins/toastr/toastr.min.css" rel="stylesheet" />
+<link href="../css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
+
+
+<!-- Custom and plugin javascript -->
+<script src="../js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="../js/plugins/toastr/toastr.min.js"></script>
+
+<!-- Input Mask-->
+<script src="../js/plugins/jasny/jasny-bootstrap.min.js"></script>
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-lg-10">
+        <h2>Create Admin</h2>
+        <ol class="breadcrumb">
+            <li>
+                <a href="Dashboard">Dashboard</a>
+            </li>
+            <li>
+                <a>Admin</a>
+            </li>
+            <li class="active">
+                <strong>Create Admin</strong>
+            </li>
+        </ol>
+    </div>
+    <div class="col-lg-2">
+    </div>
+</div>
+
+
+<div class="wrapper wrapper-content animated bounceIn">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Create a New Admin Account <small> Use this form to add a new admin user</small></h5>
+                </div>
+                <div class="ibox-content">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Username</label>
+                            <div class="col-sm-10">
+                                <input type="text" placeholder="Ex: 'Admin'" class="form-control" id="userNameText">
+                                <span class="help-block m-b-none">The username is used for logging in to the Admin Dashboard.</span>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">First Name</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" id="firstNameText"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Last Name</label>
+                            <div class="col-sm-10"><input type="text" class="form-control" id="lastNameText"></div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Email</label>
+                            <div class="col-sm-10">
+                                <div class="input-group m-b">
+                                    <span class="input-group-addon"><i class="fa fa-at"></i></span><input type="email" class="form-control" id="emailText" name="email" placeholder="email[at]nooch.com">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Account Level</label>
+                            <div class="col-sm-10">
+                                <div class="radio">
+                                    <label><input type="radio" value="SuperAdmin" id="adminLevel1" name="adminLevel"> Super Admin</label>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" value="Admin" id="adminLevel2" name="adminLevel"> Admin</label>
+                                </div>
+                                <div class="radio">
+                                    <label><input type="radio" value="Manager" id="adminLevel3" name="adminLevel"> Manager </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-6 col-sm-offset-3">
+                                <button class="btn btn-primary" onclick="Admin.Create();" type="button">Save changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<script>
+    $(document).ready(function() {
+        $("#admintasks").trigger("click");
+        $('#createAdmin').addClass('active');
+    });
+</script>
+
+
+<script src="~/Scripts/App/CreateAdmin.js"></script>
