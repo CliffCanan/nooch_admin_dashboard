@@ -513,7 +513,7 @@ namespace noochAdminNew.Controllers
                     //Get the Refered Code Used
                     mdc.ReferCodeUsed = (from Membr in obj.Members join Code in obj.InviteCodes on Membr.InviteCodeIdUsed equals Code.InviteCodeId where Membr.Nooch_ID == NoochId select Code.code).SingleOrDefault();
 
-                    var MemberKnoxDetails = (from m in obj.KnoxAccountDetails where m.Member.MemberId == Member.MemberId && m.IsDeleted == false select m).SingleOrDefault();
+                    var MemberKnoxDetails = (from m in obj.KnoxAccountDetails where m.Member.MemberId == Member.MemberId && m.IsDeleted == false select m).FirstOrDefault();
                     mdc.IsKnocAvailable = (MemberKnoxDetails != null);
                     if (mdc.IsKnocAvailable)
                     {
@@ -615,7 +615,7 @@ namespace noochAdminNew.Controllers
                     var synapse = (from Syn in obj.SynapseBanksOfMembers
                                    join mem in obj.Members on Syn.MemberId equals mem.MemberId
                                    where Syn.IsDefault == true && mem.Nooch_ID == NoochId
-                                   select Syn).SingleOrDefault();
+                                   select Syn).FirstOrDefault();
                     mdc.IsSynapseDetailAvailable = (synapse != null);
                     if (mdc.IsSynapseDetailAvailable)
                     {
@@ -628,7 +628,18 @@ namespace noochAdminNew.Controllers
                                                  SynpaseBankName = Syn.bank_name,
                                                  SynpaseBankStatus = (string.IsNullOrEmpty(Syn.Status) ? "Not Verified" : Syn.Status)
                                              }
-                                               ).SingleOrDefault();
+                            
+                                             ).FirstOrDefault();
+
+                        if (synapseDetail != null)
+                        {
+                            if (!String.IsNullOrEmpty(synapseDetail.SynpaseBankName))
+                            {
+                                synapseDetail.SynpaseBankName =
+                                    CommonHelper.GetDecryptedData(synapseDetail.SynpaseBankName);
+
+                            }
+                        }
                         mdc.SynapseDetails = synapseDetail;
                     }
                     // Get the three recent  Ip address of member
