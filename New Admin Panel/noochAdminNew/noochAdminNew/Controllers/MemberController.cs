@@ -76,7 +76,7 @@ namespace noochAdminNew.Controllers
 
                                 try
                                 {
-                                    Logger.Info("SupendMember - Attempt to send mail for Supend Member[ memberId:" +
+                                    Logger.Info("Admin Dash -> MemberController - SupendMember email sent to: [" + emailAddress + "]; Member [memberId:" +
                                                 member.MemberId + "].");
                                     Utility.SendEmail("userSuspended", fromAddress, emailAddress,
                                         "Your Nooch account has been suspended", null, tokens, null, null, null);
@@ -88,8 +88,8 @@ namespace noochAdminNew.Controllers
                                 catch (Exception)
                                 {
                                     // to return the status without inserting records in notifications or friends tables, when mail is not sent successfully.
-                                    Logger.Error("SupendMember --> Email not send to [" + member.MemberId +
-                                                           "]. Problem occured in sending Supend Member status mail. ");
+                                    Logger.Error("Admin Dash -> MemberController - SupendMember email NOT send to: [" + emailAddress + "]; Member [memberId:" +
+                                                member.MemberId + "]. Problem occured in sending mail.");
 
                                     mic.Message = "Member Suspension Failed";
                                     mic.NoochId = member.Nooch_ID;
@@ -137,8 +137,8 @@ namespace noochAdminNew.Controllers
                                     member.ModifiedBy = Utility.ConvertToGuid(Session["UserId"].ToString());
                                     obj.SaveChanges();
 
-                                    Logger.Error("MarkSDNSAFE - Attempt to mark member sdn safe[ memberId:" +
-                                                member.MemberId + "].");
+                                    Logger.Error("Admin Dash -> Members Controller - Mark SDN Safe - MemberId: [" +
+                                                member.MemberId + "]");
 
                                     mic.Message = "Member marked SDN safe Successfully. ";
                                     mic.NoochId = member.Nooch_ID;
@@ -148,8 +148,8 @@ namespace noochAdminNew.Controllers
                                 catch (Exception)
                                 {
                                     // to return the status without inserting records in notifications or friends tables, when mail is not sent successfully.
-                                    Logger.Error("MarkSDNSAFE - Attempt to mark member sdn safe failed [" + member.MemberId +
-                                                           "]. Problem occured in setting status true. ");
+                                    Logger.Error("Admin Dash -> Members Controller - Mark SDN Safe FAILED - MemberId: [" +
+                                                member.MemberId + "]");
 
                                     mic.Message = "Member SDN mark safe failed!";
                                     mic.NoochId = member.Nooch_ID;
@@ -627,7 +627,13 @@ namespace noochAdminNew.Controllers
                                              {
                                                  SynpaseBankName = Syn.bank_name,
                                                  SynpaseBankStatus = (string.IsNullOrEmpty(Syn.Status) ? "Not Verified" : Syn.Status),
-                                                 BankId=Syn.Id
+                                                 BankId = Syn.Id,
+                                                 SynapseBankNickName = Syn.nickname,
+                                                 nameFromSynapseBank = Syn.name_on_account,
+                                                 emailFromSynapseBank = Syn.email,
+                                                 phoneFromSynapseBank = Syn.phone_number,
+                                                 SynpaseBankAddedOn = Syn.AddedOn,
+                                                 SynpaseBankVerifiedOn = Syn.VerifiedOn
                                              }
                             
                                              ).FirstOrDefault();
@@ -817,8 +823,6 @@ namespace noochAdminNew.Controllers
 
                     if (result > 0)
                     {
-                        // email to user
-
                         try
                         {
                             Utility.SendEmail("PinNumberMailTemplate",
@@ -842,10 +846,9 @@ namespace noochAdminNew.Controllers
                         lr.IsSuccess = false;
                         lr.Message = "Error occuerred on server, please retry.";
                     }
+
+                    #endregion
                 }
-
-                #endregion
-
                 else
                 {
                     lr.IsSuccess = false;
@@ -860,45 +863,47 @@ namespace noochAdminNew.Controllers
         [ActionName("VerifyAccount")]
         public ActionResult VerifyAccount(string accountId)
         {
-            Logger.Info("NoochNewAdmin - VerifyAccount[ accountId:" + accountId + "].");
+            Logger.Info("NoochNewAdmin - VerifyAccount [Synapse Bank ID: " + accountId + "]");
 
             LoginResult lr = new LoginResult();
             int bnkid = Convert.ToInt16(accountId);
+
             using (var noochConnection = new NOOCHEntities())
             {
-                // getting member from db
-                var mem =
+                // Get Bank from DB
+                var bank =
                     (from c in noochConnection.SynapseBanksOfMembers where c.Id == bnkid select c)
                         .SingleOrDefault();
 
-                if (mem != null)
+                if (bank != null)
                 {
-                    #region if member found
-
-                    mem.Status="Verified";
-
-                    
-
-
-                    int result = noochConnection.SaveChanges();
-
-                    if (result > 0)
+                    #region if Bank found
+                    if (bank.Status = "Verified")
                     {
-                        // email to user
-
-                      
-                            lr.IsSuccess = true;
-                            lr.Message = "Bank account verified successfully.";
-                      
+                        lr.IsSuccess = false;
+                        lr.Message = "Bank account already verified."; 
                     }
                     else
                     {
-                        lr.IsSuccess = false;
-                        lr.Message = "Error occuerred on server, please retry.";
+                        bank.Status = "Verified";
+                        bank.VerifiedOn = DateTime.Now;
+
+                        int result = noochConnection.SaveChanges();
+
+                        if (result > 0)
+                        {
+                            lr.IsSuccess = true;
+                            lr.Message = "Bank account verified successfully."; 
+                        }
+                        else
+                        {
+                            lr.IsSuccess = false;
+                            lr.Message = "Error occuerred on server, please retry.";
+                        }
                     }
-                }
 
                     #endregion
+                }
 
                 else
                 {
@@ -919,7 +924,7 @@ namespace noochAdminNew.Controllers
             {
                 using (var noochConnection = new NOOCHEntities())
                 {
-                    // getting member from db
+                    // Get Member from DB
                     var mem =
                         (from c in noochConnection.Members where c.Nooch_ID == noochId && c.IsDeleted == false select c)
                             .SingleOrDefault();
