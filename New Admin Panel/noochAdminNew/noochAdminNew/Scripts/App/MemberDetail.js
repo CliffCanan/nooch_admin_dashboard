@@ -158,6 +158,34 @@ var Member = function () {
     }
 
 
+    // to manually verify added bank account
+    function verifyBankAccount() {
+        var accountId = $('#bnkIdHidden').val();
+        if (accountId == '') {
+            alert('No bank id selected');
+            return;
+        }
+
+        var url = "../Member/VerifyAccount";
+        var data = {};
+        data.accountId = accountId;
+
+        $.post(url, data, function (result) {
+            if (result.IsSuccess == true) {
+                toastr.success(result.Message, 'Succcess');
+
+                $('#bankAccountStatusDiv').html('');
+                $('#bankAccountStatusDiv').html("<span class='text-success' style='display: inline-block'>Verified</span>");
+                
+
+            }
+            else {
+                toastr.error(result.Message, 'Error');
+            }
+        });
+    }
+
+
     //Open ModalPopup 
     function AdminNoteAboutUserModalPopup() {
 
@@ -216,6 +244,7 @@ var Member = function () {
         EditMember: editdetails,
         ResetPin: restpin,
         OpenPopupForAdminNote: AdminNoteAboutUserModalPopup,
-        AdminNoteForUser: SaveAdminNoteForUser
+        AdminNoteForUser: SaveAdminNoteForUser,
+        VerifyBankAccount: verifyBankAccount
     };
 }();

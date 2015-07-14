@@ -626,7 +626,8 @@ namespace noochAdminNew.Controllers
                                              select new SynapseDetailOFMember
                                              {
                                                  SynpaseBankName = Syn.bank_name,
-                                                 SynpaseBankStatus = (string.IsNullOrEmpty(Syn.Status) ? "Not Verified" : Syn.Status)
+                                                 SynpaseBankStatus = (string.IsNullOrEmpty(Syn.Status) ? "Not Verified" : Syn.Status),
+                                                 BankId=Syn.Id
                                              }
                             
                                              ).FirstOrDefault();
@@ -849,6 +850,60 @@ namespace noochAdminNew.Controllers
                 {
                     lr.IsSuccess = false;
                     lr.Message = "Member not found";
+                }
+            }
+            return Json(lr);
+        }
+
+
+        [HttpPost]
+        [ActionName("VerifyAccount")]
+        public ActionResult VerifyAccount(string accountId)
+        {
+            Logger.Info("NoochNewAdmin - VerifyAccount[ accountId:" + accountId + "].");
+
+            LoginResult lr = new LoginResult();
+            int bnkid = Convert.ToInt16(accountId);
+            using (var noochConnection = new NOOCHEntities())
+            {
+                // getting member from db
+                var mem =
+                    (from c in noochConnection.SynapseBanksOfMembers where c.Id == bnkid select c)
+                        .SingleOrDefault();
+
+                if (mem != null)
+                {
+                    #region if member found
+
+                    mem.Status="Verified";
+
+                    
+
+
+                    int result = noochConnection.SaveChanges();
+
+                    if (result > 0)
+                    {
+                        // email to user
+
+                      
+                            lr.IsSuccess = true;
+                            lr.Message = "Bank account verified successfully.";
+                      
+                    }
+                    else
+                    {
+                        lr.IsSuccess = false;
+                        lr.Message = "Error occuerred on server, please retry.";
+                    }
+                }
+
+                    #endregion
+
+                else
+                {
+                    lr.IsSuccess = false;
+                    lr.Message = "Bank account not found";
                 }
             }
             return Json(lr);

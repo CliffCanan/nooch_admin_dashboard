@@ -43,7 +43,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/27/2015 13:00:30</publishTime>
     </File>
     <File Include="bin/noochAdminNew.dll">
-      <publishTime>07/13/2015 12:57:42</publishTime>
+      <publishTime>07/14/2015 16:29:20</publishTime>
     </File>
     <File Include="bin/System.ComponentModel.DataAnnotations.dll">
       <publishTime>09/26/2012 03:16:08</publishTime>
@@ -2170,7 +2170,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/27/2015 13:00:29</publishTime>
     </File>
     <File Include="Scripts/App/MemberDetail.js">
-      <publishTime>05/28/2015 09:26:59</publishTime>
+      <publishTime>07/14/2015 16:29:04</publishTime>
     </File>
     <File Include="Scripts/App/MembersList.js">
       <publishTime>05/09/2015 10:19:28</publishTime>
@@ -2245,7 +2245,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/20/2015 15:56:49</publishTime>
     </File>
     <File Include="Views/Member/Detail.cshtml">
-      <publishTime>07/13/2015 12:55:48</publishTime>
+      <publishTime>07/14/2015 16:19:05</publishTime>
     </File>
     <File Include="Views/Member/GrowthGraphs.cshtml">
       <publishTime>03/27/2015 13:00:29</publishTime>

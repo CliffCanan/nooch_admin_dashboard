@@ -389,7 +389,7 @@
                                     <div class="col-xs-8 col-sm-9 form-control-static">
                                         @if (mdc.IsSynapseDetailAvailable)
                                         {
-                                            <div style="display: inline-block">
+                                            <div style="display: inline-block" id="bankAccountStatusDiv">
 
                                                 @if (synpsDetail.SynpaseBankStatus == "Verified")
                                                 {
@@ -397,7 +397,11 @@
                                                 }
                                                 else
                                                 {
-                                                    <span class="text-danger" style="display: inline-block"> @synpsDetail.SynpaseBankStatus   </span>
+                                                    <p>
+                                                        <span class="text-danger" style="display: inline-block"> @synpsDetail.SynpaseBankStatus   </span>
+                                                        <input type="hidden" id="bnkIdHidden" value="@synpsDetail.BankId" />
+                                                        <button type="button" class="btn btn-link btn-xs pull-right" onclick="Member.VerifyBankAccount(); ">Verify</button>
+                                                    </p>
                                                 }
                                             </div>
                                         }

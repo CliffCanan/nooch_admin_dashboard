@@ -132,6 +132,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string SynpaseBankStatus { get; set; }
 
         public string SynpaseBankName { get; set; }
+        public int BankId { get; set; }
 
     }
 }
