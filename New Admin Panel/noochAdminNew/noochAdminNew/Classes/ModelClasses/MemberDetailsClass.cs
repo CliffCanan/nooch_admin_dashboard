@@ -24,7 +24,6 @@ namespace noochAdminNew.Classes.ModelClasses
         public string FBID { get; set; }
 
         public bool IsKnocAvailable { get; set; }
-
         public string KnoxBankIcon { get; set; }
         public string ReferCodeUsed { get; set; }
         public string KnoxTransId { get; set; }
@@ -33,7 +32,6 @@ namespace noochAdminNew.Classes.ModelClasses
 
         public DateTime DateCreated { get; set; }
         public string DateCreatedFormatted { get; set; }
-
         public int WeeksSinceJoined { get; set; }
 
         public string Address { get; set; }
@@ -65,12 +63,9 @@ namespace noochAdminNew.Classes.ModelClasses
         public string RecepientUserName { get; set; }
         public string GeoLocation { get; set; }
         public string Longitude { get; set; }
-
         public string Latitude { get; set; }
-
         public string TransactionType { get; set; }
         public string TransactionStatus { get; set; }
-
     }
 
     public class MemberDetailsStats
@@ -80,9 +75,8 @@ namespace noochAdminNew.Classes.ModelClasses
         public string TotalReceived { get; set; }
         public string LargestSent { get; set; }
         public string LargestReceived { get; set; }
-        
-
     }
+
     public class MemberDetailsDisputeTrans
     {
         public string Status { get; set; }
@@ -96,27 +90,19 @@ namespace noochAdminNew.Classes.ModelClasses
         public string RecepientId { get; set; }
         public string TransDateTime { get; set; }
         public string TransactionStatus { get; set; }
-
-        
-
         public string Transaction_ID { get; set; }
-
 
         public string GeoLocation { get; set; }
         public string Longitude { get; set; }
-
         public string Latitude { get; set; }
 
         public string TransactionType { get; set; }
-
     }
 
     public class ReferredMembers
     {
         public string MemberName { get; set; }
         public string ImageUrl { get; set; }
-        
-
     }
 
     public class MemberIpAddrreses
@@ -126,13 +112,19 @@ namespace noochAdminNew.Classes.ModelClasses
     }
 
 
-
     public class SynapseDetailOFMember
     {
-        public string SynpaseBankStatus { get; set; }
-
-        public string SynpaseBankName { get; set; }
         public int BankId { get; set; }
 
+        public string SynpaseBankStatus { get; set; }
+        public string SynpaseBankName { get; set; }
+        public string SynapseBankNickName { get; set; }
+
+        public string nameFromSynapseBank { get; set; }
+        public string emailFromSynapseBank { get; set; }
+        public string phoneFromSynapseBank { get; set; }
+
+        public DateTime SynpaseBankAddedOn { get; set; }
+        public DateTime SynpaseBankVerifiedOn { get; set; }
     }
 }
