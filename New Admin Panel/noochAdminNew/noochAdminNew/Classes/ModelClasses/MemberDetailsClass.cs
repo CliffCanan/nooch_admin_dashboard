@@ -124,7 +124,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string emailFromSynapseBank { get; set; }
         public string phoneFromSynapseBank { get; set; }
 
-        public DateTime SynpaseBankAddedOn { get; set; }
-        public DateTime SynpaseBankVerifiedOn { get; set; }
+        public string SynpaseBankAddedOn { get; set; }
+        public string SynpaseBankVerifiedOn { get; set; }
     }
 }

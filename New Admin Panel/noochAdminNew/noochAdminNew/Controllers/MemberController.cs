@@ -632,8 +632,8 @@ namespace noochAdminNew.Controllers
                                                  nameFromSynapseBank = Syn.name_on_account,
                                                  emailFromSynapseBank = Syn.email,
                                                  phoneFromSynapseBank = Syn.phone_number,
-                                                 SynpaseBankAddedOn = Syn.AddedOn,
-                                                 SynpaseBankVerifiedOn = Syn.VerifiedOn
+                                                 SynpaseBankAddedOn = Syn.AddedOn != null ? Convert.ToDateTime(Syn.AddedOn).ToString("dd'/'MM'/'yyyy") : "",
+                                                 SynpaseBankVerifiedOn = Syn.VerifiedOn != null ? Convert.ToDateTime(Syn.VerifiedOn).ToString("dd'/'MM'/'yyyy") : "",
                                              }
                             
                                              ).FirstOrDefault();
@@ -878,7 +878,7 @@ namespace noochAdminNew.Controllers
                 if (bank != null)
                 {
                     #region if Bank found
-                    if (bank.Status = "Verified")
+                    if (bank.Status == "Verified")
                     {
                         lr.IsSuccess = false;
                         lr.Message = "Bank account already verified."; 
