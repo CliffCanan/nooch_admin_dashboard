@@ -481,7 +481,7 @@
                                                                     @if (synpsDetail.SynpaseBankStatus == "Verified")
                                                                 {
                                                                         <p class="text-success" style="display: inline-block"> @synpsDetail.SynpaseBankStatus   </p>
-                                                                        <p> ( VERIFIED DATE HERE ) </p>
+                                                                        <p> @synpsDetail.SynpaseBankVerifiedOn </p>
                                                                 }
                                                                 else
                                                                 {
@@ -513,7 +513,7 @@
                                                             </span>
                                                             <div class="col-sm-9 form-control-static">
                                                                 <p class="f-600"> @synpsDetail.SynpaseBankName </p>
-                                                                <p> NICKNAME HERE </p>
+                                                                <p> @synpsDetail.SynapseBankNickName </p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -525,9 +525,9 @@
                                                                 <b>Bank Info</b>
                                                             </span>
                                                             <div class="col-sm-9 form-control-static">
-                                                                <p class="f-600"> Roger Federer </p>
-                                                                <p> roger@wimbledon.com </p>
-                                                                <p> (180) 123-4567 </p>
+                                                                <p class="f-600">@synpsDetail.nameFromSynapseBank </p>
+                                                                <p> @synpsDetail.emailFromSynapseBank </p>
+                                                                <p> @synpsDetail.phoneFromSynapseBank </p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -539,7 +539,7 @@
                                                                 <b>Added On</b>
                                                             </span>
                                                             <div class="col-sm-9 form-control-static">
-                                                                <p class="f-500"> May 20, 2015</p>
+                                                                <p class="f-500"> @synpsDetail.SynpaseBankAddedOn</p>
                                                             </div>
                                                         </div>
                                                     </div>

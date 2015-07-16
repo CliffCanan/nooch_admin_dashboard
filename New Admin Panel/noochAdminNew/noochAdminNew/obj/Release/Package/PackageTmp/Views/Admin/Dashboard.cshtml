@@ -435,7 +435,7 @@
                                 <th style="padding:8px 2px;">No Of User</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="bankstableBody">
                             @foreach (NoOfUsersInEachBank M in BankUserCount)
                                 {
                                 <tr class="gradeX">
@@ -579,6 +579,7 @@
 <script>
     $(function () { // Pie Chart
         var doughnutData = [
+
         /*{
             value: 300,
             color: "#a3e1d4",

@@ -58,9 +58,11 @@ $(document).ready(function () {
             $.post(url, data, function (result)
 			{
                 if (result.IsSuccess == true)
-				{
-                    $("#TBOdy tr").remove();
+                {
                     var trHTML = '';
+                    $("#TBOdy tr").remove();
+                    
+                  
                     $.each(result.RecentLiveTransaction, function (i, item) {
                         //DisputeStatus
                         var disputestatus;
@@ -83,14 +85,15 @@ $(document).ready(function () {
                         }
 
                         trHTML += '<tr ><td>' + item.TransID + '</td><td>' + item.TransactionType +
-						          '</td><td class="' + item.TransactionStatus + '">' + item.TransactionStatus +
-								  '</td><td>' + TransactionTime + '</td> <td><a href="../Member/Detail?NoochId=' + 
-								  item.SenderId + '">' + item.SenderUserName + '</a></td><td><a href="../Member/Detail?NoochId=' +
-								  item.RecepientId + '">' + item.RecepientUserName + '</a></td><td>$ ' + Number(item.Amount) +
-								  '</td><td>' + disputestatus + '</td><td><a href="#" OnClick="showLocationModal(' + item.Latitude + ',' + item.Longitude + ',' + "'" + GeoLocation + "'" + ')" class="btn btn-link" data-loctext="' + GeoLocation + '">' + GeoLocation + '</a></td></tr>'
+                            '</td><td class="' + item.TransactionStatus + '">' + item.TransactionStatus +
+                            '</td><td>' + TransactionTime + '</td> <td><a href="../Member/Detail?NoochId=' +
+                            item.SenderId + '">' + item.SenderUserName + '</a></td><td><a href="../Member/Detail?NoochId=' +
+                            item.RecepientId + '">' + item.RecepientUserName + '</a></td><td>$ ' + Number(item.Amount) +
+                            '</td><td>' + disputestatus + '</td><td><a href="#" OnClick="showLocationModal(' + item.Latitude + ',' + item.Longitude + ',' + "'" + GeoLocation + "'" + ')" class="btn btn-link" data-loctext="' + GeoLocation + '">' + GeoLocation + '</a></td></tr>';
 
                     });
-                    $("TBOdy").append(trHTML);
+                    $("#TBOdy").append(trHTML);
+                    
                 }
 
                 else {

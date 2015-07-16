@@ -4,6 +4,7 @@ using noochAdminNew.Classes.Utility;
 using noochAdminNew.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Objects.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Web;
@@ -620,26 +621,31 @@ namespace noochAdminNew.Controllers
                     if (mdc.IsSynapseDetailAvailable)
                     {
                         // get thhe synapse details 
-                        var synapseDetail = (from Syn in obj.SynapseBanksOfMembers
+                        var synapseDetail2 = (from Syn in obj.SynapseBanksOfMembers
                                              join mem in obj.Members on Syn.MemberId equals mem.MemberId
                                              where Syn.IsDefault == true && mem.Nooch_ID == NoochId
-                                             select new SynapseDetailOFMember
-                                             {
-                                                 SynpaseBankName = Syn.bank_name,
-                                                 SynpaseBankStatus = (string.IsNullOrEmpty(Syn.Status) ? "Not Verified" : Syn.Status),
-                                                 BankId = Syn.Id,
-                                                 SynapseBankNickName = Syn.nickname,
-                                                 nameFromSynapseBank = Syn.name_on_account,
-                                                 emailFromSynapseBank = Syn.email,
-                                                 phoneFromSynapseBank = Syn.phone_number,
-                                                 SynpaseBankAddedOn = Syn.AddedOn != null ? Convert.ToDateTime(Syn.AddedOn).ToString("dd'/'MM'/'yyyy") : "",
-                                                 SynpaseBankVerifiedOn = Syn.VerifiedOn != null ? Convert.ToDateTime(Syn.VerifiedOn).ToString("dd'/'MM'/'yyyy") : "",
-                                             }
-                            
-                                             ).FirstOrDefault();
-
-                        if (synapseDetail != null)
+                                             select Syn).FirstOrDefault();
+                        SynapseDetailOFMember synapseDetail = new SynapseDetailOFMember();
+                        if (synapseDetail2 != null)
                         {
+
+
+
+                            synapseDetail.SynpaseBankStatus = (string.IsNullOrEmpty(synapseDetail2.Status)
+                                ? "Not Verified"
+                                : synapseDetail2.Status);
+                            synapseDetail.BankId = synapseDetail2.Id;
+                            synapseDetail.SynapseBankNickName = CommonHelper.GetDecryptedData(synapseDetail2.nickname);
+                            synapseDetail.nameFromSynapseBank = CommonHelper.GetDecryptedData(synapseDetail2.name_on_account);
+                            synapseDetail.emailFromSynapseBank = synapseDetail2.email;
+                            synapseDetail.phoneFromSynapseBank = synapseDetail2.phone_number;
+                            synapseDetail.SynpaseBankAddedOn = synapseDetail2.AddedOn != null
+                                ? Convert.ToDateTime(synapseDetail2.AddedOn).ToString("MMM dd, yyyy")
+                                : "";
+                            synapseDetail.SynpaseBankVerifiedOn = synapseDetail2.VerifiedOn != null
+                                ? Convert.ToDateTime(synapseDetail2.VerifiedOn).ToString("MMM dd, yyyy")
+                                : "";
+
                             if (!String.IsNullOrEmpty(synapseDetail.SynpaseBankName))
                             {
                                 synapseDetail.SynpaseBankName =
