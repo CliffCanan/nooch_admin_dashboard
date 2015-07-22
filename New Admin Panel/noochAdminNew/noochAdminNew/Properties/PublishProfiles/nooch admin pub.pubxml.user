@@ -43,7 +43,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/27/2015 13:00:30</publishTime>
     </File>
     <File Include="bin/noochAdminNew.dll">
-      <publishTime>07/16/2015 11:42:58</publishTime>
+      <publishTime>07/22/2015 10:37:11</publishTime>
     </File>
     <File Include="bin/System.ComponentModel.DataAnnotations.dll">
       <publishTime>09/26/2012 03:16:08</publishTime>
@@ -2146,7 +2146,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/27/2015 13:00:29</publishTime>
     </File>
     <File Include="Models/NoochDbModel.edmx.diagram">
-      <publishTime>06/30/2015 10:20:25</publishTime>
+      <publishTime>07/22/2015 10:35:09</publishTime>
     </File>
     <File Include="packages.config">
       <publishTime>03/27/2015 13:00:30</publishTime>

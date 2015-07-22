@@ -73,7 +73,7 @@ namespace noochAdminNew.Models
         public Nullable<System.Guid> InviteCodeId { get; set; }
         public Nullable<System.Guid> InviteCodeIdUsed { get; set; }
         public string Type { get; set; }
-        public Nullable<long> SSN { get; set; }
+        public string SSN { get; set; }
         public Nullable<System.DateTime> UpgradeDate { get; set; }
         public Nullable<bool> IsVerifiedPhone { get; set; }
         public Nullable<decimal> LastLocationLat { get; set; }
@@ -96,6 +96,7 @@ namespace noochAdminNew.Models
         public Nullable<bool> IsSDNSafe { get; set; }
         public string AdminNotes { get; set; }
         public Nullable<System.DateTime> PhoneVerifiedOn { get; set; }
+        public string VerificationDocumentPath { get; set; }
     
         public virtual ICollection<KnoxAccountDetail> KnoxAccountDetails { get; set; }
         public virtual ICollection<MemberNotification> MemberNotifications { get; set; }

@@ -16,19 +16,19 @@
         <EntityTypeShape EntityType="NOOCHModel.KnoxAccountDetail" Width="1.5" PointX="3" PointY="6" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.Location" Width="1.5" PointX="8.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.MemberNotification" Width="1.5" PointX="3" PointY="10.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="NOOCHModel.Member" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.PasswordResetRequest" Width="1.5" PointX="3" PointY="17.125" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.SDN" Width="1.5" PointX="10.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.Transaction" Width="1.5" PointX="6" PointY="8.625" IsExpanded="true" />
         <AssociationConnector Association="NOOCHModel.FK_Transactions_GeoLocations" ManuallyRouted="false" />
-        <AssociationConnector Association="NOOCHModel.FK_KnoxAccountDetails_Members" ManuallyRouted="false" />
-        <AssociationConnector Association="NOOCHModel.FK_MemberNotifications_Members" ManuallyRouted="false" />
-        <AssociationConnector Association="NOOCHModel.FK_PasswordResetRequests_Members" ManuallyRouted="false" />
-        <AssociationConnector Association="NOOCHModel.FK_Transactions_Members2" ManuallyRouted="false" />
-        <AssociationConnector Association="NOOCHModel.FK_Transactions_Members3" ManuallyRouted="false" />
         <EntityTypeShape EntityType="NOOCHModel.SynapseBanksOfMember" Width="1.5" PointX="11.375" PointY="9.75" />
         <EntityTypeShape EntityType="NOOCHModel.SynapseSupportedBank" Width="1.5" PointX="12.375" PointY="0.75" />
         <EntityTypeShape EntityType="NOOCHModel.MembersIPAddress" Width="1.5" PointX="13.375" PointY="3.75" />
+        <EntityTypeShape EntityType="NOOCHModel.Member" Width="1.5" PointX="0.75" PointY="4.375" />
+        <AssociationConnector Association="NOOCHModel.FK_KnoxAccountDetails_Members" />
+        <AssociationConnector Association="NOOCHModel.FK_MemberNotifications_Members" />
+        <AssociationConnector Association="NOOCHModel.FK_PasswordResetRequests_Members" />
+        <AssociationConnector Association="NOOCHModel.FK_Transactions_Members2" />
+        <AssociationConnector Association="NOOCHModel.FK_Transactions_Members3" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

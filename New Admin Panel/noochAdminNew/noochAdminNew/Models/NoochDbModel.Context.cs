@@ -39,13 +39,13 @@ namespace noochAdminNew.Models
         public DbSet<KnoxAccountDetail> KnoxAccountDetails { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<MemberNotification> MemberNotifications { get; set; }
-        public DbSet<Member> Members { get; set; }
         public DbSet<PasswordResetRequest> PasswordResetRequests { get; set; }
         public DbSet<SDN> SDNs { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<SynapseBanksOfMember> SynapseBanksOfMembers { get; set; }
         public DbSet<SynapseSupportedBank> SynapseSupportedBanks { get; set; }
         public DbSet<MembersIPAddress> MembersIPAddresses { get; set; }
+        public DbSet<Member> Members { get; set; }
     
         public virtual ObjectResult<string> GetReportsForMember(string memberId, string getWhat)
         {
