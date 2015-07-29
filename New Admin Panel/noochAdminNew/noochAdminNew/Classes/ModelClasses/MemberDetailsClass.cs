@@ -111,13 +111,12 @@ namespace noochAdminNew.Classes.ModelClasses
         public DateTime Date { get; set; }
     }
 
-
     public class SynapseDetailOFMember
     {
         public int BankId { get; set; }
 
-        public string SynpaseBankStatus { get; set; }
-        public string SynpaseBankName { get; set; }
+        public string SynapseBankStatus { get; set; }
+        public string SynapseBankName { get; set; }
         public string SynapseBankNickName { get; set; }
 
         public string nameFromSynapseBank { get; set; }
@@ -126,5 +125,8 @@ namespace noochAdminNew.Classes.ModelClasses
 
         public string SynpaseBankAddedOn { get; set; }
         public string SynpaseBankVerifiedOn { get; set; }
+
+        public int? synapseBankId { get; set; }
+        public string synapseConsumerKey { get; set; }
     }
 }

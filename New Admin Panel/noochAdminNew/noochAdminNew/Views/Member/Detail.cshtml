@@ -311,14 +311,14 @@
                                                                 <input type="tel" placeholder="(XXX) XXX-XXXX" id="contactNumber" class="form-control" data-mask="(999) 999-9999" value="@mdc.ContactNumber">
                                                             </div>
                                                             @{
-                                                            if (mdc.IsPhoneVerified == true)
-                                                            {
-                                                                <i class="fa fa-check text-success"></i>
-                                                            }
-                                                            else
-                                                            {
-                                                                <i class="fa fa-remove text-danger"></i>
-                                                            }
+                                                                if (mdc.IsPhoneVerified == true)
+                                                                {
+                                                                    <i class="fa fa-check text-success"></i>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="fa fa-remove text-danger"></i>
+                                                                }
                                                             }
                                                         </div>
                                                     </div>
@@ -335,14 +335,14 @@
                                                                 <input type="email" disabled="" value="@mdc.UserName" class="form-control">
                                                             </div>
                                                             @{
-                                                            if (mdc.Status != "Suspended")
-                                                            {
-                                                                <i class="fa fa-check text-success"></i>
-                                                            }
-                                                            else
-                                                            {
-                                                                <i class="fa fa-remove text-danger"></i>
-                                                            }
+                                                                if (mdc.Status != "Suspended")
+                                                                {
+                                                                    <i class="fa fa-check text-success"></i>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="fa fa-remove text-danger"></i>
+                                                                }
                                                             }
                                                         </div>
                                                     </div>
@@ -373,13 +373,13 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-addon"><i class="fa fa-fw fa-envelope-o"></i></span>
                                                                 @if (!String.IsNullOrEmpty(mdc.SecondaryEmail.Trim()) && mdc.SecondaryEmail != " " && mdc.SecondaryEmail != "")
-                                                            {
+                                                                {
                                                                     <input type="email" value="@mdc.SecondaryEmail" class="form-control" id="secondaryemail1">
-                                                            }
-                                                            else
-                                                            {
+                                                                }
+                                                                else
+                                                                {
                                                                     <input type="email" class="form-control" id="secondaryemail2">
-                                                            }
+                                                                }
                                                             </div>
                                                         </div>
                                                     </div>
@@ -459,7 +459,8 @@
                     <div class="panel-body">
                         <div class="row">
 
-                            <div class="col-sm-6">
+                            <!-- SYNAPSE BANK INFO -->
+                            <div class="col-sm-12">
                                 <div class="ibox">
                                     <div class="ibox-title">
                                         <h5>Synapse Details</h5>
@@ -467,90 +468,112 @@
                                     </div>
                                     <div class="ibox-content">
                                         <form class="form-horizontal">
+
                                             <div class="row">
-                                                <div class="col-lg-12">
+
+                                                <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <span class="col-xs-4 col-sm-3 control-label">
+                                                        <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
                                                             <b>Status</b>
                                                         </span>
-                                                        <div class="col-xs-8 col-sm-9 form-control-static">
+                                                        <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
                                                             @if (mdc.IsSynapseDetailAvailable)
-                                                        {
+                                                            {
                                                                 <div id="bankAccountStatusDiv">
 
-                                                                    @if (synpsDetail.SynpaseBankStatus == "Verified")
-                                                                {
-                                                                        <p class="text-success" style="display: inline-block"> @synpsDetail.SynpaseBankStatus   </p>
-                                                                        <p> @synpsDetail.SynpaseBankVerifiedOn </p>
-                                                                }
-                                                                else
-                                                                {
+                                                                    @if (synpsDetail.SynapseBankStatus == "Verified")
+                                                                    {
+                                                                        <p class="text-success" style="display: inline-block"> @synpsDetail.SynapseBankStatus   </p>
+                                                                        <p><small>Verified: @synpsDetail.SynpaseBankVerifiedOn  </small></p>
+                                                                    }
+                                                                    else
+                                                                    {
                                                                         <p>
-                                                                            <span class="text-danger" style="display: inline-block"> @synpsDetail.SynpaseBankStatus   </span>
+                                                                            <span class="text-danger" style="display: inline-block"> @synpsDetail.SynapseBankStatus   </span>
                                                                             <input type="hidden" id="bnkIdHidden" value="@synpsDetail.BankId" />
                                                                             <button type="button" class="btn btn-link" onclick="Member.VerifyBankAccount(); "><i class="fa fa-check"></i>Verify</button>
                                                                         </p>
-                                                                }
+                                                                    }
                                                                 </div>
-                                                        }
-                                                        else
-                                                        {
-                                                                <div class="col-sm-5">
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="col-sm-8">
                                                                     <span class="text-danger">No Synapse Bank Linked</span>
                                                                 </div>
-                                                        }
+                                                            }
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            @if (mdc.IsSynapseDetailAvailable)
-                                        {
-                                                <div class="row">
-                                                    <div class="col-lg-12">
+                                                @if (mdc.IsSynapseDetailAvailable)
+                                                {
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <span class="col-sm-3 control-label">
+                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
                                                                 <b>Bank Name</b>
                                                             </span>
-                                                            <div class="col-sm-9 form-control-static">
-                                                                <p class="f-600"> @synpsDetail.SynpaseBankName </p>
+                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
+                                                                <p class="f-600"> @synpsDetail.SynapseBankName </p>
                                                                 <p> @synpsDetail.SynapseBankNickName </p>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                }
+                                            </div>
+
+                                            @if (mdc.IsSynapseDetailAvailable)
+                                            {
                                                 <div class="row">
-                                                    <div class="col-lg-12">
+
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <span class="col-sm-3 control-label">
+                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
                                                                 <b>Bank Info</b>
                                                             </span>
-                                                            <div class="col-sm-9 form-control-static">
+                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
                                                                 <p class="f-600">@synpsDetail.nameFromSynapseBank </p>
-                                                                <p> @synpsDetail.emailFromSynapseBank </p>
-                                                                <p> @synpsDetail.phoneFromSynapseBank </p>
+                                                                <p><i class="fa fa-envelope m-r-sm"></i> @synpsDetail.emailFromSynapseBank </p>
+                                                                <p><i class="fa fa-mobile-phone m-r-sm"></i> @synpsDetail.phoneFromSynapseBank </p>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-lg-12">
+
+                                                    <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <span class="col-sm-3 control-label">
+                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
                                                                 <b>Added On</b>
                                                             </span>
-                                                            <div class="col-sm-9 form-control-static">
+                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
                                                                 <p class="f-500"> @synpsDetail.SynpaseBankAddedOn</p>
                                                             </div>
                                                         </div>
                                                     </div>
+
                                                 </div>
-                                        }
+
+                                                <div class="row">
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
+                                                                <b>Bank ID</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
+                                                                <p class="f-500"> @synpsDetail.synapseBankId</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            }
+
                                         </form>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="col-sm-6">
+                            <!-- OLD KNOX BANK INFO -->
+                            <div class="col-sm-12">
                                 <div class="ibox">
                                     <div class="ibox-title">
                                         <h5>Knox Details</h5>
@@ -566,40 +589,40 @@
                                                         </span>
                                                         <div class="col-xs-8 col-sm-9 form-control-static">
                                                             @{
-                                                            if (mdc.IsKnocAvailable == true)
-                                                            {
-                                                                <div style="display: inline-block">
-                                                                    <span class="text-success" style="display: inline-block">Available</span>
-                                                                    <img src="@mdc.KnoxBankIcon" class="img-circle" id="details_bankLogo" alt="Bank Icon">
-                                                                </div>
-                                                            }
-                                                            else
-                                                            {
-                                                                <div class="col-sm-5">
-                                                                    <span class="text-danger">No Bank Linked</span>
-                                                                </div>
-                                                            }
+                                                                if (mdc.IsKnocAvailable == true)
+                                                                {
+                                                                    <div style="display: inline-block">
+                                                                        <span class="text-success" style="display: inline-block">Available</span>
+                                                                        <img src="@mdc.KnoxBankIcon" class="img-circle" id="details_bankLogo" alt="Bank Icon">
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="col-sm-5">
+                                                                        <span class="text-danger">No Bank Linked</span>
+                                                                    </div>
+                                                                }
                                                             }
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             @{
-                                            if (mdc.IsKnocAvailable == true)
-                                            {
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <div class="form-group">
-                                                            <span class="col-sm-3 control-label">
-                                                                <b>Trans ID</b>
-                                                            </span>
-                                                            <div class="col-sm-9 form-control-static">
-                                                                <span class="text-muted" id="knoxTransId"><a href="https://knoxpayments.com/admin/api/get_payment_details.php?API_key=7068_59cd5c1f5a75c31&API_pass=7068_da64134cc66a5f0&trans_id=@mdc.KnoxTransId" target="_blank"> @mdc.KnoxTransId</a></span>
+                                                if (mdc.IsKnocAvailable == true)
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="form-group">
+                                                                <span class="col-sm-3 control-label">
+                                                                    <b>Trans ID</b>
+                                                                </span>
+                                                                <div class="col-sm-9 form-control-static">
+                                                                    <span class="text-muted" id="knoxTransId"><a href="https://knoxpayments.com/admin/api/get_payment_details.php?API_key=7068_59cd5c1f5a75c31&API_pass=7068_da64134cc66a5f0&trans_id=@mdc.KnoxTransId" target="_blank"> @mdc.KnoxTransId</a></span>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            }
+                                                }
                                             }
 
                                         </form>
@@ -622,7 +645,7 @@
                                     </div>
                                     <div class="ibox-content">
                                         <form class="form-horizontal">
-                                            
+
                                             <div class="col-xs-12">
 
                                                 <div class="row">
@@ -634,25 +657,25 @@
                                                             <div class="col-xs-5 col-sm-4 form-control-static">
                                                                 <p style="margin-bottom: 0;">
                                                                     @{
-                                                                if (mdc.Status == "Registered")
-                                                                {
-                                                                    <a href="#" class="btn btn-sm btn-default" onclick=" Member.ApplyChoosenOperation(4) ">Verify Email</a>
-                                                                }
+                                                                        if (mdc.Status == "Registered")
+                                                                        {
+                                                                            <a href="#" class="btn btn-sm btn-default" onclick=" Member.ApplyChoosenOperation(4) ">Verify Email</a>
+                                                                        }
 
-                                                                if (!mdc.IsPhoneVerified && mdc.ContactNumber != null)
-                                                                {
-                                                                    <a href="#" class="btn btn-sm btn-primary" onclick=" Member.ApplyChoosenOperation(3) "> Verify Phone</a>
-                                                                }
+                                                                        if (!mdc.IsPhoneVerified && mdc.ContactNumber != null)
+                                                                        {
+                                                                            <a href="#" class="btn btn-sm btn-primary" onclick=" Member.ApplyChoosenOperation(3) "> Verify Phone</a>
+                                                                        }
 
-                                                                if (mdc.Status == "Active")
-                                                                {
-                                                                    <a href="#" class="btn btn-sm btn-danger" onclick=" Member.ApplyChoosenOperation(1) ">Suspend</a>
-                                                                }
+                                                                        if (mdc.Status == "Active")
+                                                                        {
+                                                                            <a href="#" class="btn btn-sm btn-danger" onclick=" Member.ApplyChoosenOperation(1) ">Suspend</a>
+                                                                        }
 
-                                                                if (mdc.Status == "Suspended")
-                                                                {
-                                                                    <a href="#" class="btn btn-sm btn-primary" onclick=" Member.ApplyChoosenOperation(4)">Activate (Un-Suspend)</a>
-                                                                }
+                                                                        if (mdc.Status == "Suspended")
+                                                                        {
+                                                                            <a href="#" class="btn btn-sm btn-primary" onclick=" Member.ApplyChoosenOperation(4)">Activate (Un-Suspend)</a>
+                                                                        }
                                                                     }
                                                                     @*<a href="#" class="btn btn-warning btn-rounded">Warning</a>*@
                                                                     @*<a href="#" class="btn btn-danger btn-rounded">Block</a>*@
@@ -711,7 +734,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+
                                             </div>
 
                                         </form>
@@ -734,75 +757,75 @@
                                     </div>
                                     <div class="ibox-content">
                                         @{
-                                        if (Transactionsss.Count > 0)
-                                        {
-                                            <table class="table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Transaction ID</th>
-                                                        <th>Transaction Type</th>
-                                                        <th>Status</th>
-                                                        <th>Date / Time</th>
-                                                        <th>Amount ($)</th>
-                                                        <th>Recipient ID</th>
-                                                        <th>Recipient User Name</th>
-                                                        <th>Location</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (MemberDetailsTrans mn in Transactionsss)
-                                                    {
+                                            if (Transactionsss.Count > 0)
+                                            {
+                                                <table class="table table-striped">
+                                                    <thead>
                                                         <tr>
-                                                            <td>@mn.TransID</td>
-                                                            <td>@mn.TransactionType</td>
-                                                            <td>
-                                                                @{
-                                                        if (@mn.TransactionStatus == "Rejected" || @mn.TransactionStatus == "Cancelled")
+                                                            <th>Transaction ID</th>
+                                                            <th>Transaction Type</th>
+                                                            <th>Status</th>
+                                                            <th>Date / Time</th>
+                                                            <th>Amount ($)</th>
+                                                            <th>Recipient ID</th>
+                                                            <th>Recipient User Name</th>
+                                                            <th>Location</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (MemberDetailsTrans mn in Transactionsss)
                                                         {
-                                                            <b class="text-danger">@mn.TransactionStatus</b>
-                                                        }
-                                                        else if (@mn.TransactionStatus == "Success")
-                                                        {
-                                                            <b class="text-success">Success</b>
-                                                        }
-                                                        else if (@mn.TransactionStatus == "Pending")
-                                                        {
-                                                            <b class="text-primary">Pending</b>
-                                                        }
-                                                        else
-                                                        {
-                                                            @mn.TransactionStatus
-                                                        }
-                                                                }
-                                                            </td>
-                                                            <td>@mn.TransDateTime</td>
-                                                            <td>
-                                                                @if (mn.AmountNew != "0")
-                                                                {
-                                                                    double d = (Convert.ToDouble(mn.AmountNew));
-                                                                    string transAmountFormatted = string.Format("{0:0.00}", d);
-                                                                    <h4>$ @transAmountFormatted</h4>
-                                                                }
-                                                            </td>
-                                                            <td><a href="@Url.Action("Detail", "Member", new { NoochId = @mn.RecepientId })">@mn.RecepientId</a></td>
-                                                            <td><a href="@Url.Action("Detail", "Member", new {NoochId = @mn.RecepientId})">@mn.RecepientUserName</a></td>
-                                                            @if (!String.IsNullOrEmpty(@mn.GeoLocation))
+                                                            <tr>
+                                                                <td>@mn.TransID</td>
+                                                                <td>@mn.TransactionType</td>
+                                                                <td>
+                                                                    @{
+                                                            if (@mn.TransactionStatus == "Rejected" || @mn.TransactionStatus == "Cancelled")
                                                             {
-                                                                <td><button class="btn btn-link locLink" data-lat="@mn.Latitude" data-long="@mn.Longitude" data-loctext="@mn.GeoLocation.Trim().TrimEnd(',').Trim()">@mn.GeoLocation.Trim().TrimEnd(',').Trim()</button></td>
+                                                                <b class="text-danger">@mn.TransactionStatus</b>
+                                                            }
+                                                            else if (@mn.TransactionStatus == "Success")
+                                                            {
+                                                                <b class="text-success">Success</b>
+                                                            }
+                                                            else if (@mn.TransactionStatus == "Pending")
+                                                            {
+                                                                <b class="text-primary">Pending</b>
                                                             }
                                                             else
                                                             {
-                                                                <td><span class="text-muted"> - </span></td>
+                                                                @mn.TransactionStatus
                                                             }
-                                                        </tr>
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        }
-                                        else
-                                        {
-                                            <p class="text-danger text-center"><em>@mdc.FirstName @mdc.LastName</em> has not made any payments yet.</p>
-                                        }
+                                                                    }
+                                                                </td>
+                                                                <td>@mn.TransDateTime</td>
+                                                                <td>
+                                                                    @if (mn.AmountNew != "0")
+                                                                    {
+                                                                        double d = (Convert.ToDouble(mn.AmountNew));
+                                                                        string transAmountFormatted = string.Format("{0:0.00}", d);
+                                                                        <h4>$ @transAmountFormatted</h4>
+                                                                    }
+                                                                </td>
+                                                                <td><a href="@Url.Action("Detail", "Member", new { NoochId = @mn.RecepientId })">@mn.RecepientId</a></td>
+                                                                <td><a href="@Url.Action("Detail", "Member", new {NoochId = @mn.RecepientId})">@mn.RecepientUserName</a></td>
+                                                                @if (!String.IsNullOrEmpty(@mn.GeoLocation))
+                                                                {
+                                                                    <td><button class="btn btn-link locLink" data-lat="@mn.Latitude" data-long="@mn.Longitude" data-loctext="@mn.GeoLocation.Trim().TrimEnd(',').Trim()">@mn.GeoLocation.Trim().TrimEnd(',').Trim()</button></td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td><span class="text-muted"> - </span></td>
+                                                                }
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            }
+                                            else
+                                            {
+                                                <p class="text-danger text-center"><em>@mdc.FirstName @mdc.LastName</em> has not made any payments yet.</p>
+                                            }
                                         }
 
                                     </div>
@@ -824,53 +847,53 @@
                                     </div>
                                     <div class="ibox-content">
                                         @{
-                                        if (DisputeTransactions.Count > 0)
-                                        {
-                                            <table class="table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Status</th>
-                                                        <th>Dispute ID</th>
-                                                        <th>Subject</th>
-                                                        <th>Admin Notes</th>
-                                                        <th>Dispute Date</th>
-                                                        <th>Review Date</th>
-                                                        <th>Resolved Date</th>
-                                                        <th>Transaction Id</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (MemberDetailsDisputeTrans m in DisputeTransactions)
-                                                    {
+                                            if (DisputeTransactions.Count > 0)
+                                            {
+                                                <table class="table table-striped">
+                                                    <thead>
                                                         <tr>
-                                                            <td>
-                                                                @{
-                                                        if (@m.Status == "Resolved")
-                                                        {
-                                                            <b class="text-success">@m.Status</b>
-                                                        }
-                                                        else
-                                                        {
-                                                            <b class="text-danger">@m.Status</b>
-                                                        }
-                                                                }
-                                                            </td>
-                                                            <td>@m.Dispute_ID</td>
-                                                            <td>@m.Subject</td>
-                                                            <td>@m.Admin_Notes</td>
-                                                            <td>@m.Dispute_Date</td>
-                                                            <td>@m.Review_Date</td>
-                                                            <td>@m.Resolved_Date</td>
-                                                            <td>@m.Transaction_ID</td>
+                                                            <th>Status</th>
+                                                            <th>Dispute ID</th>
+                                                            <th>Subject</th>
+                                                            <th>Admin Notes</th>
+                                                            <th>Dispute Date</th>
+                                                            <th>Review Date</th>
+                                                            <th>Resolved Date</th>
+                                                            <th>Transaction Id</th>
                                                         </tr>
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        }
-                                        else
-                                        {
-                                            <p class="text-danger text-center">There are no Disputed Transactions for <em>@mdc.FirstName @mdc.LastName</em>.</p>
-                                        }
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (MemberDetailsDisputeTrans m in DisputeTransactions)
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    @{
+                                                            if (@m.Status == "Resolved")
+                                                            {
+                                                                <b class="text-success">@m.Status</b>
+                                                            }
+                                                            else
+                                                            {
+                                                                <b class="text-danger">@m.Status</b>
+                                                            }
+                                                                    }
+                                                                </td>
+                                                                <td>@m.Dispute_ID</td>
+                                                                <td>@m.Subject</td>
+                                                                <td>@m.Admin_Notes</td>
+                                                                <td>@m.Dispute_Date</td>
+                                                                <td>@m.Review_Date</td>
+                                                                <td>@m.Resolved_Date</td>
+                                                                <td>@m.Transaction_ID</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            }
+                                            else
+                                            {
+                                                <p class="text-danger text-center">There are no Disputed Transactions for <em>@mdc.FirstName @mdc.LastName</em>.</p>
+                                            }
                                         }
                                     </div>
                                 </div>

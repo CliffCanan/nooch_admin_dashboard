@@ -82,7 +82,7 @@ var Member = function () {
                 if (operation != 5) {
                     location.reload(true);
                 }
-            
+
             }
             else {
                 toastr.error('An error occured on the server, please try again!', 'Error');
@@ -110,12 +110,10 @@ var Member = function () {
         data.zip = $("#zipcodeinput").val();
         data.noochid = NoochId;
 
-		console.log(data);
+        console.log(data);
 
-        $.post(url, data, function (result) 
-        {
-            if (result.IsSuccess == true) 
-            {
+        $.post(url, data, function (result) {
+            if (result.IsSuccess == true) {
                 toastr.success(result.Message, 'Succcess');
 
                 $("#contactNumber").val(result.contactnum);
@@ -126,7 +124,7 @@ var Member = function () {
                 $("#stateinput").val(result.state);
                 $("#zipcodeinput").val(result.zip);
 
-                setTimeout(function(){location.reload(true)},2500);
+                setTimeout(function () { location.reload(true) }, 2500);
             }
             else {
                 toastr.error(result.Message, 'Error');
@@ -176,8 +174,6 @@ var Member = function () {
 
                 $('#bankAccountStatusDiv').html('');
                 $('#bankAccountStatusDiv').html("<span class='text-success' style='display: inline-block'>Verified</span>");
-                
-
             }
             else {
                 toastr.error(result.Message, 'Error');

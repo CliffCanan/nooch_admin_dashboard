@@ -361,7 +361,7 @@ namespace noochAdminNew.Controllers
                 }
 
                 #endregion Delete Usr
-                
+
 
                 return Json(mr);
             }
@@ -523,6 +523,8 @@ namespace noochAdminNew.Controllers
                     }
 
 
+                    #region Get User's Transactions
+
                     var transtp = (from t in obj.Transactions
                                    where
                                        t.Member.MemberId == Member.MemberId && (t.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || t.TransactionType == "+C1+zhVafHdXQXCIqjU/Zg==" || t.TransactionType == "DrRr1tU1usk7nNibjtcZkA==") &&
@@ -549,8 +551,11 @@ namespace noochAdminNew.Controllers
                         mm.Add(merc);
                     }
 
+                    #endregion Get User's Transactions
 
-                    // getting last 5 disputes
+
+                    #region Get Last 5 Disputes
+
                     var disputeTrans = (from t in obj.Transactions
                                         where
                                             (t.Member.MemberId == Member.MemberId || t.Member1.MemberId == Member.MemberId)
@@ -589,73 +594,75 @@ namespace noochAdminNew.Controllers
                     mdc.Transactions = mm;
                     mdc.DisputeTransactions = mm2;
 
-                    // stats related operations
+                    #endregion Get Last 5 Disputes
+
+
+                    #region Stats-Related Operations
+
                     MemberDetailsStats ms = new MemberDetailsStats();
 
                     ms.TotalTransfer = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_P2P_transfers").SingleOrDefault();
 
-
-                    string TotalSent =
-                     obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Sent").SingleOrDefault();
+                    string TotalSent = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Sent").SingleOrDefault();
                     ms.TotalSent = TotalSent != "0" ? Convert.ToDecimal(String.Format("{0:0.00}", Convert.ToDecimal(TotalSent))).ToString() : "0";
 
-                    string TotalReceived =
-                      obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Received").SingleOrDefault();
+                    string TotalReceived = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Received").SingleOrDefault();
                     ms.TotalReceived = TotalReceived != "0" ? Convert.ToDecimal(String.Format("{0:0.00}", Convert.ToDecimal(TotalReceived))).ToString() : "0";
 
-                    string LargestSent =
-                      obj.GetReportsForMember(Member.MemberId.ToString(), "Largest_sent_transfer").SingleOrDefault();
+                    string LargestSent = obj.GetReportsForMember(Member.MemberId.ToString(), "Largest_sent_transfer").SingleOrDefault();
                     ms.LargestSent = LargestSent != "0" ? Convert.ToDecimal(String.Format("{0:0.00}", Convert.ToDecimal(LargestSent))).ToString() : "0";
 
                     mdc.MemberStats = ms;
+
+                    #endregion Stats-Related Operations
+
+                    // Calculate number of weeks since the user created an account
                     double no_Of_Since_Joined = (DateTime.Now - Convert.ToDateTime(Member.DateCreated)).TotalDays / 7;
                     mdc.WeeksSinceJoined = Convert.ToInt16(no_Of_Since_Joined);
 
 
-                    // Check whther synapse details available or not
+                    // Check whether Synapse Bank details available or not
                     var synapse = (from Syn in obj.SynapseBanksOfMembers
                                    join mem in obj.Members on Syn.MemberId equals mem.MemberId
                                    where Syn.IsDefault == true && mem.Nooch_ID == NoochId
                                    select Syn).FirstOrDefault();
+
                     mdc.IsSynapseDetailAvailable = (synapse != null);
+
                     if (mdc.IsSynapseDetailAvailable)
                     {
-                        // get thhe synapse details 
-                        var synapseDetail2 = (from Syn in obj.SynapseBanksOfMembers
-                                             join mem in obj.Members on Syn.MemberId equals mem.MemberId
-                                             where Syn.IsDefault == true && mem.Nooch_ID == NoochId
-                                             select Syn).FirstOrDefault();
+                        // Get the user's Synapse account details 
+                        var synapseDetailFromDb = (from Syn in obj.SynapseBanksOfMembers
+                                                   join mem in obj.Members on Syn.MemberId equals mem.MemberId
+                                                   where Syn.IsDefault == true && mem.Nooch_ID == NoochId
+                                                   select Syn).FirstOrDefault();
+
                         SynapseDetailOFMember synapseDetail = new SynapseDetailOFMember();
-                        if (synapseDetail2 != null)
+
+                        if (synapseDetailFromDb != null)
                         {
+                            synapseDetail.synapseConsumerKey = "";
+                            synapseDetail.synapseBankId = synapseDetailFromDb.bankid; // This is the 4 or 5 digit ID from Synapse for this account
+                            synapseDetail.BankId = synapseDetailFromDb.Id; // This is the Nooch DB "ID", which is just the row number of the account... NOT the same as the Synapse Bank ID
+                            synapseDetail.SynapseBankStatus = (string.IsNullOrEmpty(synapseDetailFromDb.Status)
+                                ? "Not Verified" : synapseDetailFromDb.Status);
+                            synapseDetail.SynapseBankNickName = CommonHelper.GetDecryptedData(synapseDetailFromDb.nickname);
+                            synapseDetail.nameFromSynapseBank = CommonHelper.GetDecryptedData(synapseDetailFromDb.name_on_account);
+                            synapseDetail.emailFromSynapseBank = synapseDetailFromDb.email;
+                            synapseDetail.phoneFromSynapseBank = synapseDetailFromDb.phone_number;
+                            synapseDetail.SynpaseBankAddedOn = synapseDetailFromDb.AddedOn != null
+                                ? Convert.ToDateTime(synapseDetailFromDb.AddedOn).ToString("MMM dd, yyyy") : "";
+                            synapseDetail.SynpaseBankVerifiedOn = synapseDetailFromDb.VerifiedOn != null
+                                ? Convert.ToDateTime(synapseDetailFromDb.VerifiedOn).ToString("MMM dd, yyyy") : "";
 
-
-
-                            synapseDetail.SynpaseBankStatus = (string.IsNullOrEmpty(synapseDetail2.Status)
-                                ? "Not Verified"
-                                : synapseDetail2.Status);
-                            synapseDetail.BankId = synapseDetail2.Id;
-                            synapseDetail.SynapseBankNickName = CommonHelper.GetDecryptedData(synapseDetail2.nickname);
-                            synapseDetail.nameFromSynapseBank = CommonHelper.GetDecryptedData(synapseDetail2.name_on_account);
-                            synapseDetail.emailFromSynapseBank = synapseDetail2.email;
-                            synapseDetail.phoneFromSynapseBank = synapseDetail2.phone_number;
-                            synapseDetail.SynpaseBankAddedOn = synapseDetail2.AddedOn != null
-                                ? Convert.ToDateTime(synapseDetail2.AddedOn).ToString("MMM dd, yyyy")
-                                : "";
-                            synapseDetail.SynpaseBankVerifiedOn = synapseDetail2.VerifiedOn != null
-                                ? Convert.ToDateTime(synapseDetail2.VerifiedOn).ToString("MMM dd, yyyy")
-                                : "";
-
-                            if (!String.IsNullOrEmpty(synapseDetail.SynpaseBankName))
-                            {
-                                synapseDetail.SynpaseBankName =
-                                    CommonHelper.GetDecryptedData(synapseDetail.SynpaseBankName);
-
-                            }
+                            synapseDetail.SynapseBankName = synapseDetailFromDb.bank_name != null
+                                ? CommonHelper.GetDecryptedData(synapseDetailFromDb.bank_name) : "Not Found";
                         }
                         mdc.SynapseDetails = synapseDetail;
                     }
-                    // Get the three recent  Ip address of member
+
+
+                    // Get the 3 most recent IP Addresses for this user
                     mdc.MemberIpAddr = (from memIpADD in obj.MembersIPAddresses
                                         join mem in obj.Members on
                                             memIpADD.MemberId equals mem.MemberId
@@ -665,10 +672,11 @@ namespace noochAdminNew.Controllers
                                             IpAddress = memIpADD.Ip,
                                             Date = (DateTime)memIpADD.ModifiedOn
                                         }
-                                          ).OrderByDescending(r => r.Date).Take(3).ToList(); 
+                                          ).OrderByDescending(r => r.Date).Take(3).ToList();
 
 
-                    // getting members referred
+                    #region Get any members referred by this user
+
                     if (Member.InviteCodeId != null)
                     {
                         Guid g = Utility.ConvertToGuid(Member.InviteCodeId.ToString());
@@ -689,12 +697,24 @@ namespace noochAdminNew.Controllers
 
                         mdc.Referrals = memreferred;
                     }
+                    #endregion Get any members referred by this user
+
                 }
             }
             return View(mdc);
         }
 
-        // to update member details
+        /// <summary>
+        /// Updates a member's Nooch account details.
+        /// </summary>
+        /// <param name="contactno"></param>
+        /// <param name="streetaddress"></param>
+        /// <param name="city"></param>
+        /// <param name="secondaryemail"></param>
+        /// <param name="recoveryemail"></param>
+        /// <param name="noochid"></param>
+        /// <param name="state"></param>
+        /// <param name="zip"></param>
         [HttpPost]
         [ActionName("EditMemberDetails")]
         public ActionResult EditMemberDetails(string contactno, string streetaddress, string city, string secondaryemail, string recoveryemail, string noochid, string state, string zip)
@@ -772,6 +792,7 @@ namespace noochAdminNew.Controllers
             return Json(re);
         }
 
+
         public string GetRandomPinNumber()
         {
             const string chars = "0123456789";
@@ -784,11 +805,12 @@ namespace noochAdminNew.Controllers
             return randomId;
         }
 
+
         [HttpPost]
         [ActionName("ResetPin")]
         public ActionResult ResetPin(string noochId)
         {
-            Logger.Info("NoochNewAdmin - ResetPin[ noochId:" + noochId + "].");
+            Logger.Info("NoochNewAdmin - ResetPin [noochId:" + noochId + "]");
 
             LoginResult lr = new LoginResult();
 
@@ -887,7 +909,7 @@ namespace noochAdminNew.Controllers
                     if (bank.Status == "Verified")
                     {
                         lr.IsSuccess = false;
-                        lr.Message = "Bank account already verified."; 
+                        lr.Message = "Bank account already verified.";
                     }
                     else
                     {
@@ -899,7 +921,7 @@ namespace noochAdminNew.Controllers
                         if (result > 0)
                         {
                             lr.IsSuccess = true;
-                            lr.Message = "Bank account verified successfully."; 
+                            lr.Message = "Bank account verified successfully.";
                         }
                         else
                         {
