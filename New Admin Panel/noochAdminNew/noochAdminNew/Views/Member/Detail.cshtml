@@ -278,7 +278,7 @@
         <div class="tabs-container">
 
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-fw fa-user m-r-sm"></i> Proifle Info</a></li>
+                <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-fw fa-user m-r-sm"></i> Profile Info</a></li>
                 <li class=""><a data-toggle="tab" href="#tab-2"><i class="fa fa-fw fa-bank m-r-sm"></i> Banks</a></li>
                 <li class=""><a data-toggle="tab" href="#tab-3"><i class="fa fa-fw fa-wrench m-r-sm"></i> Admin Actions</a></li>
                 <li class=""><a data-toggle="tab" href="#tab-4"><i class="fa fa-fw fa-exchange m-r-sm"></i> Recent Transactions</a></li>
@@ -300,7 +300,7 @@
                                         <form class="form-horizontal" method="get">
 
                                             <div class="row">
-                                                <div class="col-lg-6">
+                                                <div class="col-md-6">
                                                     <div class="form-group">
                                                         <span class="col-xs-3 col-sm-4 control-label">
                                                             <b>Contact Number</b>
@@ -324,7 +324,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-lg-6">
+                                                <div class="col-md-6">
                                                     <div class="form-group">
                                                         <span class="col-xs-3 col-sm-4 control-label">
                                                             <b>Primary Email</b>
@@ -350,7 +350,7 @@
                                             </div>
 
                                             <div class="row">
-                                                <div class="col-lg-6">
+                                                <div class="col-md-6">
                                                     <div class="form-group">
                                                         <span class="col-xs-3 col-sm-4 control-label">
                                                             <b>Street Address</b>
@@ -364,7 +364,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-lg-6">
+                                                <div class="col-md-6">
                                                     <div class="form-group">
                                                         <span class="col-xs-3 col-sm-4 control-label">
                                                             <b>Secondary Email</b>
@@ -387,7 +387,7 @@
                                             </div>
 
                                             <div class="row">
-                                                <div class="col-lg-6">
+                                                <div class="col-md-6">
                                                     <div class="form-group">
                                                         <span class="col-xs-3 col-sm-4 control-label">
                                                             <b>City</b>
@@ -401,7 +401,7 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="col-lg-6">
+                                                <div class="col-md-6">
                                                     <div class="form-group">
                                                         <span class="col-xs-3 col-sm-4 control-label">
                                                             <b>Recovery Email</b>
@@ -418,7 +418,7 @@
 
                                             <div class="row">
 
-                                                <div class="col-lg-6">
+                                                <div class="col-md-6">
                                                     <div class="form-group">
                                                         <span class="col-xs-3 col-sm-4 control-label">
                                                             <b>State</b>
@@ -432,6 +432,42 @@
                                                                     <span class="input-group-addon">ZIP</span>
                                                                     <input type="text" value="@mdc.Zipcode" class="form-control" id="zipcodeinput" data-mask="99999">
                                                                 </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <span class="col-xs-3 col-sm-4 control-label">
+                                                            <b>Date of Birth</b>
+                                                        </span>
+                                                        <div class="col-xs-9 col-sm-8">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-fw fa-calendar"></i></span>
+                                                                <input type="text" value="@mdc.dob" class="form-control" id="dobinput" data-mask="99/99/9999">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <span class="col-xs-3 col-sm-4 control-label">
+                                                            <b>SSN </b><small>Last 4</small>
+                                                        </span>
+                                                        <div class="col-xs-9 col-sm-8">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-fw fa-calendar"></i></span>
+                                                                <input type="text" value="@mdc.ssn" class="form-control" id="ssninput" data-mask="9999">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -483,17 +519,20 @@
 
                                                                     @if (synpsDetail.SynapseBankStatus == "Verified")
                                                                     {
-                                                                        <p class="text-success" style="display: inline-block"> @synpsDetail.SynapseBankStatus   </p>
-                                                                        <p><small>Verified: @synpsDetail.SynpaseBankVerifiedOn  </small></p>
+                                                                        <p>
+                                                                            <span class="text-success" style="display: inline-block"> @synpsDetail.SynapseBankStatus </span>
+                                                                            <button type="button" class="btn btn-link" onclick="Member.unVerifyBankAccount(); "><i class="fa fa-close text-danger"></i>Un-Verify</button>
+                                                                        </p>
+                                                                        <p><small>Verified On:&nbsp; @synpsDetail.SynpaseBankVerifiedOn  </small></p>
                                                                     }
                                                                     else
                                                                     {
                                                                         <p>
-                                                                            <span class="text-danger" style="display: inline-block"> @synpsDetail.SynapseBankStatus   </span>
-                                                                            <input type="hidden" id="bnkIdHidden" value="@synpsDetail.BankId" />
+                                                                            <span class="text-danger" style="display: inline-block"> @synpsDetail.SynapseBankStatus </span>
                                                                             <button type="button" class="btn btn-link" onclick="Member.VerifyBankAccount(); "><i class="fa fa-check"></i>Verify</button>
                                                                         </p>
                                                                     }
+                                                                    <input type="hidden" id="bnkIdHidden" value="@synpsDetail.BankId" />
                                                                 </div>
                                                             }
                                                             else
@@ -532,8 +571,8 @@
                                                             </span>
                                                             <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
                                                                 <p class="f-600">@synpsDetail.nameFromSynapseBank </p>
-                                                                <p><i class="fa fa-envelope m-r-sm"></i> @synpsDetail.emailFromSynapseBank </p>
-                                                                <p><i class="fa fa-mobile-phone m-r-sm"></i> @synpsDetail.phoneFromSynapseBank </p>
+                                                                <p><i class="fa fa-envelope m-r-sm f-13"></i> @synpsDetail.emailFromSynapseBank </p>
+                                                                <p><i class="fa fa-mobile-phone m-r-sm f-19"></i> @synpsDetail.phoneFromSynapseBank </p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -544,7 +583,7 @@
                                                                 <b>Added On</b>
                                                             </span>
                                                             <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p class="f-500"> @synpsDetail.SynpaseBankAddedOn</p>
+                                                                <p> @synpsDetail.SynpaseBankAddedOn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -559,7 +598,26 @@
                                                                 <b>Bank ID</b>
                                                             </span>
                                                             <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p class="f-500"> @synpsDetail.synapseBankId</p>
+                                                                <p> @synpsDetail.synapseBankId</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
+                                                                <b>ID Doc</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
+                                                                @if (mdc.idDocUrl != null)
+                                                                {
+                                                                    <img src="@mdc.idDocUrl" class="idDocImg"/>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <p>No doc submitted</p>
+                                                                }
+                                                                <p> @synpsDetail.SynpaseBankAddedOn</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -573,7 +631,7 @@
                             </div>
 
                             <!-- OLD KNOX BANK INFO -->
-                            <div class="col-sm-12">
+                            <div class="col-sm-12 m-t-sm">
                                 <div class="ibox">
                                     <div class="ibox-title">
                                         <h5>Knox Details</h5>
@@ -651,7 +709,7 @@
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <div class="form-group">
-                                                            <span class="col-xs-4 control-label">
+                                                            <span class="col-xs-4 col-lg-3 control-label">
                                                                 <b>Change Member Status</b>
                                                             </span>
                                                             <div class="col-xs-5 col-sm-4 form-control-static">
@@ -683,9 +741,8 @@
                                                                 </p>
                                                             </div>
 
-                                                            <div class="col-xs-3 form-control-static">
+                                                            <div class="col-xs-3 col-lg-2 form-control-static">
                                                                 <a href="#" id="DeleteUser" class="btn btn-sm btn-default  btn-danger">Delete User</a>
-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -694,10 +751,10 @@
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <div class="form-group">
-                                                            <span class="col-xs-4 control-label">
+                                                            <span class="col-xs-4 col-lg-3 control-label">
                                                                 <b>SDN Status</b>
                                                             </span>
-                                                            <div class="col-xs-8 form-control-static">
+                                                            <div class="col-xs-8 col-lg-9 form-control-static">
                                                                 <a href="#" id="MarkSDNSafeUser" class="btn btn-sm btn-default" onclick=" Member.ApplyChoosenOperation(2) ">Mark SDN Safe</a>
                                                             </div>
 
@@ -708,10 +765,10 @@
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <div class="form-group">
-                                                            <span class="col-xs-4 control-label">
+                                                            <span class="col-xs-4 col-lg-3 control-label">
                                                                 <b>PIN</b>
                                                             </span>
-                                                            <div class="col-xs-8 form-control-static">
+                                                            <div class="col-xs-8 col-lg-9 form-control-static">
                                                                 <p style="margin-bottom: 0; max-width: 116px;">
                                                                     <span class="text-navy font-bold" id="pinNumber">@mdc.PinNumber</span>
                                                                     <button type="button" class="btn btn-link btn-xs pull-right" onclick="Member.ResetPin();">Reset PIN</button>
@@ -725,11 +782,19 @@
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <div class="form-group">
-                                                            <span class="col-xs-4 control-label">
-                                                                <b>Add Note</b>
+                                                            <span class="col-xs-4 col-lg-3 control-label">
+                                                                <b>Admin Note</b>
                                                             </span>
-                                                            <div class="col-xs-8 form-control-static">
-                                                                <a href="#" class="btn btn-sm btn-default" onclick="Member.OpenPopupForAdminNote();">Add Note</a>
+                                                            <div class="col-xs-8 col-lg-9 form-control-static">
+                                                                @if (mdc.adminNote != null)
+                                                                {
+                                                                    <p>@mdc.adminNote</p>
+                                                                    <a href="#" class="btn btn-sm btn-default" onclick="Member.OpenPopupForAdminNote();">Edit Note</a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <a href="#" class="btn btn-sm btn-default" onclick="Member.OpenPopupForAdminNote();">Add Note</a>
+                                                                }
                                                             </div>
                                                         </div>
                                                     </div>

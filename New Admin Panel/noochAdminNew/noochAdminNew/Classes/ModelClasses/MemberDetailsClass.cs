@@ -20,6 +20,9 @@ namespace noochAdminNew.Classes.ModelClasses
         public string ContactNumber { get; set; }
         public string Status { get; set; }
         public string ImageURL { get; set; }
+        public string dob { get; set; }
+        public string ssn { get; set; }
+        public string idDocUrl { get; set; }
 
         public string FBID { get; set; }
 
@@ -39,6 +42,8 @@ namespace noochAdminNew.Classes.ModelClasses
         public string State { get; set; }
         public string Zipcode { get; set; }
         public string Country { get; set; }
+
+        public string adminNote { get; set; }
 
         public List<MemberDetailsTrans> Transactions { get; set; }
 

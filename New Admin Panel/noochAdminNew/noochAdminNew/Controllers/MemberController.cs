@@ -501,7 +501,7 @@ namespace noochAdminNew.Controllers
                     mdc.UserName = CommonHelper.GetDecryptedData(Member.UserName);
                     mdc.SecondaryEmail = Member.SecondaryEmail;
                     mdc.RecoveryEmail = CommonHelper.GetDecryptedData(Member.RecoveryEmail);
-                    mdc.ContactNumber = Member.ContactNumber;
+                    mdc.ContactNumber = CommonHelper.FormatPhoneNumber(Member.ContactNumber);
                     mdc.ImageURL = Member.Photo;
                     mdc.Address = CommonHelper.GetDecryptedData(Member.Address);
                     mdc.City = CommonHelper.GetDecryptedData(Member.City);
@@ -511,6 +511,11 @@ namespace noochAdminNew.Controllers
                     mdc.PinNumber = CommonHelper.GetDecryptedData(Member.PinNumber);
                     mdc.IsPhoneVerified = Member.IsVerifiedPhone ?? false;
                     mdc.Nooch_ID = NoochId;
+                    mdc.dob = Convert.ToDateTime(Member.DateOfBirth).ToString();
+                    mdc.ssn = CommonHelper.GetDecryptedData(Member.SSN);
+                    mdc.idDocUrl = Member.VerificationDocumentPath;
+                    mdc.adminNote = Member.AdminNotes;
+
                     //Get the Refered Code Used
                     mdc.ReferCodeUsed = (from Membr in obj.Members join Code in obj.InviteCodes on Membr.InviteCodeIdUsed equals Code.InviteCodeId where Membr.Nooch_ID == NoochId select Code.code).SingleOrDefault();
 
@@ -649,7 +654,7 @@ namespace noochAdminNew.Controllers
                             synapseDetail.SynapseBankNickName = CommonHelper.GetDecryptedData(synapseDetailFromDb.nickname);
                             synapseDetail.nameFromSynapseBank = CommonHelper.GetDecryptedData(synapseDetailFromDb.name_on_account);
                             synapseDetail.emailFromSynapseBank = synapseDetailFromDb.email;
-                            synapseDetail.phoneFromSynapseBank = synapseDetailFromDb.phone_number;
+                            synapseDetail.phoneFromSynapseBank = CommonHelper.FormatPhoneNumber(synapseDetailFromDb.phone_number);
                             synapseDetail.SynpaseBankAddedOn = synapseDetailFromDb.AddedOn != null
                                 ? Convert.ToDateTime(synapseDetailFromDb.AddedOn).ToString("MMM dd, yyyy") : "";
                             synapseDetail.SynpaseBankVerifiedOn = synapseDetailFromDb.VerifiedOn != null
@@ -665,14 +670,14 @@ namespace noochAdminNew.Controllers
                     // Get the 3 most recent IP Addresses for this user
                     mdc.MemberIpAddr = (from memIpADD in obj.MembersIPAddresses
                                         join mem in obj.Members on
-                                            memIpADD.MemberId equals mem.MemberId
+                                             memIpADD.MemberId equals mem.MemberId
                                         where mem.Nooch_ID == NoochId
                                         select new MemberIpAddrreses
                                         {
                                             IpAddress = memIpADD.Ip,
                                             Date = (DateTime)memIpADD.ModifiedOn
                                         }
-                                          ).OrderByDescending(r => r.Date).Take(3).ToList();
+                                          ).OrderByDescending(r => r.Date).Take(5).ToList();
 
 
                     #region Get any members referred by this user
@@ -727,7 +732,7 @@ namespace noochAdminNew.Controllers
             }
             else
             {
-                // getting member from db
+                // Get member from DB
                 using (NOOCHEntities obj = new NOOCHEntities())
                 {
                     var member =
@@ -810,7 +815,7 @@ namespace noochAdminNew.Controllers
         [ActionName("ResetPin")]
         public ActionResult ResetPin(string noochId)
         {
-            Logger.Info("NoochNewAdmin - ResetPin [noochId:" + noochId + "]");
+            Logger.Info("Admin Dash -> ResetPin - [noochId:" + noochId + "]");
 
             LoginResult lr = new LoginResult();
 
@@ -891,21 +896,20 @@ namespace noochAdminNew.Controllers
         [ActionName("VerifyAccount")]
         public ActionResult VerifyAccount(string accountId)
         {
-            Logger.Info("NoochNewAdmin - VerifyAccount [Synapse Bank ID: " + accountId + "]");
+            Logger.Info("Admin Dash -> VerifyAccount - [Synapse Bank ID: " + accountId + "]");
 
             LoginResult lr = new LoginResult();
             int bnkid = Convert.ToInt16(accountId);
 
             using (var noochConnection = new NOOCHEntities())
             {
-                // Get Bank from DB
-                var bank =
-                    (from c in noochConnection.SynapseBanksOfMembers where c.Id == bnkid select c)
-                        .SingleOrDefault();
+                // Get Synapse Bank info from DB
+                var bank = (from c in noochConnection.SynapseBanksOfMembers 
+                            where c.Id == bnkid select c)
+                            .SingleOrDefault();
 
                 if (bank != null)
                 {
-                    #region if Bank found
                     if (bank.Status == "Verified")
                     {
                         lr.IsSuccess = false;
@@ -930,7 +934,59 @@ namespace noochAdminNew.Controllers
                         }
                     }
 
-                    #endregion
+                }
+
+                else
+                {
+                    lr.IsSuccess = false;
+                    lr.Message = "Bank account not found";
+                }
+            }
+            return Json(lr);
+        }
+
+
+        [HttpPost]
+        [ActionName("UnVerifyAccount")]
+        public ActionResult UnVerifyAccount(string accountId)
+        {
+            Logger.Info("Admin Dash -> UnVerifyAccount - [Synapse Bank ID: " + accountId + "]");
+
+            LoginResult lr = new LoginResult();
+            int bnkid = Convert.ToInt16(accountId);
+
+            using (var noochConnection = new NOOCHEntities())
+            {
+                // Get Synapse Bank info from DB
+                var bank = (from c in noochConnection.SynapseBanksOfMembers
+                            where c.Id == bnkid
+                            select c)
+                            .SingleOrDefault();
+
+                if (bank != null)
+                {
+                    if (bank.Status != "Verified")
+                    {
+                        lr.IsSuccess = false;
+                        lr.Message = "Bank account not yet verified.";
+                    }
+                    else
+                    {
+                        bank.Status = "Pending Review";
+
+                        int result = noochConnection.SaveChanges();
+
+                        if (result > 0)
+                        {
+                            lr.IsSuccess = true;
+                            lr.Message = "Bank account un-verified successfully.";
+                        }
+                        else
+                        {
+                            lr.IsSuccess = false;
+                            lr.Message = "Error occuerred on server, please retry.";
+                        }
+                    }
                 }
 
                 else
@@ -948,6 +1004,7 @@ namespace noochAdminNew.Controllers
         public ActionResult AdminNoteAboutUserModalPopup(string noochId)
         {
             AdminNoteResult lr = new AdminNoteResult();
+
             try
             {
                 using (var noochConnection = new NOOCHEntities())
@@ -978,8 +1035,11 @@ namespace noochAdminNew.Controllers
             }
             catch (Exception ex)
             {
+                Logger.Info("Admin Dash -> AdminNoteAboutUserModalPopup FAILED - [Nooch_Id: " + noochId + "]. Exception: " + ex + "]");
+
                 lr.IsSuccess = false;
                 lr.Message = "Error";
+
                 return Json(lr);
             }
         }
@@ -1004,6 +1064,8 @@ namespace noochAdminNew.Controllers
 
             catch (Exception ex)
             {
+                Logger.Info("Admin Dash -> SaveAdminNoteForUser FAILED - [Nooch_Id: " + noochId + "]. Exception: " + ex + "]");
+
                 return "Fail";
             }
         }

@@ -14,7 +14,8 @@ $(document).ready(function () {
     NoochId = getParameterByName('NoochId');
 
     // Format the contact number if present
-    if ($("#contactNumber").val().length > 1) {
+    if ($("#contactNumber").val().length > 1)
+    {
         $("#contactNumber").val(function (i, text) {
             text = text.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
             return text;
@@ -26,7 +27,7 @@ $(document).ready(function () {
         var longi = $(this).attr('data-long');
         var locText = $(this).attr('data-locText');
 
-        console.log('LAT AND LONG: ' + lat + ", " + longi);
+        //console.log('LAT AND LONG: ' + lat + ", " + longi);
 
         var v = 'https://www.google.com/maps/embed/v1/place?q=' + lat + ',' + longi + '&center=' + lat + ',' + longi + '&key=AIzaSyDrUnX1gGpPL9fWmsWfhOxIDIy3t7YjcEY&zoom=12';
         $('#googleFrame').attr('src', v);
@@ -42,11 +43,12 @@ $('#DeleteUser').click(function () {
     $('#myModalConfirmDelete').modal('show');
 });
 
-var Member = function () {
-
-    function applyOperation(operation) {
-
-        if (NoochId == '') {
+var Member = function ()
+{
+    function applyOperation(operation)
+    {
+        if (NoochId == '')
+        {
             toastr.error('No NoochId was selected...', 'Error');
             return;
         }
@@ -57,19 +59,25 @@ var Member = function () {
         data.noochIds = NoochId;
         $.post(url, data, function (result) {
 
-            if (result.IsSuccess == true) {
+            if (result.IsSuccess == true)
+            {
                 console.log(result.Message);
                 console.log(result.MemberOperationsOuterClass);
 
                 // iterating through all innerclass objects
 
-                $.each(result.MemberOperationsOuterClass, function (key, value) {
-                    if (value.IsSuccess == true) {
+                $.each(result.MemberOperationsOuterClass, function (key, value)
+                {
+                    if (value.IsSuccess == true)
+                    {
                         toastr.success(value.Message, value.NoochId);
-                        if (operation == 4) {
+
+                        if (operation == 4)
+                        {
                             $("#memberStatus").html('Active');
                         }
-                        else if (operation == 5) {
+                        else if (operation == 5)
+                        {
                             window.location.replace("../Member/ListAll");
                             $('#myModalConfirmDelete').modal('hide');
                         }
@@ -79,7 +87,8 @@ var Member = function () {
                         toastr.error(value.Message, value.NoochId);
                     }
                 });
-                if (operation != 5) {
+                if (operation != 5)
+                {
                     location.reload(true);
                 }
 
@@ -92,8 +101,8 @@ var Member = function () {
     }
 
 
-    function editdetails() {
-
+    function editdetails()
+    {
         if (NoochId == '') {
             toastr.error('No NoochId was selected...', 'Error');
             return;
@@ -112,9 +121,12 @@ var Member = function () {
 
         console.log(data);
 
-        $.post(url, data, function (result) {
-            if (result.IsSuccess == true) {
-                toastr.success(result.Message, 'Succcess');
+        $.post(url, data, function (result)
+        {
+            if (result.IsSuccess == true)
+            {
+                toastr.info('Reloading this page...', 'FYI', { timeOut: '3500' })
+                toastr.success(result.Message, 'Success');
 
                 $("#contactNumber").val(result.contactnum);
                 $("#streetaddress").val(result.Address);
@@ -124,19 +136,20 @@ var Member = function () {
                 $("#stateinput").val(result.state);
                 $("#zipcodeinput").val(result.zip);
 
-                setTimeout(function () { location.reload(true) }, 2500);
+                setTimeout(function () { location.reload(true) }, 3500);
             }
-            else {
+            else
+            {
                 toastr.error(result.Message, 'Error');
             }
         });
     }
 
 
-    function restpin() {
-
+    function restpin()
+    {
         if (NoochId == '') {
-            alert('No nooch id selected');
+            toastr.error('No NoochId was selected...', 'Error');
             return;
         }
 
@@ -156,11 +169,12 @@ var Member = function () {
     }
 
 
-    // to manually verify added bank account
-    function verifyBankAccount() {
+    // Manually set bank account's status to 'Verified'
+    function verifyBankAccount()
+    {
         var accountId = $('#bnkIdHidden').val();
         if (accountId == '') {
-            alert('No bank id selected');
+            toastr.error('No bank account was selected...', 'Error');
             return;
         }
 
@@ -168,23 +182,56 @@ var Member = function () {
         var data = {};
         data.accountId = accountId;
 
-        $.post(url, data, function (result) {
-            if (result.IsSuccess == true) {
+        $.post(url, data, function (result)
+        {
+            if (result.IsSuccess == true)
+            {
                 toastr.success(result.Message, 'Succcess');
 
                 $('#bankAccountStatusDiv').html('');
                 $('#bankAccountStatusDiv').html("<span class='text-success' style='display: inline-block'>Verified</span>");
             }
-            else {
+            else
+            {
                 toastr.error(result.Message, 'Error');
             }
         });
     }
 
 
-    //Open ModalPopup 
-    function AdminNoteAboutUserModalPopup() {
+    // Manually set bank account's status to 'Pending Review'
+    function unVerifyBankAccount()
+    {
+        var accountId = $('#bnkIdHidden').val();
+        if (accountId == '') {
+            toastr.error('No bank account was selected...', 'Error');
+            return;
+        }
 
+        var url = "../Member/UnVerifyAccount";
+        var data = {};
+        data.accountId = accountId;
+
+        $.post(url, data, function (result)
+        {
+            if (result.IsSuccess == true)
+            {
+                toastr.success(result.Message, 'Succcess');
+
+                $('#bankAccountStatusDiv').html('');
+                $('#bankAccountStatusDiv').html("<span class='text-warning' style='display: inline-block'>Pending Review</span>");
+            }
+            else
+            {
+                toastr.error(result.Message, 'Error');
+            }
+        });
+    }
+
+
+    // Open AdminNotes Modal
+    function AdminNoteAboutUserModalPopup()
+    {
         if (NoochId == '') {
             toastr.error('No NoochId was selected...', 'Error');
             return;
@@ -206,8 +253,9 @@ var Member = function () {
     }
 
 
-    //Provide Info About the User In ModalPopup
-    function SaveAdminNoteForUser() {
+    // Provide Info About the User In ModalPopup
+    function SaveAdminNoteForUser()
+    {
         if (NoochId == '') {
             toastr.error('No NoochId was selected...', 'Error');
             return;
@@ -223,7 +271,7 @@ var Member = function () {
         data.AdminNote = $("#AmdinNotesAboutUser").val();
         $.post(url, data, function (result) {
             if (result == "Success") {
-                toastr.success(result.Message, 'Successfully Submitted');
+                toastr.success(result.Message, 'Admin Note edited successfully.');
                 $('#Modal-AdminNotes').modal('hide');
             }
             else {
@@ -231,9 +279,8 @@ var Member = function () {
                 $('#Modal-AdminNotes').modal('hide');
             }
         });
-
-        //location.reload(true);
     }
+
 
     return {
         ApplyChoosenOperation: applyOperation,
@@ -241,6 +288,7 @@ var Member = function () {
         ResetPin: restpin,
         OpenPopupForAdminNote: AdminNoteAboutUserModalPopup,
         AdminNoteForUser: SaveAdminNoteForUser,
-        VerifyBankAccount: verifyBankAccount
+        VerifyBankAccount: verifyBankAccount,
+        UnVerifyBankAccount: unVerifyBankAccount
     };
 }();

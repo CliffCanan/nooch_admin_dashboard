@@ -45,6 +45,7 @@ namespace noochAdminNew.Classes.Utility
             }
             catch (Exception ex)
             {
+                Logger.Info("Admin Dash -> GetDecryptedData FAILED - [Source Data: " + sourceData + "]. Exception: [" + ex + "]");
             }
             return string.Empty;
         }
@@ -52,21 +53,44 @@ namespace noochAdminNew.Classes.Utility
 
         public static MemberNotification GetMemberNotificationSettings(string memberId)
         {
-            Logger.Info("New Admin Panel - GetMemberNotificationSettings [ MemberId:" + memberId + ", Date:" + DateTime.Now + " ].");
             using (var noochConnection = new NOOCHEntities())
             {
-                
-
                 Guid memId = Utility.ConvertToGuid(memberId);
 
-                
                 var memberNotifications = (from c in noochConnection.MemberNotifications where c.MemberId==memId select c).SingleOrDefault();
-                
 
                 return memberNotifications;
             }
         }
 
-       
+        public static string FormatPhoneNumber(string sourcePhone)
+        {
+            if (String.IsNullOrEmpty(sourcePhone) || sourcePhone.ToString().Length != 10)
+            {
+                return sourcePhone;
+            }
+
+            sourcePhone = "(" + sourcePhone;
+            sourcePhone = sourcePhone.Insert(4, ")");
+            sourcePhone = sourcePhone.Insert(5, " ");
+            sourcePhone = sourcePhone.Insert(9, "-");
+
+            return sourcePhone;
+        }
+
+        public static string RemovePhoneNumberFormatting(string sourceNum)
+        {
+            if (!String.IsNullOrEmpty(sourceNum))
+            {
+                // removing extra stuff from phone number
+                sourceNum = sourceNum.Replace("(", "");
+                sourceNum = sourceNum.Replace(")", "");
+                sourceNum = sourceNum.Replace(" ", "");
+                sourceNum = sourceNum.Replace("-", "");
+                sourceNum = sourceNum.Replace("+", "");
+            }
+            return sourceNum;
+        }
+  
     }
 }
