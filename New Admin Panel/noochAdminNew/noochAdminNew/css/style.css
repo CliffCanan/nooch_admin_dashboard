@@ -3010,6 +3010,7 @@ body.body-small .footer.fixed {
 .table > tbody > tr > td,
 .table > tfoot > tr > td {
   border-top: 1px solid #e7eaec;
+  font-size:13px;
   line-height: 1.42857;
   text-align: center;
   vertical-align: middle;
@@ -3190,7 +3191,10 @@ small.stats-label {font-size: 12.2px;}
 }
 
 button.btn .fa {margin:0 8px 0 0;}
-
+.idDocImg {
+  width: 100%;
+  border-radius: 15px;
+}
 
 
 

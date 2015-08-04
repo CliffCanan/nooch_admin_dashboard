@@ -511,7 +511,7 @@ namespace noochAdminNew.Controllers
                     mdc.PinNumber = CommonHelper.GetDecryptedData(Member.PinNumber);
                     mdc.IsPhoneVerified = Member.IsVerifiedPhone ?? false;
                     mdc.Nooch_ID = NoochId;
-                    mdc.dob = Convert.ToDateTime(Member.DateOfBirth).ToString();
+                    mdc.dob = Convert.ToDateTime(Member.DateOfBirth).ToString("M/d/yyyy");
                     mdc.ssn = CommonHelper.GetDecryptedData(Member.SSN);
                     mdc.idDocUrl = Member.VerificationDocumentPath;
                     mdc.adminNote = Member.AdminNotes;
