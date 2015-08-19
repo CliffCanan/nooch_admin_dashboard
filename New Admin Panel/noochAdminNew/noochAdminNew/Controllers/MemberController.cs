@@ -20,6 +20,7 @@ namespace noochAdminNew.Controllers
         public ActionResult ApplyOperation(string operation, string noochIds)
         {
             MemberOperationsResult mr = new MemberOperationsResult();
+
             if (operation == "0")
             {
                 mr.IsSuccess = false;
@@ -128,7 +129,9 @@ namespace noochAdminNew.Controllers
                         {
                             var member = (from t in obj.Members where t.Nooch_ID == s && t.IsSDNSafe == null || t.IsSDNSafe == false select t).SingleOrDefault();
                             MemberOperationsInnerClass mic = new MemberOperationsInnerClass();
+                            
                             #region IfMemberNotNull
+                            
                             if (member != null)
                             {
                                 try
@@ -175,6 +178,7 @@ namespace noochAdminNew.Controllers
 
                 #endregion SDN Safe
 
+
                 #region verify phone
 
                 if (operation == "3")
@@ -213,7 +217,7 @@ namespace noochAdminNew.Controllers
                                     Logger.Error("VerifyPhone - Attempt to verify member phone failed [" + member.MemberId +
                                                            "]. Problem occured in setting status true. ");
 
-                                    mic.Message = "Member SDN mark safe Failed !! ";
+                                    mic.Message = "Verify Phone Failed unfortunately :-(";
                                     mic.NoochId = member.Nooch_ID;
                                     mic.IsSuccess = false;
                                     allinnerclass.Add(mic);
@@ -301,6 +305,7 @@ namespace noochAdminNew.Controllers
 
                 #endregion activate account - verify email
 
+
                 #region Delete User
 
                 if (operation == "5")
@@ -369,6 +374,7 @@ namespace noochAdminNew.Controllers
             {
                 mr.IsSuccess = false;
                 mr.Message = "Error";
+
                 return Json(mr);
             }
         }
