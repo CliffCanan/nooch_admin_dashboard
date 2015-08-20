@@ -3010,6 +3010,7 @@ body.body-small .footer.fixed {
 .table > tbody > tr > td,
 .table > tfoot > tr > td {
   border-top: 1px solid #e7eaec;
+  font-size:13px;
   line-height: 1.42857;
   text-align: center;
   vertical-align: middle;
@@ -3122,6 +3123,28 @@ img.circle-border {
 .f-600 {font-weight:600;}
 .f-700 {font-weight:700;}
 
+.f-10 {font-size:10px !important}
+.f-11 {font-size:11px !important}
+.f-12 {font-size:12px !important}
+.f-13 {font-size:13px !important}
+.f-14 {font-size:14px !important}
+.f-15 {font-size:15px !important}
+.f-16 {font-size:16px !important}
+.f-17 {font-size:17px !important}
+.f-18 {font-size:18px !important}
+.f-19 {font-size:19px !important}
+.f-20 {font-size:20px !important}
+.f-21 {font-size:21px !important}
+.f-22 {font-size:22px !important}
+.f-23 {font-size:23px !important}
+.f-24 {font-size:24px !important}
+.f-25 {font-size:25px !important}
+.f-26 {font-size:26px !important}
+.f-27 {font-size:27px !important}
+.f-28 {font-size:28px !important}
+.f-29 {font-size:29px !important}
+.f-30 {font-size:30px !important}
+
 .ibox-title img {
   display:inline;
   max-height:35px;
@@ -3168,7 +3191,10 @@ small.stats-label {font-size: 12.2px;}
 }
 
 button.btn .fa {margin:0 8px 0 0;}
-
+.idDocImg {
+  width: 100%;
+  border-radius: 15px;
+}
 
 
 
