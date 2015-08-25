@@ -1014,7 +1014,7 @@ namespace noochAdminNew.Controllers
                                 var noochMember = (from c in noochConnection.Members
                                             where c.MemberId.Equals(memberId) && c.IsDeleted == false
                                             select c)
-                                            .SingleOrDefault();
+                                            .FirstOrDefault();
 
                                 if (noochMember != null)
                                 {
