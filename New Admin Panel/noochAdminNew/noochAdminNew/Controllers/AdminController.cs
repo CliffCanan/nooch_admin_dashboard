@@ -25,6 +25,7 @@ namespace noochAdminNew.Controllers
 
         public void CheckSession()
         {
+
             if (Session["UserId"] == null)
             {
                 RedirectToAction("Index", "Home");
