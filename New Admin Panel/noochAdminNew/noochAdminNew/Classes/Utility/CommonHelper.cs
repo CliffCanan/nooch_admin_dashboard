@@ -20,13 +20,13 @@ namespace noochAdminNew.Classes.Utility
             }
             catch (Exception ex)
             {
-
+                Logger.Info("Admin Dash -> GetEncryptedData FAILED - [Source Data: " + sourceData + "]. Exception: [" + ex + "]");
             }
             return string.Empty;
         }
+
         public static string UppercaseFirst(string s)
         {
-            // Check for empty string.
             if (string.IsNullOrEmpty(s))
             {
                 return string.Empty;
@@ -37,19 +37,21 @@ namespace noochAdminNew.Classes.Utility
 
         public static string GetDecryptedData(string sourceData)
         {
-            try
+            if (!String.IsNullOrEmpty(sourceData))
             {
-                var aesAlgorithm = new AES();
-                string decryptedData = aesAlgorithm.Decrypt(sourceData.Replace(" ", "+"), string.Empty);
-                return decryptedData;
-            }
-            catch (Exception ex)
-            {
-                Logger.Info("Admin Dash -> GetDecryptedData FAILED - [Source Data: " + sourceData + "]. Exception: [" + ex + "]");
+                try
+                {
+                    var aesAlgorithm = new AES();
+                    string decryptedData = aesAlgorithm.Decrypt(sourceData.Replace(" ", "+"), string.Empty);
+                    return decryptedData;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Info("Admin Dash -> GetDecryptedData FAILED - [Source Data: " + sourceData + "]. Exception: [" + ex + "]");
+                }
             }
             return string.Empty;
         }
-
 
         public static MemberNotification GetMemberNotificationSettings(string memberId)
         {

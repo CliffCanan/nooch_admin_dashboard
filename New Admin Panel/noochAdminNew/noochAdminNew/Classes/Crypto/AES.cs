@@ -121,8 +121,8 @@ namespace noochAdminNew.Classes.Crypto
             }
             catch (Exception a)
             {
-                Logger.Error("Exception occured on decryption" + a.Message);
-                Logger.Error("Stack trace" + a.StackTrace);
+                Logger.Error("Exception occured on decryption: " + a.Message);
+                Logger.Error("Stack trace: " + a.StackTrace);
                 throw a;
             }
         }

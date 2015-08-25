@@ -67,6 +67,7 @@ namespace noochAdminNew.Controllers
                                 member.DateModified = DateTime.Now;
                                 member.ModifiedBy = Utility.ConvertToGuid(Session["UserId"].ToString());
                                 obj.SaveChanges();
+
                                 // sending email to member
                                 var fromAddress = Utility.GetValueFromConfig("adminMail");
                                 string emailAddress = CommonHelper.GetDecryptedData(member.UserName);
@@ -78,10 +79,12 @@ namespace noochAdminNew.Controllers
 
                                 try
                                 {
-                                    Logger.Info("Admin Dash -> MemberController - SupendMember email sent to: [" + emailAddress + "]; Member [memberId:" +
-                                                member.MemberId + "].");
                                     Utility.SendEmail("userSuspended", fromAddress, emailAddress,
                                         "Your Nooch account has been suspended", null, tokens, null, null, null);
+
+                                    Logger.Info("Admin Dash -> MemberController - SupendMember email sent to: [" + emailAddress + "]; Member [memberId:" +
+                                                member.MemberId + "]");
+
                                     mic.Message = "Member Suspended Successfully";
                                     mic.NoochId = member.Nooch_ID;
                                     mic.IsSuccess = true;
@@ -430,9 +433,9 @@ namespace noochAdminNew.Controllers
 
                     MembersListDataClass mdc = new MembersListDataClass();
                     mdc.Nooch_ID = m.Nooch_ID;
-                    mdc.FirstName = CommonHelper.GetDecryptedData(m.FirstName);
-                    mdc.LastName = CommonHelper.GetDecryptedData(m.LastName);
-                    mdc.UserName = CommonHelper.GetDecryptedData(m.UserName);
+                    mdc.FirstName = !String.IsNullOrEmpty(m.FirstName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(m.FirstName)) : "";
+                    mdc.LastName = !String.IsNullOrEmpty(m.LastName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(m.LastName)) : "";
+                    mdc.UserName = !String.IsNullOrEmpty(m.UserName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(m.UserName)) : "";
 
                     if (m.ContactNumber != null)
                     {
@@ -456,7 +459,7 @@ namespace noochAdminNew.Controllers
                     mdc.Status = m.Status;
                     mdc.IsDeleted = m.IsDeleted ?? false;
                     mdc.IsVerifiedPhone = m.IsVerifiedPhone ?? false;
-                    mdc.City = CommonHelper.GetDecryptedData(m.City);
+                    mdc.City = !String.IsNullOrEmpty(m.City) ? CommonHelper.GetDecryptedData(m.City) : "";
 
                     mdc.TotalAmountSent = mdc.TotalAmountSent != "0" ? Convert.ToDecimal(String.Format("{0:0.00}", Convert.ToDecimal(totalAmount))).ToString() : "0";
                     mdc.DateCreated = Convert.ToDateTime(m.DateCreated);
@@ -494,31 +497,24 @@ namespace noochAdminNew.Controllers
                 {
                     mdc.DateCreated = Convert.ToDateTime(Member.DateCreated);
                     mdc.DateCreatedFormatted = String.Format("{0: MMMM d, yyyy}", Member.DateCreated);
-
-                    if (Member.FacebookAccountLogin != null)
-                    {
-                        if (!String.IsNullOrEmpty(CommonHelper.GetDecryptedData(Member.FacebookAccountLogin.ToString())))
-                        {
-                            mdc.FBID = CommonHelper.GetDecryptedData(Member.FacebookAccountLogin);
-                        }
-                    }
-                    mdc.FirstName = CommonHelper.GetDecryptedData(Member.FirstName).ToUpper();
-                    mdc.LastName = CommonHelper.GetDecryptedData(Member.LastName).ToUpper();
-                    mdc.UserName = CommonHelper.GetDecryptedData(Member.UserName);
+                    mdc.FBID = !String.IsNullOrEmpty(Member.FacebookAccountLogin) ? CommonHelper.GetDecryptedData(Member.FacebookAccountLogin) : "";
+                    mdc.FirstName = !String.IsNullOrEmpty(Member.FirstName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.FirstName)) : "";
+                    mdc.LastName = !String.IsNullOrEmpty(Member.LastName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.LastName)) : "";
+                    mdc.UserName = !String.IsNullOrEmpty(Member.UserName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.UserName)) : "";
                     mdc.SecondaryEmail = Member.SecondaryEmail;
-                    mdc.RecoveryEmail = CommonHelper.GetDecryptedData(Member.RecoveryEmail);
-                    mdc.ContactNumber = CommonHelper.FormatPhoneNumber(Member.ContactNumber);
+                    mdc.RecoveryEmail = !String.IsNullOrEmpty(Member.RecoveryEmail) ? CommonHelper.GetDecryptedData(Member.RecoveryEmail) : "";
+                    mdc.ContactNumber = !String.IsNullOrEmpty(Member.ContactNumber) ? CommonHelper.FormatPhoneNumber(Member.ContactNumber) : "";
                     mdc.ImageURL = Member.Photo;
-                    mdc.Address = CommonHelper.GetDecryptedData(Member.Address);
-                    mdc.City = CommonHelper.GetDecryptedData(Member.City);
-                    mdc.State = CommonHelper.GetDecryptedData(Member.State);
-                    mdc.Zipcode = CommonHelper.GetDecryptedData(Member.Zipcode);
+                    mdc.Address = !String.IsNullOrEmpty(Member.Address) ? CommonHelper.GetDecryptedData(Member.Address) : "";
+                    mdc.City = !String.IsNullOrEmpty(Member.City) ? CommonHelper.GetDecryptedData(Member.City) : "";
+                    mdc.State = !String.IsNullOrEmpty(Member.State) ? CommonHelper.GetDecryptedData(Member.State) : "";
+                    mdc.Zipcode = !String.IsNullOrEmpty(Member.Zipcode) ? CommonHelper.GetDecryptedData(Member.Zipcode) : "";
                     mdc.Status = Member.Status;
-                    mdc.PinNumber = CommonHelper.GetDecryptedData(Member.PinNumber);
+                    mdc.PinNumber = !String.IsNullOrEmpty(Member.PinNumber) ? CommonHelper.GetDecryptedData(Member.PinNumber) : "";
                     mdc.IsPhoneVerified = Member.IsVerifiedPhone ?? false;
                     mdc.Nooch_ID = NoochId;
                     mdc.dob = Convert.ToDateTime(Member.DateOfBirth).ToString("M/d/yyyy");
-                    mdc.ssn = CommonHelper.GetDecryptedData(Member.SSN);
+                    mdc.ssn = !String.IsNullOrEmpty(Member.SSN) ? CommonHelper.GetDecryptedData(Member.SSN) : "";
                     mdc.idDocUrl = Member.VerificationDocumentPath;
                     mdc.adminNote = Member.AdminNotes;
 
@@ -657,17 +653,16 @@ namespace noochAdminNew.Controllers
                             synapseDetail.BankId = synapseDetailFromDb.Id; // This is the Nooch DB "ID", which is just the row number of the account... NOT the same as the Synapse Bank ID
                             synapseDetail.SynapseBankStatus = (string.IsNullOrEmpty(synapseDetailFromDb.Status)
                                 ? "Not Verified" : synapseDetailFromDb.Status);
-                            synapseDetail.SynapseBankNickName = CommonHelper.GetDecryptedData(synapseDetailFromDb.nickname);
-                            synapseDetail.nameFromSynapseBank = CommonHelper.GetDecryptedData(synapseDetailFromDb.name_on_account);
-                            synapseDetail.emailFromSynapseBank = synapseDetailFromDb.email;
-                            synapseDetail.phoneFromSynapseBank = CommonHelper.FormatPhoneNumber(synapseDetailFromDb.phone_number);
+                            synapseDetail.SynapseBankNickName = !String.IsNullOrEmpty(synapseDetailFromDb.nickname) ? CommonHelper.GetDecryptedData(synapseDetailFromDb.nickname) : "";
+                            synapseDetail.nameFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.name_on_account) ? CommonHelper.GetDecryptedData(synapseDetailFromDb.name_on_account) : " No Name Returned";
+                            synapseDetail.emailFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.email) ? synapseDetailFromDb.email : "No Email Returned";
+                            synapseDetail.phoneFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.phone_number) ? CommonHelper.FormatPhoneNumber(synapseDetailFromDb.phone_number) : "No Phone Returned";
                             synapseDetail.SynpaseBankAddedOn = synapseDetailFromDb.AddedOn != null
                                 ? Convert.ToDateTime(synapseDetailFromDb.AddedOn).ToString("MMM dd, yyyy") : "";
                             synapseDetail.SynpaseBankVerifiedOn = synapseDetailFromDb.VerifiedOn != null
                                 ? Convert.ToDateTime(synapseDetailFromDb.VerifiedOn).ToString("MMM dd, yyyy") : "";
 
-                            synapseDetail.SynapseBankName = synapseDetailFromDb.bank_name != null
-                                ? CommonHelper.GetDecryptedData(synapseDetailFromDb.bank_name) : "Not Found";
+                            synapseDetail.SynapseBankName = !String.IsNullOrEmpty(synapseDetailFromDb.bank_name) ? CommonHelper.GetDecryptedData(synapseDetailFromDb.bank_name) : "Not Found";
                         }
                         mdc.SynapseDetails = synapseDetail;
                     }
@@ -932,16 +927,134 @@ namespace noochAdminNew.Controllers
                         {
                             lr.IsSuccess = true;
                             lr.Message = "Bank account verified successfully.";
+
+                            try
+                            {
+                                var memberId = bank.MemberId;
+                                var BankName = CommonHelper.GetDecryptedData(bank.bank_name);
+                                var bankNickName = CommonHelper.GetDecryptedData(bank.nickname);
+
+                                #region Set Bank Logo URL Variable
+
+                                string appPath = "https://www.noochme.com/noochweb/";
+                                var bankLogoUrl = "";
+
+                                switch (BankName)
+                                {
+                                    case "Ally":
+                                        {
+                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/ally.png");
+                                        }
+                                        break;
+                                    case "Bank of America":
+                                        {
+                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/bankofamerica.png");
+                                        }
+                                        break;
+                                    case "Wells Fargo":
+                                        {
+                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/WellsFargo.png");
+                                        }
+                                        break;
+                                    case "Chase":
+                                        {
+                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/chase.png");
+                                        }
+                                        break;
+                                    case "Citibank":
+                                        {
+                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/citibank.png");
+                                        }
+                                        break;
+                                    case "TD Bank":
+                                        {
+                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/td.png");
+                                        }
+                                        break;
+                                    case "Capital One 360":
+                                        {
+                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/capone360.png");
+                                        }
+                                        break;
+                                    case "US Bank":
+                                        {
+                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/usbank.png");
+                                        }
+                                        break;
+                                    case "PNC":
+                                        {
+                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/pnc.png");
+                                        }
+                                        break;
+                                    case "SunTrust":
+                                        {
+                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/suntrust.png");
+                                        }
+                                        break;
+                                    case "USAA":
+                                        {
+                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/usaa.png");
+                                        }
+                                        break;
+
+                                    case "First Tennessee":
+                                        {
+                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/firsttennessee.png");
+                                        }
+                                        break;
+                                    default:
+                                        {
+                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/no.png");
+                                        }
+                                        break;
+                                }
+                                #endregion Set Bank Logo URL Variable
+
+                                // Get Member Info from DB
+                                var noochMember = (from c in noochConnection.Members
+                                            where c.MemberId.Equals(memberId) && c.IsDeleted == false
+                                            select c)
+                                            .SingleOrDefault();
+
+                                if (noochMember != null)
+                                {
+                                    var toAddress = noochMember.UserName.ToLower();
+                                    var fromAddress = Utility.GetValueFromConfig("adminMail");
+
+                                    var firstNameForEmail = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(noochMember.FirstName));
+                                    var fullName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(noochMember.FirstName)) + " " +
+                                                   CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(noochMember.LastName));
+
+                                    var tokens = new Dictionary<string, string>
+                                            {
+                                                {"$FirstName$", firstNameForEmail},
+                                                {"$BankName$", BankName},
+                                                {"$RecipientFullName$", fullName},
+                                                {"$Recipient$", bankNickName},
+                                                {"$Amount$", bankLogoUrl},
+                                            };
+
+                                    Utility.SendEmail("bankVerified", fromAddress, toAddress,
+                                        "Your bank account has been verified on Nooch", null, tokens,
+                                        null, null, null);
+
+                                    Logger.Info("Admin Dash -> Member Controller - Verify Bank Account - bankVerified email sent successfully to: [" + toAddress + "]");
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Error("Admin Dash -> Member Controller - Verify Bank Account - bankVerified email NOT sent successfully for BankID: ["
+                                             + accountId + "],  [Exception: " + ex + "]");
+                            }
+
                         }
                         else
                         {
                             lr.IsSuccess = false;
-                            lr.Message = "Error occuerred on server, please retry.";
+                            lr.Message = "Error occurred on server, please retry.";
                         }
                     }
-
                 }
-
                 else
                 {
                     lr.IsSuccess = false;

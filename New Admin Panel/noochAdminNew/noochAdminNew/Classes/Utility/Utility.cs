@@ -44,24 +44,23 @@ namespace noochAdminNew.Classes.Utility
                 app_id = username,
                 isIos = true,
                 include_ios_tokens = new string[] { devicetokens },
-                contents = new GameTrhviveContents() { en = alertText }
+                contents = new GameThriveContents() { en = alertText }
             });
 
             var cli = new WebClient();
             cli.Headers[HttpRequestHeader.ContentType] = "application/json";
 
             string response = cli.UploadString("https://gamethrive.com/api/v1/notifications", json);
-            GameTrhviveResponseClass gamethriveresponse = JsonConvert.DeserializeObject<GameTrhviveResponseClass>(response);
+            GameThriveResponseClass gamethriveresponse = JsonConvert.DeserializeObject<GameThriveResponseClass>(response);
             return "1";
-
-
         }
-        public class GameTrhviveContents
+
+        public class GameThriveContents
         {
             public string en;
         }
 
-        public class GameTrhviveResponseClass
+        public class GameThriveResponseClass
         {
             public string id;
             public int recipients;
@@ -91,16 +90,16 @@ namespace noochAdminNew.Classes.Utility
                 return sr.ReadToEnd();
         }
 
-        public static bool SendEmail(string templateName,  string fromAddress, string toAddress, string subject, string referenceLink, IEnumerable<KeyValuePair<string, string>> replacements, string ccMailIds, string bccMailIds, string bodyText)
+        public static bool SendEmail(string templateName, string fromAddress, string toAddress, string subject, string referenceLink, IEnumerable<KeyValuePair<string, string>> replacements, string ccMailIds, string bccMailIds, string bodyText)
         {
             try
             {
                 MailMessage mailMessage = new MailMessage();
 
-
                 string template;
                 string subjectString = subject;
                 string content = string.Empty;
+
                 if (!String.IsNullOrEmpty(templateName))
                 {
                     template = GetEmailTemplate(String.Concat(Utility.GetValueFromConfig("EmailTemplatesPath"), templateName, ".txt"));
@@ -130,13 +129,13 @@ namespace noochAdminNew.Classes.Utility
                         mailMessage.From = new MailAddress(fromAddress, "Nooch Support");
                         break;
                     default:
-                        mailMessage.From = new MailAddress(fromAddress);
+                        mailMessage.From = new MailAddress(fromAddress, "Nooch Admin");
                         break;
                 }
                 mailMessage.IsBodyHtml = true;
                 mailMessage.Subject = subjectString;
                 mailMessage.To.Add(toAddress);
-
+                mailMessage.Priority = MailPriority.High;
 
                 //---------------------------------
                 ServerProperties serverProperties = GetServerProperties();
@@ -147,13 +146,14 @@ namespace noochAdminNew.Classes.Utility
                 smtpClient.Host = serverProperties.MailServerName;
                 smtpClient.UseDefaultCredentials = false;
                 smtpClient.Credentials = nc;
-
-
                 smtpClient.Send(mailMessage);
+
                 return true;
             }
             catch (Exception ex)
             {
+                Logger.Error("Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: " + ex + "]");
+
                 return false;
             }
         }
@@ -162,17 +162,12 @@ namespace noochAdminNew.Classes.Utility
 
     public class ServerProperties
     {
-       
-
         public static int ChunkSize { get; set; }
         public bool IsAuthRequired { get; set; }
         public string LogOn { get; set; }
         public string MailServerName { get; set; }
         public string Password { get; set; }
         public static int ReceiverIdLimit { get; set; }
-      
     }
-
-
 
 }

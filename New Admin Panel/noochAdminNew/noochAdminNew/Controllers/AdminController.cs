@@ -18,9 +18,6 @@ using FileHelpers;
 using System.Data.Entity;
 
 
-
-
-
 namespace noochAdminNew.Controllers
 {
     public class AdminController : Controller
@@ -45,20 +42,14 @@ namespace noochAdminNew.Controllers
             var CurrentMonth = DateTime.Now.Month;
             var CurrentDate = DateTime.Now.Day;
 
-
             try
             {
-
-
-
                 using (NOOCHEntities obj = new NOOCHEntities())
                 {
-
                     if (Convert.ToInt16(operation) == 0)
                     {
                         try
                         {
-
                             var transtLive = (from Livetranstp in obj.Transactions
                                               join member in obj.Members on Livetranstp.SenderId equals member.MemberId
                                               join membr1 in obj.Members on Livetranstp.RecipientId equals membr1.MemberId
@@ -91,8 +82,6 @@ namespace noochAdminNew.Controllers
 
                                               }).Take(10).ToList();
 
-
-
                             List<MemberRecentLiveTransactionData> mm = new List<MemberRecentLiveTransactionData>();
                             foreach (var t in transtLive)
                             {
@@ -118,23 +107,18 @@ namespace noochAdminNew.Controllers
                             ddresult.RecentLiveTransaction = mm;
 
                             return Json(ddresult);
-
                         }
-
                         catch (Exception ex)
                         {
                             ddresult.IsSuccess = false;
                             ddresult.Message = "InValid Operation";
                             return Json(ddresult);
                         }
-
-
                     }
                     else if (Convert.ToInt16(operation) == 1)
                     {
                         try
                         {
-
                             var transtLive = (from Livetranstp in obj.Transactions
                                               join member in obj.Members on Livetranstp.SenderId equals member.MemberId
                                               join membr1 in obj.Members on Livetranstp.RecipientId equals membr1.MemberId
@@ -144,7 +128,6 @@ namespace noochAdminNew.Controllers
                                               orderby Livetranstp.TransactionDate descending
                                               select new
                                               {
-
                                                   RecepientId = member.Nooch_ID,
                                                   SenderId = membr1.Nooch_ID,
                                                   TransactionDate = Livetranstp.TransactionDate,
@@ -165,8 +148,6 @@ namespace noochAdminNew.Controllers
                                                   disputedtrack = Livetranstp.DisputeStatus
 
                                               }).Take(10).ToList();
-
-
 
                             List<MemberRecentLiveTransactionData> mm = new List<MemberRecentLiveTransactionData>();
                             foreach (var t in transtLive)
@@ -193,24 +174,18 @@ namespace noochAdminNew.Controllers
                             ddresult.RecentLiveTransaction = mm;
 
                             return Json(ddresult);
-
                         }
-
                         catch (Exception ex)
                         {
                             ddresult.IsSuccess = false;
                             ddresult.Message = "InValid Operation";
                             return Json(ddresult);
                         }
-
-
                     }
-
                     else if (Convert.ToInt16(operation) == 2)
                     {
                         try
                         {
-
                             var transtLive = (from Livetranstp in obj.Transactions
                                               join member in obj.Members on Livetranstp.SenderId equals member.MemberId
                                               join membr1 in obj.Members on Livetranstp.RecipientId equals membr1.MemberId
@@ -243,8 +218,6 @@ namespace noochAdminNew.Controllers
 
                                               }).Take(10).ToList();
 
-
-
                             List<MemberRecentLiveTransactionData> mm = new List<MemberRecentLiveTransactionData>();
                             foreach (var t in transtLive)
                             {
@@ -270,26 +243,20 @@ namespace noochAdminNew.Controllers
                             ddresult.RecentLiveTransaction = mm;
 
                             return Json(ddresult);
-
                         }
-
                         catch (Exception ex)
                         {
                             ddresult.IsSuccess = false;
                             ddresult.Message = "InValid Operation";
                             return Json(ddresult);
                         }
-
                     }
-
                     else
                     {
                         ddresult.IsSuccess = false;
                         ddresult.Message = "InValid Operation";
                         return Json(ddresult);
                     }
-
-
                 }
             }
             catch (Exception ex)
@@ -298,7 +265,6 @@ namespace noochAdminNew.Controllers
                 ddresult.Message = "InValid Operation";
                 return Json(ddresult);
             }
-
         }
 
         public ActionResult Dashboard()
@@ -320,12 +286,8 @@ namespace noochAdminNew.Controllers
             {
                 using (NOOCHEntities obj = new NOOCHEntities())
                 {
-
-
-
                     var c = (from t in obj.Members where t.IsDeleted == false select t).ToList();
                     dd.TotalActiveUsers = c.Count;
-
 
                     //No of user activate this Today
                     c = (from t in obj.Members where t.IsDeleted == false && t.DateCreated.Value.Day == CurrentDate && t.DateCreated.Value.Year == CurrentYear && t.DateCreated.Value.Month == CurrentMonth select t).ToList();
@@ -339,7 +301,6 @@ namespace noochAdminNew.Controllers
                     c = (from t in obj.Members where t.IsDeleted == false && SqlFunctions.DatePart("week", t.DateCreated) == (SqlFunctions.DatePart("week", DateTime.Now)) select t).ToList();
                     dd.TotalNoOfActiveUser_Week = c.Count;
 
-
                     //No of Phone Number Verified Today
                     c = (from t in obj.Members where t.IsDeleted == false && t.PhoneVerifiedOn.Value.Day == CurrentDate && t.PhoneVerifiedOn.Value.Year == CurrentYear && t.PhoneVerifiedOn.Value.Month == CurrentMonth select t).ToList();
                     dd.TotalNoOfVerifiedPhoneUsers_Today = c.Count;
@@ -348,13 +309,9 @@ namespace noochAdminNew.Controllers
                     c = (from t in obj.Members where t.IsDeleted == false && t.PhoneVerifiedOn.Value.Year == CurrentYear && t.PhoneVerifiedOn.Value.Month == CurrentMonth select t).ToList();
                     dd.TotalNoOfVerifiedPhoneUsers_Month = c.Count;
 
-
                     //No of Phone Number Verified week
                     c = (from t in obj.Members where t.IsDeleted == false && SqlFunctions.DatePart("week", t.PhoneVerifiedOn) == (SqlFunctions.DatePart("week", DateTime.Now)) select t).ToList();
                     dd.TotalNoOfVerifiedPhoneUsers_Week = c.Count;
-
-
-
 
                     //No of email Verified Today
                     c = (from t in obj.AuthenticationTokens
@@ -445,8 +402,6 @@ namespace noochAdminNew.Controllers
                     dd.UserCountInEachBank = ss;
                     // var ss = obj.Database.SqlQuery<NoOfUsersInEachBank>("select BankName,(select count(*) from SynapseBanksOfMembers where bank_name=ss.BankName and IsDefault=1 )as NoOfUsers from SynapseSupportedBanks ss order by BankName").ToList(); 
                 }
-
-
 
                 return View(dd);
             }
@@ -541,20 +496,13 @@ namespace noochAdminNew.Controllers
                             if (recepeintknoxdetails != null)
                             {
                                 // all set to call pin payment service
-                                string ADMIN_KNOX_TRANS_ID =
-                                    CommonHelper.GetDecryptedData(adminKnoxDetails.TransId.ToString());
-                                string ADMIN_USER_KEY =
-                                    CommonHelper.GetDecryptedData(adminKnoxDetails.UserKey.ToString());
-                                string ADMIN_USER_PASS =
-                                    CommonHelper.GetDecryptedData(adminKnoxDetails.UserPass.ToString());
+                                //string ADMIN_KNOX_TRANS_ID = CommonHelper.GetDecryptedData(adminKnoxDetails.TransId.ToString());
+                                //string ADMIN_USER_KEY = CommonHelper.GetDecryptedData(adminKnoxDetails.UserKey.ToString());
+                                //string ADMIN_USER_PASS = CommonHelper.GetDecryptedData(adminKnoxDetails.UserPass.ToString());
 
-                                string RECEPEINT_KNOX_TRANS_ID =
-                                    CommonHelper.GetDecryptedData(recepeintknoxdetails.TransId.ToString());
-                                string RECEPEINT_USER_KEY =
-                                    CommonHelper.GetDecryptedData(recepeintknoxdetails.UserKey.ToString());
-                                string RECEPEINT_USER_PASS =
-                                    CommonHelper.GetDecryptedData(recepeintknoxdetails.UserPass.ToString());
-
+                                //string RECEPEINT_KNOX_TRANS_ID = CommonHelper.GetDecryptedData(recepeintknoxdetails.TransId.ToString());
+                                //string RECEPEINT_USER_KEY = CommonHelper.GetDecryptedData(recepeintknoxdetails.UserKey.ToString());
+                                //string RECEPEINT_USER_PASS = CommonHelper.GetDecryptedData(recepeintknoxdetails.UserPass.ToString());
 
                                 string transactionTrackingId = GetRandomTransactionTrackingId();
 
@@ -588,19 +536,17 @@ namespace noochAdminNew.Controllers
                                 geo.DateCreated = DateTime.Now;
 
 
-
                                 // making api call to knox
                                 WebClient wc = new WebClient();
 
                                 string KNoxApiKey = Utility.GetValueFromConfig("KnoxApiKey");
                                 string KNoxApiPass = Utility.GetValueFromConfig("KnoxApiPass");
 
-
                                 string c = "https://knoxpayments.com/json/pinpayment.php?payee_key=" +
-                                           RECEPEINT_USER_KEY +
-                                           "&payee_pass=" + RECEPEINT_USER_PASS + "&payor_key=" + ADMIN_USER_KEY +
+                                           //RECEPEINT_USER_KEY +
+                                           //"&payee_pass=" + RECEPEINT_USER_PASS + "&payor_key=" + ADMIN_USER_KEY +
                                            "&payor_pass=" +
-                                           ADMIN_USER_PASS + "&trans_id=" + trans.TransactionId + "&PARTNER_KEY=" +
+                                           //ADMIN_USER_PASS + "&trans_id=" + trans.TransactionId + "&PARTNER_KEY=" +
                                            KNoxApiKey + "&amount=" + trans.Amount + "&recur_status=ot";
                                 string knoxPinPaymentResults = wc.DownloadString(c);
 
@@ -608,7 +554,7 @@ namespace noochAdminNew.Controllers
                                 if (m != null)
                                 {
                                     #region parsed response successfully
-
+/*
                                     string KnoxTransStatus = m.JSonDataResult.status_code;
                                     string KnoxTransErrorCode = m.JSonDataResult.error_code;
                                     string KnoxTransId = m.JSonDataResult.trans_id;
@@ -969,12 +915,13 @@ namespace noochAdminNew.Controllers
                                     }
 
 
-
+                                    */
                                     #endregion
                                 }
                                 else
                                 {
                                     #region emailSendingonTransferAttemtFailure
+                                    /*
 
                                     // for push notification in case of failure
 
@@ -1040,14 +987,12 @@ namespace noochAdminNew.Controllers
                                             }
                                         }
                                     }
-
+*/
                                     #endregion
 
                                     lr.IsSuccess = false;
                                     lr.Message = "Knox payment failed.";
                                 }
-
-
                             }
                             else
                             {
@@ -1073,12 +1018,9 @@ namespace noochAdminNew.Controllers
                     lr.Message = "Admin account team@nooch.com not active or invalid admin PIN passed.";
                 }
             }
-
-
-
-
             return Json(lr);
         }
+
 
         public string GetRandomTransactionTrackingId()
         {
@@ -1113,8 +1055,6 @@ namespace noochAdminNew.Controllers
         }
 
 
-
-
         // If session is null then redirect to home 
         public ActionResult OFAC()
         {
@@ -1136,20 +1076,14 @@ namespace noochAdminNew.Controllers
            // if ((((Request.Files[0].FileName.Contains("SDN")) || (Request.Files[0].FileName.Contains("sdn"))) && (Request.Files[0].ContentLength > 0)) && (((Request.Files[1].FileName.Contains("ADD")) || (Request.Files[1].FileName.Contains("add"))) && (Request.Files[1].ContentLength > 0)) && (((Request.Files[2].FileName.Contains("ALT")) || (Request.Files[2].FileName.Contains("alt")) && (Request.Files[2].ContentLength > 0))))
             //{
 
-
-
                 // Code For  SDN File
                 if (((Request.Files[0].FileName.Contains("SDN")) || (Request.Files[0].FileName.Contains("sdn"))) && (Request.Files[0].ContentLength > 0))
                 {
                     try
                     {
-
                         string path = AppDomain.CurrentDomain.BaseDirectory + "Content/";
                         string filename = Path.GetFileName(Request.Files[0].FileName);
                         Request.Files[0].SaveAs(Path.Combine(path, filename));
-
-
-
 
                         // code for reading content of SDN pipe file                    
                         FileHelperEngine engine = new FileHelperEngine(typeof(OfacList.SDNEntity));
@@ -1158,7 +1092,6 @@ namespace noochAdminNew.Controllers
 
                         if (res.Count() > 0)
                         {
-
                             using (NOOCHEntities NoochConnection = new NOOCHEntities())
                             {
                                 try
@@ -1175,8 +1108,6 @@ namespace noochAdminNew.Controllers
                                     result = ex.ToString();
                                     IsSuccess = false;
                                 }
-                                //}
-
 
                                 if (IsSuccess == true)
                                 {
@@ -1190,11 +1121,10 @@ namespace noochAdminNew.Controllers
                                     }
                                     else
                                     {
-                                        Logger.Info("SDN Uploaded SuccessFully");
+                                        Logger.Info("SDN Uploaded Successfully");
                                         result = "SDN Table records updated successfully.";
 
                                     }
-
                                 }
                             }
                         }
@@ -1212,7 +1142,6 @@ namespace noochAdminNew.Controllers
                         result = ex.Message.ToString();
                     }
 
-
                 }
                 else if (((Request.Files[0].FileName.Contains("SDN") == false) || (Request.Files[0].FileName.Contains("sdn") == false)) && (Request.Files[0].ContentLength > 0))
                 {
@@ -1223,19 +1152,14 @@ namespace noochAdminNew.Controllers
 
                 }
 
-
-
                 // Code For ADD File Type ADD
                 if (((Request.Files[1].FileName.Contains("ADD")) || (Request.Files[1].FileName.Contains("add"))) && (Request.Files[1].ContentLength > 0))
                 {
-
                     try
                     {
-
                         string path = AppDomain.CurrentDomain.BaseDirectory + "Content/";
                         string filename = Path.GetFileName(Request.Files[1].FileName);
                         Request.Files[1].SaveAs(Path.Combine(path, filename));
-
 
                         // code for reading content of ADD pipe file
                         FileHelperEngine engineadd = new FileHelperEngine(typeof(OfacList.ADDEntity));
@@ -1311,7 +1235,6 @@ namespace noochAdminNew.Controllers
                 {
                     try
                     {
-
                         string path = AppDomain.CurrentDomain.BaseDirectory + "Content/";
                         string filename = Path.GetFileName(Request.Files[2].FileName);
                         Request.Files[2].SaveAs(Path.Combine(path, filename));
@@ -1342,8 +1265,6 @@ namespace noochAdminNew.Controllers
                                 }
                             }
 
-
-
                             if (IsSuccess == true)
                             {
                                 // records deleted, code to insert new records into DB
@@ -1360,10 +1281,7 @@ namespace noochAdminNew.Controllers
                                     result = result + " ALT Table records updated successfully.";
 
                                 }
-
-
                             }
-
                         }
 
                         // delete file from uploads folder
@@ -1378,8 +1296,6 @@ namespace noochAdminNew.Controllers
                         flag = "false";
                         result = result + ex.Message.ToString();
                     }
-
-
                 }
                 else if (((Request.Files[2].FileName.Contains("ALT") == false) || (Request.Files[2].FileName.Contains("alt") == false)) && (Request.Files[2].ContentLength > 0))
                 {
@@ -1389,15 +1305,10 @@ namespace noochAdminNew.Controllers
 
                 }
 
-
-
-
                 if (flag.Equals("true"))
                 {
-
                     result = "Files uploaded successfully.";
                 }
-
 
             //}
             //else
@@ -1426,7 +1337,6 @@ namespace noochAdminNew.Controllers
                 foreach (AdminUser ad in alladmins)
                 {
                     SearchAdminResultClass sc = new SearchAdminResultClass();
-
 
                     sc.AdminFirstName = ad.FirstName;
                     sc.AdminLastName = ad.LastName;
@@ -1594,26 +1504,23 @@ namespace noochAdminNew.Controllers
                 }
 
                 Logger.Info("New Admin - Update admin user [" + userName + "].");
+                
                 // edit admin details
-
-
 
                 var id = Utility.ConvertToGuid(adminId);
 
                 var adminUser = (from c in obj.AdminUsers where c.UserName == userName select c).SingleOrDefault();
                 if (adminUser != null)
                 {
-
                     car.IsSuccess = false;
                     car.Message = "User name already exists. Please try with some other name.";
                     return car;
                 }
 
                 return UpdateAdminUser(userName, emailAddress, firstName, lastName, level, loggedInUserId);
-
-
             }
         }
+
 
         private static CreateAdminResultClass UpdateAdminUser(string userName, string emailAddress, string firstName,
             string lastName, string level, Guid loggedInUserId)
@@ -1637,30 +1544,19 @@ namespace noochAdminNew.Controllers
                 car.Message = "Success";
 
                 return car;
-
             }
-
-
-
         }
 
 
-
         ////////////Add new data in SDN table
-
         public string AddNewDataInSDN(OfacList.SDNEntity[] res)
         {
-
             bool b = true;
 
             using (var noochConnection = new NOOCHEntities())
             {
-
-
-
                 foreach (var item in res)
                 {
-
                     try
                     {
                         var query = new SDN
@@ -1680,21 +1576,14 @@ namespace noochAdminNew.Controllers
 
                         };
 
-
-
                         noochConnection.SDNs.Add(query);
                         int i = noochConnection.SaveChanges();
-
-
-
                     }
                     catch (Exception ex)
                     {
-
                         b = false;
                     }
                 }
-
 
                 if (b)
                 {
@@ -1702,19 +1591,17 @@ namespace noochAdminNew.Controllers
                 }
                 else
                     return "something went wrong while adding SDN list, please retry.";
-
             }
         }
+
+
         //Insert ADD Table Data
         public string AddNewDataInADD(OfacList.ADDEntity[] res)
         {
-
             bool b = true;
 
             using (var noochConnection = new NOOCHEntities())
             {
-
-
                 foreach (var item in res)
                 {
                     try
@@ -1732,7 +1619,6 @@ namespace noochAdminNew.Controllers
 
                         noochConnection.ADDs.Add(s);
                         int i = noochConnection.SaveChanges();
-
                     }
                     catch
                     {
@@ -1740,27 +1626,23 @@ namespace noochAdminNew.Controllers
                     }
                 }
 
-
                 if (b)
                 {
                     return "Records Added Successfully.";
                 }
                 else
                     return "something went wrong while adding ADD list, please retry.";
-
             }
         }
+
 
         //Add ALT Table Data
         public string AddNewDataInALT(OfacList.ALTEntity[] res)
         {
-
             bool b = true;
 
             using (var noochConnection = new NOOCHEntities())
             {
-
-
                 foreach (var item in res)
                 {
                     try
@@ -1772,21 +1654,16 @@ namespace noochAdminNew.Controllers
                             alt_type = (item.alt_type == "-0- ") ? null : item.alt_type.Trim(new char[] { '"', ' ' }),
                             alt_name = (item.alt_name == "-0- ") ? null : item.alt_name.Trim(new char[] { '"', ' ' }),
                             Country = (item.Country == "-0- ") ? null : item.Country.Trim(new char[] { '"', ' ' })
-
-
                         };
 
                         noochConnection.ALTs.Add(s);
                         int i = noochConnection.SaveChanges();
-
                     }
                     catch
                     {
                         b = false;
-
                     }
                 }
-
 
                 if (b)
                 {
@@ -1794,10 +1671,7 @@ namespace noochAdminNew.Controllers
                 }
                 else
                     return "something went wrong while adding ALT list, please retry.";
-
             }
         }
-
-
     }
 }

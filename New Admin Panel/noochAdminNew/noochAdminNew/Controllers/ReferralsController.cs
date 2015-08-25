@@ -201,9 +201,9 @@ namespace noochAdminNew.Controllers
 
                         MembersListDataClass mdc = new MembersListDataClass();
                         mdc.Nooch_ID = m.Nooch_ID;
-                        mdc.FirstName = CommonHelper.GetDecryptedData(m.FirstName);
-                        mdc.LastName = CommonHelper.GetDecryptedData(m.LastName);
-                        mdc.UserName = CommonHelper.GetDecryptedData(m.UserName);
+                        mdc.FirstName = !String.IsNullOrEmpty(m.FirstName) ? CommonHelper.GetDecryptedData(m.FirstName) : "";
+                        mdc.LastName = !String.IsNullOrEmpty(m.LastName) ? CommonHelper.GetDecryptedData(m.LastName) : "";
+                        mdc.UserName = !String.IsNullOrEmpty(m.UserName) ? CommonHelper.GetDecryptedData(m.UserName) : "";
 
                         if (m.ContactNumber != null)
                         {
@@ -227,7 +227,7 @@ namespace noochAdminNew.Controllers
                         mdc.Status = m.Status;
                         mdc.IsDeleted = m.IsDeleted ?? false;
                         mdc.IsVerifiedPhone = m.IsVerifiedPhone ?? false;
-                        mdc.City = CommonHelper.GetDecryptedData(m.City);
+                        mdc.City = !String.IsNullOrEmpty(m.City) ? CommonHelper.GetDecryptedData(m.City) : "";
 
                         mdc.TotalAmountSent = mdc.TotalAmountSent != "0" ? Convert.ToDecimal(String.Format("{0:0.00}", Convert.ToDecimal(totalAmount))).ToString() : "0";
 
@@ -241,46 +241,37 @@ namespace noochAdminNew.Controllers
 
 
             return AllMemberFormtted;
-
         }
+
 
         private List<MembersListRefCodeUsedDataClass> GetMostRecent5Referrals()
         {
             List<MembersListRefCodeUsedDataClass> AllMemberFormtted = new List<MembersListRefCodeUsedDataClass>();
+            
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-
-
-
                 var All_Members_In_Records = (from t in obj.Members
                                               where t.IsDeleted == false && t.InviteCodeIdUsed != null
                                               select t).ToList().OrderByDescending(m => m.DateCreated).Take(5);
 
                 foreach (Member m in All_Members_In_Records)
                 {
-
-
                     MembersListRefCodeUsedDataClass mdc = new MembersListRefCodeUsedDataClass();
 
-                    mdc.Name = CommonHelper.UppercaseFirst( CommonHelper.GetDecryptedData(m.FirstName) )+ " " + CommonHelper.UppercaseFirst( CommonHelper.GetDecryptedData(m.LastName));
-
+                    mdc.Name = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(m.FirstName)) + " " +
+                               CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(m.LastName));
                     mdc.DateUsed = String.Format("{0: MMMM d, yyyy}", m.DateCreated);
-                    // getting invite code used
                     mdc.NoochId = m.Nooch_ID;
+
                     var codeused = (from c in obj.InviteCodes where c.InviteCodeId == m.InviteCodeIdUsed select c).SingleOrDefault();
-
                     mdc.CodeUsed = codeused.code.Trim().ToUpper();
-
 
                     AllMemberFormtted.Add(mdc);
                 }
 
             }
 
-
-
             return AllMemberFormtted;
-
         }
 
         //
@@ -446,18 +437,10 @@ namespace noochAdminNew.Controllers
                         s2.IsSuccess = false;
                         s2.Message = "Invite code already used "+rxistingCode.count + " times.";
                     }
-                    
-                    
-
-
-
-                   
                 }
 
                 return s2;
             }
-
-
         }
 
     }
