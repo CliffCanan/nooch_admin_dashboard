@@ -14,8 +14,7 @@ $(document).ready(function () {
     NoochId = getParameterByName('NoochId');
 
     // Format the contact number if present
-    if ($("#contactNumber").val().length > 1)
-    {
+    if ($("#contactNumber").val().length > 1) {
         $("#contactNumber").val(function (i, text) {
             text = text.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
             return text;
@@ -43,12 +42,9 @@ $('#DeleteUser').click(function () {
     $('#myModalConfirmDelete').modal('show');
 });
 
-var Member = function ()
-{
-    function applyOperation(operation)
-    {
-        if (NoochId == '')
-        {
+var Member = function () {
+    function applyOperation(operation) {
+        if (NoochId == '') {
             toastr.error('No NoochId was selected...', 'Error');
             return;
         }
@@ -59,25 +55,20 @@ var Member = function ()
         data.noochIds = NoochId;
         $.post(url, data, function (result) {
 
-            if (result.IsSuccess == true)
-            {
+            if (result.IsSuccess == true) {
                 console.log(result.Message);
                 console.log(result.MemberOperationsOuterClass);
 
                 // iterating through all innerclass objects
 
-                $.each(result.MemberOperationsOuterClass, function (key, value)
-                {
-                    if (value.IsSuccess == true)
-                    {
+                $.each(result.MemberOperationsOuterClass, function (key, value) {
+                    if (value.IsSuccess == true) {
                         toastr.success(value.Message, value.NoochId);
 
-                        if (operation == 4)
-                        {
+                        if (operation == 4) {
                             $("#memberStatus").html('Active');
                         }
-                        else if (operation == 5)
-                        {
+                        else if (operation == 5) {
                             window.location.replace("../Member/ListAll");
                             $('#myModalConfirmDelete').modal('hide');
                         }
@@ -87,8 +78,7 @@ var Member = function ()
                         toastr.error(value.Message, value.NoochId);
                     }
                 });
-                if (operation != 5)
-                {
+                if (operation != 5) {
                     location.reload(true);
                 }
 
@@ -101,8 +91,7 @@ var Member = function ()
     }
 
 
-    function editdetails()
-    {
+    function editdetails() {
         if (NoochId == '') {
             toastr.error('No NoochId was selected...', 'Error');
             return;
@@ -121,10 +110,8 @@ var Member = function ()
 
         console.log(data);
 
-        $.post(url, data, function (result)
-        {
-            if (result.IsSuccess == true)
-            {
+        $.post(url, data, function (result) {
+            if (result.IsSuccess == true) {
                 toastr.info('Reloading this page...', 'FYI', { timeOut: '3500' })
                 toastr.success(result.Message, 'Success');
 
@@ -138,16 +125,14 @@ var Member = function ()
 
                 setTimeout(function () { location.reload(true) }, 3500);
             }
-            else
-            {
+            else {
                 toastr.error(result.Message, 'Error');
             }
         });
     }
 
 
-    function restpin()
-    {
+    function restpin() {
         if (NoochId == '') {
             toastr.error('No NoochId was selected...', 'Error');
             return;
@@ -170,9 +155,9 @@ var Member = function ()
 
 
     // Manually set bank account's status to 'Verified'
-    function verifyBankAccount()
-    {
+    function verifyBankAccount() {
         var accountId = $('#bnkIdHidden').val();
+
         if (accountId == '') {
             toastr.error('No bank account was selected...', 'Error');
             return;
@@ -180,19 +165,18 @@ var Member = function ()
 
         var url = "../Member/VerifyAccount";
         var data = {};
-        data.accountId = accountId;
+        data.tokenID = accountId;
 
-        $.post(url, data, function (result)
-        {
-            if (result.IsSuccess == true)
-            {
+        $.post(url, data, function (result) {
+            console.log(result);
+
+            if (result.IsSuccess == true) {
                 toastr.success(result.Message, 'Succcess');
 
                 $('#bankAccountStatusDiv').html('');
                 $('#bankAccountStatusDiv').html("<span class='text-success' style='display: inline-block'>Verified</span>");
             }
-            else
-            {
+            else {
                 toastr.error(result.Message, 'Error');
             }
         });
@@ -200,8 +184,7 @@ var Member = function ()
 
 
     // Manually set bank account's status to 'Pending Review'
-    function unVerifyBankAccount()
-    {
+    function unVerifyBankAccount() {
         var accountId = $('#bnkIdHidden').val();
         if (accountId == '') {
             toastr.error('No bank account was selected...', 'Error');
@@ -212,17 +195,14 @@ var Member = function ()
         var data = {};
         data.accountId = accountId;
 
-        $.post(url, data, function (result)
-        {
-            if (result.IsSuccess == true)
-            {
+        $.post(url, data, function (result) {
+            if (result.IsSuccess == true) {
                 toastr.success(result.Message, 'Succcess');
 
                 $('#bankAccountStatusDiv').html('');
                 $('#bankAccountStatusDiv').html("<span class='text-warning' style='display: inline-block'>Pending Review</span>");
             }
-            else
-            {
+            else {
                 toastr.error(result.Message, 'Error');
             }
         });
@@ -230,8 +210,7 @@ var Member = function ()
 
 
     // Open AdminNotes Modal
-    function AdminNoteAboutUserModalPopup()
-    {
+    function AdminNoteAboutUserModalPopup() {
         if (NoochId == '') {
             toastr.error('No NoochId was selected...', 'Error');
             return;
@@ -254,8 +233,7 @@ var Member = function ()
 
 
     // Provide Info About the User In ModalPopup
-    function SaveAdminNoteForUser()
-    {
+    function SaveAdminNoteForUser() {
         if (NoochId == '') {
             toastr.error('No NoochId was selected...', 'Error');
             return;

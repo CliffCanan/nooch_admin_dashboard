@@ -930,7 +930,7 @@ namespace noochAdminNew.Controllers
 
                             try
                             {
-                                var memberId = bank.MemberId;
+                                Guid memberId = new Guid(bank.MemberId.ToString());
                                 var BankName = CommonHelper.GetDecryptedData(bank.bank_name);
                                 var bankNickName = CommonHelper.GetDecryptedData(bank.nickname);
 
@@ -1014,11 +1014,11 @@ namespace noochAdminNew.Controllers
                                 var noochMember = (from c in noochConnection.Members
                                             where c.MemberId.Equals(memberId) && c.IsDeleted == false
                                             select c)
-                                            .SingleOrDefault();
+                                            .FirstOrDefault();
 
                                 if (noochMember != null)
                                 {
-                                    var toAddress = noochMember.UserName.ToLower();
+                                    var toAddress = CommonHelper.GetDecryptedData(noochMember.UserName.ToLower());
                                     var fromAddress = Utility.GetValueFromConfig("adminMail");
 
                                     var firstNameForEmail = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(noochMember.FirstName));
