@@ -6,10 +6,11 @@
 @{
     DashboardDataClass dd = new DashboardDataClass();
     dd = Model;
+
     List<NoOfUsersInEachBank>
-  BankUserCount = new List<NoOfUsersInEachBank>
-      ();
+    BankUserCount = new List<NoOfUsersInEachBank>();
     BankUserCount = dd.UserCountInEachBank;
+
     List<MemberRecentLiveTransactionData> LiveTrans = new List<MemberRecentLiveTransactionData>();
     // LiveTrans = dd.RecentLiveTransaction;
 }
@@ -22,16 +23,10 @@
     <div class="col-lg-10">
         <h2>Dashboard</h2>
         <ol class="breadcrumb">
-            <li>
-                <a href="#">Dashboard</a>
-            </li>
             <li class="active">
                 <strong>Home</strong>
             </li>
         </ol>
-    </div>
-
-    <div class="col-lg-2">
     </div>
 </div>
 

@@ -5096,7 +5096,7 @@ body.skin-3 {
   .fixed-sidebar.body-small.mini-navbar .navbar-static-side {
     display: block;
   }
-  
+
   /***** CUSTOM ADDITIONS FOR ADMIN DASH [SMALL SCREEN] *****/
   .nav > li > a {padding: 14px 15px;}
   .footer {display:none;}

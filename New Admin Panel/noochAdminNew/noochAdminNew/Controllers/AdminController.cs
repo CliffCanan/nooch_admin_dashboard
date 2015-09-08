@@ -38,6 +38,7 @@ namespace noochAdminNew.Controllers
         public ActionResult ShowLiveTransactionsOnDashBoard(string operation)
         {
             DashBoardLiveTransactionsOperationResult ddresult = new DashBoardLiveTransactionsOperationResult();
+
             var CurrentYear = DateTime.Now.Year;
             var CurrentMonth = DateTime.Now.Month;
             var CurrentDate = DateTime.Now.Day;
@@ -60,7 +61,6 @@ namespace noochAdminNew.Controllers
                                               orderby Livetranstp.TransactionDate descending
                                               select new
                                               {
-
                                                   RecepientId = member.Nooch_ID,
                                                   SenderId = membr1.Nooch_ID,
                                                   TransactionDate = Livetranstp.TransactionDate,
@@ -83,6 +83,7 @@ namespace noochAdminNew.Controllers
                                               }).Take(10).ToList();
 
                             List<MemberRecentLiveTransactionData> mm = new List<MemberRecentLiveTransactionData>();
+
                             foreach (var t in transtLive)
                             {
                                 MemberRecentLiveTransactionData merc = new MemberRecentLiveTransactionData();
@@ -110,8 +111,10 @@ namespace noochAdminNew.Controllers
                         }
                         catch (Exception ex)
                         {
+                            Logger.Error("AdminController -> ShowLiveTransactionsOnDashBoard - [Exception: " + ex + "]");
+
                             ddresult.IsSuccess = false;
-                            ddresult.Message = "InValid Operation";
+                            ddresult.Message = "Exception reached - Invalid Operation";
                             return Json(ddresult);
                         }
                     }
@@ -123,7 +126,8 @@ namespace noochAdminNew.Controllers
                                               join member in obj.Members on Livetranstp.SenderId equals member.MemberId
                                               join membr1 in obj.Members on Livetranstp.RecipientId equals membr1.MemberId
                                               join loc in obj.GeoLocations on Livetranstp.LocationId equals loc.LocationId
-                                              where SqlFunctions.DatePart("week", Livetranstp.TransactionDate) == (SqlFunctions.DatePart("week", DateTime.Now))
+                                              where SqlFunctions.DatePart("week", Livetranstp.TransactionDate) == (SqlFunctions.DatePart("week", DateTime.Now)) &&
+                                              Livetranstp.TransactionDate.Value.Year == CurrentYear
 
                                               orderby Livetranstp.TransactionDate descending
                                               select new
@@ -150,6 +154,7 @@ namespace noochAdminNew.Controllers
                                               }).Take(10).ToList();
 
                             List<MemberRecentLiveTransactionData> mm = new List<MemberRecentLiveTransactionData>();
+
                             foreach (var t in transtLive)
                             {
                                 MemberRecentLiveTransactionData merc = new MemberRecentLiveTransactionData();
@@ -177,8 +182,10 @@ namespace noochAdminNew.Controllers
                         }
                         catch (Exception ex)
                         {
+                            Logger.Error("AdminController -> ShowLiveTransactionsOnDashBoard - [Exception: " + ex + "]");
+
                             ddresult.IsSuccess = false;
-                            ddresult.Message = "InValid Operation";
+                            ddresult.Message = "Exception reached - Invalid Operation";
                             return Json(ddresult);
                         }
                     }
@@ -192,11 +199,9 @@ namespace noochAdminNew.Controllers
                                               join loc in obj.GeoLocations on Livetranstp.LocationId equals loc.LocationId
                                               where Livetranstp.TransactionDate.Value.Year == CurrentYear
                                                && Livetranstp.TransactionDate.Value.Month == CurrentMonth
-
                                               orderby Livetranstp.TransactionDate descending
                                               select new
                                               {
-
                                                   RecepientId = member.Nooch_ID,
                                                   SenderId = membr1.Nooch_ID,
                                                   TransactionDate = Livetranstp.TransactionDate,
@@ -246,8 +251,10 @@ namespace noochAdminNew.Controllers
                         }
                         catch (Exception ex)
                         {
+                            Logger.Error("AdminController -> ShowLiveTransactionsOnDashBoard - [Exception: " + ex + "]");
+
                             ddresult.IsSuccess = false;
-                            ddresult.Message = "InValid Operation";
+                            ddresult.Message = "Exception reached - Invalid Operation";
                             return Json(ddresult);
                         }
                     }
@@ -261,8 +268,10 @@ namespace noochAdminNew.Controllers
             }
             catch (Exception ex)
             {
+                Logger.Error("AdminController -> ShowLiveTransactionsOnDashBoard - [Outer Exception: " + ex + "]");
+
                 ddresult.IsSuccess = false;
-                ddresult.Message = "InValid Operation";
+                ddresult.Message = "Exception reached - Invalid Operation";
                 return Json(ddresult);
             }
         }
@@ -286,34 +295,56 @@ namespace noochAdminNew.Controllers
             {
                 using (NOOCHEntities obj = new NOOCHEntities())
                 {
-                    var c = (from t in obj.Members where t.IsDeleted == false select t).ToList();
+                    var c = (from t in obj.Members
+                             where t.IsDeleted == false
+                             select t).ToList();
                     dd.TotalActiveUsers = c.Count;
 
-                    //No of user activate this Today
-                    c = (from t in obj.Members where t.IsDeleted == false && t.DateCreated.Value.Day == CurrentDate && t.DateCreated.Value.Year == CurrentYear && t.DateCreated.Value.Month == CurrentMonth select t).ToList();
+                    // # of Active Users - TODAY
+                    c = (from t in obj.Members
+                         where t.IsDeleted == false && t.DateCreated.Value.Day == CurrentDate && t.DateCreated.Value.Year == CurrentYear && t.DateCreated.Value.Month == CurrentMonth
+                         select t).ToList();
                     dd.TotalNoOfActiveUser_Today = c.Count;
 
-                    //No of user activate this Month
-                    c = (from t in obj.Members where t.IsDeleted == false && t.DateCreated.Value.Year == CurrentYear && t.DateCreated.Value.Month == CurrentMonth select t).ToList();
+                    // # of Active Users - THIS MONTH
+                    c = (from t in obj.Members
+                         where t.IsDeleted == false &&
+                               t.DateCreated.Value.Year == CurrentYear &&
+                               t.DateCreated.Value.Month == CurrentMonth
+                         select t).ToList();
                     dd.TotalNoOfActiveUser_Month = c.Count;
 
-                    //No of user activate this Week
-                    c = (from t in obj.Members where t.IsDeleted == false && SqlFunctions.DatePart("week", t.DateCreated) == (SqlFunctions.DatePart("week", DateTime.Now)) select t).ToList();
+                    // # of Active Users - THIS WEEK
+                    c = (from t in obj.Members 
+                         where t.IsDeleted == false && SqlFunctions.DatePart("week", t.DateCreated) == (SqlFunctions.DatePart("week", DateTime.Now))
+                         select t).ToList();
                     dd.TotalNoOfActiveUser_Week = c.Count;
 
-                    //No of Phone Number Verified Today
-                    c = (from t in obj.Members where t.IsDeleted == false && t.PhoneVerifiedOn.Value.Day == CurrentDate && t.PhoneVerifiedOn.Value.Year == CurrentYear && t.PhoneVerifiedOn.Value.Month == CurrentMonth select t).ToList();
+                    // # of Phones Verified - TODAY
+                    c = (from t in obj.Members
+                         where t.IsDeleted == false &&
+                               t.PhoneVerifiedOn.Value.Day == CurrentDate &&
+                               t.PhoneVerifiedOn.Value.Year == CurrentYear &&
+                               t.PhoneVerifiedOn.Value.Month == CurrentMonth
+                         select t).ToList();
                     dd.TotalNoOfVerifiedPhoneUsers_Today = c.Count;
 
-                    //No of Phone Number Verified Month
-                    c = (from t in obj.Members where t.IsDeleted == false && t.PhoneVerifiedOn.Value.Year == CurrentYear && t.PhoneVerifiedOn.Value.Month == CurrentMonth select t).ToList();
+                    // # of Phones Verified - THIS MONTH
+                    c = (from t in obj.Members
+                         where t.IsDeleted == false &&
+                               t.PhoneVerifiedOn.Value.Year == CurrentYear &&
+                               t.PhoneVerifiedOn.Value.Month == CurrentMonth
+                         select t).ToList();
                     dd.TotalNoOfVerifiedPhoneUsers_Month = c.Count;
 
-                    //No of Phone Number Verified week
-                    c = (from t in obj.Members where t.IsDeleted == false && SqlFunctions.DatePart("week", t.PhoneVerifiedOn) == (SqlFunctions.DatePart("week", DateTime.Now)) select t).ToList();
+                    // # of Phones Verified - THIS WEEK
+                    c = (from t in obj.Members
+                         where t.IsDeleted == false && 
+                               SqlFunctions.DatePart("week", t.PhoneVerifiedOn) == (SqlFunctions.DatePart("week", DateTime.Now))
+                         select t).ToList();
                     dd.TotalNoOfVerifiedPhoneUsers_Week = c.Count;
 
-                    //No of email Verified Today
+                    // # of Emails Verified - TODAY
                     c = (from t in obj.AuthenticationTokens
                          join mem in obj.Members on t.MemberId equals mem.MemberId
                          where mem.IsDeleted == false && t.IsActivated == true
@@ -321,7 +352,7 @@ namespace noochAdminNew.Controllers
                          select mem).ToList();
                     dd.TotalNoOfVerifiedEmailUsers_Today = c.Count;
 
-                    //No of Email Verified Month
+                    // # of Emails Verified - THIS MONTH
                     c = (from t in obj.AuthenticationTokens
                          join mem in obj.Members on t.MemberId equals mem.MemberId
                          where mem.IsDeleted == false
@@ -330,7 +361,7 @@ namespace noochAdminNew.Controllers
                     dd.TotalNoOfVerifiedEmailUsers_Month = c.Count;
 
 
-                    //No of Email Verified week
+                    // # of Emails Verified - THIS WEEK
                     c = (from t in obj.AuthenticationTokens
                          join mem in obj.Members on t.MemberId equals mem.MemberId
                          where mem.IsDeleted == false
@@ -338,21 +369,31 @@ namespace noochAdminNew.Controllers
                          select mem).ToList();
                     dd.TotalNoOfVerifiedEmailUsers_Week = c.Count;
 
-                    c = (from t in obj.Members where t.IsDeleted == false && t.Status == "Registered" select t).ToList();
+                    c = (from t in obj.Members
+                         where t.IsDeleted == false &&
+                               t.Status == "Registered"
+                         select t).ToList();
                     dd.TotalRegisteredUsers = c.Count;
 
-                    c = (from t in obj.Members where t.IsDeleted == false && t.Status == "Active" select t).ToList();
+                    c = (from t in obj.Members
+                         where t.IsDeleted == false &&
+                               t.Status == "Active"
+                         select t).ToList();
                     dd.TotalVerifiedEmailUsers = c.Count;
 
-                    c = (from t in obj.Members where t.IsDeleted == false && t.Status == "Suspended" select t).ToList();
+                    c = (from t in obj.Members
+                         where t.IsDeleted == false &&
+                               t.Status == "Suspended"
+                         select t).ToList();
                     dd.TotalSuspendedUsers = c.Count;
 
-                    c =
-                        (from t in obj.Members where t.IsDeleted == false && t.IsVerifiedPhone == true select t).ToList();
+                    c = (from t in obj.Members
+                         where t.IsDeleted == false && 
+                               t.IsVerifiedPhone == true 
+                         select t).ToList();
                     dd.TotalVerifiedPhoneUsers = c.Count;
 
-                    c =
-                        (from t in obj.Members
+                    c = (from t in obj.Members
                          where t.IsDeleted == false && t.Status == "Active" && t.IsVerifiedPhone == true
                          select t).ToList();
                     dd.TotalVerifiedPhoneAndEmailUsers = c.Count;
@@ -360,8 +401,9 @@ namespace noochAdminNew.Controllers
                     c = (from t in obj.Members
                          join kad in obj.KnoxAccountDetails
                              on t.MemberId equals kad.MemberId
-                         where
-                             t.IsDeleted == false && t.Status == "Active" && t.IsVerifiedPhone == true &&
+                         where t.IsDeleted == false &&
+                               t.Status == "Active" &&
+                               t.IsVerifiedPhone == true &&
                              kad.IsDeleted == false
                          select t).ToList();
                     dd.TotalActiveAndVerifiedBankAccountUsers = c.Count;
@@ -419,10 +461,10 @@ namespace noochAdminNew.Controllers
             return View();
         }
 
+
         [HttpPost]
         [ActionName("CreditFundToMemberPost")]
-        public ActionResult CreditFundToMemberPost(string transferfundto, string transferAmount, string transferNotes,
-            string adminPin)
+        public ActionResult CreditFundToMemberPost(string transferfundto, string transferAmount, string transferNotes, string adminPin)
         {
             LoginResult lr = new LoginResult();
             // performing validations over input
@@ -453,57 +495,56 @@ namespace noochAdminNew.Controllers
 
             #endregion
 
-            // 1.check admin user knox account and other details
+            // CLIFF (9/7/15): THIS MUST BE UPDATED TO USE SYNAPSE V3 INSTEAD OF KNOX
+
+            // **********************  THIS REMAINS INCOMPLETE!  **********************
+
+            // 1. check admin user knox account and other details
             // 2. check fund receiver knox account details
 
-            // checking admin user details
+            // Check admin user details
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-                string adminpinEncrypted = CommonHelper.GetEncryptedData(adminPin.Trim());
                 var adminUserDetails =
                     (from c in obj.Members
-                     where
-                         c.UserName == "z2/de4EMabGlzMuO7OocHw==" && c.Status == "Active" &&
-                         c.PinNumber == adminpinEncrypted
+                     where c.UserName == "z2/de4EMabGlzMuO7OocHw==" &&
+                           c.Status == "Active" &&
+                           c.PinNumber == CommonHelper.GetEncryptedData(adminPin.Trim())
                      select c).SingleOrDefault();
 
                 if (adminUserDetails != null)
                 {
                     Guid AdminMemberId = Utility.ConvertToGuid(adminUserDetails.MemberId.ToString());
-                    // checking knox account details of admin
-                    var adminKnoxDetails =
-                        (from c in obj.KnoxAccountDetails
-                         where c.MemberId == AdminMemberId && c.IsDeleted == false
+
+                    // Get Synapse account details of admin
+                    var adminSynapseDetails =
+                        (from c in obj.SynapseBanksOfMembers
+                         where c.MemberId == AdminMemberId && c.IsDefault == true
                          select c).SingleOrDefault();
 
-                    if (adminKnoxDetails != null)
+                    if (adminSynapseDetails != null)
                     {
-                        // checking fund recepient details
+                        // Now get the Recipient's info from Members table
                         string recepientusernameencrypted = CommonHelper.GetEncryptedData(transferfundto.ToLower());
-                        var recepientdetails = (from c in obj.Members
-                                                where
-                                                    c.Nooch_ID == transferfundto ||
-                                                    c.UserName == recepientusernameencrypted && c.Status == "Active"
+
+                        var recipientMemberDetails = (from c in obj.Members
+                                                where c.Nooch_ID == transferfundto ||
+                                                      c.UserName == recepientusernameencrypted &&
+                                                      c.Status == "Active"
                                                 select c).SingleOrDefault();
-                        if (recepientdetails != null)
+
+                        if (recipientMemberDetails != null)
                         {
-                            // checking recepient knox details
-                            Guid recepeintGuid = Utility.ConvertToGuid(recepientdetails.MemberId.ToString());
-                            var recepeintknoxdetails =
+                            // Now check recipient's Synapse details
+                            Guid recepeintGuid = Utility.ConvertToGuid(recipientMemberDetails.MemberId.ToString());
+
+                            var recipientBankDetails =
                                 (from c in obj.KnoxAccountDetails
                                  where c.MemberId == recepeintGuid && c.IsDeleted == false
                                  select c).SingleOrDefault();
-                            if (recepeintknoxdetails != null)
+
+                            if (recipientBankDetails != null)
                             {
-                                // all set to call pin payment service
-                                //string ADMIN_KNOX_TRANS_ID = CommonHelper.GetDecryptedData(adminKnoxDetails.TransId.ToString());
-                                //string ADMIN_USER_KEY = CommonHelper.GetDecryptedData(adminKnoxDetails.UserKey.ToString());
-                                //string ADMIN_USER_PASS = CommonHelper.GetDecryptedData(adminKnoxDetails.UserPass.ToString());
-
-                                //string RECEPEINT_KNOX_TRANS_ID = CommonHelper.GetDecryptedData(recepeintknoxdetails.TransId.ToString());
-                                //string RECEPEINT_USER_KEY = CommonHelper.GetDecryptedData(recepeintknoxdetails.UserKey.ToString());
-                                //string RECEPEINT_USER_PASS = CommonHelper.GetDecryptedData(recepeintknoxdetails.UserPass.ToString());
-
                                 string transactionTrackingId = GetRandomTransactionTrackingId();
 
                                 Transaction trans = new Transaction();
@@ -521,7 +562,6 @@ namespace noochAdminNew.Controllers
                                 trans.Memo = transferNotes.Trim();
                                 trans.Picture = null;
 
-                                // geolocation details
                                 GeoLocation geo = new GeoLocation();
                                 geo.LocationId = Guid.NewGuid();
                                 geo.Latitude = null;
@@ -991,13 +1031,13 @@ namespace noochAdminNew.Controllers
                                     #endregion
 
                                     lr.IsSuccess = false;
-                                    lr.Message = "Knox payment failed.";
+                                    lr.Message = "Synapse payment failed.";
                                 }
                             }
                             else
                             {
                                 lr.IsSuccess = false;
-                                lr.Message = "Recepeint knox account not available.";
+                                lr.Message = "Recepeint Synapse account not available.";
                             }
                         }
                         else
@@ -1009,7 +1049,7 @@ namespace noochAdminNew.Controllers
                     else
                     {
                         lr.IsSuccess = false;
-                        lr.Message = "Admin knox account not available.";
+                        lr.Message = "Admin Synapse account not available.";
                     }
                 }
                 else
@@ -1020,6 +1060,7 @@ namespace noochAdminNew.Controllers
             }
             return Json(lr);
         }
+
 
 
         public string GetRandomTransactionTrackingId()
@@ -1058,7 +1099,6 @@ namespace noochAdminNew.Controllers
         // If session is null then redirect to home 
         public ActionResult OFAC()
         {
-
             if (Session["UserId"] == null)
             {
                 RedirectToAction("Index", "Home");
@@ -1067,257 +1107,246 @@ namespace noochAdminNew.Controllers
             return View();
         }
 
+
         // Upload the SDN , ADD files And save them in Db
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult SaveOFACListInDb()
         {
             string flag = "true", result = "";
             Boolean IsSuccess = true;
-           // if ((((Request.Files[0].FileName.Contains("SDN")) || (Request.Files[0].FileName.Contains("sdn"))) && (Request.Files[0].ContentLength > 0)) && (((Request.Files[1].FileName.Contains("ADD")) || (Request.Files[1].FileName.Contains("add"))) && (Request.Files[1].ContentLength > 0)) && (((Request.Files[2].FileName.Contains("ALT")) || (Request.Files[2].FileName.Contains("alt")) && (Request.Files[2].ContentLength > 0))))
-            //{
 
-                // Code For  SDN File
-                if (((Request.Files[0].FileName.Contains("SDN")) || (Request.Files[0].FileName.Contains("sdn"))) && (Request.Files[0].ContentLength > 0))
+            // Code For  SDN File
+            if (((Request.Files[0].FileName.Contains("SDN")) || (Request.Files[0].FileName.Contains("sdn"))) && (Request.Files[0].ContentLength > 0))
+            {
+                try
                 {
-                    try
+                    string path = AppDomain.CurrentDomain.BaseDirectory + "Content/";
+                    string filename = Path.GetFileName(Request.Files[0].FileName);
+                    Request.Files[0].SaveAs(Path.Combine(path, filename));
+
+                    // code for reading content of SDN pipe file                    
+                    FileHelperEngine engine = new FileHelperEngine(typeof(OfacList.SDNEntity));
+
+                    OfacList.SDNEntity[] res = engine.ReadFile(path + filename) as OfacList.SDNEntity[];
+
+                    if (res.Count() > 0)
                     {
-                        string path = AppDomain.CurrentDomain.BaseDirectory + "Content/";
-                        string filename = Path.GetFileName(Request.Files[0].FileName);
-                        Request.Files[0].SaveAs(Path.Combine(path, filename));
-
-                        // code for reading content of SDN pipe file                    
-                        FileHelperEngine engine = new FileHelperEngine(typeof(OfacList.SDNEntity));
-
-                        OfacList.SDNEntity[] res = engine.ReadFile(path + filename) as OfacList.SDNEntity[];
-
-                        if (res.Count() > 0)
+                        using (NOOCHEntities NoochConnection = new NOOCHEntities())
                         {
-                            using (NOOCHEntities NoochConnection = new NOOCHEntities())
+                            try
                             {
-                                try
-                                {
-                                    // Delete all records from database 
-                                    NoochConnection.Database.ExecuteSqlCommand("TRUNCATE TABLE SDN");
-                                    IsSuccess = true;
-                                }
-                                catch (Exception ex)
-                                {
-                                    Logger.Error("Error In Deleting SDN");
-
-                                    flag = "false";
-                                    result = ex.ToString();
-                                    IsSuccess = false;
-                                }
-
-                                if (IsSuccess == true)
-                                {
-                                    // records deleted, then insert new records into DB
-                                    string d = AddNewDataInSDN(res);
-                                    if (d != "Records Added Successfully.")
-                                    {
-                                        Logger.Error("Error In Inserting SDN");
-                                        flag = "false";
-                                        result = d;
-                                    }
-                                    else
-                                    {
-                                        Logger.Info("SDN Uploaded Successfully");
-                                        result = "SDN Table records updated successfully.";
-
-                                    }
-                                }
+                                // Delete all records from database 
+                                NoochConnection.Database.ExecuteSqlCommand("TRUNCATE TABLE SDN");
+                                IsSuccess = true;
                             }
-                        }
-
-                        // delete file from uploads folder
-                        if ((System.IO.File.Exists(path + filename)))
-                        {
-                            System.IO.File.Delete(path + filename);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error("Error In SDN");
-                        flag = "false";
-                        result = ex.Message.ToString();
-                    }
-
-                }
-                else if (((Request.Files[0].FileName.Contains("SDN") == false) || (Request.Files[0].FileName.Contains("sdn") == false)) && (Request.Files[0].ContentLength > 0))
-                {
-                    Logger.Error("Invalid files Uploaded.Kindly upload in correct formats for SDN");
-
-                    flag = "false";
-                    result = "Invalid file name for SDN table file.";
-
-                }
-
-                // Code For ADD File Type ADD
-                if (((Request.Files[1].FileName.Contains("ADD")) || (Request.Files[1].FileName.Contains("add"))) && (Request.Files[1].ContentLength > 0))
-                {
-                    try
-                    {
-                        string path = AppDomain.CurrentDomain.BaseDirectory + "Content/";
-                        string filename = Path.GetFileName(Request.Files[1].FileName);
-                        Request.Files[1].SaveAs(Path.Combine(path, filename));
-
-                        // code for reading content of ADD pipe file
-                        FileHelperEngine engineadd = new FileHelperEngine(typeof(OfacList.ADDEntity));
-
-                        OfacList.ADDEntity[] addres = engineadd.ReadFile(path + filename) as OfacList.ADDEntity[];
-
-                        if (addres.Count() > 0)
-                        {
-                            // drop existing records from database and add new
-                            using (NOOCHEntities NoochConnection = new NOOCHEntities())
+                            catch (Exception ex)
                             {
-                                try
-                                {
-                                    // Deletting all records from database
-                                    NoochConnection.Database.ExecuteSqlCommand("TRUNCATE TABLE [ADD]");
-                                    IsSuccess = true;
-                                }
-                                catch (Exception ex)
-                                {
-                                    Logger.Error("Error In Deleting Add");
-                                    flag = "false";
-                                    result = ex.ToString();
-                                    IsSuccess = false;
-                                }
-                            }
+                                Logger.Error("Error In Deleting SDN");
 
-
-                            if (IsSuccess == true)
-                            {
-                                // records deleted, code to insert new records into DB
-                                string d = AddNewDataInADD(addres);
-                                if (d != "Records Added Successfully.")
-                                {
-                                    Logger.Error("Error In Inserting ADD");
-                                    flag = "false";
-                                    result += d;
-                                }
-                                else
-                                {
-                                    Logger.Info("ADD Uploaded SuccessFully");
-                                    result = result + " ADD Table records updated successfully.";
-                                }
-                            }
-
-                        }
-
-                        // delete file from uploads folder
-                        if ((System.IO.File.Exists(path + filename)))
-                        {
-                            System.IO.File.Delete(path + filename);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Error("Error In ADD file");
-                        flag = "false";
-                        result = result + ex.Message.ToString();
-                    }
-
-
-                }
-                else if (((Request.Files[1].FileName.Contains("ADD") == false) || (Request.Files[1].FileName.Contains("add") == false)) && (Request.Files[1].ContentLength > 0))
-                {
-                    Logger.Error("Invalid files Uploaded.Kindly upload in correct formats for ALT");
-                    flag = "false";
-                    result += "Invalid file name for ADD table file.";
-
-                }
-
-
-                // Code For ALT File Type 
-                if (((Request.Files[2].FileName.Contains("ALT")) || (Request.Files[2].FileName.Contains("ALT"))) && (Request.Files[2].ContentLength > 0))
-                {
-                    try
-                    {
-                        string path = AppDomain.CurrentDomain.BaseDirectory + "Content/";
-                        string filename = Path.GetFileName(Request.Files[2].FileName);
-                        Request.Files[2].SaveAs(Path.Combine(path, filename));
-
-
-                        // code for reading content of ALT pipe file
-                        FileHelperEngine enginealt = new FileHelperEngine(typeof(OfacList.ALTEntity));
-
-                        OfacList.ALTEntity[] altress = enginealt.ReadFile(path + filename) as OfacList.ALTEntity[];
-
-                        if (altress.Count() > 0)
-                        {
-                            // drop existing records from database and add new
-                            using (NOOCHEntities NoochConnection = new NOOCHEntities())
-                            {
-                                try
-                                {
-                                    // Deletting all records from database
-                                    NoochConnection.Database.ExecuteSqlCommand("TRUNCATE TABLE ALT");
-                                    IsSuccess = true;
-                                }
-                                catch (Exception ex)
-                                {
-                                    Logger.Error("Error In Deleting ALT");
-                                    flag = "false";
-                                    result = ex.ToString();
-                                    IsSuccess = false;
-                                }
+                                flag = "false";
+                                result = ex.ToString();
+                                IsSuccess = false;
                             }
 
                             if (IsSuccess == true)
                             {
-                                // records deleted, code to insert new records into DB
-                                string d = AddNewDataInALT(altress);
+                                // records deleted, then insert new records into DB
+                                string d = AddNewDataInSDN(res);
                                 if (d != "Records Added Successfully.")
                                 {
-                                    Logger.Error("Error In Inserting ALT");
+                                    Logger.Error("Error In Inserting SDN");
                                     flag = "false";
-                                    result += d;
+                                    result = d;
                                 }
                                 else
                                 {
-                                    Logger.Info("ALT Uploaded SuccessFully");
-                                    result = result + " ALT Table records updated successfully.";
+                                    Logger.Info("SDN Uploaded Successfully");
+                                    result = "SDN Table records updated successfully.";
 
                                 }
                             }
                         }
+                    }
 
-                        // delete file from uploads folder
-                        if ((System.IO.File.Exists(path + filename)))
+                    // delete file from uploads folder
+                    if ((System.IO.File.Exists(path + filename)))
+                    {
+                        System.IO.File.Delete(path + filename);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("Error In SDN");
+                    flag = "false";
+                    result = ex.Message.ToString();
+                }
+
+            }
+            else if (((Request.Files[0].FileName.Contains("SDN") == false) || (Request.Files[0].FileName.Contains("sdn") == false)) && (Request.Files[0].ContentLength > 0))
+            {
+                Logger.Error("Invalid files Uploaded.Kindly upload in correct formats for SDN");
+
+                flag = "false";
+                result = "Invalid file name for SDN table file.";
+
+            }
+
+            // Code For ADD File Type ADD
+            if (((Request.Files[1].FileName.Contains("ADD")) || (Request.Files[1].FileName.Contains("add"))) && (Request.Files[1].ContentLength > 0))
+            {
+                try
+                {
+                    string path = AppDomain.CurrentDomain.BaseDirectory + "Content/";
+                    string filename = Path.GetFileName(Request.Files[1].FileName);
+                    Request.Files[1].SaveAs(Path.Combine(path, filename));
+
+                    // code for reading content of ADD pipe file
+                    FileHelperEngine engineadd = new FileHelperEngine(typeof(OfacList.ADDEntity));
+
+                    OfacList.ADDEntity[] addres = engineadd.ReadFile(path + filename) as OfacList.ADDEntity[];
+
+                    if (addres.Count() > 0)
+                    {
+                        // drop existing records from database and add new
+                        using (NOOCHEntities NoochConnection = new NOOCHEntities())
                         {
-                            System.IO.File.Delete(path + filename);
+                            try
+                            {
+                                // Deletting all records from database
+                                NoochConnection.Database.ExecuteSqlCommand("TRUNCATE TABLE [ADD]");
+                                IsSuccess = true;
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Error("Error In Deleting Add");
+                                flag = "false";
+                                result = ex.ToString();
+                                IsSuccess = false;
+                            }
+                        }
+
+
+                        if (IsSuccess == true)
+                        {
+                            // records deleted, code to insert new records into DB
+                            string d = AddNewDataInADD(addres);
+                            if (d != "Records Added Successfully.")
+                            {
+                                Logger.Error("Error In Inserting ADD");
+                                flag = "false";
+                                result += d;
+                            }
+                            else
+                            {
+                                Logger.Info("ADD Uploaded SuccessFully");
+                                result = result + " ADD Table records updated successfully.";
+                            }
+                        }
+
+                    }
+
+                    // delete file from uploads folder
+                    if ((System.IO.File.Exists(path + filename)))
+                    {
+                        System.IO.File.Delete(path + filename);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("Error In ADD file");
+                    flag = "false";
+                    result = result + ex.Message.ToString();
+                }
+
+
+            }
+            else if (((Request.Files[1].FileName.Contains("ADD") == false) || (Request.Files[1].FileName.Contains("add") == false)) && (Request.Files[1].ContentLength > 0))
+            {
+                Logger.Error("Invalid files Uploaded.Kindly upload in correct formats for ALT");
+                flag = "false";
+                result += "Invalid file name for ADD table file.";
+
+            }
+
+
+            // Code For ALT File Type 
+            if (((Request.Files[2].FileName.Contains("ALT")) || (Request.Files[2].FileName.Contains("ALT"))) && (Request.Files[2].ContentLength > 0))
+            {
+                try
+                {
+                    string path = AppDomain.CurrentDomain.BaseDirectory + "Content/";
+                    string filename = Path.GetFileName(Request.Files[2].FileName);
+
+                    Request.Files[2].SaveAs(Path.Combine(path, filename));
+
+                    // code for reading content of ALT pipe file
+                    FileHelperEngine enginealt = new FileHelperEngine(typeof(OfacList.ALTEntity));
+
+                    OfacList.ALTEntity[] altress = enginealt.ReadFile(path + filename) as OfacList.ALTEntity[];
+
+                    if (altress.Count() > 0)
+                    {
+                        // drop existing records from database and add new
+                        using (NOOCHEntities NoochConnection = new NOOCHEntities())
+                        {
+                            try
+                            {
+                                // Deleting all records from database
+                                NoochConnection.Database.ExecuteSqlCommand("TRUNCATE TABLE ALT");
+                                IsSuccess = true;
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Error("Error In Deleting ALT");
+                                flag = "false";
+                                result = ex.ToString();
+                                IsSuccess = false;
+                            }
+                        }
+
+                        if (IsSuccess == true)
+                        {
+                            // records deleted, code to insert new records into DB
+                            string d = AddNewDataInALT(altress);
+                            if (d != "Records Added Successfully.")
+                            {
+                                Logger.Error("Error In Inserting ALT");
+                                flag = "false";
+                                result += d;
+                            }
+                            else
+                            {
+                                Logger.Info("ALT Uploaded SuccessFully");
+                                result = result + " ALT Table records updated successfully.";
+                            }
                         }
                     }
-                    catch (Exception ex)
+
+                    // delete file from uploads folder
+                    if ((System.IO.File.Exists(path + filename)))
                     {
-                        Logger.Error("Error In ALT File");
-                        flag = "false";
-                        result = result + ex.Message.ToString();
+                        System.IO.File.Delete(path + filename);
                     }
                 }
-                else if (((Request.Files[2].FileName.Contains("ALT") == false) || (Request.Files[2].FileName.Contains("alt") == false)) && (Request.Files[2].ContentLength > 0))
+                catch (Exception ex)
                 {
+                    Logger.Error("Error In ALT File");
                     flag = "false";
-                    result += "Invalid file name for ALT table file.";
-                    Logger.Error("Invalid files Uploaded.Kindly upload in correct formats for ALT");
-
+                    result = result + ex.Message.ToString();
                 }
+            }
+            else if (((Request.Files[2].FileName.Contains("ALT") == false) || (Request.Files[2].FileName.Contains("alt") == false)) && (Request.Files[2].ContentLength > 0))
+            {
+                flag = "false";
+                result += "Invalid file name for ALT table file.";
+                Logger.Error("Invalid files Uploaded.Kindly upload in correct formats for ALT");
 
-                if (flag.Equals("true"))
-                {
-                    result = "Files uploaded successfully.";
-                }
+            }
 
-            //}
-            //else
-            //{
-            //    Logger.Error("Invalid files Uploaded.Kindly upload in correct formats");
-
-            //    flag = "false";
-            //    result = "Invalid files Uploaded.";
-            //}
+            if (flag.Equals("true"))
+            {
+                result = "Files uploaded successfully.";
+            }
 
             ViewData["result"] = result;
 
@@ -1325,10 +1354,8 @@ namespace noochAdminNew.Controllers
         }
 
 
-
         public ActionResult SearchAdmin()
         {
-
             // getting all active admins from db
             using (NOOCHEntities obj = new NOOCHEntities())
             {
@@ -1350,15 +1377,16 @@ namespace noochAdminNew.Controllers
             }
         }
 
+
         public ActionResult CreateAdmin()
         {
             return View();
         }
 
+
         [HttpPost]
         [ActionName("CreateAndSaveNewAdminUser")]
-        public ActionResult CreateAndSaveNewAdminUser(string userName, string emailAddress, string firstName,
-            string lastName, string level)
+        public ActionResult CreateAndSaveNewAdminUser(string userName, string emailAddress, string firstName, string lastName, string level)
         {
             Guid d = Utility.ConvertToGuid(Session["UserId"].ToString());
             CreateAdminResultClass s = new CreateAdminResultClass();
@@ -1381,7 +1409,6 @@ namespace noochAdminNew.Controllers
 
         private static string GenerateRandomPassword()
         {
-
             const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@!#$%^&*_+";
             var random = new Random();
 
@@ -1394,7 +1421,6 @@ namespace noochAdminNew.Controllers
         }
 
 
-
         public AdminUser GetAdminDetailsByUserName(string username)
         {
             using (NOOCHEntities obj = new NOOCHEntities())
@@ -1404,7 +1430,6 @@ namespace noochAdminNew.Controllers
                         .SingleOrDefault();
                 return adminUser;
             }
-
         }
 
 
@@ -1415,10 +1440,19 @@ namespace noochAdminNew.Controllers
                 var adminUser = (from c in obj.AdminUsers where c.UserId == adminid select c).SingleOrDefault();
                 return adminUser;
             }
-
         }
 
-        //To save manager or admin details into database.
+
+        /// <summary>
+        /// To save manager or admin details into database.
+        /// </summary>
+        /// <param name="adminId"></param>
+        /// <param name="userName"></param>
+        /// <param name="emailAddress"></param>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        /// <param name="level"></param>
+        /// <param name="loggedInUserId"></param>
         public CreateAdminResultClass CreateOrUpdateAdmin(string adminId, string userName, string emailAddress,
             string firstName, string lastName, string level, Guid loggedInUserId)
         {
@@ -1438,7 +1472,7 @@ namespace noochAdminNew.Controllers
                         var fromAddress = Utility.GetValueFromConfig("adminMail");
                         var password = GenerateRandomPassword();
                         string encryptedPassword = CommonHelper.GetEncryptedData((password.Trim()));
-                        // Add any tokens you want to find/replace within your template file
+
                         var tokens = new Dictionary<string, string>
                         {
                             {Constants.PLACEHOLDER_FIRST_NAME, firstName},
@@ -1448,25 +1482,18 @@ namespace noochAdminNew.Controllers
                         try
                         {
                             Logger.Info("New Admin Attempt to send email [" + emailAddress + "].");
-                            //Utility.SendEmail("AdminPasswordMailTemplate",
-                            //fromAddress, emailAddress, 
-                            //"Nooch password.",null, password,
-                            //tokens, null, null, null);
 
                             Utility.SendEmail("AdminPasswordMailTemplate", fromAddress, emailAddress, "Nooch password.",
                                 null, tokens, null, null, null);
-
                         }
                         catch (Exception)
                         {
-                            // to revert the member record when mail is not sent successfully.
                             Logger.Error("New Admin  CreateOrUpdateAdmin - Admin default password mail not sent to [" +
                                          userName + "].");
 
                             car.IsSuccess = false;
                             car.Message = "Problem occured in sending password mail. Please retry.";
                             return car;
-
                         }
 
                         Guid g = Guid.NewGuid();
@@ -1485,8 +1512,6 @@ namespace noochAdminNew.Controllers
                             DateCreated = DateTime.Now
                         };
 
-                        //Session["UserId"] = query.UserId;
-                        //Session["RoleId"] = query.AdminLevel;
                         admin.Password = encryptedPassword;
 
                         obj.AdminUsers.Add(admin);
@@ -1548,7 +1573,10 @@ namespace noochAdminNew.Controllers
         }
 
 
-        ////////////Add new data in SDN table
+        /// <summary>
+        /// Add new data in SDN table.
+        /// </summary>
+        /// <param name="res"></param>
         public string AddNewDataInSDN(OfacList.SDNEntity[] res)
         {
             bool b = true;
@@ -1595,7 +1623,10 @@ namespace noochAdminNew.Controllers
         }
 
 
-        //Insert ADD Table Data
+        /// <summary>
+        /// Insert ADD Table Data
+        /// </summary>
+        /// <param name="res"></param>
         public string AddNewDataInADD(OfacList.ADDEntity[] res)
         {
             bool b = true;
@@ -1636,7 +1667,7 @@ namespace noochAdminNew.Controllers
         }
 
 
-        //Add ALT Table Data
+        // Add ALT Table Data
         public string AddNewDataInALT(OfacList.ALTEntity[] res)
         {
             bool b = true;
