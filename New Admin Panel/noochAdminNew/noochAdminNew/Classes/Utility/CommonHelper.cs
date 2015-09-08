@@ -65,6 +65,27 @@ namespace noochAdminNew.Classes.Utility
             }
         }
 
+
+        public static string GetMemberNameFromMemberId(string memberId)
+        {
+            using (var noochConnection = new NOOCHEntities())
+            {
+                Guid memId = Utility.ConvertToGuid(memberId);
+
+                var memberNotifications = (from c in noochConnection.Members where c.MemberId == memId select c).SingleOrDefault();
+
+                if (memberNotifications!=null)
+                {
+                    return UppercaseFirst(GetDecryptedData(memberNotifications.FirstName)) + " "+
+                    UppercaseFirst(GetDecryptedData(memberNotifications.LastName));
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+
         public static string FormatPhoneNumber(string sourcePhone)
         {
             if (String.IsNullOrEmpty(sourcePhone) || sourcePhone.ToString().Length != 10)

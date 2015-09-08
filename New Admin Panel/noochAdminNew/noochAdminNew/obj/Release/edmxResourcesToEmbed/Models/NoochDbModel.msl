@@ -69,16 +69,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="BankPictures">
-      <EntityTypeMapping TypeName="NOOCHModel.BankPicture">
-        <MappingFragment StoreEntitySet="BankPictures">
-          <ScalarProperty Name="BankPictureId" ColumnName="BankPictureId" />
-          <ScalarProperty Name="BankPicture1" ColumnName="BankPicture" />
-          <ScalarProperty Name="RoutingNumber" ColumnName="RoutingNumber" />
-          <ScalarProperty Name="BankName" ColumnName="BankName" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="GeoLocations">
       <EntityTypeMapping TypeName="NOOCHModel.GeoLocation">
         <MappingFragment StoreEntitySet="GeoLocations">
@@ -125,19 +115,6 @@
           <ScalarProperty Name="BankName" ColumnName="BankName" />
           <ScalarProperty Name="AccountNum" ColumnName="AccountNum" />
           <ScalarProperty Name="BankImageURL" ColumnName="BankImageURL" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Locations">
-      <EntityTypeMapping TypeName="NOOCHModel.Location">
-        <MappingFragment StoreEntitySet="Locations">
-          <ScalarProperty Name="LocationId" ColumnName="LocationId" />
-          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
-          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-          <ScalarProperty Name="LastName" ColumnName="LastName" />
-          <ScalarProperty Name="Photo" ColumnName="Photo" />
-          <ScalarProperty Name="Miles" ColumnName="Miles" />
-          <ScalarProperty Name="State" ColumnName="State" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -377,5 +354,106 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="SynapseBankLoginResults">
+      <EntityTypeMapping TypeName="NOOCHModel.SynapseBankLoginResult">
+        <MappingFragment StoreEntitySet="SynapseBankLoginResults">
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="dateCreated" ColumnName="dateCreated" />
+          <ScalarProperty Name="IsSuccess" ColumnName="IsSuccess" />
+          <ScalarProperty Name="AuthType" ColumnName="AuthType" />
+          <ScalarProperty Name="mfaMessage" ColumnName="mfaMessage" />
+          <ScalarProperty Name="IsCodeBasedAuth" ColumnName="IsCodeBasedAuth" />
+          <ScalarProperty Name="IsQuestionBasedAuth" ColumnName="IsQuestionBasedAuth" />
+          <ScalarProperty Name="mfaQuestion" ColumnName="mfaQuestion" />
+          <ScalarProperty Name="BankAccessToken" ColumnName="BankAccessToken" />
+          <ScalarProperty Name="IsMfa" ColumnName="IsMfa" />
+          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SynapseCreateOrderResults">
+      <EntityTypeMapping TypeName="NOOCHModel.SynapseCreateOrderResult">
+        <MappingFragment StoreEntitySet="SynapseCreateOrderResults">
+          <ScalarProperty Name="TransactionDateTime" ColumnName="TransactionDateTime" />
+          <ScalarProperty Name="Result_total" ColumnName="Result_total" />
+          <ScalarProperty Name="Result_tip" ColumnName="Result_tip" />
+          <ScalarProperty Name="Result_ticket_number" ColumnName="Result_ticket_number" />
+          <ScalarProperty Name="Result_supp_id" ColumnName="Result_supp_id" />
+          <ScalarProperty Name="Result_status_url" ColumnName="Result_status_url" />
+          <ScalarProperty Name="Result_status" ColumnName="Result_status" />
+          <ScalarProperty Name="Result_seller_seller_id" ColumnName="Result_seller_seller_id" />
+          <ScalarProperty Name="Result_seller_seller_fullname" ColumnName="Result_seller_seller_fullname" />
+          <ScalarProperty Name="Result_seller_seller_avatar" ColumnName="Result_seller_seller_avatar" />
+          <ScalarProperty Name="Result_seller_has_avatar" ColumnName="Result_seller_has_avatar" />
+          <ScalarProperty Name="Result_seller_accept_gratuity" ColumnName="Result_seller_accept_gratuity" />
+          <ScalarProperty Name="Result_resource_uri" ColumnName="Result_resource_uri" />
+          <ScalarProperty Name="Result_note" ColumnName="Result_note" />
+          <ScalarProperty Name="Result_is_buyer" ColumnName="Result_is_buyer" />
+          <ScalarProperty Name="Result_id" ColumnName="Result_id" />
+          <ScalarProperty Name="Result_fee" ColumnName="Result_fee" />
+          <ScalarProperty Name="Result_facilitator_fee" ColumnName="Result_facilitator_fee" />
+          <ScalarProperty Name="Result_discount" ColumnName="Result_discount" />
+          <ScalarProperty Name="Result_date_settled" ColumnName="Result_date_settled" />
+          <ScalarProperty Name="Result_date" ColumnName="Result_date" />
+          <ScalarProperty Name="Result_order_bank_nickname" ColumnName="Result_order_bank_nickname" />
+          <ScalarProperty Name="Result_order_bank_id" ColumnName="Result_order_bank_id" />
+          <ScalarProperty Name="Result_order_amount" ColumnName="Result_order_amount" />
+          <ScalarProperty Name="Result_order_account_type" ColumnName="Result_order_account_type" />
+          <ScalarProperty Name="Result_success" ColumnName="Result_success" />
+          <ScalarProperty Name="Result_balance_verified" ColumnName="Result_balance_verified" />
+          <ScalarProperty Name="Result_blanace" ColumnName="Result_blanace" />
+          <ScalarProperty Name="TransBankId" ColumnName="TransBankId" />
+          <ScalarProperty Name="TransOAuthConsumberKey" ColumnName="TransOAuthConsumberKey" />
+          <ScalarProperty Name="TransSellerId" ColumnName="TransSellerId" />
+          <ScalarProperty Name="TransAmount" ColumnName="TransAmount" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SynapseCreateUserResults">
+      <EntityTypeMapping TypeName="NOOCHModel.SynapseCreateUserResult">
+        <MappingFragment StoreEntitySet="SynapseCreateUserResults">
+          <ScalarProperty Name="MemberIdAfterSignup" ColumnName="MemberIdAfterSignup" />
+          <ScalarProperty Name="HasNonNoochUserSignedUp" ColumnName="HasNonNoochUserSignedUp" />
+          <ScalarProperty Name="TransactionIdFromWhichInvited" ColumnName="TransactionIdFromWhichInvited" />
+          <ScalarProperty Name="NonNoochUserEmail" ColumnName="NonNoochUserEmail" />
+          <ScalarProperty Name="IsForNonNoochUser" ColumnName="IsForNonNoochUser" />
+          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="success" ColumnName="success" />
+          <ScalarProperty Name="refresh_token" ColumnName="refresh_token" />
+          <ScalarProperty Name="reason" ColumnName="reason" />
+          <ScalarProperty Name="expires_in" ColumnName="expires_in" />
+          <ScalarProperty Name="access_token" ColumnName="access_token" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="GetLiveTransactionsForDashboard" FunctionName="NOOCHModel.Store.GetLiveTransactionsForDashboard">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="NOOCHModel.GetLiveTransactionsForDashboard_Result1">
+          <ScalarProperty Name="RecipientId" ColumnName="RecipientId" />
+          <ScalarProperty Name="SenderId" ColumnName="SenderId" />
+          <ScalarProperty Name="TransactionDate" ColumnName="TransactionDate" />
+          <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="GeoLocationState" ColumnName="GeoLocationState" />
+          <ScalarProperty Name="GeoLocationCity" ColumnName="GeoLocationCity" />
+          <ScalarProperty Name="TransactionStatus" ColumnName="TransactionStatus" />
+          <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+          <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+          <ScalarProperty Name="TransactionType" ColumnName="TransactionType" />
+          <ScalarProperty Name="DisputeStatus" ColumnName="DisputeStatus" />
+          <ScalarProperty Name="IsPhoneInvitation" ColumnName="IsPhoneInvitation" />
+          <ScalarProperty Name="InvitationSentTo" ColumnName="InvitationSentTo" />
+          <ScalarProperty Name="PhoneNumberInvited" ColumnName="PhoneNumberInvited" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

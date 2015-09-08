@@ -6,11 +6,9 @@
     <EntitySet Name="AdminUsers" EntityType="NOOCHModel.AdminUser" />
     <EntitySet Name="ALTs" EntityType="NOOCHModel.ALT" />
     <EntitySet Name="AuthenticationTokens" EntityType="NOOCHModel.AuthenticationToken" />
-    <EntitySet Name="BankPictures" EntityType="NOOCHModel.BankPicture" />
     <EntitySet Name="GeoLocations" EntityType="NOOCHModel.GeoLocation" />
     <EntitySet Name="InviteCodes" EntityType="NOOCHModel.InviteCode" />
     <EntitySet Name="KnoxAccountDetails" EntityType="NOOCHModel.KnoxAccountDetail" />
-    <EntitySet Name="Locations" EntityType="NOOCHModel.Location" />
     <EntitySet Name="MemberNotifications" EntityType="NOOCHModel.MemberNotification" />
     <EntitySet Name="PasswordResetRequests" EntityType="NOOCHModel.PasswordResetRequest" />
     <EntitySet Name="SDNs" EntityType="NOOCHModel.SDN" />
@@ -57,6 +55,9 @@
       <End Role="Member" EntitySet="Members" />
       <End Role="SynapseBankLoginResult" EntitySet="SynapseBankLoginResults" />
     </AssociationSet>
+    <FunctionImport Name="GetLiveTransactionsForDashboard" ReturnType="Collection(NOOCHModel.GetLiveTransactionsForDashboard_Result1)">
+      <Parameter Name="vType" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="ADD">
     <Key>
@@ -121,15 +122,6 @@
     <Property Name="FriendRequestId" Type="Guid" />
     <Property Name="VerifiedOn" Type="DateTime" Precision="3" />
   </EntityType>
-  <EntityType Name="BankPicture">
-    <Key>
-      <PropertyRef Name="BankPictureId" />
-    </Key>
-    <Property Name="BankPictureId" Type="Guid" Nullable="false" />
-    <Property Name="BankPicture1" Type="Binary" MaxLength="Max" FixedLength="false" />
-    <Property Name="RoutingNumber" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-    <Property Name="BankName" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
-  </EntityType>
   <EntityType Name="GeoLocation">
     <Key>
       <PropertyRef Name="LocationId" />
@@ -177,18 +169,6 @@
     <Property Name="BankImageURL" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
     <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <NavigationProperty Name="Member" Relationship="NOOCHModel.FK_KnoxAccountDetails_Members" FromRole="KnoxAccountDetail" ToRole="Member" />
-  </EntityType>
-  <EntityType Name="Location">
-    <Key>
-      <PropertyRef Name="LocationId" />
-    </Key>
-    <Property Name="LocationId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-    <Property Name="MemberId" Type="Guid" />
-    <Property Name="FirstName" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
-    <Property Name="LastName" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
-    <Property Name="Photo" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-    <Property Name="Miles" Type="Decimal" Precision="18" Scale="2" />
-    <Property Name="State" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="MemberNotification">
     <Key>
@@ -586,4 +566,35 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <ComplexType Name="GetLiveTransactionsForDashboard_Result">
+    <Property Type="Guid" Name="RecipientId" Nullable="true" />
+    <Property Type="Guid" Name="SenderId" Nullable="false" />
+    <Property Type="DateTime" Name="TransactionDate" Nullable="true" Precision="23" />
+    <Property Type="Guid" Name="TransactionId" Nullable="false" />
+    <Property Type="Decimal" Name="Amount" Nullable="false" Precision="19" />
+    <Property Type="String" Name="GeoLocationState" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="GeoLocationCity" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="TransactionStatus" Nullable="false" MaxLength="15" />
+    <Property Type="Double" Name="Latitude" Nullable="true" />
+    <Property Type="Double" Name="Longitude" Nullable="true" />
+    <Property Type="String" Name="TransactionType" Nullable="true" />
+    <Property Type="String" Name="DisputeStatus" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="GetLiveTransactionsForDashboard_Result1">
+    <Property Type="Guid" Name="RecipientId" Nullable="true" />
+    <Property Type="Guid" Name="SenderId" Nullable="false" />
+    <Property Type="DateTime" Name="TransactionDate" Nullable="true" Precision="23" />
+    <Property Type="Guid" Name="TransactionId" Nullable="false" />
+    <Property Type="Decimal" Name="Amount" Nullable="false" Precision="19" />
+    <Property Type="String" Name="GeoLocationState" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="GeoLocationCity" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="TransactionStatus" Nullable="false" MaxLength="15" />
+    <Property Type="Double" Name="Latitude" Nullable="true" />
+    <Property Type="Double" Name="Longitude" Nullable="true" />
+    <Property Type="String" Name="TransactionType" Nullable="true" />
+    <Property Type="String" Name="DisputeStatus" Nullable="true" />
+    <Property Type="Boolean" Name="IsPhoneInvitation" Nullable="true" />
+    <Property Type="String" Name="InvitationSentTo" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="PhoneNumberInvited" Nullable="true" MaxLength="50" />
+  </ComplexType>
 </Schema>

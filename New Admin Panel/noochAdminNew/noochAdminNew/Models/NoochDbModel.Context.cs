@@ -33,11 +33,9 @@ namespace noochAdminNew.Models
         public DbSet<AdminUser> AdminUsers { get; set; }
         public DbSet<ALT> ALTs { get; set; }
         public DbSet<AuthenticationToken> AuthenticationTokens { get; set; }
-        public DbSet<BankPicture> BankPictures { get; set; }
         public DbSet<GeoLocation> GeoLocations { get; set; }
         public DbSet<InviteCode> InviteCodes { get; set; }
         public DbSet<KnoxAccountDetail> KnoxAccountDetails { get; set; }
-        public DbSet<Location> Locations { get; set; }
         public DbSet<MemberNotification> MemberNotifications { get; set; }
         public DbSet<PasswordResetRequest> PasswordResetRequests { get; set; }
         public DbSet<SDN> SDNs { get; set; }
@@ -70,6 +68,15 @@ namespace noochAdminNew.Models
                 new ObjectParameter("vFilterType", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetTopReferringMembers_Result>("GetTopReferringMembers", vFilterTypeParameter);
+        }
+    
+        public virtual ObjectResult<GetLiveTransactionsForDashboard_Result1> GetLiveTransactionsForDashboard(Nullable<int> vType)
+        {
+            var vTypeParameter = vType.HasValue ?
+                new ObjectParameter("vType", vType) :
+                new ObjectParameter("vType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLiveTransactionsForDashboard_Result1>("GetLiveTransactionsForDashboard", vTypeParameter);
         }
     }
 }

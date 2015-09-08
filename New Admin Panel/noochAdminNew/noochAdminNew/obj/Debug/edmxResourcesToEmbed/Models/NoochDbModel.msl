@@ -434,5 +434,26 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="GetLiveTransactionsForDashboard" FunctionName="NOOCHModel.Store.GetLiveTransactionsForDashboard">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="NOOCHModel.GetLiveTransactionsForDashboard_Result1">
+          <ScalarProperty Name="RecipientId" ColumnName="RecipientId" />
+          <ScalarProperty Name="SenderId" ColumnName="SenderId" />
+          <ScalarProperty Name="TransactionDate" ColumnName="TransactionDate" />
+          <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="GeoLocationState" ColumnName="GeoLocationState" />
+          <ScalarProperty Name="GeoLocationCity" ColumnName="GeoLocationCity" />
+          <ScalarProperty Name="TransactionStatus" ColumnName="TransactionStatus" />
+          <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+          <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+          <ScalarProperty Name="TransactionType" ColumnName="TransactionType" />
+          <ScalarProperty Name="DisputeStatus" ColumnName="DisputeStatus" />
+          <ScalarProperty Name="IsPhoneInvitation" ColumnName="IsPhoneInvitation" />
+          <ScalarProperty Name="InvitationSentTo" ColumnName="InvitationSentTo" />
+          <ScalarProperty Name="PhoneNumberInvited" ColumnName="PhoneNumberInvited" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

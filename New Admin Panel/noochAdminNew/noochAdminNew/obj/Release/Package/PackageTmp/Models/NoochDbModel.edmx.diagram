@@ -10,11 +10,9 @@
         <EntityTypeShape EntityType="NOOCHModel.AdminUser" Width="1.5" PointX="5.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.ALT" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.AuthenticationToken" Width="1.5" PointX="7.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="NOOCHModel.BankPicture" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.GeoLocation" Width="1.5" PointX="3.75" PointY="1.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.InviteCode" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.KnoxAccountDetail" Width="1.5" PointX="3" PointY="6" IsExpanded="true" />
-        <EntityTypeShape EntityType="NOOCHModel.Location" Width="1.5" PointX="8.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.MemberNotification" Width="1.5" PointX="3" PointY="10.125" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.PasswordResetRequest" Width="1.5" PointX="3" PointY="17.125" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.SDN" Width="1.5" PointX="10.75" PointY="4.75" IsExpanded="true" />
@@ -29,6 +27,10 @@
         <AssociationConnector Association="NOOCHModel.FK_PasswordResetRequests_Members" />
         <AssociationConnector Association="NOOCHModel.FK_Transactions_Members2" />
         <AssociationConnector Association="NOOCHModel.FK_Transactions_Members3" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseBankLoginResult" Width="1.5" PointX="3" PointY="19.875" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseCreateOrderResult" Width="1.5" PointX="13.375" PointY="6.75" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseCreateUserResult" Width="1.5" PointX="8.375" PointY="13.75" />
+        <AssociationConnector Association="NOOCHModel.FK_SynapseBankLoginResults_Members" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

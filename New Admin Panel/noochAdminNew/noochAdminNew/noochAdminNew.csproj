@@ -218,10 +218,13 @@
     <Compile Include="Models\AuthenticationToken.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\BankPicture.cs">
+    <Compile Include="Models\GeoLocation.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\GeoLocation.cs">
+    <Compile Include="Models\GetLiveTransactionsForDashboard_Result.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\GetLiveTransactionsForDashboard_Result1.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\GetTopReferringMembers_Result.cs">
@@ -231,9 +234,6 @@
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\KnoxAccountDetail.cs">
-      <DependentUpon>NoochDbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Location.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Member.cs">

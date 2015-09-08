@@ -6,11 +6,9 @@
     <EntitySet Name="AdminUsers" EntityType="NOOCHModel.AdminUser" />
     <EntitySet Name="ALTs" EntityType="NOOCHModel.ALT" />
     <EntitySet Name="AuthenticationTokens" EntityType="NOOCHModel.AuthenticationToken" />
-    <EntitySet Name="BankPictures" EntityType="NOOCHModel.BankPicture" />
     <EntitySet Name="GeoLocations" EntityType="NOOCHModel.GeoLocation" />
     <EntitySet Name="InviteCodes" EntityType="NOOCHModel.InviteCode" />
     <EntitySet Name="KnoxAccountDetails" EntityType="NOOCHModel.KnoxAccountDetail" />
-    <EntitySet Name="Locations" EntityType="NOOCHModel.Location" />
     <EntitySet Name="MemberNotifications" EntityType="NOOCHModel.MemberNotification" />
     <EntitySet Name="PasswordResetRequests" EntityType="NOOCHModel.PasswordResetRequest" />
     <EntitySet Name="SDNs" EntityType="NOOCHModel.SDN" />
@@ -50,6 +48,16 @@
       <End Role="Member" EntitySet="Members" />
       <End Role="Transaction" EntitySet="Transactions" />
     </AssociationSet>
+    <EntitySet Name="SynapseBankLoginResults" EntityType="NOOCHModel.SynapseBankLoginResult" />
+    <EntitySet Name="SynapseCreateOrderResults" EntityType="NOOCHModel.SynapseCreateOrderResult" />
+    <EntitySet Name="SynapseCreateUserResults" EntityType="NOOCHModel.SynapseCreateUserResult" />
+    <AssociationSet Name="FK_SynapseBankLoginResults_Members" Association="NOOCHModel.FK_SynapseBankLoginResults_Members">
+      <End Role="Member" EntitySet="Members" />
+      <End Role="SynapseBankLoginResult" EntitySet="SynapseBankLoginResults" />
+    </AssociationSet>
+    <FunctionImport Name="GetLiveTransactionsForDashboard" ReturnType="Collection(NOOCHModel.GetLiveTransactionsForDashboard_Result1)">
+      <Parameter Name="vType" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="ADD">
     <Key>
@@ -114,15 +122,6 @@
     <Property Name="FriendRequestId" Type="Guid" />
     <Property Name="VerifiedOn" Type="DateTime" Precision="3" />
   </EntityType>
-  <EntityType Name="BankPicture">
-    <Key>
-      <PropertyRef Name="BankPictureId" />
-    </Key>
-    <Property Name="BankPictureId" Type="Guid" Nullable="false" />
-    <Property Name="BankPicture1" Type="Binary" MaxLength="Max" FixedLength="false" />
-    <Property Name="RoutingNumber" Type="String" MaxLength="50" Unicode="false" FixedLength="false" />
-    <Property Name="BankName" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
-  </EntityType>
   <EntityType Name="GeoLocation">
     <Key>
       <PropertyRef Name="LocationId" />
@@ -170,18 +169,6 @@
     <Property Name="BankImageURL" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
     <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <NavigationProperty Name="Member" Relationship="NOOCHModel.FK_KnoxAccountDetails_Members" FromRole="KnoxAccountDetail" ToRole="Member" />
-  </EntityType>
-  <EntityType Name="Location">
-    <Key>
-      <PropertyRef Name="LocationId" />
-    </Key>
-    <Property Name="LocationId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-    <Property Name="MemberId" Type="Guid" />
-    <Property Name="FirstName" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
-    <Property Name="LastName" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
-    <Property Name="Photo" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-    <Property Name="Miles" Type="Decimal" Precision="18" Scale="2" />
-    <Property Name="State" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
   </EntityType>
   <EntityType Name="MemberNotification">
     <Key>
@@ -427,6 +414,7 @@
     <NavigationProperty Name="PasswordResetRequests" Relationship="NOOCHModel.FK_PasswordResetRequests_Members" FromRole="Member" ToRole="PasswordResetRequest" />
     <NavigationProperty Name="Transactions" Relationship="NOOCHModel.FK_Transactions_Members2" FromRole="Member" ToRole="Transaction" />
     <NavigationProperty Name="Transactions1" Relationship="NOOCHModel.FK_Transactions_Members3" FromRole="Member" ToRole="Transaction" />
+    <NavigationProperty Name="SynapseBankLoginResults" Relationship="NOOCHModel.FK_SynapseBankLoginResults_Members" FromRole="Member" ToRole="SynapseBankLoginResult" />
   </EntityType>
   <Association Name="FK_KnoxAccountDetails_Members">
     <End Type="NOOCHModel.Member" Role="Member" Multiplicity="0..1" />
@@ -488,4 +476,125 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="SynapseBankLoginResult">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MemberId" Type="Guid" />
+    <Property Name="IsMfa" Type="Boolean" />
+    <Property Name="BankAccessToken" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="mfaQuestion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="IsQuestionBasedAuth" Type="Boolean" />
+    <Property Name="IsCodeBasedAuth" Type="Boolean" />
+    <Property Name="mfaMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="AuthType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IsSuccess" Type="Boolean" />
+    <Property Name="dateCreated" Type="DateTime" Precision="3" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <NavigationProperty Name="Member" Relationship="NOOCHModel.FK_SynapseBankLoginResults_Members" FromRole="SynapseBankLoginResult" ToRole="Member" />
+  </EntityType>
+  <EntityType Name="SynapseCreateOrderResult">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TransAmount" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="TransSellerId" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="TransOAuthConsumberKey" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="TransBankId" Type="Int32" />
+    <Property Name="Result_blanace" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Result_balance_verified" Type="Boolean" />
+    <Property Name="Result_success" Type="Boolean" />
+    <Property Name="Result_order_account_type" Type="Int32" />
+    <Property Name="Result_order_amount" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Result_order_bank_id" Type="Int32" />
+    <Property Name="Result_order_bank_nickname" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Result_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Result_date_settled" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Result_discount" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Result_facilitator_fee" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Result_fee" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Result_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Result_is_buyer" Type="Boolean" />
+    <Property Name="Result_note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Result_resource_uri" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Result_seller_accept_gratuity" Type="Boolean" />
+    <Property Name="Result_seller_has_avatar" Type="Boolean" />
+    <Property Name="Result_seller_seller_avatar" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Result_seller_seller_fullname" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Result_seller_seller_id" Type="Int32" />
+    <Property Name="Result_status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Result_status_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Result_supp_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Result_ticket_number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Result_tip" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Result_total" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="TransactionDateTime" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="SynapseCreateUserResult">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MemberId" Type="Guid" />
+    <Property Name="DateCreated" Type="DateTime" Precision="3" />
+    <Property Name="access_token" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="expires_in" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="refresh_token" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="success" Type="Boolean" />
+    <Property Name="username" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="user_id" Type="Int32" />
+    <Property Name="IsDeleted" Type="Boolean" />
+    <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+    <Property Name="IsForNonNoochUser" Type="Boolean" />
+    <Property Name="NonNoochUserEmail" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="TransactionIdFromWhichInvited" Type="Guid" />
+    <Property Name="HasNonNoochUserSignedUp" Type="Boolean" />
+    <Property Name="MemberIdAfterSignup" Type="Guid" />
+  </EntityType>
+  <Association Name="FK_SynapseBankLoginResults_Members">
+    <End Type="NOOCHModel.Member" Role="Member" Multiplicity="0..1" />
+    <End Type="NOOCHModel.SynapseBankLoginResult" Role="SynapseBankLoginResult" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Member">
+        <PropertyRef Name="MemberId" />
+      </Principal>
+      <Dependent Role="SynapseBankLoginResult">
+        <PropertyRef Name="MemberId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="GetLiveTransactionsForDashboard_Result">
+    <Property Type="Guid" Name="RecipientId" Nullable="true" />
+    <Property Type="Guid" Name="SenderId" Nullable="false" />
+    <Property Type="DateTime" Name="TransactionDate" Nullable="true" Precision="23" />
+    <Property Type="Guid" Name="TransactionId" Nullable="false" />
+    <Property Type="Decimal" Name="Amount" Nullable="false" Precision="19" />
+    <Property Type="String" Name="GeoLocationState" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="GeoLocationCity" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="TransactionStatus" Nullable="false" MaxLength="15" />
+    <Property Type="Double" Name="Latitude" Nullable="true" />
+    <Property Type="Double" Name="Longitude" Nullable="true" />
+    <Property Type="String" Name="TransactionType" Nullable="true" />
+    <Property Type="String" Name="DisputeStatus" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="GetLiveTransactionsForDashboard_Result1">
+    <Property Type="Guid" Name="RecipientId" Nullable="true" />
+    <Property Type="Guid" Name="SenderId" Nullable="false" />
+    <Property Type="DateTime" Name="TransactionDate" Nullable="true" Precision="23" />
+    <Property Type="Guid" Name="TransactionId" Nullable="false" />
+    <Property Type="Decimal" Name="Amount" Nullable="false" Precision="19" />
+    <Property Type="String" Name="GeoLocationState" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="GeoLocationCity" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="TransactionStatus" Nullable="false" MaxLength="15" />
+    <Property Type="Double" Name="Latitude" Nullable="true" />
+    <Property Type="Double" Name="Longitude" Nullable="true" />
+    <Property Type="String" Name="TransactionType" Nullable="true" />
+    <Property Type="String" Name="DisputeStatus" Nullable="true" />
+    <Property Type="Boolean" Name="IsPhoneInvitation" Nullable="true" />
+    <Property Type="String" Name="InvitationSentTo" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="PhoneNumberInvited" Nullable="true" MaxLength="50" />
+  </ComplexType>
 </Schema>

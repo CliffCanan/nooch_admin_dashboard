@@ -40,231 +40,407 @@ namespace noochAdminNew.Controllers
         {
             DashBoardLiveTransactionsOperationResult ddresult = new DashBoardLiveTransactionsOperationResult();
 
-            var CurrentYear = DateTime.Now.Year;
-            var CurrentMonth = DateTime.Now.Month;
-            var CurrentDate = DateTime.Now.Day;
+            //var CurrentYear = DateTime.Now.Year;
+            //var CurrentMonth = DateTime.Now.Month;
+            //var CurrentDate = DateTime.Now.Day;
 
+            #region Rakesh Soni's Code...
+            //try
+            //{
+            //    using (NOOCHEntities obj = new NOOCHEntities())
+            //    {
+            //        if (Convert.ToInt16(operation) == 0)
+            //        {
+            //            try
+            //            {
+            //                var transtLive = (from Livetranstp in obj.Transactions
+            //                                  join member in obj.Members on Livetranstp.SenderId equals member.MemberId
+            //                                  join membr1 in obj.Members on Livetranstp.RecipientId equals membr1.MemberId
+            //                                  join loc in obj.GeoLocations on Livetranstp.LocationId equals loc.LocationId
+            //                                  where Livetranstp.TransactionDate.Value.Year == CurrentYear
+            //                                  && Livetranstp.TransactionDate.Value.Month == CurrentMonth
+            //                                  && Livetranstp.TransactionDate.Value.Day == CurrentDate
+            //                                  orderby Livetranstp.TransactionDate descending
+            //                                  select new
+            //                                  {
+            //                                      RecepientId = member.Nooch_ID,
+            //                                      SenderId = membr1.Nooch_ID,
+            //                                      TransactionDate = Livetranstp.TransactionDate,
+            //                                      TransactionId = Livetranstp.TransactionTrackingId,
+            //                                      SenderFirstName = member.FirstName,
+            //                                      SenderLastName = member.LastName,
+            //                                      Amount = Livetranstp.Amount,
+            //                                      RecipientFirstName = membr1.FirstName,
+            //                                      receiptLastName = membr1.LastName,
+            //                                      SenderNoochId = member.Nooch_ID,
+            //                                      ReceiptNoochId = membr1.Nooch_ID,
+            //                                      GeoLocationState = loc.State,
+            //                                      GeoLocationCity = loc.City,
+            //                                      TransactionStatus = Livetranstp.TransactionStatus,
+            //                                      Longitude = loc.Longitude,
+            //                                      latitude = loc.Latitude,
+            //                                      TransactionType = Livetranstp.TransactionType,
+            //                                      disputedtrack = Livetranstp.DisputeStatus
+
+            //                                  }).Take(10).ToList();
+
+            //                List<MemberRecentLiveTransactionData> mm = new List<MemberRecentLiveTransactionData>();
+
+            //                foreach (var t in transtLive)
+            //                {
+            //                    MemberRecentLiveTransactionData merc = new MemberRecentLiveTransactionData();
+            //                    merc.Amount = t.Amount.ToString();
+            //                    merc.TransID = t.TransactionId.ToString();
+            //                    merc.RecepientId = t.RecepientId.ToString();
+            //                    merc.SenderId = t.SenderId.ToString();
+            //                    merc.TransDateTime = t.TransactionDate;
+            //                    merc.SenderUserName = CommonHelper.GetDecryptedData(t.SenderFirstName.ToString()) + " " + CommonHelper.GetDecryptedData(t.SenderLastName.ToString());
+            //                    merc.RecepientUserName = CommonHelper.GetDecryptedData(t.RecipientFirstName.ToString()) + " " + CommonHelper.GetDecryptedData(t.receiptLastName.ToString());
+            //                    merc.GeoStateCityLocation = t.GeoLocationState + "," + t.GeoLocationCity;
+            //                    merc.Longitude = t.Longitude.ToString();
+            //                    merc.Latitude = t.latitude.ToString();
+            //                    merc.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
+            //                    merc.TransactionStatus = t.TransactionStatus;
+            //                    merc.DisputeStatus = t.disputedtrack;
+            //                    mm.Add(merc);
+            //                }
+
+            //                ddresult.IsSuccess = true;
+            //                ddresult.Message = "SuccessOperation";
+            //                ddresult.RecentLiveTransaction = mm;
+
+            //                return Json(ddresult);
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                Logger.Error("AdminController -> ShowLiveTransactionsOnDashBoard - [Exception: " + ex + "]");
+
+            //                ddresult.IsSuccess = false;
+            //                ddresult.Message = "Exception reached - Invalid Operation";
+            //                return Json(ddresult);
+            //            }
+            //        }
+            //        else if (Convert.ToInt16(operation) == 1)
+            //        {
+            //            try
+            //            {
+            //                var transtLive = (from Livetranstp in obj.Transactions
+            //                                  join member in obj.Members on Livetranstp.SenderId equals member.MemberId
+            //                                  join membr1 in obj.Members on Livetranstp.RecipientId equals membr1.MemberId
+            //                                  join loc in obj.GeoLocations on Livetranstp.LocationId equals loc.LocationId
+            //                                  where SqlFunctions.DatePart("week", Livetranstp.TransactionDate) == (SqlFunctions.DatePart("week", DateTime.Now)) &&
+            //                                  Livetranstp.TransactionDate.Value.Year == CurrentYear
+
+            //                                  orderby Livetranstp.TransactionDate descending
+            //                                  select new
+            //                                  {
+            //                                      RecepientId = member.Nooch_ID,
+            //                                      SenderId = membr1.Nooch_ID,
+            //                                      TransactionDate = Livetranstp.TransactionDate,
+            //                                      TransactionId = Livetranstp.TransactionTrackingId,
+            //                                      SenderFirstName = member.FirstName,
+            //                                      SenderLastName = member.LastName,
+            //                                      Amount = Livetranstp.Amount,
+            //                                      RecipientFirstName = membr1.FirstName,
+            //                                      receiptLastName = membr1.LastName,
+            //                                      SenderNoochId = member.Nooch_ID,
+            //                                      ReceiptNoochId = membr1.Nooch_ID,
+            //                                      GeoLocationState = loc.State,
+            //                                      GeoLocationCity = loc.City,
+            //                                      TransactionStatus = Livetranstp.TransactionStatus,
+            //                                      Longitude = loc.Longitude,
+            //                                      latitude = loc.Latitude,
+            //                                      TransactionType = Livetranstp.TransactionType,
+            //                                      disputedtrack = Livetranstp.DisputeStatus
+
+            //                                  }).Take(10).ToList();
+
+            //                List<MemberRecentLiveTransactionData> mm = new List<MemberRecentLiveTransactionData>();
+
+            //                foreach (var t in transtLive)
+            //                {
+            //                    MemberRecentLiveTransactionData merc = new MemberRecentLiveTransactionData();
+            //                    merc.Amount = t.Amount.ToString();
+            //                    merc.TransID = t.TransactionId.ToString();
+            //                    merc.RecepientId = t.RecepientId.ToString();
+            //                    merc.SenderId = t.SenderId.ToString();
+            //                    merc.TransDateTime = t.TransactionDate;
+            //                    merc.SenderUserName = CommonHelper.GetDecryptedData(t.SenderFirstName.ToString()) + " " + CommonHelper.GetDecryptedData(t.SenderLastName.ToString());
+            //                    merc.RecepientUserName = CommonHelper.GetDecryptedData(t.RecipientFirstName.ToString()) + " " + CommonHelper.GetDecryptedData(t.receiptLastName.ToString());
+            //                    merc.GeoStateCityLocation = t.GeoLocationState + " , " + t.GeoLocationCity;
+            //                    merc.Longitude = t.Longitude.ToString();
+            //                    merc.Latitude = t.latitude.ToString();
+            //                    merc.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
+            //                    merc.TransactionStatus = t.TransactionStatus;
+            //                    merc.DisputeStatus = t.disputedtrack;
+            //                    mm.Add(merc);
+            //                }
+
+            //                ddresult.IsSuccess = true;
+            //                ddresult.Message = "SuccessOperation";
+            //                ddresult.RecentLiveTransaction = mm;
+
+            //                return Json(ddresult);
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                Logger.Error("AdminController -> ShowLiveTransactionsOnDashBoard - [Exception: " + ex + "]");
+
+            //                ddresult.IsSuccess = false;
+            //                ddresult.Message = "Exception reached - Invalid Operation";
+            //                return Json(ddresult);
+            //            }
+            //        }
+            //        else if (Convert.ToInt16(operation) == 2)
+            //        {
+            //            try
+            //            {
+            //                var transtLive = (from Livetranstp in obj.Transactions
+            //                                  join member in obj.Members on Livetranstp.SenderId equals member.MemberId
+            //                                  join membr1 in obj.Members on Livetranstp.RecipientId equals membr1.MemberId
+            //                                  join loc in obj.GeoLocations on Livetranstp.LocationId equals loc.LocationId
+            //                                  where Livetranstp.TransactionDate.Value.Year == CurrentYear
+            //                                   && Livetranstp.TransactionDate.Value.Month == CurrentMonth
+            //                                  orderby Livetranstp.TransactionDate descending
+            //                                  select new
+            //                                  {
+            //                                      RecepientId = member.Nooch_ID,
+            //                                      SenderId = membr1.Nooch_ID,
+            //                                      TransactionDate = Livetranstp.TransactionDate,
+            //                                      TransactionId = Livetranstp.TransactionTrackingId,
+            //                                      SenderFirstName = member.FirstName,
+            //                                      SenderLastName = member.LastName,
+            //                                      Amount = Livetranstp.Amount,
+            //                                      RecipientFirstName = membr1.FirstName,
+            //                                      receiptLastName = membr1.LastName,
+            //                                      SenderNoochId = member.Nooch_ID,
+            //                                      ReceiptNoochId = membr1.Nooch_ID,
+            //                                      GeoLocationState = loc.State,
+            //                                      GeoLocationCity = loc.City,
+            //                                      TransactionStatus = Livetranstp.TransactionStatus,
+            //                                      Longitude = loc.Longitude,
+            //                                      latitude = loc.Latitude,
+            //                                      TransactionType = Livetranstp.TransactionType,
+            //                                      disputedtrack = Livetranstp.DisputeStatus
+
+            //                                  }).Take(10).ToList();
+
+            //                List<MemberRecentLiveTransactionData> mm = new List<MemberRecentLiveTransactionData>();
+            //                foreach (var t in transtLive)
+            //                {
+            //                    MemberRecentLiveTransactionData merc = new MemberRecentLiveTransactionData();
+            //                    merc.Amount = t.Amount.ToString();
+            //                    merc.TransID = t.TransactionId.ToString();
+            //                    merc.RecepientId = t.RecepientId.ToString();
+            //                    merc.SenderId = t.SenderId.ToString();
+            //                    merc.TransDateTime = t.TransactionDate;
+            //                    merc.SenderUserName = CommonHelper.GetDecryptedData(t.SenderFirstName.ToString()) + " " + CommonHelper.GetDecryptedData(t.SenderLastName.ToString());
+            //                    merc.RecepientUserName = CommonHelper.GetDecryptedData(t.RecipientFirstName.ToString()) + " " + CommonHelper.GetDecryptedData(t.receiptLastName.ToString());
+            //                    merc.GeoStateCityLocation = t.GeoLocationState + " , " + t.GeoLocationCity;
+            //                    merc.Longitude = t.Longitude.ToString();
+            //                    merc.Latitude = t.latitude.ToString();
+            //                    merc.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
+            //                    merc.TransactionStatus = t.TransactionStatus;
+            //                    merc.DisputeStatus = t.disputedtrack;
+            //                    mm.Add(merc);
+            //                }
+
+            //                ddresult.IsSuccess = true;
+            //                ddresult.Message = "SuccessOperation";
+            //                ddresult.RecentLiveTransaction = mm;
+
+            //                return Json(ddresult);
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                Logger.Error("AdminController -> ShowLiveTransactionsOnDashBoard - [Exception: " + ex + "]");
+
+            //                ddresult.IsSuccess = false;
+            //                ddresult.Message = "Exception reached - Invalid Operation";
+            //                return Json(ddresult);
+            //            }
+            //        }
+            //        else
+            //        {
+            //            ddresult.IsSuccess = false;
+            //            ddresult.Message = "InValid Operation";
+            //            return Json(ddresult);
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Logger.Error("AdminController -> ShowLiveTransactionsOnDashBoard - [Outer Exception: " + ex + "]");
+
+            //    ddresult.IsSuccess = false;
+            //    ddresult.Message = "Exception reached - Invalid Operation";
+            //    return Json(ddresult);
+            //} 
+            #endregion
+            #region Bill Gate's Code..... 
+            //:D  Keeping rakesh soni's code just in case if new code breaks anything on live... will revert back to original code.
             try
             {
                 using (NOOCHEntities obj = new NOOCHEntities())
                 {
-                    if (Convert.ToInt16(operation) == 0)
+                    List<GetLiveTransactionsForDashboard_Result1> dbres =
+                        obj.GetLiveTransactionsForDashboard(Convert.ToInt16(operation)).ToList();
+                    List<MemberRecentLiveTransactionData> mm = new List<MemberRecentLiveTransactionData>();
+                    if (dbres.Count > 0)
                     {
-                        try
+                        foreach (var t in dbres)
                         {
-                            var transtLive = (from Livetranstp in obj.Transactions
-                                              join member in obj.Members on Livetranstp.SenderId equals member.MemberId
-                                              join membr1 in obj.Members on Livetranstp.RecipientId equals membr1.MemberId
-                                              join loc in obj.GeoLocations on Livetranstp.LocationId equals loc.LocationId
-                                              where Livetranstp.TransactionDate.Value.Year == CurrentYear
-                                              && Livetranstp.TransactionDate.Value.Month == CurrentMonth
-                                              && Livetranstp.TransactionDate.Value.Day == CurrentDate
-                                              orderby Livetranstp.TransactionDate descending
-                                              select new
-                                              {
-                                                  RecepientId = member.Nooch_ID,
-                                                  SenderId = membr1.Nooch_ID,
-                                                  TransactionDate = Livetranstp.TransactionDate,
-                                                  TransactionId = Livetranstp.TransactionTrackingId,
-                                                  SenderFirstName = member.FirstName,
-                                                  SenderLastName = member.LastName,
-                                                  Amount = Livetranstp.Amount,
-                                                  RecipientFirstName = membr1.FirstName,
-                                                  receiptLastName = membr1.LastName,
-                                                  SenderNoochId = member.Nooch_ID,
-                                                  ReceiptNoochId = membr1.Nooch_ID,
-                                                  GeoLocationState = loc.State,
-                                                  GeoLocationCity = loc.City,
-                                                  TransactionStatus = Livetranstp.TransactionStatus,
-                                                  Longitude = loc.Longitude,
-                                                  latitude = loc.Latitude,
-                                                  TransactionType = Livetranstp.TransactionType,
-                                                  disputedtrack = Livetranstp.DisputeStatus
+                            MemberRecentLiveTransactionData merc = new MemberRecentLiveTransactionData();
+                            merc.Amount = t.Amount.ToString();
+                            merc.TransID = t.TransactionId.ToString();
 
-                                              }).Take(10).ToList();
+                            merc.TransDateTime = t.TransactionDate;
 
-                            List<MemberRecentLiveTransactionData> mm = new List<MemberRecentLiveTransactionData>();
+                            merc.GeoStateCityLocation = t.GeoLocationState + "," + t.GeoLocationCity;
+                            merc.Longitude = t.Longitude.ToString();
+                            merc.Latitude = t.Latitude.ToString();
+                            merc.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
+                            merc.TransactionStatus = t.TransactionStatus;
+                            merc.DisputeStatus = t.DisputeStatus;
 
-                            foreach (var t in transtLive)
+
+                            #region Request type transaction
+                            // request type transaction b/w existing nooch users
+                            if (merc.TransactionType == "Request" && t.RecipientId != t.SenderId)
                             {
-                                MemberRecentLiveTransactionData merc = new MemberRecentLiveTransactionData();
-                                merc.Amount = t.Amount.ToString();
-                                merc.TransID = t.TransactionId.ToString();
-                                merc.RecepientId = t.RecepientId.ToString();
+                                merc.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.SenderId.ToString());
+                                merc.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                merc.RecepientId = t.RecipientId.ToString();
                                 merc.SenderId = t.SenderId.ToString();
-                                merc.TransDateTime = t.TransactionDate;
-                                merc.SenderUserName = CommonHelper.GetDecryptedData(t.SenderFirstName.ToString()) + " " + CommonHelper.GetDecryptedData(t.SenderLastName.ToString());
-                                merc.RecepientUserName = CommonHelper.GetDecryptedData(t.RecipientFirstName.ToString()) + " " + CommonHelper.GetDecryptedData(t.receiptLastName.ToString());
-                                merc.GeoStateCityLocation = t.GeoLocationState + "," + t.GeoLocationCity;
-                                merc.Longitude = t.Longitude.ToString();
-                                merc.Latitude = t.latitude.ToString();
-                                merc.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
-                                merc.TransactionStatus = t.TransactionStatus;
-                                merc.DisputeStatus = t.disputedtrack;
-                                mm.Add(merc);
                             }
+                            // request type trans to non nooch user...by phone
+                            else if (merc.TransactionType == "Request" && t.RecipientId == t.SenderId && t.IsPhoneInvitation == true)
+                            {
+                                if (!String.IsNullOrEmpty(t.PhoneNumberInvited))
+                                {
+                                    merc.SenderUserName =
+                                        CommonHelper.FormatPhoneNumber(
+                                            CommonHelper.GetDecryptedData(t.PhoneNumberInvited));
+                                }
+                                else
+                                {
+                                    merc.SenderUserName =
+                                        "";
+                                }
+                                merc.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                merc.RecepientId = t.RecipientId.ToString();
+                                merc.SenderId = "";
+                            }
+
+                            // request type trans to non nooch user...by email
+                            else if (merc.TransactionType == "Request" && t.RecipientId == t.SenderId && t.InvitationSentTo != null)
+                            {
+                                if (!String.IsNullOrEmpty(t.InvitationSentTo))
+                                {
+                                    merc.SenderUserName =
+
+                                            CommonHelper.GetDecryptedData(t.InvitationSentTo);
+                                }
+                                else
+                                {
+                                    merc.SenderUserName =
+                                        "";
+                                }
+                                merc.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                merc.RecepientId = t.RecipientId.ToString();
+                                merc.SenderId = "";
+                            }
+
+                            #endregion
+
+                            #region Invite type transaction
+                            
+                            // invite type trans to non nooch user...by phone
+                            else if (merc.TransactionType == "Invite" && t.RecipientId == t.SenderId && t.IsPhoneInvitation == true)
+                            {
+                                if (!String.IsNullOrEmpty(t.PhoneNumberInvited))
+                                {
+                                    merc.RecepientUserName =
+                                        CommonHelper.FormatPhoneNumber(
+                                            CommonHelper.GetDecryptedData(t.PhoneNumberInvited));
+                                }
+                                else
+                                {
+                                    merc.RecepientUserName =
+                                        "";
+                                }
+                                merc.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                merc.RecepientId = "";
+                                merc.SenderId = t.SenderId.ToString();
+                            }
+
+                            // request type trans to non nooch user...by email
+                            else if (merc.TransactionType == "Invite" && t.RecipientId == t.SenderId && t.InvitationSentTo != null)
+                            {
+                                if (!String.IsNullOrEmpty(t.InvitationSentTo))
+                                {
+                                    merc.RecepientUserName =
+
+                                            CommonHelper.GetDecryptedData(t.InvitationSentTo);
+                                }
+                                else
+                                {
+                                    merc.RecepientUserName =
+                                        "";
+                                }
+                                merc.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                merc.RecepientId = "";
+                                merc.SenderId = t.SenderId.ToString();
+                            }
+
+                            #endregion
+
+                            #region Transfer, dispute or reward type transaction
+
+                            // transfer type trans to non nooch user...by phone
+                            else if (merc.TransactionType == "Transfer")
+                            {
+                            
+                                    merc.RecepientUserName =
+                                        CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                            
+                                merc.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.SenderId.ToString());
+                                merc.RecepientId = t.RecipientId.ToString();
+                                merc.SenderId = t.SenderId.ToString();
+                            }
+
+                            // request could be disputed, reward type
+                            else
+                            {
+
+
+                                merc.RecepientUserName =
+                                    CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                
+                                merc.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.SenderId.ToString());
+                                merc.RecepientId = t.RecipientId.ToString();
+                                merc.SenderId = t.SenderId.ToString();
+                            }
+
+                            #endregion
+
+                            
+                            mm.Add(merc);
+                        }
+                    }
+
+
+                  
 
                             ddresult.IsSuccess = true;
                             ddresult.Message = "SuccessOperation";
                             ddresult.RecentLiveTransaction = mm;
 
                             return Json(ddresult);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Error("AdminController -> ShowLiveTransactionsOnDashBoard - [Exception: " + ex + "]");
-
-                            ddresult.IsSuccess = false;
-                            ddresult.Message = "Exception reached - Invalid Operation";
-                            return Json(ddresult);
-                        }
-                    }
-                    else if (Convert.ToInt16(operation) == 1)
-                    {
-                        try
-                        {
-                            var transtLive = (from Livetranstp in obj.Transactions
-                                              join member in obj.Members on Livetranstp.SenderId equals member.MemberId
-                                              join membr1 in obj.Members on Livetranstp.RecipientId equals membr1.MemberId
-                                              join loc in obj.GeoLocations on Livetranstp.LocationId equals loc.LocationId
-                                              where SqlFunctions.DatePart("week", Livetranstp.TransactionDate) == (SqlFunctions.DatePart("week", DateTime.Now)) &&
-                                              Livetranstp.TransactionDate.Value.Year == CurrentYear
-
-                                              orderby Livetranstp.TransactionDate descending
-                                              select new
-                                              {
-                                                  RecepientId = member.Nooch_ID,
-                                                  SenderId = membr1.Nooch_ID,
-                                                  TransactionDate = Livetranstp.TransactionDate,
-                                                  TransactionId = Livetranstp.TransactionTrackingId,
-                                                  SenderFirstName = member.FirstName,
-                                                  SenderLastName = member.LastName,
-                                                  Amount = Livetranstp.Amount,
-                                                  RecipientFirstName = membr1.FirstName,
-                                                  receiptLastName = membr1.LastName,
-                                                  SenderNoochId = member.Nooch_ID,
-                                                  ReceiptNoochId = membr1.Nooch_ID,
-                                                  GeoLocationState = loc.State,
-                                                  GeoLocationCity = loc.City,
-                                                  TransactionStatus = Livetranstp.TransactionStatus,
-                                                  Longitude = loc.Longitude,
-                                                  latitude = loc.Latitude,
-                                                  TransactionType = Livetranstp.TransactionType,
-                                                  disputedtrack = Livetranstp.DisputeStatus
-
-                                              }).Take(10).ToList();
-
-                            List<MemberRecentLiveTransactionData> mm = new List<MemberRecentLiveTransactionData>();
-
-                            foreach (var t in transtLive)
-                            {
-                                MemberRecentLiveTransactionData merc = new MemberRecentLiveTransactionData();
-                                merc.Amount = t.Amount.ToString();
-                                merc.TransID = t.TransactionId.ToString();
-                                merc.RecepientId = t.RecepientId.ToString();
-                                merc.SenderId = t.SenderId.ToString();
-                                merc.TransDateTime = t.TransactionDate;
-                                merc.SenderUserName = CommonHelper.GetDecryptedData(t.SenderFirstName.ToString()) + " " + CommonHelper.GetDecryptedData(t.SenderLastName.ToString());
-                                merc.RecepientUserName = CommonHelper.GetDecryptedData(t.RecipientFirstName.ToString()) + " " + CommonHelper.GetDecryptedData(t.receiptLastName.ToString());
-                                merc.GeoStateCityLocation = t.GeoLocationState + " , " + t.GeoLocationCity;
-                                merc.Longitude = t.Longitude.ToString();
-                                merc.Latitude = t.latitude.ToString();
-                                merc.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
-                                merc.TransactionStatus = t.TransactionStatus;
-                                merc.DisputeStatus = t.disputedtrack;
-                                mm.Add(merc);
-                            }
-
-                            ddresult.IsSuccess = true;
-                            ddresult.Message = "SuccessOperation";
-                            ddresult.RecentLiveTransaction = mm;
-
-                            return Json(ddresult);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Error("AdminController -> ShowLiveTransactionsOnDashBoard - [Exception: " + ex + "]");
-
-                            ddresult.IsSuccess = false;
-                            ddresult.Message = "Exception reached - Invalid Operation";
-                            return Json(ddresult);
-                        }
-                    }
-                    else if (Convert.ToInt16(operation) == 2)
-                    {
-                        try
-                        {
-                            var transtLive = (from Livetranstp in obj.Transactions
-                                              join member in obj.Members on Livetranstp.SenderId equals member.MemberId
-                                              join membr1 in obj.Members on Livetranstp.RecipientId equals membr1.MemberId
-                                              join loc in obj.GeoLocations on Livetranstp.LocationId equals loc.LocationId
-                                              where Livetranstp.TransactionDate.Value.Year == CurrentYear
-                                               && Livetranstp.TransactionDate.Value.Month == CurrentMonth
-                                              orderby Livetranstp.TransactionDate descending
-                                              select new
-                                              {
-                                                  RecepientId = member.Nooch_ID,
-                                                  SenderId = membr1.Nooch_ID,
-                                                  TransactionDate = Livetranstp.TransactionDate,
-                                                  TransactionId = Livetranstp.TransactionTrackingId,
-                                                  SenderFirstName = member.FirstName,
-                                                  SenderLastName = member.LastName,
-                                                  Amount = Livetranstp.Amount,
-                                                  RecipientFirstName = membr1.FirstName,
-                                                  receiptLastName = membr1.LastName,
-                                                  SenderNoochId = member.Nooch_ID,
-                                                  ReceiptNoochId = membr1.Nooch_ID,
-                                                  GeoLocationState = loc.State,
-                                                  GeoLocationCity = loc.City,
-                                                  TransactionStatus = Livetranstp.TransactionStatus,
-                                                  Longitude = loc.Longitude,
-                                                  latitude = loc.Latitude,
-                                                  TransactionType = Livetranstp.TransactionType,
-                                                  disputedtrack = Livetranstp.DisputeStatus
-
-                                              }).Take(10).ToList();
-
-                            List<MemberRecentLiveTransactionData> mm = new List<MemberRecentLiveTransactionData>();
-                            foreach (var t in transtLive)
-                            {
-                                MemberRecentLiveTransactionData merc = new MemberRecentLiveTransactionData();
-                                merc.Amount = t.Amount.ToString();
-                                merc.TransID = t.TransactionId.ToString();
-                                merc.RecepientId = t.RecepientId.ToString();
-                                merc.SenderId = t.SenderId.ToString();
-                                merc.TransDateTime = t.TransactionDate;
-                                merc.SenderUserName = CommonHelper.GetDecryptedData(t.SenderFirstName.ToString()) + " " + CommonHelper.GetDecryptedData(t.SenderLastName.ToString());
-                                merc.RecepientUserName = CommonHelper.GetDecryptedData(t.RecipientFirstName.ToString()) + " " + CommonHelper.GetDecryptedData(t.receiptLastName.ToString());
-                                merc.GeoStateCityLocation = t.GeoLocationState + " , " + t.GeoLocationCity;
-                                merc.Longitude = t.Longitude.ToString();
-                                merc.Latitude = t.latitude.ToString();
-                                merc.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
-                                merc.TransactionStatus = t.TransactionStatus;
-                                merc.DisputeStatus = t.disputedtrack;
-                                mm.Add(merc);
-                            }
-
-                            ddresult.IsSuccess = true;
-                            ddresult.Message = "SuccessOperation";
-                            ddresult.RecentLiveTransaction = mm;
-
-                            return Json(ddresult);
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.Error("AdminController -> ShowLiveTransactionsOnDashBoard - [Exception: " + ex + "]");
-
-                            ddresult.IsSuccess = false;
-                            ddresult.Message = "Exception reached - Invalid Operation";
-                            return Json(ddresult);
-                        }
-                    }
-                    else
-                    {
-                        ddresult.IsSuccess = false;
-                        ddresult.Message = "InValid Operation";
-                        return Json(ddresult);
-                    }
+                      
+                    
+                   
+                  
                 }
             }
             catch (Exception ex)
@@ -275,6 +451,7 @@ namespace noochAdminNew.Controllers
                 ddresult.Message = "Exception reached - Invalid Operation";
                 return Json(ddresult);
             }
+            #endregion
         }
 
         public ActionResult Dashboard()
@@ -316,7 +493,7 @@ namespace noochAdminNew.Controllers
                     dd.TotalNoOfActiveUser_Month = c.Count;
 
                     // # of Active Users - THIS WEEK
-                    c = (from t in obj.Members 
+                    c = (from t in obj.Members
                          where t.IsDeleted == false && SqlFunctions.DatePart("week", t.DateCreated) == (SqlFunctions.DatePart("week", DateTime.Now))
                          select t).ToList();
                     dd.TotalNoOfActiveUser_Week = c.Count;
@@ -340,7 +517,7 @@ namespace noochAdminNew.Controllers
 
                     // # of Phones Verified - THIS WEEK
                     c = (from t in obj.Members
-                         where t.IsDeleted == false && 
+                         where t.IsDeleted == false &&
                                SqlFunctions.DatePart("week", t.PhoneVerifiedOn) == (SqlFunctions.DatePart("week", DateTime.Now))
                          select t).ToList();
                     dd.TotalNoOfVerifiedPhoneUsers_Week = c.Count;
@@ -389,8 +566,8 @@ namespace noochAdminNew.Controllers
                     dd.TotalSuspendedUsers = c.Count;
 
                     c = (from t in obj.Members
-                         where t.IsDeleted == false && 
-                               t.IsVerifiedPhone == true 
+                         where t.IsDeleted == false &&
+                               t.IsVerifiedPhone == true
                          select t).ToList();
                     dd.TotalVerifiedPhoneUsers = c.Count;
 
@@ -529,10 +706,10 @@ namespace noochAdminNew.Controllers
                         string recepientusernameencrypted = CommonHelper.GetEncryptedData(transferfundto.ToLower());
 
                         var recipientMemberDetails = (from c in obj.Members
-                                                where c.Nooch_ID == transferfundto ||
-                                                      c.UserName == recepientusernameencrypted &&
-                                                      c.Status == "Active"
-                                                select c).SingleOrDefault();
+                                                      where c.Nooch_ID == transferfundto ||
+                                                            c.UserName == recepientusernameencrypted &&
+                                                            c.Status == "Active"
+                                                      select c).SingleOrDefault();
 
                         if (recipientMemberDetails != null)
                         {
@@ -584,10 +761,10 @@ namespace noochAdminNew.Controllers
                                 string KNoxApiPass = Utility.GetValueFromConfig("KnoxApiPass");
 
                                 string c = "https://knoxpayments.com/json/pinpayment.php?payee_key=" +
-                                           //RECEPEINT_USER_KEY +
-                                           //"&payee_pass=" + RECEPEINT_USER_PASS + "&payor_key=" + ADMIN_USER_KEY +
+                                    //RECEPEINT_USER_KEY +
+                                    //"&payee_pass=" + RECEPEINT_USER_PASS + "&payor_key=" + ADMIN_USER_KEY +
                                            "&payor_pass=" +
-                                           //ADMIN_USER_PASS + "&trans_id=" + trans.TransactionId + "&PARTNER_KEY=" +
+                                    //ADMIN_USER_PASS + "&trans_id=" + trans.TransactionId + "&PARTNER_KEY=" +
                                            KNoxApiKey + "&amount=" + trans.Amount + "&recur_status=ot";
                                 string knoxPinPaymentResults = wc.DownloadString(c);
 
@@ -595,7 +772,7 @@ namespace noochAdminNew.Controllers
                                 if (m != null)
                                 {
                                     #region parsed response successfully
-/*
+                                    /*
                                     string KnoxTransStatus = m.JSonDataResult.status_code;
                                     string KnoxTransErrorCode = m.JSonDataResult.error_code;
                                     string KnoxTransId = m.JSonDataResult.trans_id;
@@ -1530,7 +1707,7 @@ namespace noochAdminNew.Controllers
                 }
 
                 Logger.Info("New Admin - Update admin user [" + userName + "].");
-                
+
                 // edit admin details
 
                 var id = Utility.ConvertToGuid(adminId);
