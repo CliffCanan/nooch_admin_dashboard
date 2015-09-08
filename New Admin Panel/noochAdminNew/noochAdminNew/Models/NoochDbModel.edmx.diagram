@@ -29,6 +29,10 @@
         <AssociationConnector Association="NOOCHModel.FK_PasswordResetRequests_Members" />
         <AssociationConnector Association="NOOCHModel.FK_Transactions_Members2" />
         <AssociationConnector Association="NOOCHModel.FK_Transactions_Members3" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseBankLoginResult" Width="1.5" PointX="3" PointY="19.875" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseCreateOrderResult" Width="1.5" PointX="13.375" PointY="6.75" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseCreateUserResult" Width="1.5" PointX="8.375" PointY="13.75" />
+        <AssociationConnector Association="NOOCHModel.FK_SynapseBankLoginResults_Members" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

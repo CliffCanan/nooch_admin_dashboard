@@ -1442,3 +1442,394 @@ ERROR 2015-08-25 11:54:09,433 881399ms Logger                 Error             
 INFO  2015-08-25 11:54:36,772 908739ms Logger                 Info               - Admin Dash -> VerifyAccount - [Synapse Bank ID: ]
 INFO  2015-08-25 11:54:46,260 918226ms Logger                 Info               - Admin Dash -> VerifyAccount - [Synapse Bank ID: 48]
 INFO  2015-08-25 11:59:21,833 154990ms Logger                 Info               - Admin Dash -> VerifyAccount - [Synapse Bank ID: 48]
+ERROR 2015-09-08 10:04:59,932 12995ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:04:59,955 13018ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:04:59,999 13062ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVcc=]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:00,876 13939ms Logger                 Error              - Exception occured on decryption: Length of the data to decrypt is invalid.
+ERROR 2015-09-08 10:05:00,877 13940ms Logger                 Error              - Stack trace:    at System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   at System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   at System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Stream.Dispose()
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 116
+INFO  2015-09-08 10:05:00,924 13987ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVc==]. Exception: [System.Security.Cryptography.CryptographicException: Length of the data to decrypt is invalid.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:04,731 17794ms Logger                 Error              - Exception occured on decryption: Length of the data to decrypt is invalid.
+ERROR 2015-09-08 10:05:04,733 17796ms Logger                 Error              - Stack trace:    at System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   at System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   at System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Stream.Dispose()
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 116
+INFO  2015-09-08 10:05:04,773 17836ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: 8A5B8jtXrFBkmaKU5BqCKgb8/2kZ7n/cBSsoNiZwx0Q==]. Exception: [System.Security.Cryptography.CryptographicException: Length of the data to decrypt is invalid.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:05,134 18197ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:05,134 18197ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:05,178 18241ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data:  ]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:05,536 18599ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:05,537 18600ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:05,581 18644ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: TanDbAsZ+PUA9OWldB8M1Egz9xROfl5qQtErPvW4Vk=]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:05,675 18738ms Logger                 Error              - Exception occured on decryption: Length of the data to decrypt is invalid.
+ERROR 2015-09-08 10:05:05,675 18738ms Logger                 Error              - Stack trace:    at System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   at System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   at System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Stream.Dispose()
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 116
+INFO  2015-09-08 10:05:05,720 18783ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: city]. Exception: [System.Security.Cryptography.CryptographicException: Length of the data to decrypt is invalid.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:05,893 18956ms Logger                 Error              - Exception occured on decryption: Length of the data to decrypt is invalid.
+ERROR 2015-09-08 10:05:05,894 18957ms Logger                 Error              - Stack trace:    at System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   at System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   at System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Stream.Dispose()
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 116
+INFO  2015-09-08 10:05:05,938 19001ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVc==]. Exception: [System.Security.Cryptography.CryptographicException: Length of the data to decrypt is invalid.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:06,450 19513ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:06,451 19514ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:06,489 19552ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVcc=]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:08,283 21347ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:08,283 21347ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:08,327 21391ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: Jaipur]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:09,013 22077ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:09,014 22078ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:09,054 22118ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data:  ]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:09,639 22703ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:09,639 22703ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:09,679 22743ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data:  ]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:12,177 25241ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:12,178 25242ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:12,216 25280ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: New Delhi]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:12,971 26035ms Logger                 Error              - Exception occured on decryption: Length of the data to decrypt is invalid.
+ERROR 2015-09-08 10:05:12,972 26036ms Logger                 Error              - Stack trace:    at System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   at System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   at System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Stream.Dispose()
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 116
+INFO  2015-09-08 10:05:13,009 26073ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVc==]. Exception: [System.Security.Cryptography.CryptographicException: Length of the data to decrypt is invalid.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:14,156 27220ms Logger                 Error              - Exception occured on decryption: Length of the data to decrypt is invalid.
+ERROR 2015-09-08 10:05:14,156 27220ms Logger                 Error              - Stack trace:    at System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   at System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   at System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Stream.Dispose()
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 116
+INFO  2015-09-08 10:05:14,202 27266ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: bfgh]. Exception: [System.Security.Cryptography.CryptographicException: Length of the data to decrypt is invalid.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:14,472 27536ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:14,472 27536ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:14,510 27574ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data:  ]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:15,679 28743ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:15,679 28743ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:15,718 28782ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVcc=]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:17,803 30866ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:17,804 30867ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:17,842 30905ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: cd]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:18,040 31103ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:18,040 31103ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:18,082 31145ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: ie4jp0lsn4wSD9RpgAnCoK+oNRL4SY+l8Azo/xf9wimh5d191xeBNJfU6gycbNnKlf]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:18,724 31787ms Logger                 Error              - Exception occured on decryption: Length of the data to decrypt is invalid.
+ERROR 2015-09-08 10:05:18,725 31788ms Logger                 Error              - Stack trace:    at System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   at System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   at System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Stream.Dispose()
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 116
+INFO  2015-09-08 10:05:18,762 31825ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: dfsd]. Exception: [System.Security.Cryptography.CryptographicException: Length of the data to decrypt is invalid.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:18,993 32056ms Logger                 Error              - Exception occured on decryption: Length of the data to decrypt is invalid.
+ERROR 2015-09-08 10:05:18,993 32056ms Logger                 Error              - Stack trace:    at System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   at System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   at System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Stream.Dispose()
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 116
+INFO  2015-09-08 10:05:19,032 32095ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: 8A5B8jtXrFBkmaKU5BqCKgb8/2kZ7n/cBSsoNiZwx0Q==]. Exception: [System.Security.Cryptography.CryptographicException: Length of the data to decrypt is invalid.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:20,458 33521ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:20,459 33522ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:20,503 33566ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: Bangalore]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:24,521 37584ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:24,522 37585ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:24,565 37628ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: aaa]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:26,493 39557ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:26,494 39558ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:26,533 39597ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: Udaypur]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:28,366 41430ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:28,367 41431ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:28,409 41473ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVcc=]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:29,467 42531ms Logger                 Error              - Exception occured on decryption: Length of the data to decrypt is invalid.
+ERROR 2015-09-08 10:05:29,468 42532ms Logger                 Error              - Stack trace:    at System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   at System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   at System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Stream.Dispose()
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 116
+INFO  2015-09-08 10:05:29,510 42574ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: city]. Exception: [System.Security.Cryptography.CryptographicException: Length of the data to decrypt is invalid.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:30,804 43868ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:30,805 43869ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:30,848 43912ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data:  ]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:32,251 45315ms Logger                 Error              - Exception occured on decryption: Length of the data to decrypt is invalid.
+ERROR 2015-09-08 10:05:32,252 45316ms Logger                 Error              - Stack trace:    at System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   at System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   at System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Stream.Dispose()
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 116
+INFO  2015-09-08 10:05:32,295 45359ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: 8A5B8jtXrFBkmaKU5BqCKgb8/2kZ7n/cBSsoNiZwx0Q==]. Exception: [System.Security.Cryptography.CryptographicException: Length of the data to decrypt is invalid.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:34,097 47160ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:34,098 47161ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:34,137 47200ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data:  ]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:36,633 49696ms Logger                 Error              - Exception occured on decryption: Length of the data to decrypt is invalid.
+ERROR 2015-09-08 10:05:36,633 49696ms Logger                 Error              - Stack trace:    at System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   at System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   at System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Stream.Dispose()
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 116
+INFO  2015-09-08 10:05:36,676 49739ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: TanDbAsZ+PUA9OWldB8M1Egz9xROfl5qQtErPvIW4Vk==]. Exception: [System.Security.Cryptography.CryptographicException: Length of the data to decrypt is invalid.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:36,933 49996ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:36,934 49997ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:36,973 50036ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data:  ]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:37,735 50798ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:37,736 50799ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:37,774 50837ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: ie4jp0lsn4wSD9RpgAnCoK+oNRL4SY+l8Azo/xf9wimh5d191xeBNJfU6gycbNnKl]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:38,171 51234ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:38,172 51235ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:38,212 51275ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: bhopal]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:41,237 54300ms Logger                 Error              - Exception occured on decryption: Invalid length for a Base-64 char array or string.
+ERROR 2015-09-08 10:05:41,237 54300ms Logger                 Error              - Stack trace:    at System.Convert.FromBase64_Decode(Char* startInputPtr, Int32 inputLength, Byte* startDestPtr, Int32 destLength)
+   at System.Convert.FromBase64CharPtr(Char* inputPtr, Int32 inputLength)
+   at System.Convert.FromBase64String(String s)
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 97
+INFO  2015-09-08 10:05:41,278 54341ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data:  ]. Exception: [System.FormatException: Invalid length for a Base-64 char array or string.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:43,188 56252ms Logger                 Error              - Exception occured on decryption: Length of the data to decrypt is invalid.
+ERROR 2015-09-08 10:05:43,189 56253ms Logger                 Error              - Stack trace:    at System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   at System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   at System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Stream.Dispose()
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 116
+INFO  2015-09-08 10:05:43,231 56295ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVc==]. Exception: [System.Security.Cryptography.CryptographicException: Length of the data to decrypt is invalid.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-09-08 10:05:45,350 58414ms Logger                 Error              - Exception occured on decryption: Length of the data to decrypt is invalid.
+ERROR 2015-09-08 10:05:45,350 58414ms Logger                 Error              - Stack trace:    at System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   at System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   at System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Stream.Dispose()
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 116
+INFO  2015-09-08 10:05:45,388 58452ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVc==]. Exception: [System.Security.Cryptography.CryptographicException: Length of the data to decrypt is invalid.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+INFO  2015-09-08 10:10:01,554 314618ms Logger                 Info               - Admin Dash -> VerifyAccount - [Synapse Bank ID: ]
+INFO  2015-09-08 10:15:13,346 626410ms Logger                 Info               - Admin Dash -> VerifyAccount - [Synapse Bank ID: ]
+INFO  2015-09-08 10:36:15,865 125440ms Logger                 Info               - Admin Dash -> VerifyAccount - [Synapse Bank ID: 50]
+ERROR 2015-09-08 10:36:40,672 150247ms Logger                 Error              - Exception occured on decryption: Padding is invalid and cannot be removed.
+ERROR 2015-09-08 10:36:40,674 150249ms Logger                 Error              - Stack trace:    at System.Security.Cryptography.RijndaelManagedTransform.DecryptData(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount, Byte[]& outputBuffer, Int32 outputOffset, PaddingMode paddingMode, Boolean fLast)
+   at System.Security.Cryptography.RijndaelManagedTransform.TransformFinalBlock(Byte[] inputBuffer, Int32 inputOffset, Int32 inputCount)
+   at System.Security.Cryptography.CryptoStream.FlushFinalBlock()
+   at System.Security.Cryptography.CryptoStream.Dispose(Boolean disposing)
+   at System.IO.Stream.Close()
+   at System.IO.Stream.Dispose()
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 116
+INFO  2015-09-08 10:36:40,711 150286ms Logger                 Info               - Admin Dash -> GetDecryptedData FAILED - [Source Data: 8goxxo3lb0r6ffec01ykbw==]. Exception: [System.Security.Cryptography.CryptographicException: Padding is invalid and cannot be removed.
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
+   at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
+   at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+INFO  2015-09-08 10:38:39,554 22529ms Logger                 Info               - Admin Dash -> VerifyAccount - [Synapse Bank ID: 50]
+ERROR 2015-09-08 10:39:28,835 71810ms Logger                 Error              - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\nooch_server_asp\EmailTemplates\bankVerified.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 89
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 105]
+INFO  2015-09-08 10:39:30,128 73103ms Logger                 Info               - Admin Dash -> Member Controller - Verify Bank Account - bankVerified email sent successfully to: [malkit.singh@venturepact.com]
+INFO  2015-09-08 10:41:28,846 191821ms Logger                 Info               - Admin Dash -> VerifyAccount - [Synapse Bank ID: 50]
+ERROR 2015-09-08 10:42:23,432 246407ms Logger                 Error              - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'D:\nooch_server_asp\EmailTemplates\bankVerified.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 89
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 105]
+INFO  2015-09-08 10:42:23,434 246409ms Logger                 Info               - Admin Dash -> Member Controller - Verify Bank Account - bankVerified email sent successfully to: [malkit.singh@venturepact.com]
+INFO  2015-09-08 10:44:34,684 32472ms Logger                 Info               - Admin Dash -> VerifyAccount - [Synapse Bank ID: 50]
+ERROR 2015-09-08 10:44:40,653 38441ms Logger                 Error              - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.FileNotFoundException: Could not find file 'C:\nooch_server_withsynapse\EmailTemplates\bankVerified.txt'.
+File name: 'C:\nooch_server_withsynapse\EmailTemplates\bankVerified.txt'
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 89
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 105]
+INFO  2015-09-08 10:44:43,182 40970ms Logger                 Info               - Admin Dash -> Member Controller - Verify Bank Account - bankVerified email sent successfully to: [malkit.singh@venturepact.com]
+INFO  2015-09-08 10:45:38,092 95880ms Logger                 Info               - Admin Dash -> VerifyAccount - [Synapse Bank ID: 50]
+INFO  2015-09-08 10:47:39,083 216871ms Logger                 Info               - Admin Dash -> Member Controller - Verify Bank Account - bankVerified email sent successfully to: [malkit.singh@venturepact.com]
+INFO  2015-09-08 10:49:08,714 306502ms Logger                 Info               - Admin Dash -> VerifyAccount - [Synapse Bank ID: 50]
+INFO  2015-09-08 10:50:22,701 380490ms Logger                 Info               - Admin Dash -> Member Controller - Verify Bank Account - bankVerified email sent successfully to: [malkit.singh@venturepact.com]

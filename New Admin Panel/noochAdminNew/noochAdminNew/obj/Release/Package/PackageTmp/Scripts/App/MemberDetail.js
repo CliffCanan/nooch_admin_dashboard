@@ -165,7 +165,7 @@ var Member = function () {
 
         var url = "../Member/VerifyAccount";
         var data = {};
-        data.tokenID = accountId;
+        data.accountId = accountId;
 
         $.post(url, data, function (result) {
             console.log(result);

@@ -1,9 +1,11 @@
 // Show the  Live Transaction On Dashboard   
 $(document).ready(function () {
+
     var val = $("input:radio[name=options]").val();
+
     DashboardDetailsOperation(val);
 
-    //Date Format changes
+    // Date Format changes
     function getISODateTime(d) {
         // padding function
         var s = function (a, b) { return (1e15 + a + "").slice(-b) };
@@ -40,10 +42,10 @@ $(document).ready(function () {
     }
 
 
-    //Click Event For Label
+    // Click Event For Label
     $("#transIbox .btn-group label").click(function () {
         var c = $(this).attr("For");
-        var val = $('#' + c + '').val();
+        var val = $('#' + c).val();
 
         DashboardDetailsOperation(val);
     });
@@ -61,42 +63,48 @@ $(document).ready(function () {
                 {
                     var trHTML = '';
                     $("#TBOdy tr").remove();
-                    
-                  
-                    $.each(result.RecentLiveTransaction, function (i, item) {
-                        //DisputeStatus
+
+                    $.each(result.RecentLiveTransaction, function (i, item)
+                    {
+                        // Dispute Status
                         var disputestatus;
-                        if ((item.DisputeStatus) == null || (item.DisputeStatus) == "") {
+                        if ((item.DisputeStatus) == null || (item.DisputeStatus) == "")
+                        {
                             disputestatus = "No";
                         }
-                        else {
+                        else
+                        {
                             disputestatus = "Yes";
                         }
-                        //TransactionTime
+
+                        // Transaction Time
                         var TransactionTime = getISODateTime(new Date(parseInt((item.TransDateTime.substr(6)))));
 
-                        //GeoLocation
+                        // GeoLocation
                         var GeoLocation;
-                        if ((item.GeoStateCityLocation) == null || $.trim((item.GeoStateCityLocation)) == ",") {
+                        if ((item.GeoStateCityLocation) == null || $.trim((item.GeoStateCityLocation)) == ",")
+                        {
                             GeoLocation = "";
                         }
-                        else {
+                        else
+                        {
                             GeoLocation = $.trim(item.GeoStateCityLocation);
                         }
 
-                        trHTML += '<tr ><td>' + item.TransID + '</td><td>' + item.TransactionType +
+                        trHTML += '<tr><td>' + item.TransID + '</td><td>' + item.TransactionType +
                             '</td><td class="' + item.TransactionStatus + '">' + item.TransactionStatus +
                             '</td><td>' + TransactionTime + '</td> <td><a href="../Member/Detail?NoochId=' +
                             item.SenderId + '">' + item.SenderUserName + '</a></td><td><a href="../Member/Detail?NoochId=' +
                             item.RecepientId + '">' + item.RecepientUserName + '</a></td><td>$ ' + Number(item.Amount) +
-                            '</td><td>' + disputestatus + '</td><td><a href="#" OnClick="showLocationModal(' + item.Latitude + ',' + item.Longitude + ',' + "'" + GeoLocation + "'" + ')" class="btn btn-link" data-loctext="' + GeoLocation + '">' + GeoLocation + '</a></td></tr>';
+                            '</td><td>' + disputestatus + '</td><td><a href="#" OnClick="showLocationModal(' + item.Latitude + ',' +
+                            item.Longitude + ',' + "'" + GeoLocation + "'" + ')" class="btn btn-link" data-loctext="' + GeoLocation + '">' + GeoLocation + '</a></td></tr>';
 
                     });
-                    $("#TBOdy").append(trHTML);
-                    
-                }
 
-                else {
+                    $("#TBOdy").append(trHTML);   
+                }
+                else
+                {
                     toastr.error('Server was unable to return the request transactions!', 'Error');
                 }
             });

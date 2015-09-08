@@ -484,6 +484,7 @@ namespace noochAdminNew.Controllers
 
         [HttpGet, OutputCache(NoStore = true, Duration = 1)]
         public ActionResult Detail(string NoochId)
+        
         {
             CheckSession();
 
@@ -1018,7 +1019,7 @@ namespace noochAdminNew.Controllers
 
                                 if (noochMember != null)
                                 {
-                                    var toAddress = CommonHelper.GetDecryptedData(noochMember.UserName.ToLower());
+                                    var toAddress = CommonHelper.GetDecryptedData(noochMember.UserName).ToLower();
                                     var fromAddress = Utility.GetValueFromConfig("adminMail");
 
                                     var firstNameForEmail = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(noochMember.FirstName));

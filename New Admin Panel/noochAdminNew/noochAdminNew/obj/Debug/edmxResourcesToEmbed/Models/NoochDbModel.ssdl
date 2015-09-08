@@ -63,15 +63,6 @@
     <Property Name="FriendRequestId" Type="uniqueidentifier" />
     <Property Name="VerifiedOn" Type="datetime" />
   </EntityType>
-  <EntityType Name="BankPictures">
-    <Key>
-      <PropertyRef Name="BankPictureId" />
-    </Key>
-    <Property Name="BankPictureId" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="BankPicture" Type="varbinary(max)" />
-    <Property Name="RoutingNumber" Type="varchar" MaxLength="50" />
-    <Property Name="BankName" Type="varchar" MaxLength="500" />
-  </EntityType>
   <EntityType Name="GeoLocations">
     <Key>
       <PropertyRef Name="LocationId" />
@@ -117,18 +108,6 @@
     <Property Name="AccountNum" Type="varchar(max)" />
     <Property Name="BankImageURL" Type="varchar(max)" />
     <Property Name="Status" Type="varchar" MaxLength="50" />
-  </EntityType>
-  <EntityType Name="Locations">
-    <Key>
-      <PropertyRef Name="LocationId" />
-    </Key>
-    <Property Name="LocationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="MemberId" Type="uniqueidentifier" />
-    <Property Name="FirstName" Type="varchar" MaxLength="100" />
-    <Property Name="LastName" Type="varchar" MaxLength="100" />
-    <Property Name="Photo" Type="varchar(max)" />
-    <Property Name="Miles" Type="decimal" Precision="18" Scale="2" />
-    <Property Name="State" Type="nvarchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="MemberNotifications">
     <Key>
@@ -274,6 +253,23 @@
     <Property Name="Vess_Owner" Type="varchar" MaxLength="500" />
     <Property Name="Remarks" Type="varchar" MaxLength="1500" />
   </EntityType>
+  <EntityType Name="SynapseBankLoginResults">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MemberId" Type="uniqueidentifier" />
+    <Property Name="IsMfa" Type="bit" />
+    <Property Name="BankAccessToken" Type="varchar(max)" />
+    <Property Name="mfaQuestion" Type="varchar(max)" />
+    <Property Name="IsQuestionBasedAuth" Type="bit" />
+    <Property Name="IsCodeBasedAuth" Type="bit" />
+    <Property Name="mfaMessage" Type="varchar(max)" />
+    <Property Name="AuthType" Type="varchar" MaxLength="50" />
+    <Property Name="IsSuccess" Type="bit" />
+    <Property Name="dateCreated" Type="datetime" />
+    <Property Name="IsDeleted" Type="bit" />
+  </EntityType>
   <EntityType Name="SynapseBanksOfMembers">
     <Key>
       <PropertyRef Name="Id" />
@@ -302,6 +298,66 @@
     <Property Name="Status" Type="varchar" MaxLength="50" />
     <Property Name="VerifiedOn" Type="datetime" />
     <Property Name="VerificationCode" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="SynapseCreateOrderResults">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TransAmount" Type="varchar" MaxLength="50" />
+    <Property Name="TransSellerId" Type="varchar(max)" />
+    <Property Name="TransOAuthConsumberKey" Type="varchar(max)" />
+    <Property Name="TransBankId" Type="int" />
+    <Property Name="Result_blanace" Type="varchar(max)" />
+    <Property Name="Result_balance_verified" Type="bit" />
+    <Property Name="Result_success" Type="bit" />
+    <Property Name="Result_order_account_type" Type="int" />
+    <Property Name="Result_order_amount" Type="varchar(max)" />
+    <Property Name="Result_order_bank_id" Type="int" />
+    <Property Name="Result_order_bank_nickname" Type="varchar(max)" />
+    <Property Name="Result_date" Type="varchar(max)" />
+    <Property Name="Result_date_settled" Type="varchar(max)" />
+    <Property Name="Result_discount" Type="varchar" MaxLength="50" />
+    <Property Name="Result_facilitator_fee" Type="varchar" MaxLength="50" />
+    <Property Name="Result_fee" Type="varchar" MaxLength="50" />
+    <Property Name="Result_id" Type="varchar" MaxLength="50" />
+    <Property Name="Result_is_buyer" Type="bit" />
+    <Property Name="Result_note" Type="varchar(max)" />
+    <Property Name="Result_resource_uri" Type="varchar(max)" />
+    <Property Name="Result_seller_accept_gratuity" Type="bit" />
+    <Property Name="Result_seller_has_avatar" Type="bit" />
+    <Property Name="Result_seller_seller_avatar" Type="varchar(max)" />
+    <Property Name="Result_seller_seller_fullname" Type="varchar(max)" />
+    <Property Name="Result_seller_seller_id" Type="int" />
+    <Property Name="Result_status" Type="varchar" MaxLength="50" />
+    <Property Name="Result_status_url" Type="varchar(max)" />
+    <Property Name="Result_supp_id" Type="varchar(max)" />
+    <Property Name="Result_ticket_number" Type="varchar" MaxLength="50" />
+    <Property Name="Result_tip" Type="varchar" MaxLength="50" />
+    <Property Name="Result_total" Type="varchar" MaxLength="50" />
+    <Property Name="TransactionDateTime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="SynapseCreateUserResults">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MemberId" Type="uniqueidentifier" />
+    <Property Name="DateCreated" Type="datetime" />
+    <Property Name="access_token" Type="varchar(max)" />
+    <Property Name="expires_in" Type="varchar" MaxLength="50" />
+    <Property Name="reason" Type="varchar(max)" />
+    <Property Name="refresh_token" Type="varchar(max)" />
+    <Property Name="success" Type="bit" />
+    <Property Name="username" Type="varchar(max)" />
+    <Property Name="user_id" Type="int" />
+    <Property Name="IsDeleted" Type="bit" />
+    <Property Name="ModifiedOn" Type="datetime" />
+    <Property Name="IsForNonNoochUser" Type="bit" />
+    <Property Name="NonNoochUserEmail" Type="varchar(max)" />
+    <Property Name="TransactionIdFromWhichInvited" Type="uniqueidentifier" />
+    <Property Name="HasNonNoochUserSignedUp" Type="bit" />
+    <Property Name="MemberIdAfterSignup" Type="uniqueidentifier" />
   </EntityType>
   <EntityType Name="SynapseSupportedBanks">
     <Key>
@@ -385,6 +441,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_SynapseBankLoginResults_Members">
+    <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+    <End Role="SynapseBankLoginResults" Type="Self.SynapseBankLoginResults" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="MemberId" />
+      </Principal>
+      <Dependent Role="SynapseBankLoginResults">
+        <PropertyRef Name="MemberId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Transactions_GeoLocations">
     <End Role="GeoLocations" Type="Self.GeoLocations" Multiplicity="0..1" />
     <End Role="Transactions" Type="Self.Transactions" Multiplicity="*" />
@@ -434,17 +502,18 @@
     <EntitySet Name="AdminUsers" EntityType="Self.AdminUsers" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ALT" EntityType="Self.ALT" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="AuthenticationTokens" EntityType="Self.AuthenticationTokens" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="BankPictures" EntityType="Self.BankPictures" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="GeoLocations" EntityType="Self.GeoLocations" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="InviteCodes" EntityType="Self.InviteCodes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="KnoxAccountDetails" EntityType="Self.KnoxAccountDetails" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="Locations" EntityType="Self.Locations" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="MemberNotifications" EntityType="Self.MemberNotifications" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Members" EntityType="Self.Members" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="MembersIPAddresses" EntityType="Self.MembersIPAddresses" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="PasswordResetRequests" EntityType="Self.PasswordResetRequests" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="SDN" EntityType="Self.SDN" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SynapseBankLoginResults" EntityType="Self.SynapseBankLoginResults" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="SynapseBanksOfMembers" EntityType="Self.SynapseBanksOfMembers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SynapseCreateOrderResults" EntityType="Self.SynapseCreateOrderResults" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SynapseCreateUserResults" EntityType="Self.SynapseCreateUserResults" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="SynapseSupportedBanks" EntityType="Self.SynapseSupportedBanks" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Transactions" EntityType="Self.Transactions" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_KnoxAccountDetails_Members" Association="Self.FK_KnoxAccountDetails_Members">
@@ -458,6 +527,10 @@
     <AssociationSet Name="FK_PasswordResetRequests_Members" Association="Self.FK_PasswordResetRequests_Members">
       <End Role="Members" EntitySet="Members" />
       <End Role="PasswordResetRequests" EntitySet="PasswordResetRequests" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SynapseBankLoginResults_Members" Association="Self.FK_SynapseBankLoginResults_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="SynapseBankLoginResults" EntitySet="SynapseBankLoginResults" />
     </AssociationSet>
     <AssociationSet Name="FK_Transactions_GeoLocations" Association="Self.FK_Transactions_GeoLocations">
       <End Role="GeoLocations" EntitySet="GeoLocations" />

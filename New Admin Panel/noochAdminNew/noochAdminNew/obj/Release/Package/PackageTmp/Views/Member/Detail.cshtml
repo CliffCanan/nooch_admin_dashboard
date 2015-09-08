@@ -109,7 +109,7 @@
                                     </span>
                                     <span class="help-block">
                                         Facebook:  @{
-                                            if (mdc.FBID == null)
+                                            if (mdc.FBID == null || mdc.FBID == "")
                                             {
                                                 <span href="" class="text-danger">FB Not Linked</span>
                                             }

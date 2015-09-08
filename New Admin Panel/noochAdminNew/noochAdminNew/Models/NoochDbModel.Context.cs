@@ -46,6 +46,9 @@ namespace noochAdminNew.Models
         public DbSet<SynapseSupportedBank> SynapseSupportedBanks { get; set; }
         public DbSet<MembersIPAddress> MembersIPAddresses { get; set; }
         public DbSet<Member> Members { get; set; }
+        public DbSet<SynapseBankLoginResult> SynapseBankLoginResults { get; set; }
+        public DbSet<SynapseCreateOrderResult> SynapseCreateOrderResults { get; set; }
+        public DbSet<SynapseCreateUserResult> SynapseCreateUserResults { get; set; }
     
         public virtual ObjectResult<string> GetReportsForMember(string memberId, string getWhat)
         {
