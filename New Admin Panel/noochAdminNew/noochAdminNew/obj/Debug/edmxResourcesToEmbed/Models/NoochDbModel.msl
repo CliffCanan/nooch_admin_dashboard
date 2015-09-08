@@ -455,5 +455,6 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="GetDashboardStats" FunctionName="NOOCHModel.Store.GetDashboardStats" />
   </EntityContainerMapping>
 </Mapping>

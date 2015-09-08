@@ -78,5 +78,18 @@ namespace noochAdminNew.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetLiveTransactionsForDashboard_Result1>("GetLiveTransactionsForDashboard", vTypeParameter);
         }
+    
+        public virtual ObjectResult<Nullable<int>> GetDashboardStats(string vStatsFor, string vStatsType)
+        {
+            var vStatsForParameter = vStatsFor != null ?
+                new ObjectParameter("vStatsFor", vStatsFor) :
+                new ObjectParameter("vStatsFor", typeof(string));
+    
+            var vStatsTypeParameter = vStatsType != null ?
+                new ObjectParameter("vStatsType", vStatsType) :
+                new ObjectParameter("vStatsType", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("GetDashboardStats", vStatsForParameter, vStatsTypeParameter);
+        }
     }
 }

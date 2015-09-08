@@ -58,6 +58,10 @@
     <FunctionImport Name="GetLiveTransactionsForDashboard" ReturnType="Collection(NOOCHModel.GetLiveTransactionsForDashboard_Result1)">
       <Parameter Name="vType" Mode="In" Type="Int32" />
     </FunctionImport>
+    <FunctionImport Name="GetDashboardStats" ReturnType="Collection(Int32)">
+      <Parameter Name="vStatsFor" Mode="In" Type="String" />
+      <Parameter Name="vStatsType" Mode="In" Type="String" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="ADD">
     <Key>

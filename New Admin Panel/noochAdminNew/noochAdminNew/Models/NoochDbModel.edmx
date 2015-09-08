@@ -494,6 +494,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="GetDashboardStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="vStatsFor" Type="varchar(max)" Mode="In" />
+          <Parameter Name="vStatsType" Type="varchar(max)" Mode="In" />
+        </Function>
         <Function Name="GetLiveTransactionsForDashboard" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="vType" Type="int" Mode="In" />
         </Function>
@@ -613,7 +617,11 @@
             <End Role="SynapseBankLoginResult" EntitySet="SynapseBankLoginResults" />
           </AssociationSet>
           <FunctionImport Name="GetLiveTransactionsForDashboard" ReturnType="Collection(NOOCHModel.GetLiveTransactionsForDashboard_Result1)">
-            <Parameter Name="vType" Mode="In" Type="Int32" />
+          <Parameter Name="vType" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetDashboardStats" ReturnType="Collection(Int32)">
+            <Parameter Name="vStatsFor" Mode="In" Type="String" />
+            <Parameter Name="vStatsType" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="ADD">
@@ -1614,6 +1622,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetDashboardStats" FunctionName="NOOCHModel.Store.GetDashboardStats" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -277,7 +277,7 @@ namespace noochAdminNew.Controllers
             //    return Json(ddresult);
             //} 
             #endregion
-            #region Bill Gate's Code..... 
+            #region Bill Gate's Code.....
             //:D  Keeping rakesh soni's code just in case if new code breaks anything on live... will revert back to original code.
             try
             {
@@ -354,7 +354,7 @@ namespace noochAdminNew.Controllers
                             #endregion
 
                             #region Invite type transaction
-                            
+
                             // invite type trans to non nooch user...by phone
                             else if (merc.TransactionType == "Invite" && t.RecipientId == t.SenderId && t.IsPhoneInvitation == true)
                             {
@@ -400,10 +400,10 @@ namespace noochAdminNew.Controllers
                             // transfer type trans to non nooch user...by phone
                             else if (merc.TransactionType == "Transfer")
                             {
-                            
-                                    merc.RecepientUserName =
-                                        CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
-                            
+
+                                merc.RecepientUserName =
+                                    CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+
                                 merc.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.SenderId.ToString());
                                 merc.RecepientId = t.RecipientId.ToString();
                                 merc.SenderId = t.SenderId.ToString();
@@ -416,7 +416,7 @@ namespace noochAdminNew.Controllers
 
                                 merc.RecepientUserName =
                                     CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
-                                
+
                                 merc.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.SenderId.ToString());
                                 merc.RecepientId = t.RecipientId.ToString();
                                 merc.SenderId = t.SenderId.ToString();
@@ -424,23 +424,23 @@ namespace noochAdminNew.Controllers
 
                             #endregion
 
-                            
+
                             mm.Add(merc);
                         }
                     }
 
 
-                  
 
-                            ddresult.IsSuccess = true;
-                            ddresult.Message = "SuccessOperation";
-                            ddresult.RecentLiveTransaction = mm;
 
-                            return Json(ddresult);
-                      
-                    
-                   
-                  
+                    ddresult.IsSuccess = true;
+                    ddresult.Message = "SuccessOperation";
+                    ddresult.RecentLiveTransaction = mm;
+
+                    return Json(ddresult);
+
+
+
+
                 }
             }
             catch (Exception ex)
@@ -456,10 +456,10 @@ namespace noochAdminNew.Controllers
 
         public ActionResult Dashboard()
         {
-            var CurrentYear = DateTime.Now.Year;
-            var CurrentMonth = DateTime.Now.Month;
-            var CurrentDate = DateTime.Now.Day;
-            var TodayDate = DateTime.Today.ToShortDateString();
+            //var CurrentYear = DateTime.Now.Year;
+            //var CurrentMonth = DateTime.Now.Month;
+            //var CurrentDate = DateTime.Now.Day;
+            //var TodayDate = DateTime.Today.ToShortDateString();
             DashboardDataClass dd = new DashboardDataClass();
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
@@ -479,73 +479,76 @@ namespace noochAdminNew.Controllers
                     dd.TotalActiveUsers = c.Count;
 
                     // # of Active Users - TODAY
-                    c = (from t in obj.Members
-                         where t.IsDeleted == false && t.DateCreated.Value.Day == CurrentDate && t.DateCreated.Value.Year == CurrentYear && t.DateCreated.Value.Month == CurrentMonth
-                         select t).ToList();
-                    dd.TotalNoOfActiveUser_Today = c.Count;
+                    //c = (from t in obj.Members
+                    //     where t.IsDeleted == false && t.DateCreated.Value.Day == CurrentDate && t.DateCreated.Value.Year == CurrentYear && t.DateCreated.Value.Month == CurrentMonth
+                    //     select t).ToList();
+
+                    dd.TotalNoOfActiveUser_Today = obj.GetDashboardStats("NEW Users", "Today").SingleOrDefault() ?? 0;
 
                     // # of Active Users - THIS MONTH
-                    c = (from t in obj.Members
-                         where t.IsDeleted == false &&
-                               t.DateCreated.Value.Year == CurrentYear &&
-                               t.DateCreated.Value.Month == CurrentMonth
-                         select t).ToList();
-                    dd.TotalNoOfActiveUser_Month = c.Count;
+                    //c = (from t in obj.Members
+                    //     where t.IsDeleted == false &&
+                    //           t.DateCreated.Value.Year == CurrentYear &&
+                    //           t.DateCreated.Value.Month == CurrentMonth
+                    //     select t).ToList();
+
+                    dd.TotalNoOfActiveUser_Month = obj.GetDashboardStats("NEW Users", "This month").SingleOrDefault() ?? 0;
+
 
                     // # of Active Users - THIS WEEK
-                    c = (from t in obj.Members
-                         where t.IsDeleted == false && SqlFunctions.DatePart("week", t.DateCreated) == (SqlFunctions.DatePart("week", DateTime.Now))
-                         select t).ToList();
-                    dd.TotalNoOfActiveUser_Week = c.Count;
+                    //c = (from t in obj.Members
+                    //     where t.IsDeleted == false && SqlFunctions.DatePart("week", t.DateCreated) == (SqlFunctions.DatePart("week", DateTime.Now))
+                    //     select t).ToList();
+                    dd.TotalNoOfActiveUser_Week = obj.GetDashboardStats("NEW Users", "This week").SingleOrDefault() ?? 0;
 
                     // # of Phones Verified - TODAY
-                    c = (from t in obj.Members
-                         where t.IsDeleted == false &&
-                               t.PhoneVerifiedOn.Value.Day == CurrentDate &&
-                               t.PhoneVerifiedOn.Value.Year == CurrentYear &&
-                               t.PhoneVerifiedOn.Value.Month == CurrentMonth
-                         select t).ToList();
-                    dd.TotalNoOfVerifiedPhoneUsers_Today = c.Count;
+                    //c = (from t in obj.Members
+                    //     where t.IsDeleted == false &&
+                    //           t.PhoneVerifiedOn.Value.Day == CurrentDate &&
+                    //           t.PhoneVerifiedOn.Value.Year == CurrentYear &&
+                    //           t.PhoneVerifiedOn.Value.Month == CurrentMonth
+                    //     select t).ToList();
+                    dd.TotalNoOfVerifiedPhoneUsers_Today = obj.GetDashboardStats("NEW Verified Phones", "Today").SingleOrDefault() ?? 0;
 
                     // # of Phones Verified - THIS MONTH
-                    c = (from t in obj.Members
-                         where t.IsDeleted == false &&
-                               t.PhoneVerifiedOn.Value.Year == CurrentYear &&
-                               t.PhoneVerifiedOn.Value.Month == CurrentMonth
-                         select t).ToList();
-                    dd.TotalNoOfVerifiedPhoneUsers_Month = c.Count;
+                    //c = (from t in obj.Members
+                    //     where t.IsDeleted == false &&
+                    //           t.PhoneVerifiedOn.Value.Year == CurrentYear &&
+                    //           t.PhoneVerifiedOn.Value.Month == CurrentMonth
+                    //     select t).ToList();
+                    dd.TotalNoOfVerifiedPhoneUsers_Month = obj.GetDashboardStats("NEW Verified Phones", "This month").SingleOrDefault() ?? 0;
 
                     // # of Phones Verified - THIS WEEK
-                    c = (from t in obj.Members
-                         where t.IsDeleted == false &&
-                               SqlFunctions.DatePart("week", t.PhoneVerifiedOn) == (SqlFunctions.DatePart("week", DateTime.Now))
-                         select t).ToList();
-                    dd.TotalNoOfVerifiedPhoneUsers_Week = c.Count;
+                    //c = (from t in obj.Members
+                    //     where t.IsDeleted == false &&
+                    //           SqlFunctions.DatePart("week", t.PhoneVerifiedOn) == (SqlFunctions.DatePart("week", DateTime.Now))
+                    //     select t).ToList();
+                    dd.TotalNoOfVerifiedPhoneUsers_Week = obj.GetDashboardStats("NEW Verified Phones", "This week").SingleOrDefault() ?? 0;
 
                     // # of Emails Verified - TODAY
-                    c = (from t in obj.AuthenticationTokens
-                         join mem in obj.Members on t.MemberId equals mem.MemberId
-                         where mem.IsDeleted == false && t.IsActivated == true
-                             && t.VerifiedOn.Value.Day == CurrentDate && t.VerifiedOn.Value.Year == CurrentYear && t.VerifiedOn.Value.Month == CurrentMonth
-                         select mem).ToList();
-                    dd.TotalNoOfVerifiedEmailUsers_Today = c.Count;
+                    //c = (from t in obj.AuthenticationTokens
+                    //     join mem in obj.Members on t.MemberId equals mem.MemberId
+                    //     where mem.IsDeleted == false && t.IsActivated == true
+                    //         && t.VerifiedOn.Value.Day == CurrentDate && t.VerifiedOn.Value.Year == CurrentYear && t.VerifiedOn.Value.Month == CurrentMonth
+                    //     select mem).ToList();
+                    dd.TotalNoOfVerifiedEmailUsers_Today = obj.GetDashboardStats("NEW Verified Email", "Today").SingleOrDefault() ?? 0;
 
                     // # of Emails Verified - THIS MONTH
-                    c = (from t in obj.AuthenticationTokens
-                         join mem in obj.Members on t.MemberId equals mem.MemberId
-                         where mem.IsDeleted == false
-                             && t.IsActivated == true && t.VerifiedOn.Value.Year == CurrentYear && t.VerifiedOn.Value.Month == CurrentMonth
-                         select mem).ToList();
-                    dd.TotalNoOfVerifiedEmailUsers_Month = c.Count;
+                    //c = (from t in obj.AuthenticationTokens
+                    //     join mem in obj.Members on t.MemberId equals mem.MemberId
+                    //     where mem.IsDeleted == false
+                    //         && t.IsActivated == true && t.VerifiedOn.Value.Year == CurrentYear && t.VerifiedOn.Value.Month == CurrentMonth
+                    //     select mem).ToList();
+                    dd.TotalNoOfVerifiedEmailUsers_Month = obj.GetDashboardStats("NEW Verified Email", "This month").SingleOrDefault() ?? 0;
 
 
                     // # of Emails Verified - THIS WEEK
-                    c = (from t in obj.AuthenticationTokens
-                         join mem in obj.Members on t.MemberId equals mem.MemberId
-                         where mem.IsDeleted == false
-                             && t.IsActivated == true && SqlFunctions.DatePart("week", t.VerifiedOn) == (SqlFunctions.DatePart("week", DateTime.Now))
-                         select mem).ToList();
-                    dd.TotalNoOfVerifiedEmailUsers_Week = c.Count;
+                    //c = (from t in obj.AuthenticationTokens
+                    //     join mem in obj.Members on t.MemberId equals mem.MemberId
+                    //     where mem.IsDeleted == false
+                    //         && t.IsActivated == true && SqlFunctions.DatePart("week", t.VerifiedOn) == (SqlFunctions.DatePart("week", DateTime.Now))
+                    //     select mem).ToList();
+                    dd.TotalNoOfVerifiedEmailUsers_Week = Convert.ToInt16(obj.GetDashboardStats("NEW Verified Email", "This week").SingleOrDefault().ToString());
 
                     c = (from t in obj.Members
                          where t.IsDeleted == false &&

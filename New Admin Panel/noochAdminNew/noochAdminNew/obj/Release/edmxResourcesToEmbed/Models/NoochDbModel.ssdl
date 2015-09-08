@@ -489,6 +489,10 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Function Name="GetDashboardStats" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="vStatsFor" Type="varchar(max)" Mode="In" />
+    <Parameter Name="vStatsType" Type="varchar(max)" Mode="In" />
+  </Function>
   <Function Name="GetLiveTransactionsForDashboard" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="vType" Type="int" Mode="In" />
   </Function>
