@@ -35,6 +35,14 @@ $(document).ready(function () {
 
         $('#modal-transferLocation').modal();
     });
+
+    $('#idDocLnk').click(function () {
+        var src = $('.idDocImg').attr('src');
+
+        $('#idImageBig').attr('src', src);
+
+        $('#idDocModal').modal();
+    })
 });
 
 

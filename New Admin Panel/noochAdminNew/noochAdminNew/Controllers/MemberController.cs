@@ -484,12 +484,11 @@ namespace noochAdminNew.Controllers
 
         [HttpGet, OutputCache(NoStore = true, Duration = 1)]
         public ActionResult Detail(string NoochId)
-        
         {
             CheckSession();
 
             MemberDetailsClass mdc = new MemberDetailsClass();
-            // getting details of noochid passed
+
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 var Member = (from m in obj.Members where m.Nooch_ID == NoochId select m).SingleOrDefault();
@@ -497,7 +496,7 @@ namespace noochAdminNew.Controllers
                 if (Member != null)
                 {
                     mdc.DateCreated = Convert.ToDateTime(Member.DateCreated);
-                    mdc.DateCreatedFormatted = String.Format("{0: MMMM d, yyyy}", Member.DateCreated);
+                    mdc.DateCreatedFormatted = String.Format("{0: MMM d, yyyy}", Member.DateCreated);
                     mdc.FBID = !String.IsNullOrEmpty(Member.FacebookAccountLogin) ? CommonHelper.GetDecryptedData(Member.FacebookAccountLogin) : "";
                     mdc.FirstName = !String.IsNullOrEmpty(Member.FirstName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.FirstName)) : "";
                     mdc.LastName = !String.IsNullOrEmpty(Member.LastName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.LastName)) : "";
