@@ -107,7 +107,7 @@ var Member = function () {
 
         var url = "../Member/EditMemberDetails";
         var data = {};
-        data.contactno = $("#contactNumber").val();
+        data.contactno = $("#contactNumber").val().replace(/\D/g, '');
         data.streetaddress = $("#streetaddress").val();
         data.city = $("#city").val();
         data.secondaryemail = $("#secondaryemail").val();
