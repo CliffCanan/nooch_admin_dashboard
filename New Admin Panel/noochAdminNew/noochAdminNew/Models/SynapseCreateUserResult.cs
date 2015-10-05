@@ -31,5 +31,10 @@ namespace noochAdminNew.Models
         public Nullable<System.Guid> TransactionIdFromWhichInvited { get; set; }
         public Nullable<bool> HasNonNoochUserSignedUp { get; set; }
         public Nullable<System.Guid> MemberIdAfterSignup { get; set; }
+        public Nullable<bool> is_business { get; set; }
+        public string legal_name { get; set; }
+        public string permission { get; set; }
+        public string Phone_number { get; set; }
+        public string photos { get; set; }
     }
 }

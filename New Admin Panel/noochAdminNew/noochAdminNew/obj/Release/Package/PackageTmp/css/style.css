@@ -3191,9 +3191,11 @@ small.stats-label {font-size: 12.2px;}
 }
 
 button.btn .fa {margin:0 8px 0 0;}
-.idDocImg {
+
+.idDocImg, #idImageBig {
+  border-radius: 12px;
   width: 100%;
-  border-radius: 15px;
+  max-width: 400px;
 }
 
 
