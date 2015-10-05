@@ -38,6 +38,7 @@ namespace noochAdminNew.Classes.ResponseClasses
 
         public string state { get; set; }
         public string zip { get; set; }
-
+        public string ssn { get; set; }
+        public string dob { get; set; }
     }
 }

@@ -41,7 +41,7 @@
 
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
-        <h2>@mdc.FirstName @mdc.LastName</h2>
+        <h2>@mdc.FirstName @mdc.LastName | <small>@mdc.Nooch_ID</small></h2>
         <ol class="breadcrumb">
             <li>
                 <a href="../Admin/Dashboard">Dashboard</a>
@@ -63,6 +63,7 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>MEMBER DETAILS | <small>@mdc.FirstName @mdc.LastName</small></h5>
+                    <span class="pull-right">@mdc.memberId</span>
                 </div>
                 <div class="ibox-content">
                     <div class="row">
@@ -91,7 +92,7 @@
                                             }
                                             else
                                             {
-                                                <span class="label label-danger">mdc.Status</span>
+                                                <span class="label label-danger">@mdc.Status</span>
                                             }
                                         }
                                     </span>
@@ -119,7 +120,6 @@
                                             }
                                         }
                                     </span>
-                                    <span class="help-block">Nooch ID:<span>@mdc.Nooch_ID </span></span>
                                     @if (!String.IsNullOrEmpty(mdc.ReferCodeUsed))
                                     {
                                         <span class="help-block m-b-none">Refer Code Used:<a href="../Referrals/JoinningsWithGivenReferralCode?RefCode=@mdc.ReferCodeUsed" class="text-navy">@mdc.ReferCodeUsed.ToUpper()</a></span>
@@ -133,7 +133,7 @@
                         </div>
 
                         <div class="col-xs-12 col-sm-6 col-md-4">
-                            <div class="ibox float-e-margins">
+                            <div class="ibox float-e-margins" style="margin-bottom:5px;">
                                 <div class="ibox-title">
                                     <h5>Transfer Activity</h5>
                                 </div>
@@ -532,11 +532,12 @@
 
                                                                     @if (synpsDetail.SynapseBankStatus == "Verified")
                                                                     {
-                                                                        <p>
+                                                                        <p style="margin-bottom:5px;">
                                                                             <span class="text-success" style="display: inline-block"> @synpsDetail.SynapseBankStatus </span>
                                                                             <button type="button" class="btn btn-link" onclick="Member.UnVerifyBankAccount(); "><i class="fa fa-close text-danger"></i>Un-Verify</button>
                                                                         </p>
                                                                         <p><small>Verified On:&nbsp; @synpsDetail.SynpaseBankVerifiedOn</small></p>
+                                                                        <p>IsVerifiedWithSynapse:&nbsp; <strong>@mdc.IsVerifiedWithSynapse</strong></p>
                                                                     }
                                                                     else
                                                                     {

@@ -132,9 +132,9 @@ namespace noochAdminNew.Controllers
                         {
                             var member = (from t in obj.Members where t.Nooch_ID == s && t.IsSDNSafe == null || t.IsSDNSafe == false select t).SingleOrDefault();
                             MemberOperationsInnerClass mic = new MemberOperationsInnerClass();
-                            
+
                             #region IfMemberNotNull
-                            
+
                             if (member != null)
                             {
                                 try
@@ -491,10 +491,13 @@ namespace noochAdminNew.Controllers
 
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-                var Member = (from m in obj.Members where m.Nooch_ID == NoochId select m).SingleOrDefault();
+                var Member = (from m in obj.Members
+                              where m.Nooch_ID == NoochId
+                              select m).SingleOrDefault();
 
                 if (Member != null)
                 {
+                    mdc.memberId = Member.MemberId.ToString();
                     mdc.DateCreated = Convert.ToDateTime(Member.DateCreated);
                     mdc.DateCreatedFormatted = String.Format("{0: MMM d, yyyy}", Member.DateCreated);
                     mdc.FBID = !String.IsNullOrEmpty(Member.FacebookAccountLogin) ? CommonHelper.GetDecryptedData(Member.FacebookAccountLogin) : "";
@@ -517,11 +520,19 @@ namespace noochAdminNew.Controllers
                     mdc.ssn = !String.IsNullOrEmpty(Member.SSN) ? CommonHelper.GetDecryptedData(Member.SSN) : "";
                     mdc.idDocUrl = Member.VerificationDocumentPath;
                     mdc.adminNote = Member.AdminNotes;
+                    mdc.IsVerifiedWithSynapse = Member.IsVerifiedWithSynapse;
 
                     //Get the Refered Code Used
-                    mdc.ReferCodeUsed = (from Membr in obj.Members join Code in obj.InviteCodes on Membr.InviteCodeIdUsed equals Code.InviteCodeId where Membr.Nooch_ID == NoochId select Code.code).SingleOrDefault();
+                    mdc.ReferCodeUsed = (from Membr in obj.Members 
+                                         join Code in obj.InviteCodes 
+                                         on Membr.InviteCodeIdUsed equals Code.InviteCodeId
+                                         where Membr.Nooch_ID == NoochId
+                                         select Code.code).SingleOrDefault();
 
-                    var MemberKnoxDetails = (from m in obj.KnoxAccountDetails where m.Member.MemberId == Member.MemberId && m.IsDeleted == false select m).FirstOrDefault();
+                    // Get any Knox bank accounts (Old)
+                    var MemberKnoxDetails = (from m in obj.KnoxAccountDetails 
+                                             where m.Member.MemberId == Member.MemberId && m.IsDeleted == false
+                                             select m).FirstOrDefault();
                     mdc.IsKnocAvailable = (MemberKnoxDetails != null);
                     if (mdc.IsKnocAvailable)
                     {
@@ -723,7 +734,7 @@ namespace noochAdminNew.Controllers
         /// <param name="zip"></param>
         [HttpPost]
         [ActionName("EditMemberDetails")]
-        public ActionResult EditMemberDetails(string contactno, string streetaddress, string city, string secondaryemail, string recoveryemail, string noochid, string state, string zip)
+        public ActionResult EditMemberDetails(string contactno, string streetaddress, string city, string secondaryemail, string recoveryemail, string noochid, string state, string zip, string ssn, string dob)
         {
             MemberEditResultClass re = new MemberEditResultClass();
             if (String.IsNullOrEmpty(noochid))
@@ -733,66 +744,92 @@ namespace noochAdminNew.Controllers
             }
             else
             {
-                // Get member from DB
-                using (NOOCHEntities obj = new NOOCHEntities())
+                try
                 {
-                    var member =
-                        (from t in obj.Members where t.Nooch_ID == noochid && t.IsDeleted == false select t)
-                            .SingleOrDefault();
-
-                    if (member == null)
+                    // Get member from DB
+                    using (NOOCHEntities obj = new NOOCHEntities())
                     {
-                        re.IsSuccess = false;
-                        re.Message = "Member not found";
+                        var member = (from t in obj.Members
+                                      where t.Nooch_ID == noochid && t.IsDeleted == false
+                                      select t).SingleOrDefault();
+
+                        if (member == null)
+                        {
+                            re.IsSuccess = false;
+                            re.Message = "Member not found";
+                        }
+                        else
+                        {
+                            if (!String.IsNullOrEmpty(contactno))
+                            {
+                                member.ContactNumber = contactno.Trim();
+                            }
+
+                            if (!String.IsNullOrEmpty(zip))
+                            {
+                                member.Zipcode = CommonHelper.GetEncryptedData(zip.Trim());
+                            }
+                            if (!String.IsNullOrEmpty(state))
+                            {
+                                member.State = CommonHelper.GetEncryptedData(state.Trim());
+                            }
+
+                            if (!String.IsNullOrEmpty(streetaddress))
+                            {
+                                member.Address = CommonHelper.GetEncryptedData(streetaddress.Trim());
+                            }
+
+                            if (!String.IsNullOrEmpty(city))
+                            {
+                                member.City = CommonHelper.GetEncryptedData(city.Trim());
+                            }
+
+                            if (!String.IsNullOrEmpty(secondaryemail))
+                            {
+                                member.SecondaryEmail = secondaryemail.Trim();
+                            }
+
+                            if (!String.IsNullOrEmpty(recoveryemail))
+                            {
+                                member.RecoveryEmail = CommonHelper.GetEncryptedData(recoveryemail.Trim());
+                            }
+
+                            if (!String.IsNullOrEmpty(ssn))
+                            {
+                                member.SSN = CommonHelper.GetEncryptedData(ssn.Trim());
+                            }
+
+                            if (!String.IsNullOrEmpty(dob))
+                            {
+                                DateTime dateofbirth;
+                                if (!DateTime.TryParse(dob, out dateofbirth))
+                                {
+                                    Logger.Error("Admin Member Controller -> EditMemberDetails - DOB was NULL - [MemberID: " + member.MemberId + "]");
+                                }
+
+                                member.DateOfBirth = dateofbirth;
+                            }
+                            member.DateModified = DateTime.Now;
+
+                            obj.SaveChanges();
+
+                            re.Address = streetaddress;
+                            re.secondaryemail = secondaryemail;
+                            re.recoveryemail = recoveryemail;
+                            re.contactnum = CommonHelper.FormatPhoneNumber(contactno);
+                            re.City = city;
+                            re.state = state.ToUpper();
+                            re.zip = zip;
+                            re.ssn = ssn;
+                            re.dob = dob;
+                            re.IsSuccess = true;
+                            re.Message = "Member record updated successfully";
+                        }
                     }
-                    else
-                    {
-                        if (!String.IsNullOrEmpty(contactno))
-                        {
-                            member.ContactNumber = contactno.Trim();
-                        }
-
-                        if (!String.IsNullOrEmpty(zip))
-                        {
-                            member.Zipcode = CommonHelper.GetEncryptedData(zip.Trim());
-                        }
-                        if (!String.IsNullOrEmpty(state))
-                        {
-                            member.State = CommonHelper.GetEncryptedData(state.Trim());
-                        }
-
-                        if (!String.IsNullOrEmpty(streetaddress))
-                        {
-                            member.Address = CommonHelper.GetEncryptedData(streetaddress.Trim());
-                        }
-
-                        if (!String.IsNullOrEmpty(city))
-                        {
-                            member.City = CommonHelper.GetEncryptedData(city.Trim());
-                        }
-
-                        if (!String.IsNullOrEmpty(secondaryemail))
-                        {
-                            member.SecondaryEmail = secondaryemail.Trim();
-                        }
-
-                        if (!String.IsNullOrEmpty(recoveryemail))
-                        {
-                            member.RecoveryEmail = CommonHelper.GetEncryptedData(recoveryemail.Trim());
-                        }
-                        re.contactnum = contactno;
-                        re.Address = streetaddress;
-                        re.secondaryemail = secondaryemail;
-                        re.recoveryemail = recoveryemail;
-                        re.contactnum = contactno;
-                        re.City = city;
-                        re.state = state;
-                        re.zip = zip;
-
-                        obj.SaveChanges();
-                        re.IsSuccess = true;
-                        re.Message = "Member record updated successfully";
-                    }
+                }
+                catch(Exception ex)
+                {
+                    Logger.Error("Admin MemberController -> EditMemberDetails FAILED - [Exception: " + ex + "]");
                 }
             }
             return Json(re);
@@ -905,8 +942,9 @@ namespace noochAdminNew.Controllers
             using (var noochConnection = new NOOCHEntities())
             {
                 // Get Synapse Bank info from DB
-                var bank = (from c in noochConnection.SynapseBanksOfMembers 
-                            where c.Id == bnkid select c)
+                var bank = (from c in noochConnection.SynapseBanksOfMembers
+                            where c.Id == bnkid
+                            select c)
                             .SingleOrDefault();
 
                 if (bank != null)
@@ -1012,8 +1050,8 @@ namespace noochAdminNew.Controllers
 
                                 // Get Member Info from DB
                                 var noochMember = (from c in noochConnection.Members
-                                            where c.MemberId.Equals(memberId) && c.IsDeleted == false
-                                            select c)
+                                                   where c.MemberId.Equals(memberId) && c.IsDeleted == false
+                                                   select c)
                                             .FirstOrDefault();
 
                                 if (noochMember != null)

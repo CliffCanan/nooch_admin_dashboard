@@ -7,6 +7,7 @@ namespace noochAdminNew.Classes.ModelClasses
 {
     public class MemberDetailsClass
     {
+        public string memberId { get; set; }
         public string Nooch_ID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -54,6 +55,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public List<ReferredMembers> Referrals { get; set; }
 
         public bool IsSynapseDetailAvailable { get; set; }
+        public bool? IsVerifiedWithSynapse { get; set; }
         public SynapseDetailOFMember SynapseDetails { get; set; }
         public List<MemberIpAddrreses> MemberIpAddr { get; set; }
     }

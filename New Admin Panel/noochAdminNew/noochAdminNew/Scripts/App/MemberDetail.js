@@ -109,18 +109,19 @@ var Member = function () {
         var data = {};
         data.contactno = $("#contactNumber").val().replace(/\D/g, '');
         data.streetaddress = $("#streetaddress").val();
-        data.city = $("#city").val();
+        data.city = $("#city").val().trim();
         data.secondaryemail = $("#secondaryemail").val();
         data.recoveryemail = $("#recoveryemail").val();
         data.state = $("#stateinput").val();
         data.zip = $("#zipcodeinput").val();
         data.noochid = NoochId;
-
+        data.ssn = $("#ssninput").val().trim();
+        data.dob = $("#dobinput").val().trim();
         console.log(data);
 
         $.post(url, data, function (result) {
             if (result.IsSuccess == true) {
-                toastr.info('Reloading this page...', 'FYI', { timeOut: '3500' })
+                toastr.info('Reloading this page...', 'FYI', { timeOut: '3000' })
                 toastr.success(result.Message, 'Success');
 
                 $("#contactNumber").val(result.contactnum);
@@ -130,8 +131,10 @@ var Member = function () {
                 $("#recoveryemail").val(result.recoveryemail)
                 $("#stateinput").val(result.state);
                 $("#zipcodeinput").val(result.zip);
+                $("#ssninput").val(result.ssn);
+                $("#dobinput").val(result.dob);
 
-                setTimeout(function () { location.reload(true) }, 3500);
+                setTimeout(function () { location.reload(true) }, 3000);
             }
             else {
                 toastr.error(result.Message, 'Error');
