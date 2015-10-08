@@ -63,16 +63,21 @@ namespace noochAdminNew.Classes.ModelClasses
     public class MemberDetailsTrans
     {
         public string TransID { get; set; }
-        public string TransDateTime { get; set; }
+        public string TransDate { get; set; }
+        public string TransTime { get; set; }
         public string Amount { get; set; }
         public string AmountNew { get; set; }
-        public string RecepientId { get; set; }
-        public string RecepientUserName { get; set; }
+        public string RecipientId { get; set; }
+        public string RecipientName { get; set; }
+        public string RecipientUserName { get; set; }
+        public string SenderId { get; set; }
+        public string SenderName { get; set; }
         public string GeoLocation { get; set; }
         public string Longitude { get; set; }
         public string Latitude { get; set; }
         public string TransactionType { get; set; }
         public string TransactionStatus { get; set; }
+        public string Memo { get; set; }
     }
 
     public class MemberDetailsStats

@@ -523,50 +523,98 @@ namespace noochAdminNew.Controllers
                     mdc.IsVerifiedWithSynapse = Member.IsVerifiedWithSynapse;
 
                     //Get the Refered Code Used
-                    mdc.ReferCodeUsed = (from Membr in obj.Members 
-                                         join Code in obj.InviteCodes 
+                    mdc.ReferCodeUsed = (from Membr in obj.Members
+                                         join Code in obj.InviteCodes
                                          on Membr.InviteCodeIdUsed equals Code.InviteCodeId
                                          where Membr.Nooch_ID == NoochId
                                          select Code.code).SingleOrDefault();
 
-                    // Get any Knox bank accounts (Old)
-                    var MemberKnoxDetails = (from m in obj.KnoxAccountDetails 
-                                             where m.Member.MemberId == Member.MemberId && m.IsDeleted == false
-                                             select m).FirstOrDefault();
-                    mdc.IsKnocAvailable = (MemberKnoxDetails != null);
-                    if (mdc.IsKnocAvailable)
-                    {
-                        mdc.KnoxBankIcon = MemberKnoxDetails.BankImageURL;
-                        mdc.KnoxTransId = CommonHelper.GetDecryptedData(MemberKnoxDetails.TransId);
-                    }
-
 
                     #region Get User's Transactions
 
+                    var memberFullName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.FirstName)) + " " +
+                                         CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.LastName));
+
                     var transtp = (from t in obj.Transactions
-                                   where
-                                       t.Member.MemberId == Member.MemberId && (t.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || t.TransactionType == "+C1+zhVafHdXQXCIqjU/Zg==" || t.TransactionType == "DrRr1tU1usk7nNibjtcZkA==") &&
-                            (t.TransactionStatus == "Success" || t.TransactionStatus == "Rejected" || t.TransactionStatus == "Pending" || t.TransactionStatus == "Cancelled")
+                                   where (t.Member.MemberId == Member.MemberId ||
+                                          t.RecipientId == Member.MemberId ||
+                                          t.SenderId == Member.MemberId)
+                                   //(t.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || t.TransactionType == "+C1+zhVafHdXQXCIqjU/Zg==" || t.TransactionType == "DrRr1tU1usk7nNibjtcZkA==")
+                                   //(t.TransactionStatus == "Success" || t.TransactionStatus == "Rejected" || t.TransactionStatus == "Pending" || t.TransactionStatus == "Cancelled")
                                    select t).OrderByDescending(r => r.TransactionDate).Take(10).ToList();
 
                     List<MemberDetailsTrans> mm = new List<MemberDetailsTrans>();
                     foreach (Transaction t in transtp)
                     {
-                        MemberDetailsTrans merc = new MemberDetailsTrans();
-                        //merc.Amount = t.Amount != 0 ? t.Amount.ToString("C", CultureInfo.CurrentCulture) : "0";
-                        merc.AmountNew = t.Amount.ToString();
-                        merc.TransID = t.TransactionTrackingId.ToString();
-                        merc.RecepientId = t.Member1.Nooch_ID.ToString();
-                        merc.TransDateTime = Convert.ToDateTime(t.TransactionDate).ToString();
-                        merc.RecepientUserName = CommonHelper.GetDecryptedData(t.Member1.UserName.ToString());
+                        MemberDetailsTrans payment = new MemberDetailsTrans();
 
-                        merc.GeoLocation = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.City + " , " + Geo_loc.State).SingleOrDefault();
-                        merc.Longitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Longitude).SingleOrDefault().ToString();
-                        merc.Latitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Latitude).SingleOrDefault().ToString();
+                        payment.AmountNew = t.Amount.ToString();
+                        payment.TransID = t.TransactionTrackingId.ToString();
+                        payment.TransDate = Convert.ToDateTime(t.TransactionDate).ToString("MMM d, yyyy");
+                        payment.TransTime = Convert.ToDateTime(t.TransactionDate).ToString("h:mm tt");
+                        payment.TransactionStatus = t.TransactionStatus;
+                        payment.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
+                        payment.Memo = t.Memo;
+                        payment.GeoLocation = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.City + " , " + Geo_loc.State).SingleOrDefault();
+                        payment.Longitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Longitude).SingleOrDefault().ToString();
+                        payment.Latitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Latitude).SingleOrDefault().ToString();
 
-                        merc.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
-                        merc.TransactionStatus = t.TransactionStatus;
-                        mm.Add(merc);
+                        if (payment.TransactionType == "Request")
+                        {
+                            if (t.RecipientId == Member.MemberId) // This member SENT the request
+                            {
+                                payment.SenderName = memberFullName;
+                                payment.SenderId = Member.Nooch_ID;
+
+                                if (String.IsNullOrEmpty(t.InvitationSentTo) &&
+                                    t.IsPhoneInvitation != true)
+                                {
+                                    payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
+                                                            CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
+                                    payment.RecipientId = t.Member1.Nooch_ID;
+                                }
+                                else if (t.IsPhoneInvitation != true) // Request to Non-Nooch user via EMAIL
+                                {
+                                    payment.RecipientName = CommonHelper.GetDecryptedData(t.InvitationSentTo);
+                                    payment.RecipientId = "";
+                                }
+                                else // Request to Non-Nooch user via EMAIL
+                                {
+                                    payment.RecipientName = CommonHelper.GetDecryptedData(t.PhoneNumberInvited);
+                                    payment.RecipientId = "";
+                                }
+                            }
+                            else // This member RECEIVED the request
+                            {
+                                payment.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.FirstName)) + " " +
+                                                        CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.LastName));
+                                payment.SenderId = t.Member.Nooch_ID;
+                                payment.RecipientName = memberFullName;
+                                payment.RecipientId = Member.Nooch_ID;
+                            }
+                        }
+                        else
+                        {
+                            if (t.SenderId == Member.MemberId) // This member SENT the transfer
+                            {
+                                payment.SenderName = memberFullName;
+                                payment.SenderId = Member.Nooch_ID;
+                                payment.RecipientId = t.Member1.Nooch_ID;
+                                payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
+                                                        CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
+                            }
+                            else // This member RECEIVED the transfer
+                            {
+                                payment.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.FirstName)) + " " +
+                                                     CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.LastName));
+                                payment.SenderId = t.Member.Nooch_ID;
+                                payment.RecipientName = memberFullName;
+                                payment.RecipientId = Member.Nooch_ID;
+                            }
+                        }
+                        
+
+                        mm.Add(payment);
                     }
 
                     #endregion Get User's Transactions
@@ -827,7 +875,7 @@ namespace noochAdminNew.Controllers
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Logger.Error("Admin MemberController -> EditMemberDetails FAILED - [Exception: " + ex + "]");
                 }

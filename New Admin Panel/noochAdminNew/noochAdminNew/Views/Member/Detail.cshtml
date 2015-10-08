@@ -21,13 +21,17 @@
         ms.TransID = mdtt.TransID;
         ms.TransactionType = mdtt.TransactionType;
         ms.TransactionStatus = mdtt.TransactionStatus;
-        ms.TransDateTime = mdtt.TransDateTime;
+        ms.TransDate = mdtt.TransDate;
+        ms.TransTime = mdtt.TransTime;
+        ms.SenderId = mdtt.SenderId;
+        ms.SenderName = mdtt.SenderName;
         ms.AmountNew = mdtt.AmountNew;
         ms.Latitude = mdtt.Latitude;
         ms.Longitude = mdtt.Longitude;
         ms.GeoLocation = mdtt.GeoLocation;
-        ms.RecepientId = mdtt.RecepientId;
-        ms.RecepientUserName = mdtt.RecepientUserName;
+        ms.RecipientId = mdtt.RecipientId;
+        ms.RecipientName = mdtt.RecipientName;
+        ms.Memo = mdtt.Memo;
         Transactionsss.Add(ms);
     }
 
@@ -862,13 +866,14 @@
                                                 <table class="table table-striped">
                                                     <thead>
                                                         <tr>
-                                                            <th>Transaction ID</th>
-                                                            <th>Transaction Type</th>
+                                                            <th>Trans ID</th>
+                                                            <th>Type</th>
                                                             <th>Status</th>
                                                             <th>Date / Time</th>
-                                                            <th>Amount ($)</th>
-                                                            <th>Recipient ID</th>
-                                                            <th>Recipient User Name</th>
+                                                            <th>Sender</th>
+                                                            <th>Amount</th>
+                                                            <th>Recipient</th>
+                                                            <th>Memo</th>
                                                             <th>Location</th>
                                                         </tr>
                                                     </thead>
@@ -898,7 +903,8 @@
                                                             }
                                                                     }
                                                                 </td>
-                                                                <td>@mn.TransDateTime</td>
+                                                                <td>@mn.TransDate<br /><small>@mn.TransTime</small></td>
+                                                                <td><a href="@Url.Action("Detail", "Member", new { NoochId = @mn.SenderId })">@mn.SenderName</a></td>
                                                                 <td>
                                                                     @if (mn.AmountNew != "0")
                                                                     {
@@ -907,8 +913,8 @@
                                                                         <h4>$ @transAmountFormatted</h4>
                                                                     }
                                                                 </td>
-                                                                <td><a href="@Url.Action("Detail", "Member", new { NoochId = @mn.RecepientId })">@mn.RecepientId</a></td>
-                                                                <td><a href="@Url.Action("Detail", "Member", new {NoochId = @mn.RecepientId})">@mn.RecepientUserName</a></td>
+                                                                <td><a href="@Url.Action("Detail", "Member", new { NoochId = @mn.RecipientId })">@mn.RecipientName</a></td>
+                                                                <td>@mn.Memo</td>
                                                                 @if (!String.IsNullOrEmpty(@mn.GeoLocation))
                                                                 {
                                                                     <td><button class="btn btn-link locLink" data-lat="@mn.Latitude" data-long="@mn.Longitude" data-loctext="@mn.GeoLocation.Trim().TrimEnd(',').Trim()">@mn.GeoLocation.Trim().TrimEnd(',').Trim()</button></td>
