@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
-
-
 using System.Text;
 using System.IO;
 using System.Security.Cryptography;
@@ -109,7 +106,6 @@ namespace noochAdminNew.Classes.Crypto
                     {
                         using (var cryptoStream = new CryptoStream(memStream, decryptor, CryptoStreamMode.Read))
                         {
-
                             byteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
                             memStream.Close();
                             cryptoStream.Close();
@@ -119,11 +115,10 @@ namespace noochAdminNew.Classes.Crypto
 
                 return Encoding.UTF8.GetString(plainTextBytes, 0, byteCount);
             }
-            catch (Exception a)
+            catch (Exception ex)
             {
-                Logger.Error("Exception occured on decryption: " + a.Message);
-                Logger.Error("Stack trace: " + a.StackTrace);
-                throw a;
+                Logger.Error("DECRYPT EXCEPTION: " + ex.InnerException);
+                throw ex;
             }
         }
     }

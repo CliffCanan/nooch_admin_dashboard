@@ -39,15 +39,22 @@ namespace noochAdminNew.Classes.Utility
         {
             if (!String.IsNullOrEmpty(sourceData))
             {
-                try
+                if (sourceData.Length > 10)
                 {
-                    var aesAlgorithm = new AES();
-                    string decryptedData = aesAlgorithm.Decrypt(sourceData.Replace(" ", "+"), string.Empty);
-                    return decryptedData;
+                    try
+                    {
+                        var aesAlgorithm = new AES();
+                        string decryptedData = aesAlgorithm.Decrypt(sourceData.Replace(" ", "+"), string.Empty);
+                        return decryptedData;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Info("GetDecryptedData FAILED - [Source Data: " + sourceData + "]. Exception: [" + ex.InnerException + "]");
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Logger.Info("Admin Dash -> GetDecryptedData FAILED - [Source Data: " + sourceData + "]. Exception: [" + ex + "]");
+                    Logger.Info("GetDecryptedData FAILED -> SourceData was too short - [SourceData: " + sourceData + "]");
                 }
             }
             return string.Empty;
@@ -59,7 +66,7 @@ namespace noochAdminNew.Classes.Utility
             {
                 Guid memId = Utility.ConvertToGuid(memberId);
 
-                var memberNotifications = (from c in noochConnection.MemberNotifications where c.MemberId==memId select c).SingleOrDefault();
+                var memberNotifications = (from c in noochConnection.MemberNotifications where c.MemberId == memId select c).SingleOrDefault();
 
                 return memberNotifications;
             }
@@ -74,9 +81,9 @@ namespace noochAdminNew.Classes.Utility
 
                 var memberNotifications = (from c in noochConnection.Members where c.MemberId == memId select c).SingleOrDefault();
 
-                if (memberNotifications!=null)
+                if (memberNotifications != null)
                 {
-                    return UppercaseFirst(GetDecryptedData(memberNotifications.FirstName)) + " "+
+                    return UppercaseFirst(GetDecryptedData(memberNotifications.FirstName)) + " " +
                     UppercaseFirst(GetDecryptedData(memberNotifications.LastName));
                 }
                 else
@@ -114,6 +121,6 @@ namespace noochAdminNew.Classes.Utility
             }
             return sourceNum;
         }
-  
+
     }
 }

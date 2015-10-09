@@ -24,8 +24,9 @@ namespace noochAdminNew.Classes.ModelClasses
         public string dob { get; set; }
         public string ssn { get; set; }
         public string idDocUrl { get; set; }
-
         public string FBID { get; set; }
+        public string DeviceToken { get; set; }
+        public string AccessToken { get; set; }
 
         public bool IsKnocAvailable { get; set; }
         public string KnoxBankIcon { get; set; }
@@ -78,6 +79,9 @@ namespace noochAdminNew.Classes.ModelClasses
         public string TransactionType { get; set; }
         public string TransactionStatus { get; set; }
         public string Memo { get; set; }
+        public string UDID { get; set; }
+        public string DeviceToken { get; set; }
+        public string AccessToken { get; set; }
     }
 
     public class MemberDetailsStats

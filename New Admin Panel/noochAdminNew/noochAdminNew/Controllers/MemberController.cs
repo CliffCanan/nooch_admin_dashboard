@@ -386,7 +386,7 @@ namespace noochAdminNew.Controllers
         {
             if (Session["UserId"] == null)
             {
-                RedirectToAction("Index", "Home");
+                Response.Redirect("https://noochme.com/noochnewadmin/");
             }
         }
 
@@ -521,6 +521,9 @@ namespace noochAdminNew.Controllers
                     mdc.idDocUrl = Member.VerificationDocumentPath;
                     mdc.adminNote = Member.AdminNotes;
                     mdc.IsVerifiedWithSynapse = Member.IsVerifiedWithSynapse;
+                    mdc.UDID1 = !String.IsNullOrEmpty(Member.UDID1) ? Member.UDID1 : "NULL";
+                    mdc.DeviceToken = !String.IsNullOrEmpty(Member.DeviceToken) ? Member.DeviceToken : "NULL";
+                    mdc.AccessToken = !String.IsNullOrEmpty(Member.AccessToken) ? Member.AccessToken : "NULL";
 
                     //Get the Refered Code Used
                     mdc.ReferCodeUsed = (from Membr in obj.Members
@@ -612,7 +615,7 @@ namespace noochAdminNew.Controllers
                                 payment.RecipientId = Member.Nooch_ID;
                             }
                         }
-                        
+
 
                         mm.Add(payment);
                     }
