@@ -19,15 +19,17 @@ namespace noochAdminNew.Controllers
         {
             List<MemberSearchResult> res = new List<MemberSearchResult>();
             List<MemberSearchResult> resFinal = new List<MemberSearchResult>();
+
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 //string ecnryptedusername = CommonHelper.GetEncryptedData(username.Trim().ToLower());
 
-
                 // getting all users with active knox bank account
 
-                var allActiveUsersWithKnox =
-                    (from c in obj.KnoxAccountDetails where c.IsDeleted == false select c).ToList();
+                var allActiveUsersWithKnox = (from c in obj.KnoxAccountDetails
+                                              where c.IsDeleted == false
+                                              select c).ToList();
+
                 foreach (KnoxAccountDetail kad in allActiveUsersWithKnox)
                 {
                     var mem = (from c in obj.Members where c.MemberId == kad.MemberId select c).SingleOrDefault();
@@ -41,23 +43,14 @@ namespace noochAdminNew.Controllers
                             res.Add(msr);
                         }
                     }
-
                 }
-
-
-
 
                 resFinal = (from c in res
                             where c.UserName.Contains(username)
                             select c).ToList();
-
-
-
-
             }
             return resFinal;
         }
-
 
         public class MemberSearchResult
         {

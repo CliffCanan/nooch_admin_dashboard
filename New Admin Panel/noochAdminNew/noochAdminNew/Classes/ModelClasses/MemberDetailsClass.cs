@@ -27,6 +27,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string FBID { get; set; }
         public string DeviceToken { get; set; }
         public string AccessToken { get; set; }
+        public string type { get; set; }
 
         public bool IsKnocAvailable { get; set; }
         public string KnoxBankIcon { get; set; }

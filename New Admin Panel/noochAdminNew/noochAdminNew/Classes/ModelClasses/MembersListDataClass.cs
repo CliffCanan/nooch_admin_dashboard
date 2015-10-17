@@ -30,17 +30,11 @@ namespace noochAdminNew.Classes.ModelClasses
     }
 
 
-
     public class MembersListRefCodeUsedDataClass
     {
-        
         public string Name { get; set; }
         public string NoochId { get; set; }
-        
-
         public string CodeUsed { get; set; }
         public string DateUsed { get; set; }
-
-        
     }
 }

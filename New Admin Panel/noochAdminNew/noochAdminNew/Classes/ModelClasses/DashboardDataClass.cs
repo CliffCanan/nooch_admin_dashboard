@@ -22,16 +22,11 @@ namespace noochAdminNew.Classes.ModelClasses
 
         public int TransactionsPendi { get; set; }
 
-
-
         public int TotalRegisteredUsers { get; set; }
         public int TotalSuspendedUsers { get; set; }
-
-
         public int TotalVerifiedPhoneAndEmailUsers { get; set; }
 
         public int TotalActiveAndVerifiedBankAccountUsers { get; set; }
-
 
         public int TotalNoOfActiveUser_Today { get; set; }
         public int TotalNoOfActiveUser_Week { get; set; }
@@ -44,8 +39,6 @@ namespace noochAdminNew.Classes.ModelClasses
         public int TotalNoOfVerifiedEmailUsers_Week { get; set; }
         public int TotalNoOfVerifiedEmailUsers_Month { get; set; }
         public List<NoOfUsersInEachBank> UserCountInEachBank { get; set; }
-
-
     }
 
     public class NoOfUsersInEachBank
@@ -53,12 +46,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string BankName { get; set; }
         public int NoOfUsers { get; set; }
         //public bool IsDefault { get; set; }
-
-
     }
-
-
-
 
     public class DashBoardLiveTransactionsOperationResult
     {
@@ -66,14 +54,11 @@ namespace noochAdminNew.Classes.ModelClasses
 
         public bool IsSuccess { get; set; }
         public string Message { get; set; }
-
-
     }
 
 
     public class MemberRecentLiveTransactionData
     {
-
         public string TransID { get; set; }
         public DateTime? TransDateTime { get; set; }
         public string Amount { get; set; }
@@ -84,16 +69,9 @@ namespace noochAdminNew.Classes.ModelClasses
         public string RecepientUserName { get; set; }
         public string GeoStateCityLocation { get; set; }
         public string Longitude { get; set; }
-
         public string Latitude { get; set; }
-
         public string TransactionType { get; set; }
         public string TransactionStatus { get; set; }
-
         public string DisputeStatus { get; set; }
     }
-
-
-
-
 }

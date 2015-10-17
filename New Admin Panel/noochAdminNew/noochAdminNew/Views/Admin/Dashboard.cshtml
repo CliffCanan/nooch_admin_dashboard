@@ -6,11 +6,10 @@
 @{
     DashboardDataClass dd = new DashboardDataClass();
     dd = Model;
-
     List<NoOfUsersInEachBank>
-    BankUserCount = new List<NoOfUsersInEachBank>();
+  BankUserCount = new List<NoOfUsersInEachBank>
+      ();
     BankUserCount = dd.UserCountInEachBank;
-
     List<MemberRecentLiveTransactionData> LiveTrans = new List<MemberRecentLiveTransactionData>();
     // LiveTrans = dd.RecentLiveTransaction;
 }
@@ -23,6 +22,9 @@
     <div class="col-lg-10">
         <h2>Dashboard</h2>
         <ol class="breadcrumb">
+            <li>
+                <a href="#">Dashboard</a>
+            </li>
             <li class="active">
                 <strong>Home</strong>
             </li>
@@ -271,7 +273,6 @@
                                         string transPerWeek = string.Format("{0:#,###0.00}", d);
                                         <h3 class="font-bold">$@transPerWeek</h3>
                                     }
-
                                 </div>
                             </div>
                         </div>
@@ -320,8 +321,6 @@
                     </div>
                 </div>
 
-
-
             </div>
         </div>
 
@@ -369,38 +368,6 @@
                                     </thead>
 
                                     <tbody id="TBOdy">
-
-                                        @foreach (var M in LiveTrans)
-                                        {
-                                            <tr class="gradeX">
-                                                <td>@M.TransID</td>
-                                                <td>@M.TransactionType</td>
-                                                <td>@M.TransactionStatus</td>
-                                                <td>@M.TransDateTime</td>
-                                                <td><a href="@Url.Action("Detail", "Member", new {NoochId = @M.SenderId})">@M.SenderUserName</a></td>
-                                                <td><a href="@Url.Action("Detail", "Member", new {NoochId = @M.RecepientId})">@M.RecepientUserName</a></td>
-                                                <td>@M.Amount</td>
-
-                                                @if (String.IsNullOrEmpty(@M.DisputeStatus))
-                                                {
-                                                    <td>No</td>
-                                                }
-                                                else
-                                                {
-                                                    <td>Yes</td>
-                                                }
-
-                                                @if (!String.IsNullOrEmpty(@M.GeoStateCityLocation))
-                                                {
-                                                    <td><a href="#" onclick="showlocationmodal('@M.Latitude', '@M.Longitude' , '@M.GeoStateCityLocation.Trim().TrimEnd(',')' ) " class=" btn btn-link" data-loctext="@M.GeoStateCityLocation.Trim().TrimEnd(',').Trim()">@M.GeoStateCityLocation.Trim().TrimEnd(',').Trim()</a></td>
-                                                }
-                                                else
-                                                {
-                                                    <td><span class="text-muted"> - </span></td>
-                                                }
-                                            </tr>
-                                        }
-
                                     </tbody>
 
                                 </table>
@@ -432,12 +399,12 @@
                         </thead>
                         <tbody id="bankstableBody">
                             @foreach (NoOfUsersInEachBank M in BankUserCount)
-                                {
+                            {
                                 <tr class="gradeX">
                                     <td>@M.BankName</td>
                                     <td>@M.NoOfUsers</td>
                                 </tr>
-                                }
+                            }
                         </tbody>
 
                     </table>
@@ -574,7 +541,6 @@
 <script>
     $(function () { // Pie Chart
         var doughnutData = [
-
         /*{
             value: 300,
             color: "#a3e1d4",

@@ -571,7 +571,6 @@
                                                                             <button type="button" class="btn btn-link" onclick="Member.UnVerifyBankAccount(); "><i class="fa fa-close text-danger"></i>Un-Verify</button>
                                                                         </p>
                                                                         <p><small>Verified On:&nbsp; @synpsDetail.SynpaseBankVerifiedOn</small></p>
-                                                                        <p>IsVerifiedWithSynapse:&nbsp; <strong>@mdc.IsVerifiedWithSynapse</strong></p>
                                                                     }
                                                                     else
                                                                     {
@@ -580,6 +579,7 @@
                                                                             <button type="button" class="btn btn-link" onclick="Member.VerifyBankAccount(); "><i class="fa fa-check"></i>Verify</button>
                                                                         </p>
                                                                     }
+                                                                    <p>IsVerifiedWithSynapse:&nbsp; <strong>@mdc.IsVerifiedWithSynapse</strong></p>
                                                                     <input type="hidden" id="bnkIdHidden" value="@synpsDetail.BankId" />
                                                                 </div>
                                                             }
@@ -700,7 +700,7 @@
                             </div>
 
                             <!-- OLD KNOX BANK INFO -->
-                            <div class="col-sm-12 m-t-sm">
+                            <!--<div class="col-sm-12 m-t-sm">
                                 <div class="ibox">
                                     <div class="ibox-title">
                                         <h5>Knox Details</h5>
@@ -755,7 +755,7 @@
                                         </form>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
 
                         </div>
                     </div>

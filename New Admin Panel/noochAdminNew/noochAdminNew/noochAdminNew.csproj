@@ -890,6 +890,7 @@
     <Content Include="Views\Member\GrowthGraphs.cshtml" />
     <Content Include="Views\Referrals\JoinningsWithGivenReferralCode.cshtml" />
     <Content Include="Views\Admin\CreditFundToMember.cshtml" />
+    <Content Include="Views\Member\ListAllLandlords.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

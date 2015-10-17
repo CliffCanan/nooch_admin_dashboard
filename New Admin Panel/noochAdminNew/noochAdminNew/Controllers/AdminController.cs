@@ -25,7 +25,6 @@ namespace noochAdminNew.Controllers
 
         public void CheckSession()
         {
-
             if (Session["UserId"] == null)
             {
                 RedirectToAction("Index", "Home");
@@ -35,7 +34,6 @@ namespace noochAdminNew.Controllers
 
         [HttpPost]
         [ActionName("ShowLiveTransactionsOnDashBoard")]
-
         public ActionResult ShowLiveTransactionsOnDashBoard(string operation)
         {
             DashBoardLiveTransactionsOperationResult ddresult = new DashBoardLiveTransactionsOperationResult();
@@ -283,72 +281,57 @@ namespace noochAdminNew.Controllers
             {
                 using (NOOCHEntities obj = new NOOCHEntities())
                 {
-                    List<GetLiveTransactionsForDashboard_Result1> dbres =
-                        obj.GetLiveTransactionsForDashboard(Convert.ToInt16(operation)).ToList();
+                    List<GetLiveTransactionsForDashboard_Result1> allTrans = obj.GetLiveTransactionsForDashboard(Convert.ToInt16(operation)).ToList();
                     List<MemberRecentLiveTransactionData> mm = new List<MemberRecentLiveTransactionData>();
-                    if (dbres.Count > 0)
+
+                    if (allTrans.Count > 0)
                     {
-                        foreach (var t in dbres)
+                        foreach (var t in allTrans)
                         {
-                            MemberRecentLiveTransactionData merc = new MemberRecentLiveTransactionData();
-                            merc.Amount = t.Amount.ToString();
-                            merc.TransID = t.TransactionId.ToString();
-
-                            merc.TransDateTime = t.TransactionDate;
-
-                            merc.GeoStateCityLocation = t.GeoLocationState + "," + t.GeoLocationCity;
-                            merc.Longitude = t.Longitude.ToString();
-                            merc.Latitude = t.Latitude.ToString();
-                            merc.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
-                            merc.TransactionStatus = t.TransactionStatus;
-                            merc.DisputeStatus = t.DisputeStatus;
-
+                            MemberRecentLiveTransactionData singleTrans = new MemberRecentLiveTransactionData();
+                            singleTrans.Amount = t.Amount.ToString();
+                            singleTrans.TransID = t.TransactionId.ToString();
+                            singleTrans.TransDateTime = t.TransactionDate;
+                            singleTrans.GeoStateCityLocation = t.GeoLocationState + "," + t.GeoLocationCity;
+                            singleTrans.Longitude = t.Longitude.ToString();
+                            singleTrans.Latitude = t.Latitude.ToString();
+                            singleTrans.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
+                            singleTrans.TransactionStatus = t.TransactionStatus;
+                            singleTrans.DisputeStatus = t.DisputeStatus;
 
                             #region Request type transaction
+
                             // request type transaction b/w existing nooch users
-                            if (merc.TransactionType == "Request" && t.RecipientId != t.SenderId)
+                            if (singleTrans.TransactionType == "Request" && t.RecipientId != t.SenderId)
                             {
-                                merc.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.SenderId.ToString());
-                                merc.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
-                                merc.RecepientId = t.RecipientId.ToString();
-                                merc.SenderId = t.SenderId.ToString();
+                                singleTrans.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.SenderId.ToString());
+                                singleTrans.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                singleTrans.RecepientId = t.RecipientId.ToString();
+                                singleTrans.SenderId = t.SenderId.ToString();
                             }
                             // request type trans to non nooch user...by phone
-                            else if (merc.TransactionType == "Request" && t.RecipientId == t.SenderId && t.IsPhoneInvitation == true)
+                            else if (singleTrans.TransactionType == "Request" && t.RecipientId == t.SenderId && t.IsPhoneInvitation == true)
                             {
                                 if (!String.IsNullOrEmpty(t.PhoneNumberInvited))
                                 {
-                                    merc.SenderUserName =
-                                        CommonHelper.FormatPhoneNumber(
-                                            CommonHelper.GetDecryptedData(t.PhoneNumberInvited));
+                                    singleTrans.SenderUserName = CommonHelper.FormatPhoneNumber( CommonHelper.GetDecryptedData(t.PhoneNumberInvited));
                                 }
                                 else
                                 {
-                                    merc.SenderUserName =
-                                        "";
+                                    singleTrans.SenderUserName = "";
                                 }
-                                merc.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
-                                merc.RecepientId = t.RecipientId.ToString();
-                                merc.SenderId = "";
+                                singleTrans.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                singleTrans.RecepientId = t.RecipientId.ToString();
+                                singleTrans.SenderId = "";
                             }
 
                             // request type trans to non nooch user...by email
-                            else if (merc.TransactionType == "Request" && t.RecipientId == t.SenderId && t.InvitationSentTo != null)
+                            else if (singleTrans.TransactionType == "Request" && t.RecipientId == t.SenderId && t.InvitationSentTo != null)
                             {
-                                if (!String.IsNullOrEmpty(t.InvitationSentTo))
-                                {
-                                    merc.SenderUserName =
-
-                                            CommonHelper.GetDecryptedData(t.InvitationSentTo);
-                                }
-                                else
-                                {
-                                    merc.SenderUserName =
-                                        "";
-                                }
-                                merc.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
-                                merc.RecepientId = t.RecipientId.ToString();
-                                merc.SenderId = "";
+                                singleTrans.SenderUserName = !String.IsNullOrEmpty(t.InvitationSentTo) ? CommonHelper.GetDecryptedData(t.InvitationSentTo) : "";
+                                singleTrans.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                singleTrans.RecepientId = t.RecipientId.ToString();
+                                singleTrans.SenderId = "";
                             }
 
                             #endregion
@@ -356,41 +339,41 @@ namespace noochAdminNew.Controllers
                             #region Invite type transaction
 
                             // invite type trans to non nooch user...by phone
-                            else if (merc.TransactionType == "Invite" && t.RecipientId == t.SenderId && t.IsPhoneInvitation == true)
+                            else if (singleTrans.TransactionType == "Invite" && t.RecipientId == t.SenderId && t.IsPhoneInvitation == true)
                             {
                                 if (!String.IsNullOrEmpty(t.PhoneNumberInvited))
                                 {
-                                    merc.RecepientUserName =
+                                    singleTrans.RecepientUserName =
                                         CommonHelper.FormatPhoneNumber(
                                             CommonHelper.GetDecryptedData(t.PhoneNumberInvited));
                                 }
                                 else
                                 {
-                                    merc.RecepientUserName =
+                                    singleTrans.RecepientUserName =
                                         "";
                                 }
-                                merc.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
-                                merc.RecepientId = "";
-                                merc.SenderId = t.SenderId.ToString();
+                                singleTrans.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                singleTrans.RecepientId = "";
+                                singleTrans.SenderId = t.SenderId.ToString();
                             }
 
                             // request type trans to non nooch user...by email
-                            else if (merc.TransactionType == "Invite" && t.RecipientId == t.SenderId && t.InvitationSentTo != null)
+                            else if (singleTrans.TransactionType == "Invite" && t.RecipientId == t.SenderId && t.InvitationSentTo != null)
                             {
                                 if (!String.IsNullOrEmpty(t.InvitationSentTo))
                                 {
-                                    merc.RecepientUserName =
+                                    singleTrans.RecepientUserName =
 
                                             CommonHelper.GetDecryptedData(t.InvitationSentTo);
                                 }
                                 else
                                 {
-                                    merc.RecepientUserName =
+                                    singleTrans.RecepientUserName =
                                         "";
                                 }
-                                merc.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
-                                merc.RecepientId = "";
-                                merc.SenderId = t.SenderId.ToString();
+                                singleTrans.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                singleTrans.RecepientId = "";
+                                singleTrans.SenderId = t.SenderId.ToString();
                             }
 
                             #endregion
@@ -398,49 +381,34 @@ namespace noochAdminNew.Controllers
                             #region Transfer, dispute or reward type transaction
 
                             // transfer type trans to non nooch user...by phone
-                            else if (merc.TransactionType == "Transfer")
+                            else if (singleTrans.TransactionType == "Transfer")
                             {
-
-                                merc.RecepientUserName =
-                                    CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
-
-                                merc.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.SenderId.ToString());
-                                merc.RecepientId = t.RecipientId.ToString();
-                                merc.SenderId = t.SenderId.ToString();
+                                singleTrans.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                singleTrans.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.SenderId.ToString());
+                                singleTrans.RecepientId = t.RecipientId.ToString();
+                                singleTrans.SenderId = t.SenderId.ToString();
                             }
 
                             // request could be disputed, reward type
                             else
                             {
-
-
-                                merc.RecepientUserName =
-                                    CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
-
-                                merc.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.SenderId.ToString());
-                                merc.RecepientId = t.RecipientId.ToString();
-                                merc.SenderId = t.SenderId.ToString();
+                                singleTrans.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                singleTrans.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.SenderId.ToString());
+                                singleTrans.RecepientId = t.RecipientId.ToString();
+                                singleTrans.SenderId = t.SenderId.ToString();
                             }
 
                             #endregion
 
-
-                            mm.Add(merc);
+                            mm.Add(singleTrans);
                         }
                     }
-
-
-
 
                     ddresult.IsSuccess = true;
                     ddresult.Message = "SuccessOperation";
                     ddresult.RecentLiveTransaction = mm;
 
                     return Json(ddresult);
-
-
-
-
                 }
             }
             catch (Exception ex)
@@ -607,10 +575,10 @@ namespace noochAdminNew.Controllers
                                                 where r.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw==" && r.TransactionStatus == "success"
                                                 select r).ToList().Count;
 
-                    dd.TransactionsPendi =
-                        (from r in obj.Transactions where r.TransactionStatus == "Pending" select r).ToList().Count;
+                    dd.TransactionsPendi = (from r in obj.Transactions
+                                            where r.TransactionStatus == "Pending"
+                                            select r).ToList().Count;
 
-                    // dd.TransData = "[                [gd(2012, 1, 1), 7], [gd(2012, 1, 2), 6], [gd(2012, 1, 3), 4], [gd(2012, 1, 4), 8],                [gd(2012, 1, 5), 9], [gd(2012, 1, 6), 7], [gd(2012, 1, 7), 5], [gd(2012, 1, 8), 4],                [gd(2012, 1, 9), 7], [gd(2012, 1, 10), 8], [gd(2012, 1, 11), 9], [gd(2012, 1, 12), 6],                [gd(2012, 1, 13), 4], [gd(2012, 1, 14), 5], [gd(2012, 1, 15), 11], [gd(2012, 1, 16), 8],                [gd(2012, 1, 17), 8], [gd(2012, 1, 18), 11], [gd(2012, 1, 19), 11], [gd(2012, 1, 20), 6],                [gd(2012, 1, 21), 6], [gd(2012, 1, 22), 8], [gd(2012, 1, 23), 11], [gd(2012, 1, 24), 13],                [gd(2012, 1, 25), 7], [gd(2012, 1, 26), 9], [gd(2012, 1, 27), 9], [gd(2012, 1, 28), 8],                [gd(2012, 1, 29), 5], [gd(2012, 1, 30), 8], [gd(2012, 1, 31), 25]            ]               "; 
 
                     // **No Of User Of Each Bank   
                     var ss = (from SSB in obj.SynapseSupportedBanks
@@ -1584,7 +1552,6 @@ namespace noochAdminNew.Controllers
             }
 
             return Json(s);
-
         }
 
 

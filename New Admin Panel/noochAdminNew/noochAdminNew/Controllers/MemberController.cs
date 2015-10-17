@@ -391,13 +391,39 @@ namespace noochAdminNew.Controllers
         }
 
 
+
+        /// <summary>
+        /// For getting the page to view ALL MEMBERS.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet, OutputCache(NoStore = true, Duration = 1)]
+        public ActionResult ListAll()
+        {
+            List<MembersListDataClass> AllMemberFormtted = GetAllMembers();
+
+            return View(AllMemberFormtted);
+        }
+
+        [HttpGet, OutputCache(NoStore = true, Duration = 1)]
+        public ActionResult ListAllLandlords()
+        {
+            List<MembersListDataClass> AllLandlords = GetAllLandlords();
+
+            return View(AllLandlords);
+        }
+
+
+        /// <summary>
+        /// Method to return the details of all MEMBERS.
+        /// </summary>
+        /// <returns></returns>
         private List<MembersListDataClass> GetAllMembers()
         {
             List<MembersListDataClass> AllMemberFormtted = new List<MembersListDataClass>();
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 var All_Members_In_Records = (from t in obj.Members
-                                              // where t.IsDeleted == false  // CLIFF: Commenting this line out so this returns ALL member records
+                                              where t.Type == "Personal"  // CLIFF: Commenting this line out so this returns ALL member records
                                               select t).ToList();
 
                 foreach (Member m in All_Members_In_Records)
@@ -412,8 +438,9 @@ namespace noochAdminNew.Controllers
                     // request - T3EMY1WWZ9IscHIj3dbcNw==
 
                     var sumofTransfers = (from tr in obj.Transactions
-                                          where tr.TransactionStatus == "Success" && tr.TransactionType == "5dt4HUwCue532sNmw3LKDQ=="
-                                                && tr.Member.MemberId == m.MemberId
+                                          where tr.TransactionStatus == "Success" &&
+                                               (tr.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || tr.TransactionType == "DrRr1tU1usk7nNibjtcZkA==") &&
+                                                tr.Member.MemberId == m.MemberId
                                           select tr.Amount
                         ).Sum(tr => (decimal?)tr) ?? 0;
 
@@ -465,20 +492,100 @@ namespace noochAdminNew.Controllers
                     mdc.DateCreated = Convert.ToDateTime(m.DateCreated);
 
                     mdc.TotalTransactions = TransCount;
+
                     AllMemberFormtted.Add(mdc);
                 }
             }
-            return AllMemberFormtted;
 
+            return AllMemberFormtted;
         }
 
 
-        [HttpGet, OutputCache(NoStore = true, Duration = 1)]
-        public ActionResult ListAll()
+        /// <summary>
+        /// Method to return the details of all LANDLORDS.
+        /// </summary>
+        /// <returns></returns>
+        private List<MembersListDataClass> GetAllLandlords()
         {
-            List<MembersListDataClass> AllMemberFormtted = GetAllMembers();
+            List<MembersListDataClass> AllMemberFormtted = new List<MembersListDataClass>();
+            using (NOOCHEntities obj = new NOOCHEntities())
+            {
+                var All_Members_In_Records = (from t in obj.Members
+                                              where t.Type == "Landlord"  // CLIFF: Commenting this line out so this returns ALL member records
+                                              select t).ToList();
 
-            return View(AllMemberFormtted);
+                foreach (Member m in All_Members_In_Records)
+                {
+                    int TransCount = (from tr in obj.Transactions
+                                      where (tr.Member.MemberId == m.MemberId || tr.Member1.MemberId == m.MemberId) &&
+                                             tr.TransactionStatus == "Success"
+                                      select tr).Count();
+
+                    // transaction - Transfer Type - 5dt4HUwCue532sNmw3LKDQ==
+                    // invite - DrRr1tU1usk7nNibjtcZkA==
+                    // request - T3EMY1WWZ9IscHIj3dbcNw==
+
+                    var sumofTransfers = (from tr in obj.Transactions
+                                          where tr.TransactionStatus == "Success" &&
+                                               (tr.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || tr.TransactionType == "DrRr1tU1usk7nNibjtcZkA==") &&
+                                                tr.Member.MemberId == m.MemberId
+                                          select tr.Amount
+                        ).Sum(tr => (decimal?)tr) ?? 0;
+
+                    var sumOfInvitations = (from tr in obj.Transactions
+                                            where tr.TransactionStatus == "Success" && tr.TransactionType == "DrRr1tU1usk7nNibjtcZkA=="
+                                                  && tr.Member1.MemberId == m.MemberId
+                                            select tr.Amount
+                        ).Sum(tr => (decimal?)tr) ?? 0;
+
+                    var sumOfRequests = (from tr in obj.Transactions
+                                         where tr.TransactionStatus == "Success" && tr.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw=="
+                                               && tr.Member.MemberId == m.MemberId
+                                         select tr.Amount
+                        ).Sum(tr => (decimal?)tr) ?? 0;
+
+                    var totalAmount = sumOfInvitations + sumOfRequests + sumofTransfers;
+
+                    MembersListDataClass mdc = new MembersListDataClass();
+                    mdc.Nooch_ID = m.Nooch_ID;
+                    mdc.FirstName = !String.IsNullOrEmpty(m.FirstName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(m.FirstName)) : "";
+                    mdc.LastName = !String.IsNullOrEmpty(m.LastName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(m.LastName)) : "";
+                    mdc.UserName = !String.IsNullOrEmpty(m.UserName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(m.UserName)) : "";
+
+                    if (m.ContactNumber != null)
+                    {
+                        if (m.ContactNumber.Length == 10)
+                        {
+                            mdc.ContactNumber = "(" + m.ContactNumber;
+                            mdc.ContactNumber = mdc.ContactNumber.Insert(4, ")");
+                            mdc.ContactNumber = mdc.ContactNumber.Insert(5, " ");
+                            mdc.ContactNumber = mdc.ContactNumber.Insert(9, "-");
+                        }
+                        else
+                        {
+                            mdc.ContactNumber = m.ContactNumber;
+                        }
+                    }
+                    else
+                    {
+                        mdc.ContactNumber = m.ContactNumber;
+                    }
+
+                    mdc.Status = m.Status;
+                    mdc.IsDeleted = m.IsDeleted ?? false;
+                    mdc.IsVerifiedPhone = m.IsVerifiedPhone ?? false;
+                    mdc.City = !String.IsNullOrEmpty(m.City) ? CommonHelper.GetDecryptedData(m.City) : "";
+
+                    mdc.TotalAmountSent = mdc.TotalAmountSent != "0" ? Convert.ToDecimal(String.Format("{0:0.00}", Convert.ToDecimal(totalAmount))).ToString() : "0";
+                    mdc.DateCreated = Convert.ToDateTime(m.DateCreated);
+
+                    mdc.TotalTransactions = TransCount;
+
+                    AllMemberFormtted.Add(mdc);
+                }
+            }
+
+            return AllMemberFormtted;
         }
 
 
@@ -491,9 +598,22 @@ namespace noochAdminNew.Controllers
 
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-                var Member = (from m in obj.Members
-                              where m.Nooch_ID == NoochId
+                Member Member = new Member();
+
+                if (NoochId.Length < 20) // it's a Nooch_Id and not a MemberID
+                {
+                    Member = (from m in obj.Members
+                                  where m.Nooch_ID == NoochId
+                                  select m).SingleOrDefault();
+                }
+                else
+                {
+                    Guid memGuid = new Guid(NoochId);
+
+                    Member = (from m in obj.Members
+                              where m.MemberId == memGuid
                               select m).SingleOrDefault();
+                }
 
                 if (Member != null)
                 {
@@ -516,6 +636,7 @@ namespace noochAdminNew.Controllers
                     mdc.PinNumber = !String.IsNullOrEmpty(Member.PinNumber) ? CommonHelper.GetDecryptedData(Member.PinNumber) : "";
                     mdc.IsPhoneVerified = Member.IsVerifiedPhone ?? false;
                     mdc.Nooch_ID = NoochId;
+                    mdc.type = Member.Type;
                     mdc.dob = Convert.ToDateTime(Member.DateOfBirth).ToString("M/d/yyyy");
                     mdc.ssn = !String.IsNullOrEmpty(Member.SSN) ? CommonHelper.GetDecryptedData(Member.SSN) : "";
                     mdc.idDocUrl = Member.VerificationDocumentPath;
