@@ -45,6 +45,8 @@ namespace noochAdminNew.Classes.ModelClasses
         public string State { get; set; }
         public string Zipcode { get; set; }
         public string Country { get; set; }
+        public string lastlat { get; set; }
+        public string lastlong { get; set; }
 
         public string adminNote { get; set; }
 

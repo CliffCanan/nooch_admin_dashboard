@@ -603,8 +603,8 @@ namespace noochAdminNew.Controllers
                 if (NoochId.Length < 20) // it's a Nooch_Id and not a MemberID
                 {
                     Member = (from m in obj.Members
-                                  where m.Nooch_ID == NoochId
-                                  select m).SingleOrDefault();
+                              where m.Nooch_ID == NoochId
+                              select m).SingleOrDefault();
                 }
                 else
                 {
@@ -645,6 +645,8 @@ namespace noochAdminNew.Controllers
                     mdc.UDID1 = !String.IsNullOrEmpty(Member.UDID1) ? Member.UDID1 : "NULL";
                     mdc.DeviceToken = !String.IsNullOrEmpty(Member.DeviceToken) ? Member.DeviceToken : "NULL";
                     mdc.AccessToken = !String.IsNullOrEmpty(Member.AccessToken) ? Member.AccessToken : "NULL";
+                    mdc.lastlat = (Member.LastLocationLat != null && Member.LastLocationLat != 0) ? Member.LastLocationLat.ToString() : "none";
+                    mdc.lastlong = (Member.LastLocationLat != null && Member.LastLocationLng != 0) ? Member.LastLocationLng.ToString() : "none";
 
                     //Get the Refered Code Used
                     mdc.ReferCodeUsed = (from Membr in obj.Members
@@ -811,6 +813,8 @@ namespace noochAdminNew.Controllers
                     mdc.WeeksSinceJoined = Convert.ToInt16(no_Of_Since_Joined);
 
 
+                    #region Get Synapse Details
+
                     // Check whether Synapse Bank details available or not
                     var synapse = (from Syn in obj.SynapseBanksOfMembers
                                    join mem in obj.Members on Syn.MemberId equals mem.MemberId
@@ -827,11 +831,17 @@ namespace noochAdminNew.Controllers
                                                    where Syn.IsDefault == true && mem.Nooch_ID == NoochId
                                                    select Syn).FirstOrDefault();
 
+                        // Get Auth Token (It's not in the banks table... it's in the SynapseCreateUserResults Table)
+                        string synapseAuthToken = (from Syn in obj.SynapseCreateUserResults
+                                                   join mem in obj.Members on Syn.MemberId equals mem.MemberId
+                                                   where Syn.IsDeleted == false && mem.Nooch_ID == NoochId
+                                                   select Syn.access_token).FirstOrDefault();
+
                         SynapseDetailOFMember synapseDetail = new SynapseDetailOFMember();
 
                         if (synapseDetailFromDb != null)
                         {
-                            synapseDetail.synapseConsumerKey = "";
+                            synapseDetail.synapseConsumerKey = synapseAuthToken;
                             synapseDetail.synapseBankId = synapseDetailFromDb.bankid; // This is the 4 or 5 digit ID from Synapse for this account
                             synapseDetail.BankId = synapseDetailFromDb.Id; // This is the Nooch DB "ID", which is just the row number of the account... NOT the same as the Synapse Bank ID
                             synapseDetail.SynapseBankStatus = (string.IsNullOrEmpty(synapseDetailFromDb.Status)
@@ -850,6 +860,7 @@ namespace noochAdminNew.Controllers
                         mdc.SynapseDetails = synapseDetail;
                     }
 
+                    #endregion Get Synapse Details
 
                     // Get the 3 most recent IP Addresses for this user
                     mdc.MemberIpAddr = (from memIpADD in obj.MembersIPAddresses
@@ -869,10 +880,14 @@ namespace noochAdminNew.Controllers
                     if (Member.InviteCodeId != null)
                     {
                         Guid g = Utility.ConvertToGuid(Member.InviteCodeId.ToString());
-                        var allreferrals =
-                            (from c in obj.Members where c.InviteCodeIdUsed == g && c.IsDeleted == false select c)
-                                .Take(5).OrderByDescending(m => m.DateCreated).ToList();
+
+                        var allreferrals = (from c in obj.Members
+                                            where c.InviteCodeIdUsed == g && c.IsDeleted == false
+                                            select c)
+                                                    .Take(5).OrderByDescending(m => m.DateCreated).ToList();
+
                         List<ReferredMembers> memreferred = new List<ReferredMembers>();
+
                         if (allreferrals.Count > 0)
                         {
                             foreach (Member m in allreferrals)
