@@ -28,12 +28,39 @@ $(document).ready(function () {
 
         //console.log('LAT AND LONG: ' + lat + ", " + longi);
 
-        var v = 'https://www.google.com/maps/embed/v1/place?q=' + lat + ',' + longi + '&center=' + lat + ',' + longi + '&key=AIzaSyDrUnX1gGpPL9fWmsWfhOxIDIy3t7YjcEY&zoom=12';
-        $('#googleFrame').attr('src', v);
+        var src = 'https://www.google.com/maps/embed/v1/place?q=' + lat + ',' + longi + '&center=' + lat + ',' + longi + '&key=AIzaSyDrUnX1gGpPL9fWmsWfhOxIDIy3t7YjcEY&zoom=12';
+        $('#googleFrame').attr('src', src);
 
         $("#citystate").text(locText);
 
         $('#modal-transferLocation').modal();
+    });
+
+    $('#userLoc').click(function () {
+        var lat = $(this).attr('data-lat');
+        var long = $(this).attr('data-long');
+
+        var latLong = new google.maps.LatLng(Number(lat), Number(long));
+
+        console.log('LAT AND LONG: ' + latLong);
+
+        var mapDivInModal = document.getElementById("userMapInModal");
+
+
+        var map = new google.maps.Map(mapDivInModal, {
+            zoom: 11,
+            center: latLong
+        });
+
+        var marker = new google.maps.Marker({
+            position: latLong,
+            map: map,
+            title: 'Last Location'
+        });
+
+        mapDivInModal.style.height = '420px';
+
+        $('#modal-userLocation').modal();
     });
 
     $('#idDocLnk').click(function () {
@@ -43,8 +70,46 @@ $(document).ready(function () {
 
         $('#idDocModal').modal();
     })
+
+
+    setTimeout(function () {
+        //checkIfUserLocationExists();
+    }, 500);
+
 });
 
+function checkIfUserLocationExists() {
+
+    var lat = $('#userLoc').attr('data-lat');
+    console.log(lat);
+
+    if (lat != "none") {
+        console.log("Lat did not = 'none'. ");
+
+        var mapDiv = document.getElementById("userMap");
+        var long = $('#userLoc').attr('data-long');
+        var latLong = new google.maps.LatLng(Number(lat), Number(long));
+
+        var map = new google.maps.Map(mapDiv, {
+            zoom: 7,
+            center: latLong
+        });
+
+        var marker = new google.maps.Marker({
+            position: latLong,
+            map: map,
+            title: 'Last Location'
+        });
+
+        mapDiv.style.height = '180px';
+    }
+    else
+    {
+        console.log("Lat = 'none' ");
+
+        $('#userLoc').html('<span style="color:rgba(88,90,92,.8) !important;"><em class="center-block text-center m-t-md">No location available.</em></span>');
+    }
+}
 
 $('#DeleteUser').click(function () {
     $('#myModalConfirmDelete').modal('show');
@@ -109,18 +174,19 @@ var Member = function () {
         var data = {};
         data.contactno = $("#contactNumber").val().replace(/\D/g, '');
         data.streetaddress = $("#streetaddress").val();
-        data.city = $("#city").val();
+        data.city = $("#city").val().trim();
         data.secondaryemail = $("#secondaryemail").val();
         data.recoveryemail = $("#recoveryemail").val();
         data.state = $("#stateinput").val();
         data.zip = $("#zipcodeinput").val();
         data.noochid = NoochId;
-
+        data.ssn = $("#ssninput").val().trim();
+        data.dob = $("#dobinput").val().trim();
         console.log(data);
 
         $.post(url, data, function (result) {
             if (result.IsSuccess == true) {
-                toastr.info('Reloading this page...', 'FYI', { timeOut: '3500' })
+                toastr.info('Reloading this page...', 'FYI', { timeOut: '3000' })
                 toastr.success(result.Message, 'Success');
 
                 $("#contactNumber").val(result.contactnum);
@@ -130,8 +196,10 @@ var Member = function () {
                 $("#recoveryemail").val(result.recoveryemail)
                 $("#stateinput").val(result.state);
                 $("#zipcodeinput").val(result.zip);
+                $("#ssninput").val(result.ssn);
+                $("#dobinput").val(result.dob);
 
-                setTimeout(function () { location.reload(true) }, 3500);
+                setTimeout(function () { location.reload(true) }, 3000);
             }
             else {
                 toastr.error(result.Message, 'Error');

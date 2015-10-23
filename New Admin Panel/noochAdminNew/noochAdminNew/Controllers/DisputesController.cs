@@ -294,22 +294,19 @@ namespace noochAdminNew.Controllers
                                     }
 
                                     ////
-                                    var mem = obj.Members.First(o => o.Nooch_ID == DisputeQuery.SenderNoochId && o.Status != Constants.STATUS_ACTIVE);
-                                    mem.Status = Constants.STATUS_ACTIVE;
-                                    mem.InvalidLoginAttemptCount = 0;
-                                    mem.InvalidPinAttemptCount = null;
-                                    mem.InvalidLoginTime = null;
-                                    mem.InvalidPinAttemptTime = null;
-                                    mem.DateModified = DateTime.Now;
-                                    mem.ModifiedBy = Utility.ConvertToGuid(Session["UserId"].ToString());
+                                    var mem = obj.Members.FirstOrDefault(o => o.Nooch_ID == DisputeQuery.SenderNoochId && o.Status != Constants.STATUS_ACTIVE);
+                                    if (mem != null)
+                                    {
+                                        mem.Status = Constants.STATUS_ACTIVE;
+                                        mem.InvalidLoginAttemptCount = 0;
+                                        mem.InvalidPinAttemptCount = null;
+                                        mem.InvalidLoginTime = null;
+                                        mem.InvalidPinAttemptTime = null;
+                                        mem.DateModified = DateTime.Now;
+                                        mem.ModifiedBy = Utility.ConvertToGuid(Session["UserId"].ToString());    
+                                    }
 
-
-
-
-
-
-
-
+                                    
                                     int i = obj.SaveChanges();
 
                                     #region DisputeTakenForReviewCode

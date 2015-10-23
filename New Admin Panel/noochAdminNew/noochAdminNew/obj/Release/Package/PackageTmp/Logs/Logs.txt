@@ -2333,3 +2333,63 @@ INFO  2015-10-02 09:30:09,226 79337ms Logger                 Info               
    at noochAdminNew.Classes.Crypto.AES.Decrypt(String cipherText, String password, String salt, AESHashAlgorithm hashAlgorithm, Int32 passwordIterations, String initialVector, AESKeySize keySize) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 126
    at noochAdminNew.Classes.Crypto.AES.Decrypt(String encryptedString, String cryptographyKey) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Crypto\AES.cs:line 38
    at noochAdminNew.Classes.Utility.CommonHelper.GetDecryptedData(String sourceData) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\CommonHelper.cs:line 45]
+ERROR 2015-10-23 11:11:37,534 33715ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:11:37,599 33780ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVcc=]. Exception: []
+ERROR 2015-10-23 11:11:38,412 34593ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:11:38,455 34636ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVc==]. Exception: []
+ERROR 2015-10-23 11:11:42,151 38331ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:11:42,192 38372ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: 8A5B8jtXrFBkmaKU5BqCKgb8/2kZ7n/cBSsoNiZwx0Q==]. Exception: []
+INFO  2015-10-23 11:11:42,502 38682ms Logger                 Info               - GetDecryptedData FAILED -> SourceData was too short - [SourceData:  ]
+ERROR 2015-10-23 11:11:42,901 39081ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:11:42,945 39125ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVc==]. Exception: []
+ERROR 2015-10-23 11:11:43,480 39660ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:11:43,524 39704ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVcc=]. Exception: []
+INFO  2015-10-23 11:11:46,157 42338ms Logger                 Info               - GetDecryptedData FAILED -> SourceData was too short - [SourceData:  ]
+INFO  2015-10-23 11:11:46,776 42957ms Logger                 Info               - GetDecryptedData FAILED -> SourceData was too short - [SourceData:  ]
+ERROR 2015-10-23 11:11:50,293 46474ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:11:50,335 46516ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVc==]. Exception: []
+INFO  2015-10-23 11:11:51,503 47683ms Logger                 Info               - GetDecryptedData FAILED -> SourceData was too short - [SourceData:  ]
+ERROR 2015-10-23 11:11:52,562 48742ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:11:52,602 48783ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVcc=]. Exception: []
+ERROR 2015-10-23 11:11:54,717 50898ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:11:54,759 50940ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: ie4jp0lsn4wSD9RpgAnCoK+oNRL4SY+l8Azo/xf9wimh5d191xeBNJfU6gycbNnKlf]. Exception: []
+ERROR 2015-10-23 11:11:55,518 51699ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:11:55,552 51733ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: 8A5B8jtXrFBkmaKU5BqCKgb8/2kZ7n/cBSsoNiZwx0Q==]. Exception: []
+ERROR 2015-10-23 11:12:03,493 59674ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:12:03,533 59714ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVcc=]. Exception: []
+INFO  2015-10-23 11:12:05,719 61899ms Logger                 Info               - GetDecryptedData FAILED -> SourceData was too short - [SourceData:  ]
+ERROR 2015-10-23 11:12:07,027 63207ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:12:07,068 63248ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: 8A5B8jtXrFBkmaKU5BqCKgb8/2kZ7n/cBSsoNiZwx0Q==]. Exception: []
+INFO  2015-10-23 11:12:08,650 64830ms Logger                 Info               - GetDecryptedData FAILED -> SourceData was too short - [SourceData:  ]
+ERROR 2015-10-23 11:12:11,069 67250ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:12:11,109 67290ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: TanDbAsZ+PUA9OWldB8M1Egz9xROfl5qQtErPvIW4Vk==]. Exception: []
+INFO  2015-10-23 11:12:11,325 67506ms Logger                 Info               - GetDecryptedData FAILED -> SourceData was too short - [SourceData:  ]
+ERROR 2015-10-23 11:12:12,094 68275ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:12:12,136 68317ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: ie4jp0lsn4wSD9RpgAnCoK+oNRL4SY+l8Azo/xf9wimh5d191xeBNJfU6gycbNnKl]. Exception: []
+INFO  2015-10-23 11:12:15,323 71504ms Logger                 Info               - GetDecryptedData FAILED -> SourceData was too short - [SourceData:  ]
+ERROR 2015-10-23 11:12:17,269 73450ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:12:17,307 73488ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVc==]. Exception: []
+ERROR 2015-10-23 11:12:19,435 75616ms Logger                 Error              - DECRYPT EXCEPTION: 
+INFO  2015-10-23 11:12:19,473 75654ms Logger                 Info               - GetDecryptedData FAILED - [Source Data: cbUU4X95lzR0CGK0VFsOX27WIMG9l3R0YIhh6beNLVc==]. Exception: []
+INFO  2015-10-23 11:18:44,305 460485ms Logger                 Info               - ChangeDisputeStatus - Dispute Taken For Review email sent to: [Cliff Canan | cliff@nooch.com]
+INFO  2015-10-23 11:18:46,158 462338ms Logger                 Info               - ChangeDisputeStatus -> Dispute Resolved email sent to: [Joel Embiid | malkit.singhjones00@venturepact.com]
+ERROR 2015-10-23 11:19:46,433 522614ms Logger                 Error              - Sequence contains no elements
+System.InvalidOperationException: Sequence contains no elements
+   at System.Linq.Enumerable.First[TSource](IEnumerable`1 source)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.<>c__DisplayClass0`1.<GetElementFunction>b__1(IEnumerable`1 sequence)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.ExecuteSingle[TResult](IEnumerable`1 query, Expression queryRoot)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.System.Linq.IQueryProvider.Execute[S](Expression expression)
+   at System.Data.Entity.Internal.Linq.DbQueryProvider.Execute[TResult](Expression expression)
+   at System.Linq.Queryable.First[TSource](IQueryable`1 source, Expression`1 predicate)
+   at noochAdminNew.Controllers.DisputesController.ApplyDisputeOperation(String operation, String DisputeId, String AdminNotes) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\DisputesController.cs:line 297
+ERROR 2015-10-23 11:20:09,096 545276ms Logger                 Error              - Sequence contains no elements
+System.InvalidOperationException: Sequence contains no elements
+   at System.Linq.Enumerable.First[TSource](IEnumerable`1 source)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.<>c__DisplayClass0`1.<GetElementFunction>b__1(IEnumerable`1 sequence)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.ExecuteSingle[TResult](IEnumerable`1 query, Expression queryRoot)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.System.Linq.IQueryProvider.Execute[S](Expression expression)
+   at System.Data.Entity.Internal.Linq.DbQueryProvider.Execute[TResult](Expression expression)
+   at System.Linq.Queryable.First[TSource](IQueryable`1 source, Expression`1 predicate)
+   at noochAdminNew.Controllers.DisputesController.ApplyDisputeOperation(String operation, String DisputeId, String AdminNotes) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\DisputesController.cs:line 297
+INFO  2015-10-23 11:29:25,849 139864ms Logger                 Info               - ChangeDisputeStatus -> Dispute status mail sent to:[ Cliff Canan | malkit.singh@venturepact.com]
+INFO  2015-10-23 11:29:30,846 144862ms Logger                 Info               - ChangeDisputeStatus -> Dispute Resolved email sent to: [Joel Embiid | malkit@ymail.com]

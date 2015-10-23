@@ -21,13 +21,17 @@
         ms.TransID = mdtt.TransID;
         ms.TransactionType = mdtt.TransactionType;
         ms.TransactionStatus = mdtt.TransactionStatus;
-        ms.TransDateTime = mdtt.TransDateTime;
+        ms.TransDate = mdtt.TransDate;
+        ms.TransTime = mdtt.TransTime;
+        ms.SenderId = mdtt.SenderId;
+        ms.SenderName = mdtt.SenderName;
         ms.AmountNew = mdtt.AmountNew;
         ms.Latitude = mdtt.Latitude;
         ms.Longitude = mdtt.Longitude;
         ms.GeoLocation = mdtt.GeoLocation;
-        ms.RecepientId = mdtt.RecepientId;
-        ms.RecepientUserName = mdtt.RecepientUserName;
+        ms.RecipientId = mdtt.RecipientId;
+        ms.RecipientName = mdtt.RecipientName;
+        ms.Memo = mdtt.Memo;
         Transactionsss.Add(ms);
     }
 
@@ -41,7 +45,7 @@
 
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
-        <h2>@mdc.FirstName @mdc.LastName</h2>
+        <h2>@mdc.FirstName @mdc.LastName | <small>@mdc.Nooch_ID</small></h2>
         <ol class="breadcrumb">
             <li>
                 <a href="../Admin/Dashboard">Dashboard</a>
@@ -63,6 +67,7 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>MEMBER DETAILS | <small>@mdc.FirstName @mdc.LastName</small></h5>
+                    <span class="pull-right">@mdc.memberId</span>
                 </div>
                 <div class="ibox-content">
                     <div class="row">
@@ -91,7 +96,7 @@
                                             }
                                             else
                                             {
-                                                <span class="label label-danger">mdc.Status</span>
+                                                <span class="label label-danger">@mdc.Status</span>
                                             }
                                         }
                                     </span>
@@ -119,7 +124,6 @@
                                             }
                                         }
                                     </span>
-                                    <span class="help-block">Nooch ID:<span>@mdc.Nooch_ID </span></span>
                                     @if (!String.IsNullOrEmpty(mdc.ReferCodeUsed))
                                     {
                                         <span class="help-block m-b-none">Refer Code Used:<a href="../Referrals/JoinningsWithGivenReferralCode?RefCode=@mdc.ReferCodeUsed" class="text-navy">@mdc.ReferCodeUsed.ToUpper()</a></span>
@@ -132,8 +136,9 @@
                             </div>
                         </div>
 
+                        <!-- Transfer Activity -->
                         <div class="col-xs-12 col-sm-6 col-md-4">
-                            <div class="ibox float-e-margins">
+                            <div class="ibox float-e-margins" style="margin-bottom:5px;">
                                 <div class="ibox-title">
                                     <h5>Transfer Activity</h5>
                                 </div>
@@ -191,79 +196,94 @@
                         <div class="col-xs-12 col-md-4">
                             <div class="ibox float-e-margins">
                                 <div class="ibox-title">
-                                    <h5>IP Addresses</h5>
+                                    <ul class="nav nav-tabs small">
+                                        <li class="active"><a data-toggle="tab" href="#tab-a"><i class="fa fa-fw fa-crosshairs m-r-xs"></i> IP Addresses</a></li>
+                                        <li class=""><a data-toggle="tab" href="#tab-b"><i class="fa fa-fw fa-map-marker m-r-xs"></i> Location</a></li>
+                                    </ul>
                                 </div>
-                                <div class="ibox-content">
-                                    @{
-                                        if (MemIpAddr.Count > 0)
-                                        {
-                                            <table class="table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Ip Address</th>
-                                                        <th>Date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (MemberIpAddrreses mn in MemIpAddr)
-                                                    {
-                                                        <tr>
-                                                            <td>@mn.IpAddress</td>
-                                                            <td>@mn.Date</td>
-                                                        </tr>
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        }
-                                        else
-                                        {
-                                            <p class="text-danger text-center"> There are no IP Addresses for<em>@mdc.FirstName @mdc.LastName</em> </p>
-                                        }
-                                    }
 
+                                <div class="ibox-content">
+                                    <div class="tab-content ">
+
+                                        <div id="tab-a" class="tab-pane fade active in">
+                                            @{
+                                                if (MemIpAddr.Count > 0)
+                                                {
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Ip Address</th>
+                                                                <th>Date</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (MemberIpAddrreses mn in MemIpAddr)
+                                                            {
+                                                                <tr>
+                                                                    <td>@mn.IpAddress</td>
+                                                                    <td>@mn.Date</td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                }
+                                                else
+                                                {
+                                                    <p class="text-danger text-center m-t-md"> There are no IP Addresses for<em>@mdc.FirstName @mdc.LastName</em> </p>
+                                                }
+                                            }
+                                        </div>
+
+                                        <div id="tab-b" class="tab-pane fade">
+                                            @{
+                                                <div id="userLoc" data-lat="@mdc.lastlat" data-long="@mdc.lastlong">
+                                                    <div id="userMap"></div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-
                         <!--<div class="col-xs 12 col-sm-6 col-md-4">
-                                <div class="ibox float-e-margins">
-                                    <div class="ibox-title">
-                                        <h5>Referred Users</h5>
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>Referred Users</h5>
 
-                                               <div class="ibox-tools">
-                                                   <a class="collapse-link">
-                                                       <i class="fa fa-chevron-up"></i>
-                                                   </a>
-                                               </div>
+                                           <div class="ibox-tools">
+                                               <a class="collapse-link">
+                                                   <i class="fa fa-chevron-up"></i>
+                                               </a>
+                                           </div>
 
-                                    </div>
-                                    <div class="ibox-content no-padding">
-
-                                        <ul class="list-group list-group-condensed">
-                                            @*if (mdc.Referrals.Count > 0)
-                                                {
-
-                                                    foreach (ReferredMembers memref in mdc.Referrals)
-                                                    {
-                                                    <li class="list-group-item">
-                                                        <span class="memDetails_ReferredFriendIcon">
-                                                            <img src="@memref.ImageUrl" class="img-circle" alt="image"/>
-                                                        </span>
-                                                        @memref.MemberName.First().ToString().ToUpper()@memref.MemberName.Substring(1)
-                                                    </li>
-                                                    }
-
-                                                }
-                                                else
-                                                {
-                                                    <li class="list-group-item">No Referrals
-                                                    </li>
-                                                }*@
-                                        </ul>
-                                    </div>
                                 </div>
-                            </div>-->
+                                <div class="ibox-content no-padding">
+
+                                    <ul class="list-group list-group-condensed">
+                                        @*if (mdc.Referrals.Count > 0)
+                                            {
+
+                                                foreach (ReferredMembers memref in mdc.Referrals)
+                                                {
+                                                <li class="list-group-item">
+                                                    <span class="memDetails_ReferredFriendIcon">
+                                                        <img src="@memref.ImageUrl" class="img-circle" alt="image"/>
+                                                    </span>
+                                                    @memref.MemberName.First().ToString().ToUpper()@memref.MemberName.Substring(1)
+                                                </li>
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                <li class="list-group-item">No Referrals
+                                                </li>
+                                            }*@
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>-->
 
                     </div>
                 </div>
@@ -285,7 +305,7 @@
 
             <div class="tab-content ">
 
-                <div id="tab-1" class="tab-pane active">
+                <div id="tab-1" class="tab-pane fade active in">
                     <div class="panel-body">
                         <div class="row">
 
@@ -435,6 +455,16 @@
                                                     </div>
                                                 </div>
 
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>UDID</b><br /><small>(Fingerprint)</small>
+                                                        </span>
+                                                        <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                            <p class="form-control-static" style="word-wrap:break-word;">@mdc.UDID1</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <div class="row">
@@ -453,6 +483,16 @@
                                                     </div>
                                                 </div>
 
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>Device Token</b>
+                                                        </span>
+                                                        <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                            <p class="form-control-static" style="word-wrap:break-word;">@mdc.DeviceToken</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <div class="row">
@@ -471,6 +511,16 @@
                                                     </div>
                                                 </div>
 
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>Access Token</b>
+                                                        </span>
+                                                        <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                            <p class="form-control-static" style="word-wrap:break-word;">@mdc.AccessToken</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
 
                                             <div class="row">
@@ -489,7 +539,7 @@
                     </div>
                 </div>
 
-                <div id="tab-2" class="tab-pane">
+                <div id="tab-2" class="tab-pane fade">
                     <div class="panel-body">
                         <div class="row">
 
@@ -532,7 +582,7 @@
 
                                                                     @if (synpsDetail.SynapseBankStatus == "Verified")
                                                                     {
-                                                                        <p>
+                                                                        <p style="margin-bottom:5px;">
                                                                             <span class="text-success" style="display: inline-block"> @synpsDetail.SynapseBankStatus </span>
                                                                             <button type="button" class="btn btn-link" onclick="Member.UnVerifyBankAccount(); "><i class="fa fa-close text-danger"></i>Un-Verify</button>
                                                                         </p>
@@ -545,6 +595,7 @@
                                                                             <button type="button" class="btn btn-link" onclick="Member.VerifyBankAccount(); "><i class="fa fa-check"></i>Verify</button>
                                                                         </p>
                                                                     }
+                                                                    <p>IsVerifiedWithSynapse:&nbsp; <strong>@mdc.IsVerifiedWithSynapse</strong></p>
                                                                     <input type="hidden" id="bnkIdHidden" value="@synpsDetail.BankId" />
                                                                 </div>
                                                             }
@@ -624,6 +675,16 @@
                                                     </div>
 
                                                     <div class="col-md-6">
+
+                                                        <div class="form-group m-b-none">
+                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
+                                                                <b>OAuth Token</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
+                                                                <p style="word-wrap:break-word;">@synpsDetail.synapseConsumerKey</p>
+                                                            </div>
+                                                        </div>
+
                                                         <div class="form-group">
                                                             <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
                                                                 <b>Bank ID</b>
@@ -632,6 +693,7 @@
                                                                 <p> @synpsDetail.synapseBankId</p>
                                                             </div>
                                                         </div>
+
                                                     </div>
 
                                                 </div>
@@ -665,7 +727,7 @@
                             </div>
 
                             <!-- OLD KNOX BANK INFO -->
-                            <div class="col-sm-12 m-t-sm">
+                            <!--<div class="col-sm-12 m-t-sm">
                                 <div class="ibox">
                                     <div class="ibox-title">
                                         <h5>Knox Details</h5>
@@ -720,13 +782,13 @@
                                         </form>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
 
                         </div>
                     </div>
                 </div>
 
-                <div id="tab-3" class="tab-pane">
+                <div id="tab-3" class="tab-pane fade">
                     <div class="panel-body">
                         <div class="row">
 
@@ -845,7 +907,7 @@
                     </div>
                 </div>
 
-                <div id="tab-4" class="tab-pane">
+                <div id="tab-4" class="tab-pane fade">
                     <div class="panel-body">
                         <div class="row">
 
@@ -861,13 +923,14 @@
                                                 <table class="table table-striped">
                                                     <thead>
                                                         <tr>
-                                                            <th>Transaction ID</th>
-                                                            <th>Transaction Type</th>
+                                                            <th>Trans ID</th>
+                                                            <th>Type</th>
                                                             <th>Status</th>
                                                             <th>Date / Time</th>
-                                                            <th>Amount ($)</th>
-                                                            <th>Recipient ID</th>
-                                                            <th>Recipient User Name</th>
+                                                            <th>Sender</th>
+                                                            <th>Amount</th>
+                                                            <th>Recipient</th>
+                                                            <th>Memo</th>
                                                             <th>Location</th>
                                                         </tr>
                                                     </thead>
@@ -897,7 +960,8 @@
                                                             }
                                                                     }
                                                                 </td>
-                                                                <td>@mn.TransDateTime</td>
+                                                                <td>@mn.TransDate<br /><small>@mn.TransTime</small></td>
+                                                                <td><a href="@Url.Action("Detail", "Member", new { NoochId = @mn.SenderId })">@mn.SenderName</a></td>
                                                                 <td>
                                                                     @if (mn.AmountNew != "0")
                                                                     {
@@ -906,8 +970,8 @@
                                                                         <h4>$ @transAmountFormatted</h4>
                                                                     }
                                                                 </td>
-                                                                <td><a href="@Url.Action("Detail", "Member", new { NoochId = @mn.RecepientId })">@mn.RecepientId</a></td>
-                                                                <td><a href="@Url.Action("Detail", "Member", new {NoochId = @mn.RecepientId})">@mn.RecepientUserName</a></td>
+                                                                <td><a href="@Url.Action("Detail", "Member", new { NoochId = @mn.RecipientId })">@mn.RecipientName</a></td>
+                                                                <td>@mn.Memo</td>
                                                                 @if (!String.IsNullOrEmpty(@mn.GeoLocation))
                                                                 {
                                                                     <td><button class="btn btn-link locLink" data-lat="@mn.Latitude" data-long="@mn.Longitude" data-loctext="@mn.GeoLocation.Trim().TrimEnd(',').Trim()">@mn.GeoLocation.Trim().TrimEnd(',').Trim()</button></td>
@@ -935,7 +999,7 @@
                     </div>
                 </div>
 
-                <div id="tab-5" class="tab-pane">
+                <div id="tab-5" class="tab-pane fade">
                     <div class="panel-body">
                         <div class="row">
 
@@ -1032,6 +1096,24 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal-userLocation" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span class="fa fa-map-marker pull-left"></span>User Location</h4>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:16px;font-weight:600;text-align:center; margin-bottom:12px;">This user's last location was:</p>
+                <div id="userMapInModal"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="Modal-AdminNotes" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1102,6 +1184,9 @@
 </div>
 
 <script src="~/Scripts/App/MemberDetail.js"></script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBejM5FqN8AVj_JbZvCYCjoGwrmB7R-rT0&callback=checkIfUserLocationExists">
+</script>
 
 <!-- Input Mask-->
 <script src="../js/plugins/jasny/jasny-bootstrap.min.js"></script>
