@@ -586,7 +586,8 @@ namespace noochAdminNew.Controllers
                               {
                                   BankName = SSB.BankName,
                                   NoOfUsers = (from SBM in obj.SynapseBanksOfMembers
-                                               where SBM.IsDefault == true && SBM.bank_name == SSB.BankName
+                                               where SBM.IsDefault == true &&
+                                                     SBM.bank_name == SSB.BankName
                                                group SBM by SBM.bank_name into s
                                                select s.Count()).FirstOrDefault()
                               }).OrderBy(a => a.BankName).ToList();

@@ -6,10 +6,10 @@
 @{
     DashboardDataClass dd = new DashboardDataClass();
     dd = Model;
-    List<NoOfUsersInEachBank>
-  BankUserCount = new List<NoOfUsersInEachBank>
-      ();
+
+    List<NoOfUsersInEachBank> BankUserCount = new List<NoOfUsersInEachBank>();
     BankUserCount = dd.UserCountInEachBank;
+
     List<MemberRecentLiveTransactionData> LiveTrans = new List<MemberRecentLiveTransactionData>();
     // LiveTrans = dd.RecentLiveTransaction;
 }
@@ -367,8 +367,7 @@
                                         </tr>
                                     </thead>
 
-                                    <tbody id="TBOdy">
-                                    </tbody>
+                                    <tbody id="TBOdy"></tbody>
 
                                 </table>
                             </div>
