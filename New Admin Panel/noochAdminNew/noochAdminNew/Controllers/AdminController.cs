@@ -314,7 +314,7 @@ namespace noochAdminNew.Controllers
                             {
                                 if (!String.IsNullOrEmpty(t.PhoneNumberInvited))
                                 {
-                                    singleTrans.SenderUserName = CommonHelper.FormatPhoneNumber( CommonHelper.GetDecryptedData(t.PhoneNumberInvited));
+                                    singleTrans.SenderUserName = CommonHelper.FormatPhoneNumber(CommonHelper.GetDecryptedData(t.PhoneNumberInvited));
                                 }
                                 else
                                 {
@@ -580,18 +580,54 @@ namespace noochAdminNew.Controllers
                                             select r).ToList().Count;
 
 
+
+                    // have to do it long way because we have bank_name as encrypted in db
+
+                    var allSyanpseSupportedBanks =
+                        (from ce in obj.SynapseSupportedBanks where ce.IsDeleted == false select ce).ToList();
+
+                    var membersInEachBank = obj.GetMembersInEachSynapseBank().ToList();
+
+                    List<GetMembersInEachSynapseBank_Result> decryptedList = new List<GetMembersInEachSynapseBank_Result>();
+                    foreach (GetMembersInEachSynapseBank_Result mem in membersInEachBank)
+                    {
+                        GetMembersInEachSynapseBank_Result m = new GetMembersInEachSynapseBank_Result();
+                        m.bank_name = CommonHelper.GetDecryptedData(mem.bank_name).ToLower().Trim();
+                        m.CountInBank = mem.CountInBank;
+                        decryptedList.Add(m);
+                    }
+                    List<NoOfUsersInEachBank> UserCountInEachBankPrep = new List<NoOfUsersInEachBank>();
+
+                    foreach (SynapseSupportedBank ssb in allSyanpseSupportedBanks)
+                    {
+                        NoOfUsersInEachBank nusi = new NoOfUsersInEachBank();
+                        nusi.BankName = ssb.BankName;
+                        nusi.NoOfUsers = 0;
+                        foreach (GetMembersInEachSynapseBank_Result res in decryptedList)
+                        {
+                            if (res.bank_name == ssb.BankName.ToLower().Trim())
+                            {
+                                nusi.NoOfUsers = Convert.ToInt16( res.CountInBank);
+                            }
+                        }
+
+                        UserCountInEachBankPrep.Add(nusi);
+                    }
+
+
+
                     // **No Of User Of Each Bank   
-                    var ss = (from SSB in obj.SynapseSupportedBanks
-                              select new NoOfUsersInEachBank
-                              {
-                                  BankName = SSB.BankName,
-                                  NoOfUsers = (from SBM in obj.SynapseBanksOfMembers
-                                               where SBM.IsDefault == true &&
-                                                     SBM.bank_name == SSB.BankName
-                                               group SBM by SBM.bank_name into s
-                                               select s.Count()).FirstOrDefault()
-                              }).OrderBy(a => a.BankName).ToList();
-                    dd.UserCountInEachBank = ss;
+                    //var ss = (from SSB in obj.SynapseSupportedBanks
+                    //          select new NoOfUsersInEachBank
+                    //          {
+                    //              BankName = SSB.BankName,
+                    //              NoOfUsers = (from SBM in obj.SynapseBanksOfMembers
+                    //                           where SBM.IsDefault == true &&
+                    //                                 SBM.bank_name == SSB.BankName
+                    //                           group SBM by SBM.bank_name into s
+                    //                           select s.Count()).FirstOrDefault()
+                    //          }).OrderBy(a => a.BankName).ToList();
+                    dd.UserCountInEachBank = UserCountInEachBankPrep;
                     // var ss = obj.Database.SqlQuery<NoOfUsersInEachBank>("select BankName,(select count(*) from SynapseBanksOfMembers where bank_name=ss.BankName and IsDefault=1 )as NoOfUsers from SynapseSupportedBanks ss order by BankName").ToList(); 
                 }
 

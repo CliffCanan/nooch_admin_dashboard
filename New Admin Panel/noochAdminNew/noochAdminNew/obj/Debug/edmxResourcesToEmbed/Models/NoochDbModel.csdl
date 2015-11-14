@@ -62,6 +62,7 @@
     </AssociationSet>
     <EntitySet Name="SynapseBanksOfMembers" EntityType="NOOCHModel.SynapseBanksOfMember" />
     <EntitySet Name="SynapseCreateUserResults" EntityType="NOOCHModel.SynapseCreateUserResult" />
+    <FunctionImport Name="GetMembersInEachSynapseBank" ReturnType="Collection(NOOCHModel.GetMembersInEachSynapseBank_Result)" />
   </EntityContainer>
   <EntityType Name="ADD">
     <Key>
@@ -601,4 +602,8 @@
     <Property Name="Phone_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
     <Property Name="photos" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
   </EntityType>
+  <ComplexType Name="GetMembersInEachSynapseBank_Result">
+    <Property Type="Int32" Name="CountInBank" Nullable="true" />
+    <Property Type="String" Name="bank_name" Nullable="true" />
+  </ComplexType>
 </Schema>

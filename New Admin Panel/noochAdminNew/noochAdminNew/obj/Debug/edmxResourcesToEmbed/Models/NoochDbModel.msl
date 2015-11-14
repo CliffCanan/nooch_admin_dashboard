@@ -456,5 +456,13 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="GetMembersInEachSynapseBank" FunctionName="NOOCHModel.Store.GetMembersInEachSynapseBank">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="NOOCHModel.GetMembersInEachSynapseBank_Result">
+          <ScalarProperty Name="CountInBank" ColumnName="CountInBank" />
+          <ScalarProperty Name="bank_name" ColumnName="bank_name" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>
