@@ -292,7 +292,7 @@ namespace noochAdminNew.Controllers
                             singleTrans.Amount = t.Amount.ToString();
                             singleTrans.TransID = t.TransactionId.ToString();
                             singleTrans.TransDateTime = t.TransactionDate;
-                            singleTrans.GeoStateCityLocation = t.GeoLocationState + "," + t.GeoLocationCity;
+                            singleTrans.GeoStateCityLocation = t.GeoLocationCity + ", " + t.GeoLocationState;
                             singleTrans.Longitude = t.Longitude.ToString();
                             singleTrans.Latitude = t.Latitude.ToString();
                             singleTrans.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
@@ -564,12 +564,14 @@ namespace noochAdminNew.Controllers
                          select t).ToList();
                     dd.TotalActiveBankAccountUsers = c.Count;
 
-                    dd.TotalAmountOfDollars =
-                        (from r in obj.Transactions where r.TransactionStatus == "success" select r).ToList()
-                            .Sum(t => t.Amount)
-                            .ToString();
-                    dd.TotalNoOfPaymentsCompleted =
-                        (from r in obj.Transactions where r.TransactionStatus == "success" select r).ToList().Count;
+                    dd.TotalAmountOfDollars = (from r in obj.Transactions
+                                               where r.TransactionStatus == "success"
+                                               select r).ToList()
+                                                    .Sum(t => t.Amount).ToString();
+                    
+                    dd.TotalNoOfPaymentsCompleted = (from r in obj.Transactions
+                                                     where r.TransactionStatus == "success"
+                                                     select r).ToList().Count;
 
                     dd.totalRequestTypeTrans = (from r in obj.Transactions
                                                 where r.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw==" && r.TransactionStatus == "success"

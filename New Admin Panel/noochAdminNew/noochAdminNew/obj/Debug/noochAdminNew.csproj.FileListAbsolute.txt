@@ -162,12 +162,7 @@ C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.Razor.dll
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Xml.dll
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Xml.Linq.dll
-C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Interop.Excel.dll
-C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Interop.Office.dll
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\EntityFramework.xml
-C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\FileHelpers.xml
-C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\FileHelpers.DataLink.xml
-C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\FileHelpers.ExcelStorage.xml
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\log4net.xml
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Newtonsoft.Json.xml
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.Helpers.xml

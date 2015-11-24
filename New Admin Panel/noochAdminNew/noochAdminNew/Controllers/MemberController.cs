@@ -423,7 +423,8 @@ namespace noochAdminNew.Controllers
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 var All_Members_In_Records = (from t in obj.Members
-                                              where t.Type == "Personal"  // CLIFF: Commenting this line out so this returns ALL member records
+                                              where t.Type == "Personal" ||
+                                                    t.Type == "Business" // CLIFF: Commenting this line out so this returns ALL member records
                                               select t).ToList();
 
                 foreach (Member m in All_Members_In_Records)
@@ -923,7 +924,12 @@ namespace noochAdminNew.Controllers
         [ActionName("EditMemberDetails")]
         public ActionResult EditMemberDetails(string contactno, string streetaddress, string city, string secondaryemail, string recoveryemail, string noochid, string state, string zip, string ssn, string dob)
         {
+            Logger.Info("Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [" + contactno + "], Street Address: [" + streetaddress +
+                        "], City: [" + city + "], State: [" + state + "], ZIP: [" + zip+ "], secondaryEmail: [" + secondaryemail + "], NoochID: [" + noochid +
+                        "], SSN [" + ssn + "], DOB: [" + dob + "]");
+
             MemberEditResultClass re = new MemberEditResultClass();
+
             if (String.IsNullOrEmpty(noochid))
             {
                 re.IsSuccess = false;

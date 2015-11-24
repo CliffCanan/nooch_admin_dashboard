@@ -202,6 +202,8 @@ var Member = function () {
                 setTimeout(function () { location.reload(true) }, 3000);
             }
             else {
+                console.log("ERROR!");
+                console.log(result);
                 toastr.error(result.Message, 'Error');
             }
         });
