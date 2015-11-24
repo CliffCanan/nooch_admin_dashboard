@@ -501,6 +501,7 @@
         <Function Name="GetLiveTransactionsForDashboard" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="vType" Type="int" Mode="In" />
         </Function>
+        <Function Name="GetMembersInEachSynapseBank" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="GetReportsForMember" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="MemberId" Type="varchar" Mode="In" />
           <Parameter Name="GetWhat" Type="varchar" Mode="In" />
@@ -623,6 +624,7 @@
           </AssociationSet>
           <EntitySet Name="SynapseBanksOfMembers" EntityType="NOOCHModel.SynapseBanksOfMember" />
           <EntitySet Name="SynapseCreateUserResults" EntityType="NOOCHModel.SynapseCreateUserResult" />
+          <FunctionImport Name="GetMembersInEachSynapseBank" ReturnType="Collection(NOOCHModel.GetMembersInEachSynapseBank_Result)" />
         </EntityContainer>
         <EntityType Name="ADD">
           <Key>
@@ -1162,6 +1164,10 @@
           <Property Name="Phone_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="photos" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
+        <ComplexType Name="GetMembersInEachSynapseBank_Result">
+          <Property Type="Int32" Name="CountInBank" Nullable="true" />
+          <Property Type="String" Name="bank_name" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1623,6 +1629,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetMembersInEachSynapseBank" FunctionName="NOOCHModel.Store.GetMembersInEachSynapseBank">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="NOOCHModel.GetMembersInEachSynapseBank_Result">
+                <ScalarProperty Name="CountInBank" ColumnName="CountInBank" />
+                <ScalarProperty Name="bank_name" ColumnName="bank_name" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

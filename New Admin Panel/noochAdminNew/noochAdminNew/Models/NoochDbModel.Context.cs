@@ -91,5 +91,10 @@ namespace noochAdminNew.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("GetDashboardStats", vStatsForParameter, vStatsTypeParameter);
         }
+    
+        public virtual ObjectResult<GetMembersInEachSynapseBank_Result> GetMembersInEachSynapseBank()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetMembersInEachSynapseBank_Result>("GetMembersInEachSynapseBank");
+        }
     }
 }

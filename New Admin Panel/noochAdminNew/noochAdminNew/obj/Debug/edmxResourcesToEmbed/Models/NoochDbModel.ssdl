@@ -496,6 +496,7 @@
   <Function Name="GetLiveTransactionsForDashboard" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="vType" Type="int" Mode="In" />
   </Function>
+  <Function Name="GetMembersInEachSynapseBank" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="GetReportsForMember" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="MemberId" Type="varchar" Mode="In" />
     <Parameter Name="GetWhat" Type="varchar" Mode="In" />

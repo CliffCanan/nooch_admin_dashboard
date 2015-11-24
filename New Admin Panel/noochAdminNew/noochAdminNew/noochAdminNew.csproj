@@ -227,6 +227,9 @@
     <Compile Include="Models\GetLiveTransactionsForDashboard_Result1.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GetMembersInEachSynapseBank_Result.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GetTopReferringMembers_Result.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
