@@ -467,6 +467,7 @@
     <NavigationProperty Name="Transactions" Relationship="NOOCHModel.FK_Transactions_Members2" FromRole="Member" ToRole="Transaction" />
     <NavigationProperty Name="Transactions1" Relationship="NOOCHModel.FK_Transactions_Members3" FromRole="Member" ToRole="Transaction" />
     <Property Name="TransferLimit" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="FacebookUserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
   </EntityType>
   <Association Name="FK_KnoxAccountDetails_Members">
     <End Type="NOOCHModel.Member" Role="Member" Multiplicity="0..1" />

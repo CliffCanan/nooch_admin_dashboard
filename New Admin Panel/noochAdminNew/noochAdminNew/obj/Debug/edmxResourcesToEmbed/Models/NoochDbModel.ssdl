@@ -207,6 +207,7 @@
     <Property Name="VerificationDocumentPath" Type="varchar(max)" />
     <Property Name="IsVerifiedWithSynapse" Type="bit" />
     <Property Name="TransferLimit" Type="varchar(max)" />
+    <Property Name="FacebookUserId" Type="varchar(max)" />
   </EntityType>
   <EntityType Name="MembersIPAddresses">
     <Key>
