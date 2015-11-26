@@ -83,7 +83,7 @@ $(document).ready(function () {
                             GeoLocation = $.trim(item.GeoStateCityLocation);
                         }
 
-                        trHTML = '<tr><td>' + item.TransID + '</td>' +
+                        trHTML = '<tr><td><small>' + item.TransID + '</small></td>' +
                                  '<td>' + item.TransactionType + '</td>' +
                                  '<td class="' + item.TransactionStatus + '">' + item.TransactionStatus + '</td>' +
                                  '<td>' + TransactionTime + '</td>';

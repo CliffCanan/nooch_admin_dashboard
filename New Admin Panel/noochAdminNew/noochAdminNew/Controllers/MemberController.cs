@@ -649,6 +649,9 @@ namespace noochAdminNew.Controllers
                     mdc.lastlat = (Member.LastLocationLat != null && Member.LastLocationLat != 0) ? Member.LastLocationLat.ToString() : "none";
                     mdc.lastlong = (Member.LastLocationLat != null && Member.LastLocationLng != 0) ? Member.LastLocationLng.ToString() : "none";
 
+
+                    mdc.TransferLimit = Member.TransferLimit ?? "0";
+
                     //Get the Refered Code Used
                     mdc.ReferCodeUsed = (from Membr in obj.Members
                                          join Code in obj.InviteCodes
@@ -922,7 +925,7 @@ namespace noochAdminNew.Controllers
         /// <param name="zip"></param>
         [HttpPost]
         [ActionName("EditMemberDetails")]
-        public ActionResult EditMemberDetails(string contactno, string streetaddress, string city, string secondaryemail, string recoveryemail, string noochid, string state, string zip, string ssn, string dob)
+        public ActionResult EditMemberDetails(string contactno, string streetaddress, string city, string secondaryemail, string recoveryemail, string noochid, string state, string zip, string ssn, string dob, string transferLimit)
         {
             Logger.Info("Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [" + contactno + "], Street Address: [" + streetaddress +
                         "], City: [" + city + "], State: [" + state + "], ZIP: [" + zip+ "], secondaryEmail: [" + secondaryemail + "], NoochID: [" + noochid +
@@ -990,6 +993,10 @@ namespace noochAdminNew.Controllers
                             if (!String.IsNullOrEmpty(ssn))
                             {
                                 member.SSN = CommonHelper.GetEncryptedData(ssn.Trim());
+                            }
+                            if (!String.IsNullOrEmpty(transferLimit))
+                            {
+                                member.TransferLimit= transferLimit.Trim();
                             }
 
                             if (!String.IsNullOrEmpty(dob))

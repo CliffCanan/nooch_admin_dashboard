@@ -24,6 +24,9 @@ a:hover {color: #4EB8EE;}
   font-weight: 600;
   padding: 14px 20px 14px 25px;
 }
+.nav.nav-tabs.small > li > a {
+    padding: 10px 14px;
+}
 .nav.navbar-right > li > a {
   color: #999c9e;
 }
@@ -3016,17 +3019,21 @@ body.body-small .footer.fixed {
   vertical-align: middle;
 }
 .ibox-content table tr > td {padding:2px;}
+table#AllTrans > thead > tr th,
+table#AllTrans > tbody > tr td {
+    padding: 2px;
+}
 
-table#AllMembers > tbody > tr  td:nth-child(2),
-table#AllMembers > tbody > tr  td:nth-child(3),
-table#AllMembers > tbody > tr  td:nth-child(4),
-table#AllMembers > tbody > tr  td:nth-child(9),
-table#AllTrans > tbody > tr  td:nth-child(5),
-table#AllTrans > tbody > tr  td:nth-child(6),
-table#AllTrans > tbody > tr  td:nth-child(9) {
+table#AllMembers > tbody > tr td:nth-child(2),
+table#AllMembers > tbody > tr td:nth-child(3),
+table#AllMembers > tbody > tr td:nth-child(4),
+table#AllMembers > tbody > tr td:nth-child(9),
+table#AllTrans > tbody > tr td:nth-child(5),
+table#AllTrans > tbody > tr td:nth-child(6),
+table#AllTrans > tbody > tr td:nth-child(9) {
 	text-transform: capitalize;
 }
-table#AllTrans > tbody > tr  td:nth-child(3) {font-weight:600;}
+table#AllTrans > tbody > tr td:nth-child(3) {font-weight:600;}
 table td.Pending {color:#3fabe1;}
 table td.Success {color:#72bf44;}
 table td.Cancelled,

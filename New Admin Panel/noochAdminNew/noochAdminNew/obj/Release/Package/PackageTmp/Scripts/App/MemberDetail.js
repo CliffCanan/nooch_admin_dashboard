@@ -181,7 +181,10 @@ var Member = function () {
         data.zip = $("#zipcodeinput").val();
         data.noochid = NoochId;
         data.ssn = $("#ssninput").val().trim();
+        data.ssn = $("#ssninput").val().trim();
         data.dob = $("#dobinput").val().trim();
+        data.transferLimit = $("#transferLimitinput").val().trim();
+        
         console.log(data);
 
         $.post(url, data, function (result) {
@@ -202,6 +205,8 @@ var Member = function () {
                 setTimeout(function () { location.reload(true) }, 3000);
             }
             else {
+                console.log("ERROR!");
+                console.log(result);
                 toastr.error(result.Message, 'Error');
             }
         });

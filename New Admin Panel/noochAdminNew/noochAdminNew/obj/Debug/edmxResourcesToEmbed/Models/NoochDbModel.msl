@@ -326,6 +326,7 @@
     <EntitySetMapping Name="Members">
       <EntityTypeMapping TypeName="NOOCHModel.Member">
         <MappingFragment StoreEntitySet="Members">
+          <ScalarProperty Name="TransferLimit" ColumnName="TransferLimit" />
           <ScalarProperty Name="IsVerifiedWithSynapse" ColumnName="IsVerifiedWithSynapse" />
           <ScalarProperty Name="VerificationDocumentPath" ColumnName="VerificationDocumentPath" />
           <ScalarProperty Name="PhoneVerifiedOn" ColumnName="PhoneVerifiedOn" />

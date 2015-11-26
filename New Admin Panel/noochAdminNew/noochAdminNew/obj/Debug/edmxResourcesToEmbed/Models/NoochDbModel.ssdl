@@ -206,6 +206,7 @@
     <Property Name="PhoneVerifiedOn" Type="datetime" />
     <Property Name="VerificationDocumentPath" Type="varchar(max)" />
     <Property Name="IsVerifiedWithSynapse" Type="bit" />
+    <Property Name="TransferLimit" Type="varchar(max)" />
   </EntityType>
   <EntityType Name="MembersIPAddresses">
     <Key>

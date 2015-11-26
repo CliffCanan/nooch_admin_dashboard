@@ -62,6 +62,7 @@
     </AssociationSet>
     <EntitySet Name="SynapseBanksOfMembers" EntityType="NOOCHModel.SynapseBanksOfMember" />
     <EntitySet Name="SynapseCreateUserResults" EntityType="NOOCHModel.SynapseCreateUserResult" />
+    <FunctionImport Name="GetMembersInEachSynapseBank" ReturnType="Collection(NOOCHModel.GetMembersInEachSynapseBank_Result)" />
   </EntityContainer>
   <EntityType Name="ADD">
     <Key>
@@ -465,6 +466,7 @@
     <NavigationProperty Name="SynapseBankLoginResults" Relationship="NOOCHModel.FK_SynapseBankLoginResults_Members" FromRole="Member" ToRole="SynapseBankLoginResult" />
     <NavigationProperty Name="Transactions" Relationship="NOOCHModel.FK_Transactions_Members2" FromRole="Member" ToRole="Transaction" />
     <NavigationProperty Name="Transactions1" Relationship="NOOCHModel.FK_Transactions_Members3" FromRole="Member" ToRole="Transaction" />
+    <Property Name="TransferLimit" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
   </EntityType>
   <Association Name="FK_KnoxAccountDetails_Members">
     <End Type="NOOCHModel.Member" Role="Member" Multiplicity="0..1" />
@@ -601,4 +603,8 @@
     <Property Name="Phone_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
     <Property Name="photos" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
   </EntityType>
+  <ComplexType Name="GetMembersInEachSynapseBank_Result">
+    <Property Type="Int32" Name="CountInBank" Nullable="true" />
+    <Property Type="String" Name="bank_name" Nullable="true" />
+  </ComplexType>
 </Schema>
