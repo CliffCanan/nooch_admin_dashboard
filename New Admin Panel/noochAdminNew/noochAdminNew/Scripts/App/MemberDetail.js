@@ -189,7 +189,7 @@ var Member = function () {
 
         $.post(url, data, function (result) {
             if (result.IsSuccess == true) {
-                toastr.info('Reloading this page...', 'FYI', { timeOut: '3000' })
+                toastr.info('Reloading this page...', 'FYI', { timeOut: '2500' })
                 toastr.success(result.Message, 'Success');
 
                 $("#contactNumber").val(result.contactnum);
@@ -202,7 +202,7 @@ var Member = function () {
                 $("#ssninput").val(result.ssn);
                 $("#dobinput").val(result.dob);
 
-                setTimeout(function () { location.reload(true) }, 3000);
+                setTimeout(function () { location.reload(true) }, 2500);
             }
             else {
                 console.log("ERROR!");
@@ -252,7 +252,7 @@ var Member = function () {
             console.log(result);
 
             if (result.IsSuccess == true) {
-                toastr.success(result.Message, 'Succcess');
+                toastr.success(result.Message, 'Success');
 
                 $('#bankAccountStatusDiv').html('');
                 $('#bankAccountStatusDiv').html("<span class='text-success' style='display: inline-block'>Verified</span>");
@@ -278,7 +278,7 @@ var Member = function () {
 
         $.post(url, data, function (result) {
             if (result.IsSuccess == true) {
-                toastr.success(result.Message, 'Succcess');
+                toastr.success(result.Message, 'Success');
 
                 $('#bankAccountStatusDiv').html('');
                 $('#bankAccountStatusDiv').html("<span class='text-warning' style='display: inline-block'>Pending Review</span>");
@@ -341,6 +341,42 @@ var Member = function () {
     }
 
 
+    // Manually set bank account's status to 'Verified'
+    function getSynapseInfo() {
+
+        var authKey = $('#synAuthKey').text();
+
+        if (authKey == '') {
+            toastr.error('No Synapse Auth key was selected!', 'Error');
+            return;
+        }
+
+        var url = "https://synapsepay.com/api/v2/user/show";
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: JSON.stringify({
+                "oauth_consumer_key": authKey
+            }),
+            success: function (data) {
+                console.log(data);
+
+                if (data.success == true) {
+                    toastr.success(data.reason, 'Success');
+                    alert(JSON.stringify(data));
+                }
+                else {
+                    toastr.error(data.reason, 'Error');
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            },
+            dataType: "json",
+            contentType: "application/json"
+        });
+    }
+
     return {
         ApplyChoosenOperation: applyOperation,
         EditMember: editdetails,
@@ -348,6 +384,7 @@ var Member = function () {
         OpenPopupForAdminNote: AdminNoteAboutUserModalPopup,
         AdminNoteForUser: SaveAdminNoteForUser,
         VerifyBankAccount: verifyBankAccount,
-        UnVerifyBankAccount: unVerifyBankAccount
+        UnVerifyBankAccount: unVerifyBankAccount,
+        getSynapseInfo: getSynapseInfo
     };
 }();

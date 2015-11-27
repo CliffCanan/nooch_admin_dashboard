@@ -649,8 +649,7 @@ namespace noochAdminNew.Controllers
                     mdc.lastlat = (Member.LastLocationLat != null && Member.LastLocationLat != 0) ? Member.LastLocationLat.ToString() : "none";
                     mdc.lastlong = (Member.LastLocationLat != null && Member.LastLocationLng != 0) ? Member.LastLocationLng.ToString() : "none";
 
-
-                    mdc.TransferLimit = Member.TransferLimit ?? "0";
+                    mdc.TransferLimit = Member.TransferLimit ?? "0.00";
 
                     //Get the Refered Code Used
                     mdc.ReferCodeUsed = (from Membr in obj.Members
@@ -845,13 +844,13 @@ namespace noochAdminNew.Controllers
 
                         if (synapseDetailFromDb != null)
                         {
-                            synapseDetail.synapseConsumerKey = synapseAuthToken;
+                            synapseDetail.synapseConsumerKey = !String.IsNullOrEmpty(synapseAuthToken) ? CommonHelper.GetDecryptedData(synapseAuthToken) : "AUTH TOKEN NOT FOUND";
                             synapseDetail.synapseBankId = synapseDetailFromDb.bankid; // This is the 4 or 5 digit ID from Synapse for this account
                             synapseDetail.BankId = synapseDetailFromDb.Id; // This is the Nooch DB "ID", which is just the row number of the account... NOT the same as the Synapse Bank ID
                             synapseDetail.SynapseBankStatus = (string.IsNullOrEmpty(synapseDetailFromDb.Status)
                                 ? "Not Verified" : synapseDetailFromDb.Status);
                             synapseDetail.SynapseBankNickName = !String.IsNullOrEmpty(synapseDetailFromDb.nickname) ? CommonHelper.GetDecryptedData(synapseDetailFromDb.nickname) : "";
-                            synapseDetail.nameFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.name_on_account) ? CommonHelper.GetDecryptedData(synapseDetailFromDb.name_on_account) : " No Name Returned";
+                            synapseDetail.nameFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.name_on_account) ? CommonHelper.GetDecryptedData(synapseDetailFromDb.name_on_account) : "No Name Returned";
                             synapseDetail.emailFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.email) ? synapseDetailFromDb.email : "No Email Returned";
                             synapseDetail.phoneFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.phone_number) ? CommonHelper.FormatPhoneNumber(synapseDetailFromDb.phone_number) : "No Phone Returned";
                             synapseDetail.SynpaseBankAddedOn = synapseDetailFromDb.AddedOn != null
