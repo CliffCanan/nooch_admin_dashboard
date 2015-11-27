@@ -103,12 +103,7 @@ C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.We
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.Razor.dll
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Xml.dll
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Xml.Linq.dll
-C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Interop.Excel.dll
-C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Interop.Office.dll
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\EntityFramework.xml
-C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\FileHelpers.xml
-C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\FileHelpers.DataLink.xml
-C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\FileHelpers.ExcelStorage.xml
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\log4net.xml
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Newtonsoft.Json.xml
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Net.Http.Formatting.xml

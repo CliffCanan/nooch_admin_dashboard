@@ -495,17 +495,46 @@
                                                 </div>
                                             </div>
 
+                                        <div class="row">
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>SSN </b><br /><small>Last 4</small>
+                                                        </span>
+                                                    <div class="col-xs-9 col-sm-8 col-lg-5">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon"><i class="fa fa-fw fa-male"></i></span>
+                                                            <input type="text" value="@mdc.ssn" class="form-control" id="ssninput" data-mask="9999">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>Access Token</b>
+                                                        </span>
+                                                    <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                        <p class="form-control-static" style="word-wrap: break-word;">@mdc.AccessToken</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
                                             <div class="row">
 
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>SSN </b><br /><small>Last 4</small>
+                                                            <b>Transfer Limit </b><br />
                                                         </span>
                                                         <div class="col-xs-9 col-sm-8 col-lg-5">
                                                             <div class="input-group">
                                                                 <span class="input-group-addon"><i class="fa fa-fw fa-male"></i></span>
-                                                                <input type="text" value="@mdc.ssn" class="form-control" id="ssninput" data-mask="9999">
+                                                                <input type="text" value="@mdc.TransferLimit" class="form-control" id="transferLimitinput" data-mask="9999">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -514,16 +543,17 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>Access Token</b>
+                                                            <b></b>
                                                         </span>
                                                         <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                            <p class="form-control-static" style="word-wrap:break-word;">@mdc.AccessToken</p>
+                                                            <p class="form-control-static" style="word-wrap:break-word;"></p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div class="row">
+
+                                        <div class="row">
                                                 <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
                                                     <a class="btn btn-danger center-block" onclick="Member.EditMember()"><i class="fa fa-save"></i>  Save Changes to Profile</a>
                                                 </div>
@@ -725,64 +755,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- OLD KNOX BANK INFO -->
-                            <!--<div class="col-sm-12 m-t-sm">
-                                <div class="ibox">
-                                    <div class="ibox-title">
-                                        <h5>Knox Details</h5>
-                                        <i class="fa fa-bank" style="position: relative; top: -2px; left: 10px;"></i>
-                                    </div>
-                                    <div class="ibox-content">
-                                        <form class="form-horizontal">
-                                            <div class="row">
-                                                <div class="col-lg-12">
-                                                    <div class="form-group">
-                                                        <span class="col-xs-4 col-sm-3 control-label">
-                                                            <b>Status</b>
-                                                        </span>
-                                                        <div class="col-xs-8 col-sm-9 form-control-static">
-                                                            @{
-                                                                if (mdc.IsKnocAvailable == true)
-                                                                {
-                                                                    <div style="display: inline-block">
-                                                                        <span class="text-success" style="display: inline-block">Available</span>
-                                                                        <img src="@mdc.KnoxBankIcon" class="img-circle" id="details_bankLogo" alt="Bank Icon">
-                                                                    </div>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <div class="col-sm-5">
-                                                                        <span class="text-danger">No Bank Linked</span>
-                                                                    </div>
-                                                                }
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            @{
-                                                if (mdc.IsKnocAvailable == true)
-                                                {
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <div class="form-group">
-                                                                <span class="col-sm-3 control-label">
-                                                                    <b>Trans ID</b>
-                                                                </span>
-                                                                <div class="col-sm-9 form-control-static">
-                                                                    <span class="text-muted" id="knoxTransId"><a href="https://knoxpayments.com/admin/api/get_payment_details.php?API_key=7068_59cd5c1f5a75c31&API_pass=7068_da64134cc66a5f0&trans_id=@mdc.KnoxTransId" target="_blank"> @mdc.KnoxTransId</a></span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                }
-                                            }
-
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>-->
 
                         </div>
                     </div>

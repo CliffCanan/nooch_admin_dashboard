@@ -41,6 +41,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public int WeeksSinceJoined { get; set; }
 
         public string Address { get; set; }
+        public string TransferLimit { get; set; }
         public string City { get; set; }
         public string State { get; set; }
         public string Zipcode { get; set; }
