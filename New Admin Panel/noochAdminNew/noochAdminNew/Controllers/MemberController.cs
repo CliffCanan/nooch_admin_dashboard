@@ -927,7 +927,7 @@ namespace noochAdminNew.Controllers
         public ActionResult EditMemberDetails(string contactno, string streetaddress, string city, string secondaryemail, string recoveryemail, string noochid, string state, string zip, string ssn, string dob, string transferLimit)
         {
             Logger.Info("Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [" + contactno + "], Street Address: [" + streetaddress +
-                        "], City: [" + city + "], State: [" + state + "], ZIP: [" + zip+ "], secondaryEmail: [" + secondaryemail + "], NoochID: [" + noochid +
+                        "], City: [" + city + "], State: [" + state + "], ZIP: [" + zip + "], secondaryEmail: [" + secondaryemail + "], NoochID: [" + noochid +
                         "], SSN [" + ssn + "], DOB: [" + dob + "]");
 
             MemberEditResultClass re = new MemberEditResultClass();
@@ -995,7 +995,7 @@ namespace noochAdminNew.Controllers
                             }
                             if (!String.IsNullOrEmpty(transferLimit))
                             {
-                                member.TransferLimit= transferLimit.Trim();
+                                member.TransferLimit = transferLimit.Trim();
                             }
 
                             if (!String.IsNullOrEmpty(dob))
@@ -1058,10 +1058,9 @@ namespace noochAdminNew.Controllers
 
             using (var noochConnection = new NOOCHEntities())
             {
-                // getting member from db
-                var mem =
-                    (from c in noochConnection.Members where c.Nooch_ID == noochId && c.IsDeleted == false select c)
-                        .SingleOrDefault();
+                var mem = (from c in noochConnection.Members
+                           where c.Nooch_ID == noochId && c.IsDeleted == false
+                           select c).SingleOrDefault();
 
                 if (mem != null)
                 {
@@ -1131,11 +1130,13 @@ namespace noochAdminNew.Controllers
 
         [HttpPost]
         [ActionName("VerifyAccount")]
-        public ActionResult VerifyAccount(string accountId)
+        public ActionResult VerifyAccount(string accountId, bool sendEmail)
         {
-            Logger.Info("Admin Dash -> VerifyAccount - [Synapse Bank ID: " + accountId + "]");
+            Logger.Info("Admin Dash -> VerifyAccount - Synapse Bank ID: [" + accountId + "], sendEmail: [" + sendEmail + "]");
 
             LoginResult lr = new LoginResult();
+            lr.IsSuccess = false;
+
             int bnkid = Convert.ToInt16(accountId);
 
             using (var noochConnection = new NOOCHEntities())
@@ -1143,14 +1144,12 @@ namespace noochAdminNew.Controllers
                 // Get Synapse Bank info from DB
                 var bank = (from c in noochConnection.SynapseBanksOfMembers
                             where c.Id == bnkid
-                            select c)
-                            .SingleOrDefault();
+                            select c).SingleOrDefault();
 
                 if (bank != null)
                 {
                     if (bank.Status == "Verified")
                     {
-                        lr.IsSuccess = false;
                         lr.Message = "Bank account already verified.";
                     }
                     else
@@ -1165,104 +1164,108 @@ namespace noochAdminNew.Controllers
                             lr.IsSuccess = true;
                             lr.Message = "Bank account verified successfully.";
 
-                            try
+                            #region Notify User by Email
+
+                            if (sendEmail != false)
                             {
-                                Guid memberId = new Guid(bank.MemberId.ToString());
-                                var BankName = CommonHelper.GetDecryptedData(bank.bank_name);
-                                var bankNickName = CommonHelper.GetDecryptedData(bank.nickname);
-
-                                #region Set Bank Logo URL Variable
-
-                                string appPath = "https://www.noochme.com/noochweb/";
-                                var bankLogoUrl = "";
-
-                                switch (BankName)
+                                try
                                 {
-                                    case "Ally":
-                                        {
-                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/ally.png");
-                                        }
-                                        break;
-                                    case "Bank of America":
-                                        {
-                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/bankofamerica.png");
-                                        }
-                                        break;
-                                    case "Wells Fargo":
-                                        {
-                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/WellsFargo.png");
-                                        }
-                                        break;
-                                    case "Chase":
-                                        {
-                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/chase.png");
-                                        }
-                                        break;
-                                    case "Citibank":
-                                        {
-                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/citibank.png");
-                                        }
-                                        break;
-                                    case "TD Bank":
-                                        {
-                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/td.png");
-                                        }
-                                        break;
-                                    case "Capital One 360":
-                                        {
-                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/capone360.png");
-                                        }
-                                        break;
-                                    case "US Bank":
-                                        {
-                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/usbank.png");
-                                        }
-                                        break;
-                                    case "PNC":
-                                        {
-                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/pnc.png");
-                                        }
-                                        break;
-                                    case "SunTrust":
-                                        {
-                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/suntrust.png");
-                                        }
-                                        break;
-                                    case "USAA":
-                                        {
-                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/usaa.png");
-                                        }
-                                        break;
+                                    Guid memberId = new Guid(bank.MemberId.ToString());
+                                    var BankName = CommonHelper.GetDecryptedData(bank.bank_name);
+                                    var bankNickName = CommonHelper.GetDecryptedData(bank.nickname);
 
-                                    case "First Tennessee":
-                                        {
-                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/firsttennessee.png");
-                                        }
-                                        break;
-                                    default:
-                                        {
-                                            bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/no.png");
-                                        }
-                                        break;
-                                }
-                                #endregion Set Bank Logo URL Variable
+                                    #region Set Bank Logo URL Variable
 
-                                // Get Member Info from DB
-                                var noochMember = (from c in noochConnection.Members
-                                                   where c.MemberId.Equals(memberId) && c.IsDeleted == false
-                                                   select c)
-                                            .FirstOrDefault();
+                                    string appPath = "https://www.noochme.com/noochweb/";
+                                    var bankLogoUrl = "";
 
-                                if (noochMember != null)
-                                {
-                                    var toAddress = CommonHelper.GetDecryptedData(noochMember.UserName).ToLower();
-                                    var fromAddress = Utility.GetValueFromConfig("adminMail");
+                                    switch (BankName)
+                                    {
+                                        case "Ally":
+                                            {
+                                                bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/ally.png");
+                                            }
+                                            break;
+                                        case "Bank of America":
+                                            {
+                                                bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/bankofamerica.png");
+                                            }
+                                            break;
+                                        case "Wells Fargo":
+                                            {
+                                                bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/WellsFargo.png");
+                                            }
+                                            break;
+                                        case "Chase":
+                                            {
+                                                bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/chase.png");
+                                            }
+                                            break;
+                                        case "Citibank":
+                                            {
+                                                bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/citibank.png");
+                                            }
+                                            break;
+                                        case "TD Bank":
+                                            {
+                                                bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/td.png");
+                                            }
+                                            break;
+                                        case "Capital One 360":
+                                            {
+                                                bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/capone360.png");
+                                            }
+                                            break;
+                                        case "US Bank":
+                                            {
+                                                bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/usbank.png");
+                                            }
+                                            break;
+                                        case "PNC":
+                                            {
+                                                bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/pnc.png");
+                                            }
+                                            break;
+                                        case "SunTrust":
+                                            {
+                                                bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/suntrust.png");
+                                            }
+                                            break;
+                                        case "USAA":
+                                            {
+                                                bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/usaa.png");
+                                            }
+                                            break;
 
-                                    var firstNameForEmail = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(noochMember.FirstName));
-                                    var fullName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(noochMember.FirstName)) + " " +
-                                                   CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(noochMember.LastName));
+                                        case "First Tennessee":
+                                            {
+                                                bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/firsttennessee.png");
+                                            }
+                                            break;
+                                        default:
+                                            {
+                                                bankLogoUrl = String.Concat(appPath, "Assets/Images/bankPictures/no.png");
+                                            }
+                                            break;
+                                    }
+                                    #endregion Set Bank Logo URL Variable
 
-                                    var tokens = new Dictionary<string, string>
+                                    // Get Member Info from DB
+                                    var noochMember = (from c in noochConnection.Members
+                                                       where c.MemberId.Equals(memberId) && c.IsDeleted == false
+                                                       select c)
+                                                .FirstOrDefault();
+
+                                    if (noochMember != null)
+                                    {
+                                        var toAddress = CommonHelper.GetDecryptedData(noochMember.UserName).ToLower();
+                                        var fromAddress = Utility.GetValueFromConfig("adminMail");
+
+                                        var firstNameForEmail = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(noochMember.FirstName));
+                                        var fullName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(noochMember.FirstName)) + " " +
+                                                       CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(noochMember.LastName));
+
+                                        var tokens = new Dictionary<string, string>
                                             {
                                                 {"$FirstName$", firstNameForEmail},
                                                 {"$BankName$", BankName},
@@ -1271,33 +1274,34 @@ namespace noochAdminNew.Controllers
                                                 {"$Amount$", bankLogoUrl},
                                             };
 
-                                    Utility.SendEmail("bankVerified", fromAddress, toAddress,
-                                        "Your bank account has been verified on Nooch", null, tokens,
-                                        null, null, null);
+                                        Utility.SendEmail("bankVerified", fromAddress, toAddress,
+                                            "Your bank account has been verified on Nooch", null, tokens,
+                                            null, null, null);
 
-                                    Logger.Info("Admin Dash -> Member Controller - Verify Bank Account - bankVerified email sent successfully to: [" + toAddress + "]");
+                                        Logger.Info("Admin Dash -> Member Controller - Verify Bank Account - bankVerified email sent successfully to: [" + toAddress + "]");
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Error("Admin Dash -> Member Controller - Verify Bank Account - bankVerified email NOT sent successfully for BankID: ["
+                                                 + accountId + "],  [Exception: " + ex + "]");
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                Logger.Error("Admin Dash -> Member Controller - Verify Bank Account - bankVerified email NOT sent successfully for BankID: ["
-                                             + accountId + "],  [Exception: " + ex + "]");
-                            }
 
+                            #endregion Notify User by Email
                         }
                         else
                         {
-                            lr.IsSuccess = false;
                             lr.Message = "Error occurred on server, please retry.";
                         }
                     }
                 }
                 else
                 {
-                    lr.IsSuccess = false;
                     lr.Message = "Bank account not found";
                 }
             }
+
             return Json(lr);
         }
 
@@ -1309,6 +1313,8 @@ namespace noochAdminNew.Controllers
             Logger.Info("Admin Dash -> UnVerifyAccount - [Synapse Bank ID: " + accountId + "]");
 
             LoginResult lr = new LoginResult();
+            lr.IsSuccess = false;
+
             int bnkid = Convert.ToInt16(accountId);
 
             using (var noochConnection = new NOOCHEntities())
@@ -1339,7 +1345,6 @@ namespace noochAdminNew.Controllers
                         }
                         else
                         {
-                            lr.IsSuccess = false;
                             lr.Message = "Error occuerred on server, please retry.";
                         }
                     }
@@ -1347,10 +1352,10 @@ namespace noochAdminNew.Controllers
 
                 else
                 {
-                    lr.IsSuccess = false;
                     lr.Message = "Bank account not found";
                 }
             }
+
             return Json(lr);
         }
 

@@ -244,22 +244,45 @@ var Member = function () {
             return;
         }
 
-        var url = "../Member/VerifyAccount";
-        var data = {};
-        data.accountId = accountId;
+        swal({
+            title: "Send Email?",
+            text: "Should this user be notified about this action:<br/>" +
+                  "<span class='text-center' style='margin: 10px auto; font-weight:500;'>Verify Bank Account</span>",
+            type: "error",
+            showCancelButton: true,
+            confirmButtonColor: "#3fabe1",
+            confirmButtonText: "Send Email",
+            cancelButtonText: "No Notification",
+            closeOnConfirm: true,
+            closeOnCancel: false,
+            allowEscapeKey: true,
+            html: true
+        }, function (isConfirm) {
+            var data = {};
+            data.accountId = accountId;
 
-        $.post(url, data, function (result) {
-            console.log(result);
-
-            if (result.IsSuccess == true) {
-                toastr.success(result.Message, 'Success');
-
-                $('#bankAccountStatusDiv').html('');
-                $('#bankAccountStatusDiv').html("<span class='text-success' style='display: inline-block'>Verified</span>");
+            if (isConfirm) {
+                data.sendEmail = true;
             }
             else {
-                toastr.error(result.Message, 'Error');
+                data.sendEmail = false;
             }
+
+            var url = "../Member/VerifyAccount";
+
+            $.post(url, data, function (result) {
+                console.log(result);
+
+                if (result.IsSuccess == true) {
+                    toastr.success(result.Message, 'Success');
+
+                    $('#bankAccountStatusDiv').html('');
+                    $('#bankAccountStatusDiv').html("<span class='text-success' style='display: inline-block'>Verified</span>");
+                }
+                else {
+                    toastr.error(result.Message, 'Error');
+                }
+            });
         });
     }
 
