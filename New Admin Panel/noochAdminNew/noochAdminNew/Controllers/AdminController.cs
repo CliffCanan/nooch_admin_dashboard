@@ -302,38 +302,44 @@ namespace noochAdminNew.Controllers
                             #region Request type transaction
 
                             // request type transaction b/w existing nooch users
-                            if (singleTrans.TransactionType == "Request" && t.RecipientId != t.SenderId)
+                            if (singleTrans.TransactionType == "Request")
                             {
-                                singleTrans.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.SenderId.ToString());
-                                singleTrans.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
-                                singleTrans.RecepientId = t.RecipientId.ToString();
-                                singleTrans.SenderId = t.SenderId.ToString();
-                            }
-                            // request type trans to non nooch user...by phone
-                            else if (singleTrans.TransactionType == "Request" && t.RecipientId == t.SenderId && t.IsPhoneInvitation == true)
-                            {
-                                if (!String.IsNullOrEmpty(t.PhoneNumberInvited))
-                                {
-                                    singleTrans.SenderUserName = CommonHelper.FormatPhoneNumber(CommonHelper.GetDecryptedData(t.PhoneNumberInvited));
-                                }
-                                else
-                                {
-                                    singleTrans.SenderUserName = "";
-                                }
-                                singleTrans.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
-                                singleTrans.RecepientId = t.RecipientId.ToString();
-                                singleTrans.SenderId = "";
-                            }
+                                singleTrans.TransactionStatus = t.TransactionStatus == "Success"
+                                                            ? "Complete (Paid)"
+                                                            : t.TransactionStatus;
 
-                            // request type trans to non nooch user...by email
-                            else if (singleTrans.TransactionType == "Request" && t.RecipientId == t.SenderId && t.InvitationSentTo != null)
-                            {
-                                singleTrans.SenderUserName = !String.IsNullOrEmpty(t.InvitationSentTo) ? CommonHelper.GetDecryptedData(t.InvitationSentTo) : "";
-                                singleTrans.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
-                                singleTrans.RecepientId = t.RecipientId.ToString();
-                                singleTrans.SenderId = "";
-                            }
+                                if (t.RecipientId != t.SenderId)
+                                {
+                                    singleTrans.SenderUserName = CommonHelper.GetMemberNameFromMemberId(t.SenderId.ToString());
+                                    singleTrans.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                    singleTrans.RecepientId = t.RecipientId.ToString();
+                                    singleTrans.SenderId = t.SenderId.ToString();
+                                }
+                                // request type trans to non nooch user...by phone
+                                else if (t.RecipientId == t.SenderId && t.IsPhoneInvitation == true)
+                                {
+                                    if (!String.IsNullOrEmpty(t.PhoneNumberInvited))
+                                    {
+                                        singleTrans.SenderUserName = CommonHelper.FormatPhoneNumber(CommonHelper.GetDecryptedData(t.PhoneNumberInvited));
+                                    }
+                                    else
+                                    {
+                                        singleTrans.SenderUserName = "";
+                                    }
+                                    singleTrans.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                    singleTrans.RecepientId = t.RecipientId.ToString();
+                                    singleTrans.SenderId = "";
+                                }
 
+                                // request type trans to non nooch user...by email
+                                else if (t.RecipientId == t.SenderId && t.InvitationSentTo != null)
+                                {
+                                    singleTrans.SenderUserName = !String.IsNullOrEmpty(t.InvitationSentTo) ? CommonHelper.GetDecryptedData(t.InvitationSentTo) : "";
+                                    singleTrans.RecepientUserName = CommonHelper.GetMemberNameFromMemberId(t.RecipientId.ToString());
+                                    singleTrans.RecepientId = t.RecipientId.ToString();
+                                    singleTrans.SenderId = "";
+                                }
+                            }
                             #endregion
 
                             #region Invite type transaction
@@ -585,12 +591,14 @@ namespace noochAdminNew.Controllers
 
                     // have to do it long way because we have bank_name as encrypted in db
 
-                    var allSyanpseSupportedBanks =
-                        (from ce in obj.SynapseSupportedBanks where ce.IsDeleted == false select ce).ToList();
+                    var allSyanpseSupportedBanks = (from ce in obj.SynapseSupportedBanks
+                                                    where ce.IsDeleted == false
+                                                    select ce).ToList();
 
                     var membersInEachBank = obj.GetMembersInEachSynapseBank().ToList();
 
                     List<GetMembersInEachSynapseBank_Result> decryptedList = new List<GetMembersInEachSynapseBank_Result>();
+
                     foreach (GetMembersInEachSynapseBank_Result mem in membersInEachBank)
                     {
                         GetMembersInEachSynapseBank_Result m = new GetMembersInEachSynapseBank_Result();
@@ -598,6 +606,7 @@ namespace noochAdminNew.Controllers
                         m.CountInBank = mem.CountInBank;
                         decryptedList.Add(m);
                     }
+
                     List<NoOfUsersInEachBank> UserCountInEachBankPrep = new List<NoOfUsersInEachBank>();
 
                     foreach (SynapseSupportedBank ssb in allSyanpseSupportedBanks)

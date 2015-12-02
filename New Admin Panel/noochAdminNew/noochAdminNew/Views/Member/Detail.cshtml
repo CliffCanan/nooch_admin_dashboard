@@ -50,7 +50,16 @@
                 <a href="../Admin/Dashboard">Dashboard</a>
             </li>
             <li>
-                <a href="ListAll">Members</a>
+                @{
+                    if (mdc.type == "Landlord")
+                    {
+                        <a href="ListAllLandlords">Landlords</a>
+                    }
+                    else
+                    {
+                        <a href="ListAll">Members</a>
+                    }
+                }
             </li>
             <li class="active">
                 <strong>Search Admin</strong>
@@ -65,7 +74,19 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>MEMBER DETAILS | <small>@mdc.FirstName @mdc.LastName</small></h5>
+                    <h5>
+                        @{
+                            if (mdc.type == "Landlord")
+                            {
+                                <span>Landlord </span>
+                            }
+                            else
+                            {
+                                <span>MEMBER </span>
+                            }
+                        }
+                        Details | <small>@mdc.FirstName @mdc.LastName</small>
+                    </h5>
                     <span class="pull-right">@mdc.memberId</span>
                 </div>
                 <div class="ibox-content">

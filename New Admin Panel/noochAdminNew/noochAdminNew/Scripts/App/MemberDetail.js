@@ -1,5 +1,6 @@
 var NoochId = '';
 var operationtoperform = 0;
+var escapeKeyPressed = false;
 
 $(document).ready(function () {
     $("#MemberMenuExpander").trigger("click");
@@ -71,6 +72,11 @@ $(document).ready(function () {
         $('#idDocModal').modal();
     })
 
+    $(document).keyup(function (e) {
+        if (e.keyCode == 27) { // escape key maps to keycode `27`
+            escapeKeyPressed = true;
+        }
+    });
 
     setTimeout(function () {
         //checkIfUserLocationExists();
@@ -254,35 +260,44 @@ var Member = function () {
             confirmButtonText: "Send Email",
             cancelButtonText: "No Notification",
             closeOnConfirm: true,
-            closeOnCancel: false,
             allowEscapeKey: true,
             html: true
         }, function (isConfirm) {
-            var data = {};
-            data.accountId = accountId;
 
-            if (isConfirm) {
-                data.sendEmail = true;
-            }
-            else {
-                data.sendEmail = false;
-            }
-
-            var url = "../Member/VerifyAccount";
-
-            $.post(url, data, function (result) {
-                console.log(result);
-
-                if (result.IsSuccess == true) {
-                    toastr.success(result.Message, 'Success');
-
-                    $('#bankAccountStatusDiv').html('');
-                    $('#bankAccountStatusDiv').html("<span class='text-success' style='display: inline-block'>Verified</span>");
+            setTimeout(function () {
+                if (escapeKeyPressed == true) 
+                {
+                    escapeKeyPressed = false;
                 }
-                else {
-                    toastr.error(result.Message, 'Error');
+                else
+                {
+                    var data = {};
+                    data.accountId = accountId;
+
+                    if (isConfirm) {
+                        data.sendEmail = true;
+                    }
+                    else {
+                        data.sendEmail = false;
+                    }
+
+                    var url = "../Member/VerifyAccount";
+
+                    $.post(url, data, function (result) {
+                        console.log(result);
+
+                        if (result.IsSuccess == true) {
+                            toastr.success(result.Message, 'Success');
+
+                            $('#bankAccountStatusDiv').html('');
+                            $('#bankAccountStatusDiv').html("<span class='text-success' style='display: inline-block'>Verified</span>");
+                        }
+                        else {
+                            toastr.error(result.Message, 'Error');
+                        }
+                    });
                 }
-            });
+            }, 200);
         });
     }
 

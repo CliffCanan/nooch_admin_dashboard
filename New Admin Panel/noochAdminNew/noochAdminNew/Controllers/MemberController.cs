@@ -420,11 +420,12 @@ namespace noochAdminNew.Controllers
         private List<MembersListDataClass> GetAllMembers()
         {
             List<MembersListDataClass> AllMemberFormtted = new List<MembersListDataClass>();
+
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 var All_Members_In_Records = (from t in obj.Members
                                               where t.Type == "Personal" ||
-                                                    t.Type == "Business" // CLIFF: Commenting this line out so this returns ALL member records
+                                                    t.Type == "Business"
                                               select t).ToList();
 
                 foreach (Member m in All_Members_In_Records)
@@ -625,10 +626,14 @@ namespace noochAdminNew.Controllers
                     mdc.FirstName = !String.IsNullOrEmpty(Member.FirstName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.FirstName)) : "";
                     mdc.LastName = !String.IsNullOrEmpty(Member.LastName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.LastName)) : "";
                     mdc.UserName = !String.IsNullOrEmpty(Member.UserName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.UserName)) : "";
-                    mdc.SecondaryEmail = Member.SecondaryEmail;
-                    mdc.RecoveryEmail = !String.IsNullOrEmpty(Member.RecoveryEmail) ? CommonHelper.GetDecryptedData(Member.RecoveryEmail) : "";
+                    mdc.SecondaryEmail = !String.IsNullOrEmpty(Member.SecondaryEmail) && Member.SecondaryEmail.Length > 40
+                                         ? CommonHelper.GetDecryptedData(Member.SecondaryEmail)
+                                         : Member.SecondaryEmail;
+                    mdc.RecoveryEmail = !String.IsNullOrEmpty(Member.RecoveryEmail) && Member.RecoveryEmail.Length > 40
+                                        ? CommonHelper.GetDecryptedData(Member.RecoveryEmail)
+                                        : Member.RecoveryEmail;
                     mdc.ContactNumber = !String.IsNullOrEmpty(Member.ContactNumber) ? CommonHelper.FormatPhoneNumber(Member.ContactNumber) : "";
-                    mdc.ImageURL = Member.Photo;
+                    mdc.ImageURL = Member.Photo ?? "https://www.noochme.com/noochweb/Assets/Images/userpic-default.png";
                     mdc.Address = !String.IsNullOrEmpty(Member.Address) ? CommonHelper.GetDecryptedData(Member.Address) : "";
                     mdc.City = !String.IsNullOrEmpty(Member.City) ? CommonHelper.GetDecryptedData(Member.City) : "";
                     mdc.State = !String.IsNullOrEmpty(Member.State) ? CommonHelper.GetDecryptedData(Member.State) : "";
@@ -670,9 +675,10 @@ namespace noochAdminNew.Controllers
                                           t.SenderId == Member.MemberId)
                                    //(t.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || t.TransactionType == "+C1+zhVafHdXQXCIqjU/Zg==" || t.TransactionType == "DrRr1tU1usk7nNibjtcZkA==")
                                    //(t.TransactionStatus == "Success" || t.TransactionStatus == "Rejected" || t.TransactionStatus == "Pending" || t.TransactionStatus == "Cancelled")
-                                   select t).OrderByDescending(r => r.TransactionDate).Take(10).ToList();
+                                   select t).OrderByDescending(r => r.TransactionDate).Take(20).ToList();
 
                     List<MemberDetailsTrans> mm = new List<MemberDetailsTrans>();
+
                     foreach (Transaction t in transtp)
                     {
                         MemberDetailsTrans payment = new MemberDetailsTrans();
@@ -681,7 +687,9 @@ namespace noochAdminNew.Controllers
                         payment.TransID = t.TransactionTrackingId.ToString();
                         payment.TransDate = Convert.ToDateTime(t.TransactionDate).ToString("MMM d, yyyy");
                         payment.TransTime = Convert.ToDateTime(t.TransactionDate).ToString("h:mm tt");
-                        payment.TransactionStatus = t.TransactionStatus;
+                        payment.TransactionStatus = t.TransactionStatus == "Success"
+                                                    ? "Complete (Paid)"
+                                                    : t.TransactionStatus;
                         payment.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
                         payment.Memo = t.Memo;
                         payment.GeoLocation = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.City + " , " + Geo_loc.State).SingleOrDefault();
@@ -741,7 +749,6 @@ namespace noochAdminNew.Controllers
                                 payment.RecipientId = Member.Nooch_ID;
                             }
                         }
-
 
                         mm.Add(payment);
                     }
