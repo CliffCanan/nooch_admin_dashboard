@@ -138,6 +138,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string SynapseBankStatus { get; set; }
         public string SynapseBankName { get; set; }
         public string SynapseBankNickName { get; set; }
+        public bool mfaVerified { get; set; }
 
         public string nameFromSynapseBank { get; set; }
         public string emailFromSynapseBank { get; set; }
@@ -148,5 +149,6 @@ namespace noochAdminNew.Classes.ModelClasses
 
         public int? synapseBankId { get; set; }
         public string synapseConsumerKey { get; set; }
+        public string synapseRefreshKey { get; set; }
     }
 }

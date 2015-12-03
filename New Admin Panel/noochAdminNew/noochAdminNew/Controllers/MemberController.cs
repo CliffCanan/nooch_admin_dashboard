@@ -399,7 +399,7 @@ namespace noochAdminNew.Controllers
         [HttpGet, OutputCache(NoStore = true, Duration = 1)]
         public ActionResult ListAll()
         {
-            List<MembersListDataClass> AllMemberFormtted = GetAllMembers();
+            List<MembersListDataClass> AllMemberFormtted = GetAllMembers("Personal");
 
             return View(AllMemberFormtted);
         }
@@ -407,114 +407,52 @@ namespace noochAdminNew.Controllers
         [HttpGet, OutputCache(NoStore = true, Duration = 1)]
         public ActionResult ListAllLandlords()
         {
-            List<MembersListDataClass> AllLandlords = GetAllLandlords();
+            List<MembersListDataClass> AllLandlords = GetAllMembers("Landlord");
 
             return View(AllLandlords);
+        }
+
+        [HttpGet, OutputCache(NoStore = true, Duration = 1)]
+        public ActionResult ListAllTenants()
+        {
+            List<MembersListDataClass> AllTenants = GetAllMembers("Tenant");
+
+            return View(AllTenants);
         }
 
 
         /// <summary>
         /// Method to return the details of all MEMBERS.
         /// </summary>
+        /// <param name="type">Specifies one of: 'Personal', 'Landlord', or 'Tenant' and returns only that type of Member.</param>
         /// <returns></returns>
-        private List<MembersListDataClass> GetAllMembers()
+        private List<MembersListDataClass> GetAllMembers(string type)
         {
             List<MembersListDataClass> AllMemberFormtted = new List<MembersListDataClass>();
 
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-                var All_Members_In_Records = (from t in obj.Members
+                List<Member> All_Members_In_Records = new List<Member>();
+
+                if (type == "Personal")
+                {
+                    All_Members_In_Records = (from t in obj.Members
                                               where t.Type == "Personal" ||
                                                     t.Type == "Business"
                                               select t).ToList();
-
-                foreach (Member m in All_Members_In_Records)
-                {
-                    int TransCount = (from tr in obj.Transactions
-                                      where (tr.Member.MemberId == m.MemberId || tr.Member1.MemberId == m.MemberId) &&
-                                             tr.TransactionStatus == "Success"
-                                      select tr).Count();
-
-                    // transaction - Transfer Type - 5dt4HUwCue532sNmw3LKDQ==
-                    // invite - DrRr1tU1usk7nNibjtcZkA==
-                    // request - T3EMY1WWZ9IscHIj3dbcNw==
-
-                    var sumofTransfers = (from tr in obj.Transactions
-                                          where tr.TransactionStatus == "Success" &&
-                                               (tr.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || tr.TransactionType == "DrRr1tU1usk7nNibjtcZkA==") &&
-                                                tr.Member.MemberId == m.MemberId
-                                          select tr.Amount
-                        ).Sum(tr => (decimal?)tr) ?? 0;
-
-                    var sumOfInvitations = (from tr in obj.Transactions
-                                            where tr.TransactionStatus == "Success" && tr.TransactionType == "DrRr1tU1usk7nNibjtcZkA=="
-                                                  && tr.Member1.MemberId == m.MemberId
-                                            select tr.Amount
-                        ).Sum(tr => (decimal?)tr) ?? 0;
-
-                    var sumOfRequests = (from tr in obj.Transactions
-                                         where tr.TransactionStatus == "Success" && tr.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw=="
-                                               && tr.Member.MemberId == m.MemberId
-                                         select tr.Amount
-                        ).Sum(tr => (decimal?)tr) ?? 0;
-
-                    var totalAmount = sumOfInvitations + sumOfRequests + sumofTransfers;
-
-                    MembersListDataClass mdc = new MembersListDataClass();
-                    mdc.Nooch_ID = m.Nooch_ID;
-                    mdc.FirstName = !String.IsNullOrEmpty(m.FirstName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(m.FirstName)) : "";
-                    mdc.LastName = !String.IsNullOrEmpty(m.LastName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(m.LastName)) : "";
-                    mdc.UserName = !String.IsNullOrEmpty(m.UserName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(m.UserName)) : "";
-
-                    if (m.ContactNumber != null)
-                    {
-                        if (m.ContactNumber.Length == 10)
-                        {
-                            mdc.ContactNumber = "(" + m.ContactNumber;
-                            mdc.ContactNumber = mdc.ContactNumber.Insert(4, ")");
-                            mdc.ContactNumber = mdc.ContactNumber.Insert(5, " ");
-                            mdc.ContactNumber = mdc.ContactNumber.Insert(9, "-");
-                        }
-                        else
-                        {
-                            mdc.ContactNumber = m.ContactNumber;
-                        }
-                    }
-                    else
-                    {
-                        mdc.ContactNumber = m.ContactNumber;
-                    }
-
-                    mdc.Status = m.Status;
-                    mdc.IsDeleted = m.IsDeleted ?? false;
-                    mdc.IsVerifiedPhone = m.IsVerifiedPhone ?? false;
-                    mdc.City = !String.IsNullOrEmpty(m.City) ? CommonHelper.GetDecryptedData(m.City) : "";
-
-                    mdc.TotalAmountSent = mdc.TotalAmountSent != "0" ? Convert.ToDecimal(String.Format("{0:0.00}", Convert.ToDecimal(totalAmount))).ToString() : "0";
-                    mdc.DateCreated = Convert.ToDateTime(m.DateCreated);
-
-                    mdc.TotalTransactions = TransCount;
-
-                    AllMemberFormtted.Add(mdc);
                 }
-            }
-
-            return AllMemberFormtted;
-        }
-
-
-        /// <summary>
-        /// Method to return the details of all LANDLORDS.
-        /// </summary>
-        /// <returns></returns>
-        private List<MembersListDataClass> GetAllLandlords()
-        {
-            List<MembersListDataClass> AllMemberFormtted = new List<MembersListDataClass>();
-            using (NOOCHEntities obj = new NOOCHEntities())
-            {
-                var All_Members_In_Records = (from t in obj.Members
-                                              where t.Type == "Landlord"  // CLIFF: Commenting this line out so this returns ALL member records
+                else if (type == "Landlord")
+                {
+                    All_Members_In_Records = (from t in obj.Members
+                                              where t.Type == "Landlord"
                                               select t).ToList();
+                }
+                else if (type == "Tenant")
+                {
+                    All_Members_In_Records = (from t in obj.Members
+                                              where t.Type == "Tenant"
+                                              select t).ToList();
+                }
 
                 foreach (Member m in All_Members_In_Records)
                 {
@@ -589,6 +527,7 @@ namespace noochAdminNew.Controllers
 
             return AllMemberFormtted;
         }
+
 
 
         [HttpGet, OutputCache(NoStore = true, Duration = 1)]
@@ -842,28 +781,46 @@ namespace noochAdminNew.Controllers
                                                    select Syn).FirstOrDefault();
 
                         // Get Auth Token (It's not in the banks table... it's in the SynapseCreateUserResults Table)
-                        string synapseAuthToken = (from Syn in obj.SynapseCreateUserResults
+                        var synapseCreateUserObj = (from Syn in obj.SynapseCreateUserResults
                                                    join mem in obj.Members on Syn.MemberId equals mem.MemberId
                                                    where Syn.IsDeleted == false && mem.Nooch_ID == NoochId
-                                                   select Syn.access_token).FirstOrDefault();
+                                                   select Syn).FirstOrDefault();
+
+                        string synapseAuthToken = synapseCreateUserObj.access_token;
+                        string synapseRefreshToken = synapseCreateUserObj.refresh_token;
 
                         SynapseDetailOFMember synapseDetail = new SynapseDetailOFMember();
 
                         if (synapseDetailFromDb != null)
                         {
-                            synapseDetail.synapseConsumerKey = !String.IsNullOrEmpty(synapseAuthToken) ? CommonHelper.GetDecryptedData(synapseAuthToken) : "AUTH TOKEN NOT FOUND";
+                            synapseDetail.synapseRefreshKey = !String.IsNullOrEmpty(synapseRefreshToken)
+                                                              ? CommonHelper.GetDecryptedData(synapseRefreshToken)
+                                                              : "REFRESH TOKEN NOT FOUND";
+                            synapseDetail.synapseConsumerKey = !String.IsNullOrEmpty(synapseAuthToken)
+                                                               ? CommonHelper.GetDecryptedData(synapseAuthToken)
+                                                               : "AUTH TOKEN NOT FOUND";
                             synapseDetail.synapseBankId = synapseDetailFromDb.bankid; // This is the 4 or 5 digit ID from Synapse for this account
                             synapseDetail.BankId = synapseDetailFromDb.Id; // This is the Nooch DB "ID", which is just the row number of the account... NOT the same as the Synapse Bank ID
                             synapseDetail.SynapseBankStatus = (string.IsNullOrEmpty(synapseDetailFromDb.Status)
-                                ? "Not Verified" : synapseDetailFromDb.Status);
-                            synapseDetail.SynapseBankNickName = !String.IsNullOrEmpty(synapseDetailFromDb.nickname) ? CommonHelper.GetDecryptedData(synapseDetailFromDb.nickname) : "";
-                            synapseDetail.nameFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.name_on_account) ? CommonHelper.GetDecryptedData(synapseDetailFromDb.name_on_account) : "No Name Returned";
-                            synapseDetail.emailFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.email) ? synapseDetailFromDb.email : "No Email Returned";
-                            synapseDetail.phoneFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.phone_number) ? CommonHelper.FormatPhoneNumber(synapseDetailFromDb.phone_number) : "No Phone Returned";
+                                                              ? "Not Verified"
+                                                              : synapseDetailFromDb.Status);
+                            synapseDetail.mfaVerified = synapseDetailFromDb.mfa_verifed ?? false;
+                            synapseDetail.SynapseBankNickName = !String.IsNullOrEmpty(synapseDetailFromDb.nickname)
+                                                                ? CommonHelper.GetDecryptedData(synapseDetailFromDb.nickname) : "";
+                            synapseDetail.nameFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.name_on_account)
+                                                                ? CommonHelper.GetDecryptedData(synapseDetailFromDb.name_on_account) : "No Name Returned";
+                            synapseDetail.emailFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.email)
+                                                                 ? synapseDetailFromDb.email
+                                                                 : "No Email Returned";
+                            synapseDetail.phoneFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.phone_number)
+                                                                 ? CommonHelper.FormatPhoneNumber(synapseDetailFromDb.phone_number)
+                                                                 : "No Phone Returned";
                             synapseDetail.SynpaseBankAddedOn = synapseDetailFromDb.AddedOn != null
-                                ? Convert.ToDateTime(synapseDetailFromDb.AddedOn).ToString("MMM dd, yyyy") : "";
+                                                               ? Convert.ToDateTime(synapseDetailFromDb.AddedOn).ToString("MMM dd, yyyy")
+                                                               : "";
                             synapseDetail.SynpaseBankVerifiedOn = synapseDetailFromDb.VerifiedOn != null
-                                ? Convert.ToDateTime(synapseDetailFromDb.VerifiedOn).ToString("MMM dd, yyyy") : "";
+                                                                  ? Convert.ToDateTime(synapseDetailFromDb.VerifiedOn).ToString("MMM dd, yyyy")
+                                                                  : "";
 
                             synapseDetail.SynapseBankName = !String.IsNullOrEmpty(synapseDetailFromDb.bank_name) ? CommonHelper.GetDecryptedData(synapseDetailFromDb.bank_name) : "Not Found";
                         }

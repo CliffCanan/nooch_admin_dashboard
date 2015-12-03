@@ -9,12 +9,9 @@
 <link href="~/css/plugins/dataTables/dataTables.responsive.css" rel="stylesheet">
 <link href="~/css/plugins/dataTables/dataTables.tableTools.min.css" rel="stylesheet">
 
-
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>Nooch Members</h2>
-    </div>
-    <div class="col-lg-2">
     </div>
 </div>
 
@@ -32,14 +29,14 @@
                             <i class="fa fa-chevron-up"></i>
                         </a>
                         @* <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li><a href="#">Config option 1</a>
-                            </li>
-                            <li><a href="#">Config option 2</a>
-                            </li>
-                        </ul>*@
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">Config option 1</a>
+                                </li>
+                                <li><a href="#">Config option 2</a>
+                                </li>
+                            </ul>*@
                     </div>
                 </div>
 
@@ -57,12 +54,12 @@
                             </select>
                         </div>
                         @* <div class="col-sm-4 m-b-xs">
-                            <div class="btn-group" data-toggle="buttons">
-                                        <label class="btn btn-sm btn-white active"> <input type="radio" name="options" id="option1"> Day </label>
-                                        <label class="btn btn-sm btn-white"> <input type="radio" name="options" id="option2"> Week </label>
-                                        <label class="btn btn-sm btn-white"> <input type="radio" name="options" id="option3"> Month </label>
-                                    </div>
-                          </div>*@
+                              <div class="btn-group" data-toggle="buttons">
+                                          <label class="btn btn-sm btn-white active"> <input type="radio" name="options" id="option1"> Day </label>
+                                          <label class="btn btn-sm btn-white"> <input type="radio" name="options" id="option2"> Week </label>
+                                          <label class="btn btn-sm btn-white"> <input type="radio" name="options" id="option3"> Month </label>
+                                      </div>
+                            </div>*@
                         <div class="col-xs-3" id="memListAll_ApplyChg">
                             <div class="input-group">
                                 @*<input type="text" class="input-sm form-control" placeholder="Search"> *@
@@ -104,29 +101,32 @@
                                     <td>@M.UserName</td>
                                     <td>@M.ContactNumber<br />
                                     @{
-                                        if (M.IsVerifiedPhone == true)
-                                        {
-                                            <span class="small text-success">Verified</span>
-                                        }
-                                        else if (M.ContactNumber != null)
-                                        {
-                                            <span class="small text-danger">Not Verified</span>
-                                        }
+                                if (M.IsVerifiedPhone == true)
+                                {
+                                    <span class="small text-success">Verified</span>
+                                }
+                                else if (M.ContactNumber != null)
+                                {
+                                    <span class="small text-danger">Not Verified</span>
+                                }
                                     }
-                                    </td>
-                                    <td>@M.DateCreated.ToString("dd MMM yyyy")</td>
-                                    <td>@M.Status</td>
-                                    <td>@M.City</td>
-                                    <td>@M.TotalTransactions</td>
-                                    <td>@M.TotalAmountSent</td>
-                                </tr>
+                                </td>
+                                <td>@M.DateCreated.ToString("dd MMM yyyy")</td>
+                                <td>@M.Status</td>
+                                <td>@M.City</td>
+                                <td>@M.TotalTransactions</td>
+                                <td>@M.TotalAmountSent</td>
+                            </tr>
                             }
 
                         </tbody>
+                        <tfoot>
+                        </tfoot>
                     </table>
                 </div>
             </div>
         </div>
+
     </div>
 
     <div class="row">
@@ -237,6 +237,7 @@
         });
     });
 </script>
+
 
 <script>
     window.paceOptions = {
