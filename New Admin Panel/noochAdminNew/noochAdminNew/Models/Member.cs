@@ -22,6 +22,8 @@ namespace noochAdminNew.Models
             this.SynapseBankLoginResults = new HashSet<SynapseBankLoginResult>();
             this.Transactions = new HashSet<Transaction>();
             this.Transactions1 = new HashSet<Transaction>();
+            this.AutoPayTransactions = new HashSet<AutoPayTransaction>();
+            this.AutoPayTransactions1 = new HashSet<AutoPayTransaction>();
         }
     
         public System.Guid MemberId { get; set; }
@@ -88,6 +90,7 @@ namespace noochAdminNew.Models
         public Nullable<bool> IsVerifiedWithSynapse { get; set; }
         public string TransferLimit { get; set; }
         public string FacebookUserId { get; set; }
+        public string GoogleUserId { get; set; }
     
         public virtual ICollection<KnoxAccountDetail> KnoxAccountDetails { get; set; }
         public virtual ICollection<MemberNotification> MemberNotifications { get; set; }
@@ -95,5 +98,7 @@ namespace noochAdminNew.Models
         public virtual ICollection<SynapseBankLoginResult> SynapseBankLoginResults { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }
         public virtual ICollection<Transaction> Transactions1 { get; set; }
+        public virtual ICollection<AutoPayTransaction> AutoPayTransactions { get; set; }
+        public virtual ICollection<AutoPayTransaction> AutoPayTransactions1 { get; set; }
     }
 }
