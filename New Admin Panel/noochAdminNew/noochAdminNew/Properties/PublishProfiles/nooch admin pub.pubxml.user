@@ -43,7 +43,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/27/2015 13:00:30</publishTime>
     </File>
     <File Include="bin/noochAdminNew.dll">
-      <publishTime>11/26/2015 10:05:44</publishTime>
+      <publishTime>12/03/2015 11:05:42</publishTime>
     </File>
     <File Include="bin/System.ComponentModel.DataAnnotations.dll">
       <publishTime>09/26/2012 03:16:08</publishTime>
@@ -2134,7 +2134,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/27/2015 13:00:30</publishTime>
     </File>
     <File Include="js/plugins/toastr/toastr.min.js">
-      <publishTime>04/08/2015 12:20:14</publishTime>
+      <publishTime>08/04/2015 12:20:14</publishTime>
     </File>
     <File Include="js/plugins/validate/jquery.validate.min.js">
       <publishTime>03/27/2015 13:00:30</publishTime>
@@ -2146,7 +2146,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>11/14/2015 14:47:06</publishTime>
     </File>
     <File Include="Models/NoochDbModel.edmx.diagram">
-      <publishTime>10/23/2015 11:09:15</publishTime>
+      <publishTime>12/03/2015 11:04:29</publishTime>
     </File>
     <File Include="packages.config">
       <publishTime>03/27/2015 13:00:30</publishTime>
@@ -2170,7 +2170,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/27/2015 13:00:29</publishTime>
     </File>
     <File Include="Scripts/App/MemberDetail.js">
-      <publishTime>11/26/2015 10:04:17</publishTime>
+      <publishTime>12/03/2015 10:59:16</publishTime>
     </File>
     <File Include="Scripts/App/MembersList.js">
       <publishTime>05/09/2015 10:19:28</publishTime>
@@ -2179,7 +2179,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>04/29/2015 09:08:18</publishTime>
     </File>
     <File Include="Scripts/App/Utility.js">
-      <publishTime>08/09/2015 10:01:56</publishTime>
+      <publishTime>09/08/2015 10:01:56</publishTime>
     </File>
     <File Include="Scripts/jquery-1.8.2.js">
       <publishTime>03/27/2015 13:00:29</publishTime>
@@ -2227,7 +2227,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/27/2015 13:00:29</publishTime>
     </File>
     <File Include="Views/Admin/CreditFundToMember.cshtml">
-      <publishTime>08/09/2015 10:01:56</publishTime>
+      <publishTime>09/08/2015 10:01:56</publishTime>
     </File>
     <File Include="Views/Admin/Dashboard.cshtml">
       <publishTime>11/26/2015 09:53:22</publishTime>
@@ -2245,16 +2245,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/23/2015 11:09:15</publishTime>
     </File>
     <File Include="Views/Member/Detail.cshtml">
-      <publishTime>11/26/2015 10:02:47</publishTime>
+      <publishTime>12/03/2015 10:59:16</publishTime>
     </File>
     <File Include="Views/Member/GrowthGraphs.cshtml">
       <publishTime>03/27/2015 13:00:29</publishTime>
     </File>
     <File Include="Views/Member/ListAll.cshtml">
-      <publishTime>10/23/2015 11:09:15</publishTime>
+      <publishTime>12/03/2015 10:59:16</publishTime>
     </File>
     <File Include="Views/Member/ListAllLandlords.cshtml">
-      <publishTime>10/23/2015 11:09:15</publishTime>
+      <publishTime>12/03/2015 10:59:16</publishTime>
+    </File>
+    <File Include="Views/Member/ListAllTenants.cshtml">
+      <publishTime>12/03/2015 10:59:16</publishTime>
     </File>
     <File Include="Views/Platforms/Index.cshtml">
       <publishTime>10/23/2015 11:09:15</publishTime>
@@ -2266,13 +2269,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>05/11/2015 09:29:32</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>10/23/2015 11:09:15</publishTime>
+      <publishTime>12/03/2015 10:59:16</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>04/08/2015 16:24:19</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>11/26/2015 10:05:48</publishTime>
+      <publishTime>12/03/2015 11:05:46</publishTime>
     </File>
   </ItemGroup>
 </Project>
