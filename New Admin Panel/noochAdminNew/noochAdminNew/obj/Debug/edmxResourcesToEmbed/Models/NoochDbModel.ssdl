@@ -168,6 +168,7 @@
     <Property Name="IsAnyRentReceived" Type="bit" />
     <Property Name="IsIdVerified" Type="bit" />
     <Property Name="FacebookUserId" Type="varchar(max)" />
+    <Property Name="MemoFormula" Type="int" />
   </EntityType>
   <EntityType Name="MemberNotifications">
     <Key>

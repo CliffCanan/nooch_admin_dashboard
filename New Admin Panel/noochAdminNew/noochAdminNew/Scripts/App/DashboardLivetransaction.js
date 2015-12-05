@@ -41,14 +41,18 @@ $(document).ready(function () {
 
 
     //Click Event For Label
-    $("#transIbox .btn-group label").click(function () {
+    $("#dash_TransPanel2 .btn-group label").click(function () {
+        alert('came in click');
         var c = $(this).attr("For");
         var val = $('#' + c + '').val();
 
         DashboardDetailsOperation(val);
     });
 
+    
     function DashboardDetailsOperation(operation) {
+
+        alert(operation);
 
         if (operation == '0' || operation == '1' || operation == '2') {
 
