@@ -54,6 +54,7 @@ namespace noochAdminNew.Models
         public DbSet<Tenant> Tenants { get; set; }
         public DbSet<TenantsIdDocument> TenantsIdDocuments { get; set; }
         public DbSet<UnitsOccupiedByTenant> UnitsOccupiedByTenants { get; set; }
+        public DbSet<RentTransaction> RentTransactions { get; set; }
     
         public virtual ObjectResult<string> GetReportsForMember(string memberId, string getWhat)
         {
