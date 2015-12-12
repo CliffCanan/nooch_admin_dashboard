@@ -14,11 +14,6 @@ namespace noochAdminNew.Models
     
     public partial class Property
     {
-        public Property()
-        {
-            this.AutoPayTransactions = new HashSet<AutoPayTransaction>();
-        }
-    
         public System.Guid PropertyId { get; set; }
         public string PropStatus { get; set; }
         public string PropType { get; set; }
@@ -38,7 +33,5 @@ namespace noochAdminNew.Models
         public Nullable<bool> IsSingleUnit { get; set; }
         public Nullable<bool> IsDeleted { get; set; }
         public Nullable<int> DefaulBank { get; set; }
-    
-        public virtual ICollection<AutoPayTransaction> AutoPayTransactions { get; set; }
     }
 }

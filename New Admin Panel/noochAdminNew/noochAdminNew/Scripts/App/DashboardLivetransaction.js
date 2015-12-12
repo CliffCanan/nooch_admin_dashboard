@@ -52,7 +52,7 @@ $(document).ready(function () {
     
     function DashboardDetailsOperation(operation) {
 
-        alert(operation);
+      
 
         if (operation == '0' || operation == '1' || operation == '2') {
 

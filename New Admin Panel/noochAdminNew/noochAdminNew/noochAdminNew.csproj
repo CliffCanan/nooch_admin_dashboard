@@ -218,9 +218,6 @@
     <Compile Include="Models\AuthenticationToken.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\AutoPayTransaction.cs">
-      <DependentUpon>NoochDbModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\GeoLocation.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
