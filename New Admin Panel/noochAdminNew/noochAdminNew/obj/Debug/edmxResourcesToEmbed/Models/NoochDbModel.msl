@@ -647,5 +647,41 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="SynapseV3CreateTransResults">
+      <EntityTypeMapping TypeName="NOOCHModel.SynapseV3CreateTransResults">
+        <MappingFragment StoreEntitySet="SynapseV3CreateTransResults">
+          <ScalarProperty Name="NoochTransactionId" ColumnName="NoochTransactionId" />
+          <ScalarProperty Name="NoochAdminNotes" ColumnName="NoochAdminNotes" />
+          <ScalarProperty Name="NoochTransactionDate" ColumnName="NoochTransactionDate" />
+          <ScalarProperty Name="to_node_type" ColumnName="to_node_type" />
+          <ScalarProperty Name="to_node_nickname" ColumnName="to_node_nickname" />
+          <ScalarProperty Name="to_node_id" ColumnName="to_node_id" />
+          <ScalarProperty Name="to_user_id" ColumnName="to_user_id" />
+          <ScalarProperty Name="recent_status_id" ColumnName="recent_status_id" />
+          <ScalarProperty Name="recent_status" ColumnName="recent_status" />
+          <ScalarProperty Name="recent_note" ColumnName="recent_note" />
+          <ScalarProperty Name="recent_status_date" ColumnName="recent_status_date" />
+          <ScalarProperty Name="from_node_type" ColumnName="from_node_type" />
+          <ScalarProperty Name="from_node_nickname" ColumnName="from_node_nickname" />
+          <ScalarProperty Name="from_node_id" ColumnName="from_node_id" />
+          <ScalarProperty Name="from_user_id" ColumnName="from_user_id" />
+          <ScalarProperty Name="nooch_fee_note" ColumnName="nooch_fee_note" />
+          <ScalarProperty Name="synapse_fee_note" ColumnName="synapse_fee_note" />
+          <ScalarProperty Name="nooch_fee_id" ColumnName="nooch_fee_id" />
+          <ScalarProperty Name="nooch_fee_fee" ColumnName="nooch_fee_fee" />
+          <ScalarProperty Name="synapse_fee_id" ColumnName="synapse_fee_id" />
+          <ScalarProperty Name="synapse_fee_fee" ColumnName="synapse_fee_fee" />
+          <ScalarProperty Name="extra_supp_id" ColumnName="extra_supp_id" />
+          <ScalarProperty Name="extra_process_on_date" ColumnName="extra_process_on_date" />
+          <ScalarProperty Name="extra_created_on_date" ColumnName="extra_created_on_date" />
+          <ScalarProperty Name="client_name" ColumnName="client_name" />
+          <ScalarProperty Name="client_id" ColumnName="client_id" />
+          <ScalarProperty Name="trans_currency" ColumnName="trans_currency" />
+          <ScalarProperty Name="trans_amount" ColumnName="trans_amount" />
+          <ScalarProperty Name="trans_id_oid" ColumnName="trans_id_oid" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

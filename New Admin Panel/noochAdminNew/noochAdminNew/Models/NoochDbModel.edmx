@@ -497,6 +497,41 @@
           <Property Name="IsPinRequired" Type="bit" />
           <Property Name="IsDeleted" Type="bit" />
         </EntityType>
+        <EntityType Name="SynapseV3CreateTransResults">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="trans_id_oid" Type="varchar(max)" />
+          <Property Name="trans_amount" Type="varchar(max)" />
+          <Property Name="trans_currency" Type="varchar(max)" />
+          <Property Name="client_id" Type="varchar(max)" />
+          <Property Name="client_name" Type="varchar(max)" />
+          <Property Name="extra_created_on_date" Type="varchar(max)" />
+          <Property Name="extra_process_on_date" Type="varchar(max)" />
+          <Property Name="extra_supp_id" Type="varchar(max)" />
+          <Property Name="synapse_fee_fee" Type="varchar(max)" />
+          <Property Name="synapse_fee_id" Type="varchar(max)" />
+          <Property Name="nooch_fee_fee" Type="varchar(max)" />
+          <Property Name="nooch_fee_id" Type="varchar(max)" />
+          <Property Name="synapse_fee_note" Type="varchar(max)" />
+          <Property Name="nooch_fee_note" Type="varchar(max)" />
+          <Property Name="from_user_id" Type="varchar(max)" />
+          <Property Name="from_node_id" Type="varchar(max)" />
+          <Property Name="from_node_nickname" Type="varchar(max)" />
+          <Property Name="from_node_type" Type="varchar(max)" />
+          <Property Name="recent_status_date" Type="varchar(max)" />
+          <Property Name="recent_note" Type="varchar(max)" />
+          <Property Name="recent_status" Type="varchar(max)" />
+          <Property Name="recent_status_id" Type="varchar(max)" />
+          <Property Name="to_user_id" Type="varchar(max)" />
+          <Property Name="to_node_id" Type="varchar(max)" />
+          <Property Name="to_node_nickname" Type="varchar(max)" />
+          <Property Name="to_node_type" Type="varchar(max)" />
+          <Property Name="NoochTransactionDate" Type="datetime" />
+          <Property Name="NoochAdminNotes" Type="varchar(max)" />
+          <Property Name="NoochTransactionId" Type="varchar(max)" />
+        </EntityType>
         <EntityType Name="Tenants">
           <Key>
             <PropertyRef Name="TenantId" />
@@ -744,6 +779,7 @@
           <EntitySet Name="SynapseCreateOrderResults" EntityType="Self.SynapseCreateOrderResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SynapseCreateUserResults" EntityType="Self.SynapseCreateUserResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SynapseSupportedBanks" EntityType="Self.SynapseSupportedBanks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SynapseV3CreateTransResults" EntityType="Self.SynapseV3CreateTransResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tenants" EntityType="Self.Tenants" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TenantsIdDocuments" EntityType="Self.TenantsIdDocuments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Transactions" EntityType="Self.Transactions" Schema="dbo" store:Type="Tables" />
@@ -875,6 +911,7 @@
             <End Role="UnitsOccupiedByTenant" EntitySet="UnitsOccupiedByTenants" />
             <End Role="RentTransaction" EntitySet="RentTransactions" />
           </AssociationSet>
+          <EntitySet Name="SynapseV3CreateTransResults" EntityType="NOOCHModel.SynapseV3CreateTransResults" />
           </EntityContainer>
         <EntityType Name="ADD">
           <Key>
@@ -1636,6 +1673,41 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="SynapseV3CreateTransResults">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="trans_id_oid" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="trans_amount" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="trans_currency" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="client_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="client_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="extra_created_on_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="extra_process_on_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="extra_supp_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="synapse_fee_fee" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="synapse_fee_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="nooch_fee_fee" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="nooch_fee_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="synapse_fee_note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="nooch_fee_note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="from_user_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="from_node_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="from_node_nickname" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="from_node_type" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="recent_status_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="recent_note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="recent_status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="recent_status_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="to_user_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="to_node_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="to_node_nickname" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="to_node_type" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="NoochTransactionDate" Type="DateTime" Precision="3" />
+          <Property Name="NoochAdminNotes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="NoochTransactionId" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2284,6 +2356,42 @@
                 <ScalarProperty Name="OccupiedOn" ColumnName="OccupiedOn" />
                 <ScalarProperty Name="TenantId" ColumnName="TenantId" />
                 <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SynapseV3CreateTransResults">
+            <EntityTypeMapping TypeName="NOOCHModel.SynapseV3CreateTransResults">
+              <MappingFragment StoreEntitySet="SynapseV3CreateTransResults">
+                <ScalarProperty Name="NoochTransactionId" ColumnName="NoochTransactionId" />
+                <ScalarProperty Name="NoochAdminNotes" ColumnName="NoochAdminNotes" />
+                <ScalarProperty Name="NoochTransactionDate" ColumnName="NoochTransactionDate" />
+                <ScalarProperty Name="to_node_type" ColumnName="to_node_type" />
+                <ScalarProperty Name="to_node_nickname" ColumnName="to_node_nickname" />
+                <ScalarProperty Name="to_node_id" ColumnName="to_node_id" />
+                <ScalarProperty Name="to_user_id" ColumnName="to_user_id" />
+                <ScalarProperty Name="recent_status_id" ColumnName="recent_status_id" />
+                <ScalarProperty Name="recent_status" ColumnName="recent_status" />
+                <ScalarProperty Name="recent_note" ColumnName="recent_note" />
+                <ScalarProperty Name="recent_status_date" ColumnName="recent_status_date" />
+                <ScalarProperty Name="from_node_type" ColumnName="from_node_type" />
+                <ScalarProperty Name="from_node_nickname" ColumnName="from_node_nickname" />
+                <ScalarProperty Name="from_node_id" ColumnName="from_node_id" />
+                <ScalarProperty Name="from_user_id" ColumnName="from_user_id" />
+                <ScalarProperty Name="nooch_fee_note" ColumnName="nooch_fee_note" />
+                <ScalarProperty Name="synapse_fee_note" ColumnName="synapse_fee_note" />
+                <ScalarProperty Name="nooch_fee_id" ColumnName="nooch_fee_id" />
+                <ScalarProperty Name="nooch_fee_fee" ColumnName="nooch_fee_fee" />
+                <ScalarProperty Name="synapse_fee_id" ColumnName="synapse_fee_id" />
+                <ScalarProperty Name="synapse_fee_fee" ColumnName="synapse_fee_fee" />
+                <ScalarProperty Name="extra_supp_id" ColumnName="extra_supp_id" />
+                <ScalarProperty Name="extra_process_on_date" ColumnName="extra_process_on_date" />
+                <ScalarProperty Name="extra_created_on_date" ColumnName="extra_created_on_date" />
+                <ScalarProperty Name="client_name" ColumnName="client_name" />
+                <ScalarProperty Name="client_id" ColumnName="client_id" />
+                <ScalarProperty Name="trans_currency" ColumnName="trans_currency" />
+                <ScalarProperty Name="trans_amount" ColumnName="trans_amount" />
+                <ScalarProperty Name="trans_id_oid" ColumnName="trans_id_oid" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

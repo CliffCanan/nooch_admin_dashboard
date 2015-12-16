@@ -82,6 +82,7 @@
       <End Role="UnitsOccupiedByTenant" EntitySet="UnitsOccupiedByTenants" />
       <End Role="RentTransaction" EntitySet="RentTransactions" />
     </AssociationSet>
+    <EntitySet Name="SynapseV3CreateTransResults" EntityType="NOOCHModel.SynapseV3CreateTransResults" />
   </EntityContainer>
   <EntityType Name="ADD">
     <Key>
@@ -843,4 +844,39 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="SynapseV3CreateTransResults">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="trans_id_oid" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="trans_amount" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="trans_currency" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="client_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="client_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="extra_created_on_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="extra_process_on_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="extra_supp_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="synapse_fee_fee" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="synapse_fee_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="nooch_fee_fee" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="nooch_fee_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="synapse_fee_note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="nooch_fee_note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="from_user_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="from_node_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="from_node_nickname" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="from_node_type" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="recent_status_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="recent_note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="recent_status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="recent_status_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="to_user_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="to_node_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="to_node_nickname" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="to_node_type" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="NoochTransactionDate" Type="DateTime" Precision="3" />
+    <Property Name="NoochAdminNotes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="NoochTransactionId" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
 </Schema>

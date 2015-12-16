@@ -16,6 +16,9 @@ using System.Data.Objects.SqlClient;
 using System.IO;
 using FileHelpers;
 using System.Data.Entity;
+using System.Web.Helpers;
+using noochAdminNew.Classes.PushNotification;
+using Newtonsoft.Json.Linq;
 
 
 namespace noochAdminNew.Controllers
@@ -574,7 +577,7 @@ namespace noochAdminNew.Controllers
                                                where r.TransactionStatus == "success"
                                                select r).ToList()
                                                     .Sum(t => t.Amount).ToString();
-                    
+
                     dd.TotalNoOfPaymentsCompleted = (from r in obj.Transactions
                                                      where r.TransactionStatus == "success"
                                                      select r).ToList().Count;
@@ -618,7 +621,7 @@ namespace noochAdminNew.Controllers
                         {
                             if (res.bank_name == ssb.BankName.ToLower().Trim())
                             {
-                                nusi.NoOfUsers = Convert.ToInt16( res.CountInBank);
+                                nusi.NoOfUsers = Convert.ToInt16(res.CountInBank);
                             }
                         }
 
@@ -1248,6 +1251,640 @@ namespace noochAdminNew.Controllers
                         lr.IsSuccess = false;
                         lr.Message = "Admin Synapse account not available.";
                     }
+                }
+                else
+                {
+                    lr.IsSuccess = false;
+                    lr.Message = "Admin account team@nooch.com not active or invalid admin PIN passed.";
+                }
+            }
+            return Json(lr);
+        }
+
+
+        [HttpPost]
+        [ActionName("CreditFundToMemberPostSynapseV3Test")]
+        public ActionResult CreditFundToMemberPostSynapseV3Test(string transferfundto, string transferAmount, string transferNotes, string adminPin)
+        {
+            LoginResult lr = new LoginResult();
+            // performing validations over input
+
+            #region input validations
+
+            if (String.IsNullOrEmpty(transferfundto))
+            {
+                lr.IsSuccess = false;
+                lr.Message = "Please enter user name or NoochId of Member to transfer fund.";
+            }
+            if (String.IsNullOrEmpty(transferAmount))
+            {
+                lr.IsSuccess = false;
+                lr.Message = "Please enter transfer fund amount";
+            }
+
+            if (String.IsNullOrEmpty(transferNotes))
+            {
+                lr.IsSuccess = false;
+                lr.Message = "Please enter transfer notes.";
+            }
+            if (String.IsNullOrEmpty(adminPin))
+            {
+                lr.IsSuccess = false;
+                lr.Message = "Please enter admin pin.";
+            }
+
+            #endregion
+
+
+            // Check admin user details
+            using (NOOCHEntities obj = new NOOCHEntities())
+            {
+                var adminUserDetails =
+                    (from c in obj.Members
+                     where c.UserName == "z2/de4EMabGlzMuO7OocHw==" &&
+                           c.Status == "Active" &&
+                           c.PinNumber == CommonHelper.GetEncryptedData(adminPin.Trim())
+                     select c).SingleOrDefault();
+
+                if (adminUserDetails != null)
+                {
+                    #region Admin Member and synapse details
+                    Guid AdminMemberId = Utility.ConvertToGuid(adminUserDetails.MemberId.ToString());
+
+                    // Get Synapse account details of admin
+                    var adminSynapseDetails =
+                        CommonHelper.GetSynapseBankAndUserDetailsforGivenMemberId(AdminMemberId.ToString());
+
+                    if (adminSynapseDetails.wereBankDetailsFound != true)
+                    {
+                        Logger.Error("Add fund to members account New Admin -> Transfer FAILED -> Transfer ABORTED: Requester's Synapse bank account NOT FOUND - Trans Creator MemberId is: [" + AdminMemberId + "]");
+                        lr.Message = "Admin does not have any bank added";
+                        lr.IsSuccess = false;
+                        return Json(lr);
+                    }
+
+                    // Check Admins's Synapse Bank Account status
+                    if (adminSynapseDetails.BankDetails != null &&
+                        adminSynapseDetails.BankDetails.Status != "Verified" &&
+                        adminUserDetails.IsVerifiedWithSynapse != true)
+                    {
+                        Logger.Error("Add fund to members account New Admin -> Transfer FAILED -> Admin's Synapse bank account exists but is not Verified and " +
+                            "isVerifiedWithSynapse != true - Admin memberId is: [" + adminUserDetails.MemberId + "]");
+                        lr.Message = "Admin does not have any verified bank account.";
+                        lr.IsSuccess = false;
+                        return Json(lr);
+                    }
+                    #endregion
+
+                    // Money recepient Member and Synapse Bank Acount Details
+                    string recepientusernameencrypted = CommonHelper.GetEncryptedData(transferfundto.ToLower());
+                    var recipientMemberDetails = (from c in obj.Members
+                                                  where c.Nooch_ID == transferfundto ||
+                                                        c.UserName == recepientusernameencrypted &&
+                                                        c.Status == "Active"
+                                                  select c).SingleOrDefault();
+                    if (recipientMemberDetails != null)
+                    {
+                        // Now check recipient's Synapse details
+                        Guid recepeintGuid = Utility.ConvertToGuid(recipientMemberDetails.MemberId.ToString());
+
+                        var recipientBankDetails =
+                                                    CommonHelper.GetSynapseBankAndUserDetailsforGivenMemberId(recepeintGuid.ToString());
+
+                        if (recipientBankDetails.wereBankDetailsFound != true)
+                        {
+                            Logger.Error("Add fund to members account New Admin -> Transfer FAILED -> Transfer ABORTED: Recepient's Synapse bank account NOT FOUND - Trans Creator MemberId is: [" + recepeintGuid + "]");
+                            lr.Message = "Recepient does not have any bank added";
+                            lr.IsSuccess = false;
+                            return Json(lr);
+                        }
+
+                        // Check Admins's Synapse Bank Account status
+                        if (recipientBankDetails.BankDetails != null &&
+                            recipientBankDetails.BankDetails.Status != "Verified" &&
+                            recipientMemberDetails.IsVerifiedWithSynapse != true)
+                        {
+                            Logger.Error("Add fund to members account New Admin -> Transfer FAILED -> Recepient's Synapse bank account exists but is not Verified and " +
+                                "isVerifiedWithSynapse != true - Recepient memberId is: [" + adminUserDetails.MemberId + "]");
+                            lr.Message = "Recepient does not have any verified bank account.";
+                            lr.IsSuccess = false;
+                            return Json(lr);
+                        }
+
+
+
+                        // have admin and recepient all details to transfer money
+                        #region Define Variables From Transaction for Notifications
+
+                        Guid TransactionIdToUse = Guid.NewGuid();
+                        DateTime TransactionDateTimeToUSe = DateTime.Now;
+                        var fromAddress = Utility.GetValueFromConfig("transfersMail");
+                        string senderUserName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(adminUserDetails.UserName));
+                        string senderFirstName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(adminUserDetails.FirstName));
+                        string senderLastName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(adminUserDetails.LastName));
+                        string recipientFirstName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(recipientMemberDetails.FirstName));
+                        string recipientLastName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(recipientMemberDetails.LastName));
+                        string receiverUserName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(recipientMemberDetails.UserName));
+
+                        var sender_synapse_Bank_Id = adminSynapseDetails.BankDetails.bankid.ToString();
+                        decimal transactionAmount = Convert.ToDecimal(transferAmount);
+
+                        string wholeAmount = transactionAmount.ToString("n2");
+                        string[] s3 = wholeAmount.Split('.');
+                        string ce = "";
+                        string dl = "";
+                        if (s3.Length <= 1)
+                        {
+                            dl = s3[0].ToString();
+                            ce = "00";
+                        }
+                        else
+                        {
+                            ce = s3[1].ToString();
+                            dl = s3[0].ToString();
+                        }
+
+                        string memo = "";
+                        if (!String.IsNullOrEmpty(transferNotes))
+                        {
+                            if (transferNotes.Length > 3)
+                            {
+                                string firstThreeChars = transferNotes.Substring(0, 3).ToLower();
+                                bool startsWithFor = firstThreeChars.Equals("for");
+
+                                if (startsWithFor)
+                                {
+                                    memo = transferNotes.ToString();
+                                }
+                                else
+                                {
+                                    memo = "For: " + transferNotes.ToString();
+                                }
+                            }
+                            else
+                            {
+                                memo = "For: " + transferNotes.ToString();
+                            }
+                        }
+
+                        string senderPic = "https://www.noochme.com/noochweb/Assets/Images/userpic-default.png";
+                        string recipientPic;
+
+                        #endregion Define Variables From Transaction for Notifications
+
+                        short shouldSendFailureNotifications = 0;
+                        int saveToSynapseCreateOrderTable = 0;
+                        int saveToTransTable = 0;
+                        // Make call to SYNAPSE Order API service
+                        try
+                        {
+                            #region Query Synapse Order API
+
+                            string sender_oauth = adminSynapseDetails.UserDetails.access_token;
+                            string sender_fingerPrint = adminUserDetails.UDID1;
+                            string sender_bank_node_id = adminSynapseDetails.BankDetails.bankid.ToString();
+                            string amount = transferAmount;
+                            string fee = "0";
+                            if (transactionAmount > 10)
+                            {
+                                fee = "0.20"; //to offset the Synapse fee so the user doesn't pay it
+                            }
+                            else if (transactionAmount < 10)
+                            {
+                                fee = "0.10"; //to offset the Synapse fee so the user doesn't pay it
+                            }
+                            string receiver_oauth = recipientBankDetails.UserDetails.access_token;
+                            string receiver_fingerprint = recipientMemberDetails.UDID1;
+                            string receiver_bank_node_id = recipientBankDetails.BankDetails.bankid.ToString();
+                            string suppID_or_transID = TransactionIdToUse.ToString();
+
+                            string iPForTransaction = CommonHelper.GetRecentOrDefaultIPOfMember(AdminMemberId);
+
+                            SynapseV3AddTrans_ReusableClass transactionResultFromSynapseAPI =
+                                CommonHelper.AddTransSynapseV3Reusable(sender_oauth, sender_fingerPrint,
+                                    sender_bank_node_id,
+                                    amount, fee, receiver_oauth, receiver_fingerprint, receiver_bank_node_id,
+                                    suppID_or_transID,
+                                    senderUserName, receiverUserName, iPForTransaction, senderLastName,
+                                    recipientLastName);
+
+
+
+                            if (transactionResultFromSynapseAPI.success == true)
+                            {
+
+                                #region Save info in SynapseCreateOrder Table
+
+
+                                try
+                                {
+                                    // Add entry in SynapseV3CreateTransResults Table in Nooch DB
+                                    SynapseV3CreateTransResults orderRes = new SynapseV3CreateTransResults();
+
+                                    #region Preparing stuff to save in Synapse Create Order Result Table V3
+
+                                    orderRes.trans_amount = transferAmount;
+                                    orderRes.trans_id_oid =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans._id.ToString();
+                                    orderRes.trans_currency =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.amount.currency;
+
+                                    orderRes.extra_created_on_date =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.extra.created_on
+                                            .ToString();
+                                    orderRes.extra_process_on_date =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.extra.process_on
+                                            .ToString();
+                                    orderRes.extra_supp_id =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.extra.supp_id.ToString
+                                            ();
+
+                                    orderRes.synapse_fee_fee =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.fees[0].fee;
+                                    orderRes.synapse_fee_id =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.fees[0].to.id.oid;
+                                    orderRes.synapse_fee_note =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.fees[0].note;
+
+                                    orderRes.nooch_fee_fee =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.fees[1].fee;
+                                    orderRes.nooch_fee_id =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.fees[1].to.id.oid;
+                                    orderRes.nooch_fee_note =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.fees[1].note;
+
+                                    orderRes.from_user_id =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.from.user._id.id
+                                            .ToString();
+                                    //orderRes.from_node_id= sender_bank_node_id;
+                                    orderRes.from_node_id =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.from.id.oid;
+                                    orderRes.from_node_type =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.from.type;
+                                    //orderRes.from_node_nickname=
+
+
+
+                                    orderRes.recent_status =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.recent_status.status;
+                                    orderRes.recent_note =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.recent_status.note;
+                                    orderRes.recent_status_date =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.recent_status.date
+                                            .ToString();
+                                    orderRes.recent_status_id =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.recent_status
+                                            .status_id;
+
+
+                                    orderRes.to_user_id =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.to.user._id.id;
+                                    orderRes.to_node_id =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.to.id.oid;
+                                    orderRes.to_node_type =
+                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.to.type;
+
+                                    orderRes.NoochTransactionDate = TransactionDateTimeToUSe;
+                                    orderRes.NoochTransactionId = TransactionIdToUse.ToString();
+
+                                    #endregion
+
+                                    obj.SynapseV3CreateTransResults.Add(orderRes);
+                                    saveToSynapseCreateOrderTable = obj.SaveChanges();
+
+                                    #region save to synapse create trans table returned success -- now saving in Transactions table
+
+                                    if (saveToSynapseCreateOrderTable > 0)
+                                    {
+                                        #region Save info in Transaction Details table
+
+                                        Transaction transactionDetail = new Transaction();
+
+
+                                        transactionDetail.TransactionTrackingId =
+                                            CommonHelper.GetRandomTransactionTrackingId();
+                                        transactionDetail.TransactionStatus = "Success";
+                                        transactionDetail.Memo = transferNotes.Trim();
+
+                                        transactionDetail.Amount = Convert.ToDecimal(transferAmount);
+
+
+                                        transactionDetail.TransactionId = TransactionIdToUse;
+                                        transactionDetail.TransactionDate = TransactionDateTimeToUSe;
+                                        transactionDetail.DisputeStatus = null;
+
+                                        transactionDetail.TransactionType = CommonHelper.GetEncryptedData("Reward");
+                                        // @cliff what type it will be of ?
+
+                                        transactionDetail.TransactionFee = 0;
+                                        transactionDetail.SenderId = AdminMemberId;
+                                        transactionDetail.RecipientId = recipientMemberDetails.MemberId;
+
+
+                                        obj.Transactions.Add(transactionDetail);
+
+                                        saveToTransTable = obj.SaveChanges();
+
+
+                                        #endregion Save info in Transaction Details table
+                                    }
+
+                                    #endregion
+
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Error(
+                                        "Add fund to members account New Admin -> Transfer FAILED ->  [Exception: " + ex +
+                                        "]");
+                                }
+
+                                #endregion Save info in SynapseCreateOrder Table
+
+                            }
+                            else
+                            {
+                                // synapse API call failed
+                                shouldSendFailureNotifications = 1;
+                            }
+
+                            #endregion
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(
+                                        "Add fund to members account New Admin -> Transfer FAILED ->  [Exception: " + ex +
+                                        "]");
+
+                            shouldSendFailureNotifications = 1;
+                        }
+
+                        #region Failure Sections
+
+
+                        if (shouldSendFailureNotifications == 1 && saveToSynapseCreateOrderTable == 0 &&
+                            saveToTransTable == 0)
+                        {
+                            // error while making order API 
+                            Logger.Info("Add fund to members account New Admin -> Transfer FAILED. Error occur in call order API");
+                            // Check if there was a failure above and we need to send the failure Email/SMS notifications to the sender.
+                            if (shouldSendFailureNotifications > 0)
+                            {
+                                Logger.Info("Add fund to members account New Admin - THERE WAS A FAILURE - Sending Failure Notifications to both Users");
+
+                                #region Notify Sender about failure
+
+                                var senderNotificationSettings = CommonHelper.GetMemberNotificationSettings(adminUserDetails.MemberId.ToString());
+
+                                if (senderNotificationSettings != null)
+                                {
+                                    #region Push Notification to Sender about failure
+
+
+                                    if (senderNotificationSettings.TransferAttemptFailure == true)
+                                    {
+                                        string senderDeviceId = senderNotificationSettings != null ? adminUserDetails.DeviceToken : null;
+
+                                        string mailBodyText = "Your attempt to send $" + transactionAmount.ToString("n2") +
+                                                              " to " + recipientFirstName + " " + recipientLastName + " failed ;-(  Contact Nooch support for more info.";
+
+                                        if (!String.IsNullOrEmpty(senderDeviceId))
+                                        {
+                                            try
+                                            {
+                                                ApplePushNotification.SendNotificationMessage(mailBodyText, 0, null, senderDeviceId,
+                                                                                            Utility.GetValueFromConfig("AppKey"),
+                                                                                            Utility.GetValueFromConfig("MasterSecret"));
+
+                                                Logger.Info("Add fund to members account New Admin --> TransferMoneyUsingSynapse FAILED - Push notif sent to Sender: [" +
+                                                    senderFirstName + " " + senderLastName + "] successfully.");
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                Logger.Info(
+                                                    "Add fund to members account New Admin --> TransferMoneyUsingSynapse FAILED - Push notif FAILED also, SMS NOT sent to [" +
+                                                    senderFirstName + " " + senderLastName + "],  [Exception: " + ex + "]");
+                                            }
+                                        }
+                                    }
+
+                                    #endregion Push Notification to Sender about failure
+
+                                    #region Email notification to Sender about failure
+
+                                    if (senderNotificationSettings.EmailTransferAttemptFailure ?? false)
+                                    {
+                                        var tokens = new Dictionary<string, string>
+	                                {
+	                                    {Constants.PLACEHOLDER_FIRST_NAME, senderFirstName + " " + senderLastName},
+	                                    {Constants.PLACEHOLDER_FRIEND_FIRST_NAME, recipientFirstName + " " + recipientLastName},
+	                                    {Constants.PLACEHOLDER_TRANSFER_AMOUNT, dl},
+	                                    {Constants.PLACEHLODER_CENTS, ce},
+	                                };
+
+                                        var toAddress = CommonHelper.GetDecryptedData(adminUserDetails.UserName);
+
+                                        try
+                                        {
+                                            Utility.SendEmail("transferFailure",
+                                                fromAddress, toAddress, "Nooch transfer failure :-(", null,
+                                                tokens, null, null, null);
+
+                                            Logger.Info("Add fund to members account New Admin -> TransferMoneyUsingSynapse FAILED - Email sent to Sender: [" +
+                                                toAddress + "] successfully.");
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Logger.Info("Add fund to members account New Admin -> TransferMoneyUsingSynapse --> Error: TransferAttemptFailure mail " +
+                                                                   "NOT sent to [" + toAddress + "],  [Exception: " + ex + "]");
+                                        }
+                                    }
+
+                                    #endregion Email notification to Sender about failure
+                                }
+
+                                #endregion Notify Sender about failure
+
+                                if (shouldSendFailureNotifications == 1)
+                                {
+                                    lr.Message = "There was a problem with Synapse.";
+                                    lr.IsSuccess = false;
+                                    return Json(lr);
+
+                                }
+                                else if (saveToTransTable == 0 || saveToSynapseCreateOrderTable == 0)
+                                {
+                                    lr.Message = "There was a problem updating Nooch DB tables.";
+                                    lr.IsSuccess = false;
+                                    return Json(lr);
+                                }
+                                else
+                                {
+                                    lr.Message = "Unknown Failure";
+                                    lr.IsSuccess = false;
+                                    return Json(lr);
+
+                                }
+                            }
+                        }
+                        #endregion Failure Sections
+                        else if (shouldSendFailureNotifications == 0 && saveToSynapseCreateOrderTable == 1 &&
+                            saveToTransTable == 1)
+                        {
+                            #region Success notifications
+                            #region Send Email to Sender on transfer success
+
+                            var sendersNotificationSets = CommonHelper.GetMemberNotificationSettings(adminUserDetails.MemberId.ToString());
+
+                            if (sendersNotificationSets != null)
+                            {
+                                if (sendersNotificationSets != null && (sendersNotificationSets.EmailTransferSent ?? false))
+                                {
+                                    if (!String.IsNullOrEmpty(recipientMemberDetails.Photo) && recipientMemberDetails.Photo.Length > 20)
+                                    {
+                                        recipientPic = recipientMemberDetails.Photo.ToString();
+                                    }
+
+                                    var tokens = new Dictionary<string, string>
+	                                    {
+	                                        {Constants.PLACEHOLDER_FIRST_NAME, senderFirstName},
+	                                        {Constants.PLACEHOLDER_FRIEND_FIRST_NAME, recipientFirstName + " " + recipientLastName},
+	                                        {Constants.PLACEHOLDER_TRANSFER_AMOUNT, dl},
+	                                        {Constants.PLACEHLODER_CENTS, ce},
+	                                        {Constants.MEMO, memo}
+	                                    };
+
+                                    var toAddress = CommonHelper.GetDecryptedData(adminUserDetails.UserName);
+
+                                    try
+                                    {
+                                        Utility.SendEmail("TransferSent", fromAddress, toAddress,
+                                            "Your $" + wholeAmount + " payment to " + recipientFirstName + " on Nooch",
+                                            null, tokens, null, null, null);
+
+                                        Logger.Info("Add fund to members account New Admin -> TransferSent email sent to [" +
+                                            toAddress + "] successfully");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Logger.Error("Add fund to members account New Admin  -> EMAIL TO RECIPIENT FAILED: TransferReceived Email NOT sent to [" +
+                                            toAddress + "], [Exception: " + ex + "]");
+                                    }
+                                }
+                            }
+
+                            #endregion Send Email to Sender on transfer success
+
+                            #region Send Notifications to Recipient on transfer success
+
+                            var recipNotificationSets = CommonHelper.GetMemberNotificationSettings(recipientMemberDetails.MemberId.ToString());
+
+                            if (recipNotificationSets != null)
+                            {
+                                // First, send push notification
+                                #region Push notification to Recipient
+
+                                if ((recipNotificationSets.TransferReceived == null)
+                                    ? false
+                                    : recipNotificationSets.TransferReceived.Value)
+                                {
+                                    string recipDeviceId = recipNotificationSets != null ? recipientMemberDetails.DeviceToken : null;
+
+                                    string pushBodyText = "You received $" + wholeAmount + " from " + senderFirstName +
+                                                          " " + senderLastName + "! Spend it wisely :-)";
+                                    try
+                                    {
+                                        if (recipNotificationSets != null &&
+                                            !String.IsNullOrEmpty(recipDeviceId) &&
+                                            (recipNotificationSets.TransferReceived ?? false))
+                                        {
+                                            ApplePushNotification.SendNotificationMessage(pushBodyText, 1,
+                                                null, recipDeviceId,
+                                                Utility.GetValueFromConfig("AppKey"),
+                                                Utility.GetValueFromConfig("MasterSecret"));
+
+                                            Logger.Info(
+                                                "Add fund to members account New Admin -> SUCCESS - Push notification sent to Recipient [" +
+                                                recipientFirstName + " " + recipientLastName + "] successfully.");
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Logger.Error(
+                                            "Add fund to members account New Admin  -> Success - BUT Push notification FAILURE - Push to Recipient NOT sent [" +
+                                                recipientFirstName + " " + recipientLastName + "], Exception: [" + ex + "]");
+                                    }
+                                }
+
+                                #endregion Push notification to Recipient
+
+                                // Now send email notification
+                                #region Email notification to Recipient
+
+                                if (recipNotificationSets != null && (recipNotificationSets.EmailTransferReceived ?? false))
+                                {
+                                    if (!String.IsNullOrEmpty(adminUserDetails.Photo) && adminUserDetails.Photo.Length > 20)
+                                    {
+                                        senderPic = adminUserDetails.Photo.ToString();
+                                    }
+
+                                    var tokensR = new Dictionary<string, string>
+	                                        {
+	                                            {Constants.PLACEHOLDER_FIRST_NAME, recipientFirstName},
+	                                            {Constants.PLACEHOLDER_FRIEND_FIRST_NAME, senderFirstName + " " + senderLastName},
+                                                {"$UserPicture$", senderPic},
+	                                            {Constants.PLACEHOLDER_TRANSFER_AMOUNT, wholeAmount},
+	                                            {Constants.PLACEHOLDER_TRANSACTION_DATE, TransactionDateTimeToUSe.ToString("MMM dd")},
+	                                            {Constants.MEMO, memo}
+	                                        };
+
+                                    var toAddress2 = CommonHelper.GetDecryptedData(recipientMemberDetails.UserName);
+
+                                    try
+                                    {
+                                        Utility.SendEmail("TransferReceived", fromAddress, toAddress2,
+                                            senderFirstName + " sent you $" + wholeAmount + " with Nooch", null, tokensR, null, null, null);
+
+                                        Logger.Info("Add fund to members account New Admin  ->  TransferReceived Email sent to [" +
+                                            toAddress2 + "] successfully");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Logger.Error(
+                                            "Add fund to members account New Admin  -> EMAIL TO RECIPIENT FAILED: TransferReceived Email NOT sent to [" +
+                                            toAddress2 + "], [Exception: " + ex + "]");
+                                    }
+                                }
+
+                                #endregion Email notification to Recipient
+                            }
+
+                            #endregion Send Notifications to Recipient on transfer success
+
+                            #endregion
+                            lr.Message = "Your cash was sent successfully.";
+                            lr.IsSuccess = true;
+                            return Json(lr);
+                        }
+                        else
+                        {
+                            lr.Message = "Server Error.";
+                            lr.IsSuccess = false;
+                            return Json(lr);
+                        }
+
+
+
+                    }
+
+                    else
+                    {
+                        lr.IsSuccess = false;
+                        lr.Message = "Given username/nooch id not found or give username/nooch id not active.";
+                        return Json(lr);
+                    }
+
                 }
                 else
                 {
