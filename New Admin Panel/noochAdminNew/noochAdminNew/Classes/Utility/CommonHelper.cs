@@ -274,9 +274,10 @@ namespace noochAdminNew.Classes.Utility
                     var content = sr.ReadToEnd();
 
                     JObject checkPermissionResponse = JObject.Parse(content);
+                    var successProperty = checkPermissionResponse.Property("success");
 
-                    if (checkPermissionResponse["success"] != null &&
-                        Convert.ToBoolean(checkPermissionResponse["success"]) == true)
+                    if (successProperty != null &&
+                        (bool)successProperty.Value == true)
                     {
                         res = JsonConvert.DeserializeObject<synapseSearchUserResponse>(content);
                     }

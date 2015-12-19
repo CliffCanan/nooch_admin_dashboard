@@ -1299,11 +1299,12 @@ namespace noochAdminNew.Controllers
             // Check admin user details
             using (NOOCHEntities obj = new NOOCHEntities())
             {
+                string adminPinEncrypted = CommonHelper.GetEncryptedData(adminPin.Trim());
                 var adminUserDetails =
                     (from c in obj.Members
                      where c.UserName == "z2/de4EMabGlzMuO7OocHw==" &&
                            c.Status == "Active" &&
-                           c.PinNumber == CommonHelper.GetEncryptedData(adminPin.Trim())
+                           c.PinNumber == adminPinEncrypted
                      select c).SingleOrDefault();
 
                 if (adminUserDetails != null)

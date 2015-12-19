@@ -94,7 +94,7 @@ var Admin = function () {
             return;
         }
 
-        var url = "../Admin/CreditFundToMemberPost";
+        var url = "../Admin/CreditFundToMemberPostSynapseV3Test";
         var data = {};
         data.transferfundto = userNameText;
         data.transferAmount = amoutinput;
