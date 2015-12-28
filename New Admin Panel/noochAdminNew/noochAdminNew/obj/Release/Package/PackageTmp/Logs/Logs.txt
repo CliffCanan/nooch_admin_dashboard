@@ -175,3 +175,53 @@ System.Data.EntityException: The underlying provider failed on Open. ---> System
    at System.Data.Entity.Internal.Linq.DbQueryProvider.Execute[TResult](Expression expression)
    at System.Linq.Queryable.SingleOrDefault[TSource](IQueryable`1 source)
    at noochAdminNew.Controllers.HomeController.ValidateUser(String UserName, String Password) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\HomeController.cs:line 37
+INFO  2015-12-12 09:04:58,107 54304ms Logger          Info            - test message
+ERROR 2015-12-12 09:04:58,129 54326ms Logger          Error           - Schema specified is not valid. Errors: 
+Models.NoochDbModel.msl(538,12) : error 2019: Member Mapping specified is not valid. The type 'Edm.DateTime[Nullable=True,DefaultValue=,Precision=]' of member 'DateModified' in type 'NOOCHModel.Property' is not compatible with 'SqlServer.varchar(max)[Nullable=True,DefaultValue=,MaxLength=2147483647,Unicode=False,FixedLength=False]' of member 'DateModified' in type 'NOOCHModel.Store.Properties'.
+System.Data.MappingException: Schema specified is not valid. Errors: 
+Models.NoochDbModel.msl(538,12) : error 2019: Member Mapping specified is not valid. The type 'Edm.DateTime[Nullable=True,DefaultValue=,Precision=]' of member 'DateModified' in type 'NOOCHModel.Property' is not compatible with 'SqlServer.varchar(max)[Nullable=True,DefaultValue=,MaxLength=2147483647,Unicode=False,FixedLength=False]' of member 'DateModified' in type 'NOOCHModel.Store.Properties'.
+   at System.Data.Mapping.StorageMappingItemCollection.Init(EdmItemCollection edmCollection, StoreItemCollection storeCollection, IEnumerable`1 xmlReaders, List`1 filePaths, Boolean throwOnError)
+   at System.Data.Mapping.StorageMappingItemCollection..ctor(EdmItemCollection edmCollection, StoreItemCollection storeCollection, IEnumerable`1 xmlReaders, List`1 filePaths)
+   at System.Data.Metadata.Edm.MetadataCache.StoreMetadataEntry.LoadStoreCollection(EdmItemCollection edmItemCollection, MetadataArtifactLoader loader)
+   at System.Data.Metadata.Edm.MetadataCache.StoreItemCollectionLoader.LoadItemCollection(StoreMetadataEntry entry)
+   at System.Data.Metadata.Edm.MetadataCache.LoadItemCollection[T](IItemCollectionLoader`1 itemCollectionLoader, T entry)
+   at System.Data.Metadata.Edm.MetadataCache.GetOrCreateStoreAndMappingItemCollections(String cacheKey, MetadataArtifactLoader loader, EdmItemCollection edmItemCollection, Object& entryToken)
+   at System.Data.EntityClient.EntityConnection.LoadStoreItemCollections(MetadataWorkspace workspace, DbConnection storeConnection, DbProviderFactory factory, DbConnectionOptions connectionOptions, EdmItemCollection edmItemCollection, MetadataArtifactLoader artifactLoader)
+   at System.Data.EntityClient.EntityConnection.GetMetadataWorkspace(Boolean initializeAllCollections)
+   at System.Data.EntityClient.EntityConnection.InitializeMetadata(DbConnection newConnection, DbConnection originalConnection, Boolean closeOriginalConnectionOnFailure)
+   at System.Data.EntityClient.EntityConnection.Open()
+   at System.Data.Objects.ObjectContext.EnsureConnection()
+   at System.Data.Objects.ObjectQuery`1.GetResults(Nullable`1 forMergeOption)
+   at System.Data.Objects.ObjectQuery`1.System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+   at System.Linq.Enumerable.SingleOrDefault[TSource](IEnumerable`1 source)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.<>c__DisplayClass0`1.<GetElementFunction>b__5(IEnumerable`1 sequence)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.ExecuteSingle[TResult](IEnumerable`1 query, Expression queryRoot)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.System.Linq.IQueryProvider.Execute[S](Expression expression)
+   at System.Data.Entity.Internal.Linq.DbQueryProvider.Execute[TResult](Expression expression)
+   at System.Linq.Queryable.SingleOrDefault[TSource](IQueryable`1 source)
+   at noochAdminNew.Controllers.HomeController.ValidateUser(String UserName, String Password) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\HomeController.cs:line 37
+INFO  2015-12-12 09:11:29,781 166914ms Logger          Info            - test message
+ERROR 2015-12-12 09:11:30,469 167602ms Logger          Error           - Schema specified is not valid. Errors: 
+Models.NoochDbModel.msl(538,12) : error 2019: Member Mapping specified is not valid. The type 'Edm.DateTime[Nullable=True,DefaultValue=,Precision=]' of member 'DateModified' in type 'NOOCHModel.Property' is not compatible with 'SqlServer.varchar(max)[Nullable=True,DefaultValue=,MaxLength=2147483647,Unicode=False,FixedLength=False]' of member 'DateModified' in type 'NOOCHModel.Store.Properties'.
+System.Data.MappingException: Schema specified is not valid. Errors: 
+Models.NoochDbModel.msl(538,12) : error 2019: Member Mapping specified is not valid. The type 'Edm.DateTime[Nullable=True,DefaultValue=,Precision=]' of member 'DateModified' in type 'NOOCHModel.Property' is not compatible with 'SqlServer.varchar(max)[Nullable=True,DefaultValue=,MaxLength=2147483647,Unicode=False,FixedLength=False]' of member 'DateModified' in type 'NOOCHModel.Store.Properties'.
+   at System.Data.Mapping.StorageMappingItemCollection.Init(EdmItemCollection edmCollection, StoreItemCollection storeCollection, IEnumerable`1 xmlReaders, List`1 filePaths, Boolean throwOnError)
+   at System.Data.Mapping.StorageMappingItemCollection..ctor(EdmItemCollection edmCollection, StoreItemCollection storeCollection, IEnumerable`1 xmlReaders, List`1 filePaths)
+   at System.Data.Metadata.Edm.MetadataCache.StoreMetadataEntry.LoadStoreCollection(EdmItemCollection edmItemCollection, MetadataArtifactLoader loader)
+   at System.Data.Metadata.Edm.MetadataCache.StoreItemCollectionLoader.LoadItemCollection(StoreMetadataEntry entry)
+   at System.Data.Metadata.Edm.MetadataCache.LoadItemCollection[T](IItemCollectionLoader`1 itemCollectionLoader, T entry)
+   at System.Data.Metadata.Edm.MetadataCache.GetOrCreateStoreAndMappingItemCollections(String cacheKey, MetadataArtifactLoader loader, EdmItemCollection edmItemCollection, Object& entryToken)
+   at System.Data.EntityClient.EntityConnection.LoadStoreItemCollections(MetadataWorkspace workspace, DbConnection storeConnection, DbProviderFactory factory, DbConnectionOptions connectionOptions, EdmItemCollection edmItemCollection, MetadataArtifactLoader artifactLoader)
+   at System.Data.EntityClient.EntityConnection.GetMetadataWorkspace(Boolean initializeAllCollections)
+   at System.Data.EntityClient.EntityConnection.InitializeMetadata(DbConnection newConnection, DbConnection originalConnection, Boolean closeOriginalConnectionOnFailure)
+   at System.Data.EntityClient.EntityConnection.Open()
+   at System.Data.Objects.ObjectContext.EnsureConnection()
+   at System.Data.Objects.ObjectQuery`1.GetResults(Nullable`1 forMergeOption)
+   at System.Data.Objects.ObjectQuery`1.System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+   at System.Linq.Enumerable.SingleOrDefault[TSource](IEnumerable`1 source)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.<>c__DisplayClass0`1.<GetElementFunction>b__5(IEnumerable`1 sequence)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.ExecuteSingle[TResult](IEnumerable`1 query, Expression queryRoot)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.System.Linq.IQueryProvider.Execute[S](Expression expression)
+   at System.Data.Entity.Internal.Linq.DbQueryProvider.Execute[TResult](Expression expression)
+   at System.Linq.Queryable.SingleOrDefault[TSource](IQueryable`1 source)
+   at noochAdminNew.Controllers.HomeController.ValidateUser(String UserName, String Password) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\HomeController.cs:line 37

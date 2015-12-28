@@ -39,9 +39,8 @@
     MemberDetailsStats stats = Model.MemberStats;
 }
 
-<link href="../css/plugins/jasny/jasny-bootstrap.min.css" rel="stylesheet">
-<!-- Custom and plugin javascript -->
-
+<link rel="stylesheet" href="../css/plugins/jasny/jasny-bootstrap.min.css" />
+<link rel="stylesheet" href="../css/plugins/sweetalert-override.min.css" />
 
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
@@ -51,7 +50,16 @@
                 <a href="../Admin/Dashboard">Dashboard</a>
             </li>
             <li>
-                <a href="ListAll">Members</a>
+                @{
+                    if (mdc.type == "Landlord")
+                    {
+                        <a href="ListAllLandlords">Landlords</a>
+                    }
+                    else
+                    {
+                        <a href="ListAll">Members</a>
+                    }
+                }
             </li>
             <li class="active">
                 <strong>Search Admin</strong>
@@ -66,7 +74,19 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <h5>MEMBER DETAILS | <small>@mdc.FirstName @mdc.LastName</small></h5>
+                    <h5>
+                        @{
+                            if (mdc.type == "Landlord")
+                            {
+                                <span>Landlord </span>
+                            }
+                            else
+                            {
+                                <span>MEMBER </span>
+                            }
+                        }
+                        Details | <small>@mdc.FirstName @mdc.LastName</small>
+                    </h5>
                     <span class="pull-right">@mdc.memberId</span>
                 </div>
                 <div class="ibox-content">
@@ -305,271 +325,433 @@
 
             <div class="tab-content ">
 
-                <div id="tab-1" class="tab-pane fade active in">
-                    <div class="panel-body">
-                        <div class="row">
+            <div id="tab-1" class="tab-pane fade active in">
+            <div class="panel-body">
+            <div class="row">
 
-                            <div class="col-lg-12">
-                                <div class="ibox">
-                                    <div class="ibox-title">
-                                        <h5>Contact Info</h5>
-                                    </div>
-                                    <div class="ibox-content">
-                                        <form class="form-horizontal" method="get">
+            <div class="col-lg-12">
+            <div class="ibox">
+            <div class="ibox-title">
+                <h5>Contact Info</h5>
+            </div>
+            <div class="ibox-content">
+            <form class="form-horizontal" method="get">
 
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
                                                             <b>Contact Number</b>
                                                         </span>
-                                                        <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon"><i class="fa fa-fw fa-phone"></i></span>
-                                                                <input type="tel" placeholder="(XXX) XXX-XXXX" id="contactNumber" class="form-control" data-mask="(999) 999-9999" value="@mdc.ContactNumber">
-                                                            </div>
-                                                            @{
-                                                                if (mdc.IsPhoneVerified == true)
-                                                                {
-                                                                    <i class="fa fa-check text-success"></i>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <i class="fa fa-remove text-danger"></i>
-                                                                }
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>Primary Email</b>
-                                                        </span>
-                                                        <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span>
-                                                                <input type="email" disabled="" value="@mdc.UserName" class="form-control">
-                                                            </div>
-                                                            @{
-                                                                if (mdc.Status != "Suspended")
-                                                                {
-                                                                    <i class="fa fa-check text-success"></i>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <i class="fa fa-remove text-danger"></i>
-                                                                }
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>Street Address</b>
-                                                        </span>
-                                                        <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon"><i class="fa fa-fw fa-road"></i></span>
-                                                                <input type="text" value="@mdc.Address" class="form-control" id="streetaddress">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>Secondary Email</b>
-                                                        </span>
-                                                        <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon"><i class="fa fa-fw fa-envelope-o"></i></span>
-                                                                @if (!String.IsNullOrEmpty(mdc.SecondaryEmail.Trim()) && mdc.SecondaryEmail != " " && mdc.SecondaryEmail != "")
-                                                                {
-                                                                    <input type="email" value="@mdc.SecondaryEmail" class="form-control" id="secondaryemail1">
-                                                                }
-                                                                else
-                                                                {
-                                                                    <input type="email" class="form-control" id="secondaryemail2">
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>City</b>
-                                                        </span>
-                                                        <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon"><i class="fa fa-fw fa-map-marker"></i></span>
-                                                                <input type="text" value="@mdc.City" class="form-control" id="city">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>Recovery Email</b>
-                                                        </span>
-                                                        <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon"><i class="fa fa-fw fa-envelope-o"></i></span>
-                                                                <input type="email" class="form-control" id="recoveryemail" value="@mdc.RecoveryEmail">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>State</b>
-                                                        </span>
-                                                        <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                            <div class="col-xs-4" style="padding-left: 0;">
-                                                                <input type="text" value="@mdc.State" class="form-control" id="stateinput">
-                                                            </div>
-                                                            <div class="col-xs-8" style="padding-left: 10px; ">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon">ZIP</span>
-                                                                    <input type="text" value="@mdc.Zipcode" class="form-control" id="zipcodeinput" data-mask="99999">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>UDID</b><br /><small>(Fingerprint)</small>
-                                                        </span>
-                                                        <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                            <p class="form-control-static" style="word-wrap:break-word;">@mdc.UDID1</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="row">
-
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>Date of Birth</b>
-                                                        </span>
-                                                        <div class="col-xs-9 col-sm-8 col-lg-5">
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon"><i class="fa fa-fw fa-calendar"></i></span>
-                                                                <input type="text" value="@mdc.dob" class="form-control" id="dobinput" data-mask="99/99/9999">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>Device Token</b>
-                                                        </span>
-                                                        <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                            <p class="form-control-static" style="word-wrap:break-word;">@mdc.DeviceToken</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        <div class="row">
-
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>SSN </b><br /><small>Last 4</small>
-                                                        </span>
-                                                    <div class="col-xs-9 col-sm-8 col-lg-5">
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon"><i class="fa fa-fw fa-male"></i></span>
-                                                            <input type="text" value="@mdc.ssn" class="form-control" id="ssninput" data-mask="9999">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>Access Token</b>
-                                                        </span>
-                                                    <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                        <p class="form-control-static" style="word-wrap: break-word;">@mdc.AccessToken</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                            <div class="row">
-
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>Transfer Limit </b><br />
-                                                        </span>
-                                                        <div class="col-xs-9 col-sm-8 col-lg-5">
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon"><i class="fa fa-fw fa-male"></i></span>
-                                                                <input type="text" value="@mdc.TransferLimit" class="form-control" id="transferLimitinput" data-mask="9999">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b></b>
-                                                        </span>
-                                                        <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                            <p class="form-control-static" style="word-wrap:break-word;"></p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-                                        <div class="row">
-                                                <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
-                                                    <a class="btn btn-danger center-block" onclick="Member.EditMember()"><i class="fa fa-save"></i>  Save Changes to Profile</a>
-                                                </div>
-                                            </div>
-
-                                        </form>
-
-                                    </div>
-                                </div>
+                        <div class="col-xs-9 col-sm-8 col-lg-7">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-phone"></i></span>
+                                <input type="tel" placeholder="(XXX) XXX-XXXX" id="contactNumber" class="form-control" data-mask="(999) 999-9999" value="@mdc.ContactNumber">
                             </div>
-
+                            @{
+                                if (mdc.IsPhoneVerified == true)
+                                {
+                                    <i class="fa fa-check text-success"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa fa-remove text-danger"></i>
+                                }
+                            }
                         </div>
                     </div>
                 </div>
 
-                <div id="tab-2" class="tab-pane fade">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>Primary Email</b>
+                                                        </span>
+                        <div class="col-xs-9 col-sm-8 col-lg-7">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span>
+                                <input type="email" disabled="" value="@mdc.UserName" class="form-control">
+                            </div>
+                            @{
+                                if (mdc.Status != "Suspended")
+                                {
+                                    <i class="fa fa-check text-success"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa fa-remove text-danger"></i>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>Street Address</b>
+                                                        </span>
+                        <div class="col-xs-9 col-sm-8 col-lg-7">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-road"></i></span>
+                                <input type="text" value="@mdc.Address" class="form-control" id="streetaddress">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>Secondary Email</b>
+                                                        </span>
+                        <div class="col-xs-9 col-sm-8 col-lg-7">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-envelope-o"></i></span>
+                                @if (!String.IsNullOrEmpty(mdc.SecondaryEmail.Trim()) && mdc.SecondaryEmail != " " && mdc.SecondaryEmail != "")
+                                {
+                                    <input type="email" value="@mdc.SecondaryEmail" class="form-control" id="secondaryemail1">
+                                }
+                                else
+                                {
+                                    <input type="email" class="form-control" id="secondaryemail2">
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>City</b>
+                                                        </span>
+                        <div class="col-xs-9 col-sm-8 col-lg-7">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-map-marker"></i></span>
+                                <input type="text" value="@mdc.City" class="form-control" id="city">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>Recovery Email</b>
+                                                        </span>
+                        <div class="col-xs-9 col-sm-8 col-lg-7">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-envelope-o"></i></span>
+                                <input type="email" class="form-control" id="recoveryemail" value="@mdc.RecoveryEmail">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>State</b>
+                                                        </span>
+                        <div class="col-xs-9 col-sm-8 col-lg-7">
+                            <div class="col-xs-4" style="padding-left: 0;">
+                                <input type="text" value="@mdc.State" class="form-control" id="stateinput">
+                            </div>
+                            <div class="col-xs-8" style="padding-left: 10px;">
+                                <div class="input-group">
+                                    <span class="input-group-addon">ZIP</span>
+                                    <input type="text" value="@mdc.Zipcode" class="form-control" id="zipcodeinput" data-mask="99999">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>UDID</b><br /><small>(Fingerprint)</small>
+                                                        </span>
+                        <div class="col-xs-9 col-sm-8 col-lg-7">
+                            <p class="form-control-static" style="word-wrap: break-word;">@mdc.UDID1</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>Date of Birth</b>
+                                                        </span>
+                        <div class="col-xs-9 col-sm-8 col-lg-5">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-calendar"></i></span>
+                                <input type="text" value="@mdc.dob" class="form-control" id="dobinput" data-mask="99/99/9999">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>Device Token</b>
+                                                        </span>
+                        <div class="col-xs-9 col-sm-8 col-lg-7">
+                            <p class="form-control-static" style="word-wrap: break-word;">@mdc.DeviceToken</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>SSN </b><br /><small>Last 4</small>
+                                                        </span>
+                        <div class="col-xs-9 col-sm-8 col-lg-5">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-male"></i></span>
+                                <input type="text" value="@mdc.ssn" class="form-control" id="ssninput" data-mask="9999">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>Access Token</b>
+                                                        </span>
+                        <div class="col-xs-9 col-sm-8 col-lg-7">
+                            <p class="form-control-static" style="word-wrap: break-word;">@mdc.AccessToken</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>Transfer Limit </b><br />
+                                                        </span>
+                        <div class="col-xs-9 col-sm-8 col-lg-5">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-fw fa-usd"></i></span>
+                                <input type="text" value="@mdc.TransferLimit" class="form-control" id="transferLimitinput" data-mask="9999.99">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b></b>
+                                                        </span>
+                        <div class="col-xs-9 col-sm-8 col-lg-7">
+                            <p class="form-control-static" style="word-wrap: break-word;"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+                    <a class="btn btn-danger center-block" onclick=" Member.EditMember() "><i class="fa fa-save"></i> Save Changes to Profile</a>
+                </div>
+            </div>
+
+            </form>
+
+            </div>
+            </div>
+            </div>
+
+            </div>
+            </div>
+            </div>
+
+                @{
+                    if (mdc.type == "Tenant")
+                    {
+                        <div id="tab-1a" class="tab-pane fade">
+                            <div class="panel-body">
+                                <div class="row">
+
+                                    <div class="col-lg-12">
+                                        <div class="ibox">
+                                            <div class="ibox-title">
+                                                <h5>Tenant & Unit Info</h5>
+                                            </div>
+                                            <div class="ibox-content">
+                                                <form class="form-horizontal" method="get">
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Property</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><i class="fa fa-fw fa-building"></i></span>
+                                                                        <input type="text" id="property" class="form-control" value="@mdc.ContactNumber">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Status</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <p class="form-control-static">@mdc.UserName</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Unit</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><i class="fa fa-fw fa-home"></i></span>
+                                                                        <input type="text" value="@mdc.Address" class="form-control" id="unitNum">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Last Payment</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    @if (!String.IsNullOrEmpty(mdc.SecondaryEmail.Trim()))
+                                                                    {
+                                                                        <p id="lastPayment" class="form-control-static">@mdc.SecondaryEmail</p>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <p id="lastPayment" class="form-control-static">@mdc.SecondaryEmail</p>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Rent</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><i class="fa fa-fw fa-usd"></i></span>
+                                                                        <input type="text" value="@mdc.City" class="form-control" id="rentAmount">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Auto Pay</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <input type="checkbox" class="form-control" id="autoPay">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row">
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Due On</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <p class="form-control-static" id="dueOn">@mdc.State</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Admin Notes</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <p class="form-control-static" style="word-wrap:break-word;">@mdc.UDID1</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Lease Length</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <p class="form-control-static" id="leaseLength">@mdc.State</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4 m-t-md">
+                                                            <a class="btn btn-danger btn-lg center-block" onclick="Member.EditMember()"><i class="fa fa-save"></i> Save Changes</a>
+                                                        </div>
+                                                    </div>
+
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+            <div id="tab-2" class="tab-pane fade">
                     <div class="panel-body">
                         <div class="row">
 
@@ -659,6 +841,17 @@
                                                     </div>
 
                                                     <div class="col-md-6">
+
+
+                                                        <div class="form-group">
+                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
+                                                                <b>Bank ID</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
+                                                                <p>@synpsDetail.synapseBankId</p>
+                                                            </div>
+                                                        </div>
+
                                                         <div class="form-group">
                                                             <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
                                                                 <b>Added On</b>
@@ -667,6 +860,7 @@
                                                                 <p> @synpsDetail.SynpaseBankAddedOn</p>
                                                             </div>
                                                         </div>
+
                                                     </div>
 
                                                 </div>
@@ -711,16 +905,16 @@
                                                                 <b>OAuth Token</b>
                                                             </span>
                                                             <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p style="word-wrap:break-word;">@synpsDetail.synapseConsumerKey</p>
+                                                                <a href="javascript:Member.getSynapseInfo();" id="synAuthKey" style="word-wrap:break-word;">@synpsDetail.synapseConsumerKey</a>
                                                             </div>
                                                         </div>
 
                                                         <div class="form-group">
                                                             <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
-                                                                <b>Bank ID</b>
+                                                                <b>Refresh Token</b>
                                                             </span>
                                                             <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p> @synpsDetail.synapseBankId</p>
+                                                                <p>@synpsDetail.synapseRefreshKey</p>
                                                             </div>
                                                         </div>
 
@@ -785,22 +979,22 @@
                                                                     @{
                                                                         if (mdc.Status == "Registered")
                                                                         {
-                                                                            <a href="#" class="btn btn-sm btn-default" onclick=" Member.ApplyChoosenOperation(4) ">Verify Email</a>
+                                                                            <a href="#" class="btn btn-sm btn-default" onclick="Member.ApplyChoosenOperation(4) ">Verify Email</a>
                                                                         }
 
                                                                         if (!mdc.IsPhoneVerified && mdc.ContactNumber != null)
                                                                         {
-                                                                            <a href="#" class="btn btn-sm btn-primary" onclick=" Member.ApplyChoosenOperation(3) "> Verify Phone</a>
+                                                                            <a href="#" class="btn btn-sm btn-primary" onclick="Member.ApplyChoosenOperation(3) "> Verify Phone</a>
                                                                         }
 
                                                                         if (mdc.Status == "Active")
                                                                         {
-                                                                            <a href="#" class="btn btn-sm btn-danger" onclick=" Member.ApplyChoosenOperation(1) ">Suspend</a>
+                                                                            <a href="#" class="btn btn-sm btn-danger" onclick="Member.ApplyChoosenOperation(1) ">Suspend</a>
                                                                         }
 
                                                                         if (mdc.Status == "Suspended" || mdc.Status == "Temporarily_Blocked")
                                                                         {
-                                                                            <a href="#" class="btn btn-sm btn-primary" onclick=" Member.ApplyChoosenOperation(4)">Activate (Un-Suspend)</a>
+                                                                            <a href="#" class="btn btn-sm btn-primary" onclick="Member.ApplyChoosenOperation(4)">Activate (Un-Suspend)</a>
                                                                         }
                                                                     }
                                                                     @*<a href="#" class="btn btn-warning btn-rounded">Warning</a>*@
@@ -1155,6 +1349,7 @@
     </div>
 </div>
 
+<script src="~/js/plugins/sweetalert.min.js"></script>
 <script src="~/Scripts/App/MemberDetail.js"></script>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBejM5FqN8AVj_JbZvCYCjoGwrmB7R-rT0&callback=checkIfUserLocationExists">

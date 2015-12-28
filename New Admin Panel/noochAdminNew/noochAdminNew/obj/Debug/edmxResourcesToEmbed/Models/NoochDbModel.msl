@@ -177,43 +177,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Transactions">
-      <EntityTypeMapping TypeName="NOOCHModel.Transaction">
-        <MappingFragment StoreEntitySet="Transactions">
-          <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
-          <ScalarProperty Name="SenderId" ColumnName="SenderId" />
-          <ScalarProperty Name="RecipientId" ColumnName="RecipientId" />
-          <ScalarProperty Name="DeviceId" ColumnName="DeviceId" />
-          <ScalarProperty Name="DisputeTrackingId" ColumnName="DisputeTrackingId" />
-          <ScalarProperty Name="Amount" ColumnName="Amount" />
-          <ScalarProperty Name="TransactionDate" ColumnName="TransactionDate" />
-          <ScalarProperty Name="IsPrepaidTransaction" ColumnName="IsPrepaidTransaction" />
-          <ScalarProperty Name="TransactionFee" ColumnName="TransactionFee" />
-          <ScalarProperty Name="DisputeStatus" ColumnName="DisputeStatus" />
-          <ScalarProperty Name="TransactionStatus" ColumnName="TransactionStatus" />
-          <ScalarProperty Name="TransactionType" ColumnName="TransactionType" />
-          <ScalarProperty Name="LocationId" ColumnName="LocationId" />
-          <ScalarProperty Name="DisputeDate" ColumnName="DisputeDate" />
-          <ScalarProperty Name="ReviewDate" ColumnName="ReviewDate" />
-          <ScalarProperty Name="ResolvedDate" ColumnName="ResolvedDate" />
-          <ScalarProperty Name="TransactionTrackingId" ColumnName="TransactionTrackingId" />
-          <ScalarProperty Name="AdminNotes" ColumnName="AdminNotes" />
-          <ScalarProperty Name="AdminName" ColumnName="AdminName" />
-          <ScalarProperty Name="Subject" ColumnName="Subject" />
-          <ScalarProperty Name="RaisedBy" ColumnName="RaisedBy" />
-          <ScalarProperty Name="RaisedById" ColumnName="RaisedById" />
-          <ScalarProperty Name="Memo" ColumnName="Memo" />
-          <ScalarProperty Name="Picture" ColumnName="Picture" />
-          <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
-          <ScalarProperty Name="InvitationSentTo" ColumnName="InvitationSentTo" />
-          <ScalarProperty Name="SenderUpdatedBalanceAfterTransaction" ColumnName="SenderUpdatedBalanceAfterTransaction" />
-          <ScalarProperty Name="ReceiverUpdatedBalanceAfterTransaction" ColumnName="ReceiverUpdatedBalanceAfterTransaction" />
-          <ScalarProperty Name="BankId" ColumnName="BankId" />
-          <ScalarProperty Name="IsPhoneInvitation" ColumnName="IsPhoneInvitation" />
-          <ScalarProperty Name="PhoneNumberInvited" ColumnName="PhoneNumberInvited" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <FunctionImportMapping FunctionImportName="GetReportsForMember" FunctionName="NOOCHModel.Store.GetReportsForMember" />
     <FunctionImportMapping FunctionImportName="GetTopReferringMembers" FunctionName="NOOCHModel.Store.GetTopReferringMembers">
       <ResultMapping>
@@ -323,76 +286,6 @@
       </ResultMapping>
     </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="GetDashboardStats" FunctionName="NOOCHModel.Store.GetDashboardStats" />
-    <EntitySetMapping Name="Members">
-      <EntityTypeMapping TypeName="NOOCHModel.Member">
-        <MappingFragment StoreEntitySet="Members">
-          <ScalarProperty Name="FacebookUserId" ColumnName="FacebookUserId" />
-          <ScalarProperty Name="TransferLimit" ColumnName="TransferLimit" />
-          <ScalarProperty Name="IsVerifiedWithSynapse" ColumnName="IsVerifiedWithSynapse" />
-          <ScalarProperty Name="VerificationDocumentPath" ColumnName="VerificationDocumentPath" />
-          <ScalarProperty Name="PhoneVerifiedOn" ColumnName="PhoneVerifiedOn" />
-          <ScalarProperty Name="AdminNotes" ColumnName="AdminNotes" />
-          <ScalarProperty Name="IsSDNSafe" ColumnName="IsSDNSafe" />
-          <ScalarProperty Name="DeviceToken" ColumnName="DeviceToken" />
-          <ScalarProperty Name="IsRequiredImmediatley" ColumnName="IsRequiredImmediatley" />
-          <ScalarProperty Name="ent_num" ColumnName="ent_num" />
-          <ScalarProperty Name="AnyPriliminaryHit" ColumnName="AnyPriliminaryHit" />
-          <ScalarProperty Name="SDNCheckDateTime" ColumnName="SDNCheckDateTime" />
-          <ScalarProperty Name="IsOnline" ColumnName="IsOnline" />
-          <ScalarProperty Name="Allow2FactorAuthentication" ColumnName="Allow2FactorAuthentication" />
-          <ScalarProperty Name="AccessToken" ColumnName="AccessToken" />
-          <ScalarProperty Name="LastLocationLng" ColumnName="LastLocationLng" />
-          <ScalarProperty Name="LastLocationLat" ColumnName="LastLocationLat" />
-          <ScalarProperty Name="IsVerifiedPhone" ColumnName="IsVerifiedPhone" />
-          <ScalarProperty Name="UpgradeDate" ColumnName="UpgradeDate" />
-          <ScalarProperty Name="SSN" ColumnName="SSN" />
-          <ScalarProperty Name="Type" ColumnName="Type" />
-          <ScalarProperty Name="InviteCodeIdUsed" ColumnName="InviteCodeIdUsed" />
-          <ScalarProperty Name="InviteCodeId" ColumnName="InviteCodeId" />
-          <ScalarProperty Name="ValidationFailedCount" ColumnName="ValidationFailedCount" />
-          <ScalarProperty Name="ValidatedDate" ColumnName="ValidatedDate" />
-          <ScalarProperty Name="TotalACHTransfersCount" ColumnName="TotalACHTransfersCount" />
-          <ScalarProperty Name="TotalNoochTransfersCount" ColumnName="TotalNoochTransfersCount" />
-          <ScalarProperty Name="Address2" ColumnName="Address2" />
-          <ScalarProperty Name="TimeZoneKey" ColumnName="TimeZoneKey" />
-          <ScalarProperty Name="UserNameLowerCase" ColumnName="UserNameLowerCase" />
-          <ScalarProperty Name="InviteReminderDate" ColumnName="InviteReminderDate" />
-          <ScalarProperty Name="Deposit" ColumnName="Deposit" />
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-          <ScalarProperty Name="ShowInSearch" ColumnName="ShowInSearch" />
-          <ScalarProperty Name="Country" ColumnName="Country" />
-          <ScalarProperty Name="Zipcode" ColumnName="Zipcode" />
-          <ScalarProperty Name="State" ColumnName="State" />
-          <ScalarProperty Name="City" ColumnName="City" />
-          <ScalarProperty Name="Address" ColumnName="Address" />
-          <ScalarProperty Name="Photo" ColumnName="Photo" />
-          <ScalarProperty Name="AllowPushNotifications" ColumnName="AllowPushNotifications" />
-          <ScalarProperty Name="FacebookAccountLogin" ColumnName="FacebookAccountLogin" />
-          <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
-          <ScalarProperty Name="InvalidPinAttemptTime" ColumnName="InvalidPinAttemptTime" />
-          <ScalarProperty Name="InvalidPinAttemptCount" ColumnName="InvalidPinAttemptCount" />
-          <ScalarProperty Name="InvalidLoginAttemptCount" ColumnName="InvalidLoginAttemptCount" />
-          <ScalarProperty Name="InvalidLoginTime" ColumnName="InvalidLoginTime" />
-          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-          <ScalarProperty Name="RememberMeEnabled" ColumnName="RememberMeEnabled" />
-          <ScalarProperty Name="Status" ColumnName="Status" />
-          <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
-          <ScalarProperty Name="Password" ColumnName="Password" />
-          <ScalarProperty Name="PinNumber" ColumnName="PinNumber" />
-          <ScalarProperty Name="TertiaryEmail" ColumnName="TertiaryEmail" />
-          <ScalarProperty Name="RecoveryEmail" ColumnName="RecoveryEmail" />
-          <ScalarProperty Name="SecondaryEmail" ColumnName="SecondaryEmail" />
-          <ScalarProperty Name="UserName" ColumnName="UserName" />
-          <ScalarProperty Name="UDID1" ColumnName="UDID1" />
-          <ScalarProperty Name="LastName" ColumnName="LastName" />
-          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-          <ScalarProperty Name="Nooch_ID" ColumnName="Nooch_ID" />
-          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="SynapseBanksOfMembers">
       <EntityTypeMapping TypeName="NOOCHModel.SynapseBanksOfMember">
         <MappingFragment StoreEntitySet="SynapseBanksOfMembers">
@@ -466,5 +359,329 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <EntitySetMapping Name="TenantsIdDocuments">
+      <EntityTypeMapping TypeName="NOOCHModel.TenantsIdDocument">
+        <MappingFragment StoreEntitySet="TenantsIdDocuments">
+          <ScalarProperty Name="AdminNotes" ColumnName="AdminNotes" />
+          <ScalarProperty Name="VerfiedBy" ColumnName="VerfiedBy" />
+          <ScalarProperty Name="VerifiedOn" ColumnName="VerifiedOn" />
+          <ScalarProperty Name="IsVerified" ColumnName="IsVerified" />
+          <ScalarProperty Name="TenantId" ColumnName="TenantId" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="UploadedOn" ColumnName="UploadedOn" />
+          <ScalarProperty Name="DocumentPath" ColumnName="DocumentPath" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Landlords">
+      <EntityTypeMapping TypeName="NOOCHModel.Landlord">
+        <MappingFragment StoreEntitySet="Landlords">
+          <ScalarProperty Name="MemoFormula" ColumnName="MemoFormula" />
+          <ScalarProperty Name="FacebookUserId" ColumnName="FacebookUserId" />
+          <ScalarProperty Name="IsIdVerified" ColumnName="IsIdVerified" />
+          <ScalarProperty Name="IsAnyRentReceived" ColumnName="IsAnyRentReceived" />
+          <ScalarProperty Name="LastSeenOn" ColumnName="LastSeenOn" />
+          <ScalarProperty Name="WebAccessToken" ColumnName="WebAccessToken" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="CompaZip" ColumnName="CompaZip" />
+          <ScalarProperty Name="CompanyState" ColumnName="CompanyState" />
+          <ScalarProperty Name="CompanyCity" ColumnName="CompanyCity" />
+          <ScalarProperty Name="CompanyeAddressLineTwo" ColumnName="CompanyeAddressLineTwo" />
+          <ScalarProperty Name="CompanyAddressLineOne" ColumnName="CompanyAddressLineOne" />
+          <ScalarProperty Name="CompanyEIN" ColumnName="CompanyEIN" />
+          <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
+          <ScalarProperty Name="InstagramUrl" ColumnName="InstagramUrl" />
+          <ScalarProperty Name="TwitterHandle" ColumnName="TwitterHandle" />
+          <ScalarProperty Name="FBId" ColumnName="FBId" />
+          <ScalarProperty Name="IpAddresses" ColumnName="IpAddresses" />
+          <ScalarProperty Name="UserPic" ColumnName="UserPic" />
+          <ScalarProperty Name="SSN" ColumnName="SSN" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="Zip" ColumnName="Zip" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="AddressLineTwo" ColumnName="AddressLineTwo" />
+          <ScalarProperty Name="AddressLineOne" ColumnName="AddressLineOne" />
+          <ScalarProperty Name="IsEmailVerfieid" ColumnName="IsEmailVerfieid" />
+          <ScalarProperty Name="eMail" ColumnName="eMail" />
+          <ScalarProperty Name="IsPhoneVerified" ColumnName="IsPhoneVerified" />
+          <ScalarProperty Name="MobileNumber" ColumnName="MobileNumber" />
+          <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="SubType" ColumnName="SubType" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+          <ScalarProperty Name="LandlordId" ColumnName="LandlordId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Members">
+      <EntityTypeMapping TypeName="NOOCHModel.Member">
+        <MappingFragment StoreEntitySet="Members">
+          <ScalarProperty Name="GoogleUserId" ColumnName="GoogleUserId" />
+          <ScalarProperty Name="FacebookUserId" ColumnName="FacebookUserId" />
+          <ScalarProperty Name="TransferLimit" ColumnName="TransferLimit" />
+          <ScalarProperty Name="IsVerifiedWithSynapse" ColumnName="IsVerifiedWithSynapse" />
+          <ScalarProperty Name="VerificationDocumentPath" ColumnName="VerificationDocumentPath" />
+          <ScalarProperty Name="PhoneVerifiedOn" ColumnName="PhoneVerifiedOn" />
+          <ScalarProperty Name="AdminNotes" ColumnName="AdminNotes" />
+          <ScalarProperty Name="IsSDNSafe" ColumnName="IsSDNSafe" />
+          <ScalarProperty Name="DeviceToken" ColumnName="DeviceToken" />
+          <ScalarProperty Name="IsRequiredImmediatley" ColumnName="IsRequiredImmediatley" />
+          <ScalarProperty Name="ent_num" ColumnName="ent_num" />
+          <ScalarProperty Name="AnyPriliminaryHit" ColumnName="AnyPriliminaryHit" />
+          <ScalarProperty Name="SDNCheckDateTime" ColumnName="SDNCheckDateTime" />
+          <ScalarProperty Name="IsOnline" ColumnName="IsOnline" />
+          <ScalarProperty Name="Allow2FactorAuthentication" ColumnName="Allow2FactorAuthentication" />
+          <ScalarProperty Name="AccessToken" ColumnName="AccessToken" />
+          <ScalarProperty Name="LastLocationLng" ColumnName="LastLocationLng" />
+          <ScalarProperty Name="LastLocationLat" ColumnName="LastLocationLat" />
+          <ScalarProperty Name="IsVerifiedPhone" ColumnName="IsVerifiedPhone" />
+          <ScalarProperty Name="UpgradeDate" ColumnName="UpgradeDate" />
+          <ScalarProperty Name="SSN" ColumnName="SSN" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="InviteCodeIdUsed" ColumnName="InviteCodeIdUsed" />
+          <ScalarProperty Name="InviteCodeId" ColumnName="InviteCodeId" />
+          <ScalarProperty Name="ValidationFailedCount" ColumnName="ValidationFailedCount" />
+          <ScalarProperty Name="ValidatedDate" ColumnName="ValidatedDate" />
+          <ScalarProperty Name="TotalACHTransfersCount" ColumnName="TotalACHTransfersCount" />
+          <ScalarProperty Name="TotalNoochTransfersCount" ColumnName="TotalNoochTransfersCount" />
+          <ScalarProperty Name="Address2" ColumnName="Address2" />
+          <ScalarProperty Name="TimeZoneKey" ColumnName="TimeZoneKey" />
+          <ScalarProperty Name="UserNameLowerCase" ColumnName="UserNameLowerCase" />
+          <ScalarProperty Name="InviteReminderDate" ColumnName="InviteReminderDate" />
+          <ScalarProperty Name="Deposit" ColumnName="Deposit" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="ShowInSearch" ColumnName="ShowInSearch" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="Zipcode" ColumnName="Zipcode" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="Photo" ColumnName="Photo" />
+          <ScalarProperty Name="AllowPushNotifications" ColumnName="AllowPushNotifications" />
+          <ScalarProperty Name="FacebookAccountLogin" ColumnName="FacebookAccountLogin" />
+          <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+          <ScalarProperty Name="InvalidPinAttemptTime" ColumnName="InvalidPinAttemptTime" />
+          <ScalarProperty Name="InvalidPinAttemptCount" ColumnName="InvalidPinAttemptCount" />
+          <ScalarProperty Name="InvalidLoginAttemptCount" ColumnName="InvalidLoginAttemptCount" />
+          <ScalarProperty Name="InvalidLoginTime" ColumnName="InvalidLoginTime" />
+          <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="RememberMeEnabled" ColumnName="RememberMeEnabled" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="PinNumber" ColumnName="PinNumber" />
+          <ScalarProperty Name="TertiaryEmail" ColumnName="TertiaryEmail" />
+          <ScalarProperty Name="RecoveryEmail" ColumnName="RecoveryEmail" />
+          <ScalarProperty Name="SecondaryEmail" ColumnName="SecondaryEmail" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="UDID1" ColumnName="UDID1" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="Nooch_ID" ColumnName="Nooch_ID" />
+          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Properties">
+      <EntityTypeMapping TypeName="NOOCHModel.Property">
+        <MappingFragment StoreEntitySet="Properties">
+          <ScalarProperty Name="DefaulBank" ColumnName="DefaulBank" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="IsSingleUnit" ColumnName="IsSingleUnit" />
+          <ScalarProperty Name="PropertyImage" ColumnName="PropertyImage" />
+          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+          <ScalarProperty Name="LandlordId" ColumnName="LandlordId" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+          <ScalarProperty Name="DefaultDueDate" ColumnName="DefaultDueDate" />
+          <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
+          <ScalarProperty Name="Zip" ColumnName="Zip" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="AddressLineTwo" ColumnName="AddressLineTwo" />
+          <ScalarProperty Name="AddressLineOne" ColumnName="AddressLineOne" />
+          <ScalarProperty Name="PropName" ColumnName="PropName" />
+          <ScalarProperty Name="PropType" ColumnName="PropType" />
+          <ScalarProperty Name="PropStatus" ColumnName="PropStatus" />
+          <ScalarProperty Name="PropertyId" ColumnName="PropertyId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PropertyUnits">
+      <EntityTypeMapping TypeName="NOOCHModel.PropertyUnit">
+        <MappingFragment StoreEntitySet="PropertyUnits">
+          <ScalarProperty Name="LeaseDocumentPath" ColumnName="LeaseDocumentPath" />
+          <ScalarProperty Name="LeaseLength" ColumnName="LeaseLength" />
+          <ScalarProperty Name="RentStartDate" ColumnName="RentStartDate" />
+          <ScalarProperty Name="UnitNickName" ColumnName="UnitNickName" />
+          <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="IsOccupied" ColumnName="IsOccupied" />
+          <ScalarProperty Name="IsHidden" ColumnName="IsHidden" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="UnitImage" ColumnName="UnitImage" />
+          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+          <ScalarProperty Name="LandlordId" ColumnName="LandlordId" />
+          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+          <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+          <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
+          <ScalarProperty Name="UnitRent" ColumnName="UnitRent" />
+          <ScalarProperty Name="UnitNumber" ColumnName="UnitNumber" />
+          <ScalarProperty Name="PropertyId" ColumnName="PropertyId" />
+          <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RentTransactions">
+      <EntityTypeMapping TypeName="NOOCHModel.RentTransaction">
+        <MappingFragment StoreEntitySet="RentTransactions">
+          <ScalarProperty Name="UserPreferredDayOfMonthForAutoPay" ColumnName="UserPreferredDayOfMonthForAutoPay" />
+          <ScalarProperty Name="NoOfTimesToRecurr" ColumnName="NoOfTimesToRecurr" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="TransactionType" ColumnName="TransactionType" />
+          <ScalarProperty Name="Attachment" ColumnName="Attachment" />
+          <ScalarProperty Name="RecentRecurrTransId" ColumnName="RecentRecurrTransId" />
+          <ScalarProperty Name="NextRecurrTransDueDate" ColumnName="NextRecurrTransDueDate" />
+          <ScalarProperty Name="IsRecurring" ColumnName="IsRecurring" />
+          <ScalarProperty Name="Memo" ColumnName="Memo" />
+          <ScalarProperty Name="AdminNotes" ColumnName="AdminNotes" />
+          <ScalarProperty Name="RaisedById" ColumnName="RaisedById" />
+          <ScalarProperty Name="RaisedBy" ColumnName="RaisedBy" />
+          <ScalarProperty Name="DisputeStatus" ColumnName="DisputeStatus" />
+          <ScalarProperty Name="IsDisputed" ColumnName="IsDisputed" />
+          <ScalarProperty Name="UOBTId" ColumnName="UOBTId" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="TransRespondedOn" ColumnName="TransRespondedOn" />
+          <ScalarProperty Name="TransCreatedOn" ColumnName="TransCreatedOn" />
+          <ScalarProperty Name="TransactionStatus" ColumnName="TransactionStatus" />
+          <ScalarProperty Name="TenantId" ColumnName="TenantId" />
+          <ScalarProperty Name="LandlordId" ColumnName="LandlordId" />
+          <ScalarProperty Name="RentTransactionId" ColumnName="RentTransactionId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Tenants">
+      <EntityTypeMapping TypeName="NOOCHModel.Tenant">
+        <MappingFragment StoreEntitySet="Tenants">
+          <ScalarProperty Name="IsAutopayOn" ColumnName="IsAutopayOn" />
+          <ScalarProperty Name="IsAnyRentPaid" ColumnName="IsAnyRentPaid" />
+          <ScalarProperty Name="IsIdDocumentVerified" ColumnName="IsIdDocumentVerified" />
+          <ScalarProperty Name="UserPic" ColumnName="UserPic" />
+          <ScalarProperty Name="BankAccountId" ColumnName="BankAccountId" />
+          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="IsEmailVerified" ColumnName="IsEmailVerified" />
+          <ScalarProperty Name="eMail" ColumnName="eMail" />
+          <ScalarProperty Name="SSN" ColumnName="SSN" />
+          <ScalarProperty Name="IsPhoneVerfied" ColumnName="IsPhoneVerfied" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+          <ScalarProperty Name="Zip" ColumnName="Zip" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="AddressLineTwo" ColumnName="AddressLineTwo" />
+          <ScalarProperty Name="AddressLineOne" ColumnName="AddressLineOne" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+          <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="TenantId" ColumnName="TenantId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Transactions">
+      <EntityTypeMapping TypeName="NOOCHModel.Transaction">
+        <MappingFragment StoreEntitySet="Transactions">
+          <ScalarProperty Name="PhoneNumberInvited" ColumnName="PhoneNumberInvited" />
+          <ScalarProperty Name="IsPhoneInvitation" ColumnName="IsPhoneInvitation" />
+          <ScalarProperty Name="InvitationSentTo" ColumnName="InvitationSentTo" />
+          <ScalarProperty Name="Picture" ColumnName="Picture" />
+          <ScalarProperty Name="Memo" ColumnName="Memo" />
+          <ScalarProperty Name="RaisedById" ColumnName="RaisedById" />
+          <ScalarProperty Name="RaisedBy" ColumnName="RaisedBy" />
+          <ScalarProperty Name="Subject" ColumnName="Subject" />
+          <ScalarProperty Name="AdminName" ColumnName="AdminName" />
+          <ScalarProperty Name="AdminNotes" ColumnName="AdminNotes" />
+          <ScalarProperty Name="TransactionTrackingId" ColumnName="TransactionTrackingId" />
+          <ScalarProperty Name="ResolvedDate" ColumnName="ResolvedDate" />
+          <ScalarProperty Name="ReviewDate" ColumnName="ReviewDate" />
+          <ScalarProperty Name="DisputeDate" ColumnName="DisputeDate" />
+          <ScalarProperty Name="LocationId" ColumnName="LocationId" />
+          <ScalarProperty Name="TransactionType" ColumnName="TransactionType" />
+          <ScalarProperty Name="TransactionStatus" ColumnName="TransactionStatus" />
+          <ScalarProperty Name="DisputeStatus" ColumnName="DisputeStatus" />
+          <ScalarProperty Name="TransactionFee" ColumnName="TransactionFee" />
+          <ScalarProperty Name="IsPrepaidTransaction" ColumnName="IsPrepaidTransaction" />
+          <ScalarProperty Name="TransactionDate" ColumnName="TransactionDate" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="DisputeTrackingId" ColumnName="DisputeTrackingId" />
+          <ScalarProperty Name="DeviceId" ColumnName="DeviceId" />
+          <ScalarProperty Name="RecipientId" ColumnName="RecipientId" />
+          <ScalarProperty Name="SenderId" ColumnName="SenderId" />
+          <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UnitsOccupiedByTenants">
+      <EntityTypeMapping TypeName="NOOCHModel.UnitsOccupiedByTenant">
+        <MappingFragment StoreEntitySet="UnitsOccupiedByTenants">
+          <ScalarProperty Name="IsPaymentDueForThisMonth" ColumnName="IsPaymentDueForThisMonth" />
+          <ScalarProperty Name="LastPaymentAmount" ColumnName="LastPaymentAmount" />
+          <ScalarProperty Name="LastPaymentDate" ColumnName="LastPaymentDate" />
+          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="OccupiedOn" ColumnName="OccupiedOn" />
+          <ScalarProperty Name="TenantId" ColumnName="TenantId" />
+          <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SynapseV3CreateTransResults">
+      <EntityTypeMapping TypeName="NOOCHModel.SynapseV3CreateTransResults">
+        <MappingFragment StoreEntitySet="SynapseV3CreateTransResults">
+          <ScalarProperty Name="NoochTransactionId" ColumnName="NoochTransactionId" />
+          <ScalarProperty Name="NoochAdminNotes" ColumnName="NoochAdminNotes" />
+          <ScalarProperty Name="NoochTransactionDate" ColumnName="NoochTransactionDate" />
+          <ScalarProperty Name="to_node_type" ColumnName="to_node_type" />
+          <ScalarProperty Name="to_node_nickname" ColumnName="to_node_nickname" />
+          <ScalarProperty Name="to_node_id" ColumnName="to_node_id" />
+          <ScalarProperty Name="to_user_id" ColumnName="to_user_id" />
+          <ScalarProperty Name="recent_status_id" ColumnName="recent_status_id" />
+          <ScalarProperty Name="recent_status" ColumnName="recent_status" />
+          <ScalarProperty Name="recent_note" ColumnName="recent_note" />
+          <ScalarProperty Name="recent_status_date" ColumnName="recent_status_date" />
+          <ScalarProperty Name="from_node_type" ColumnName="from_node_type" />
+          <ScalarProperty Name="from_node_nickname" ColumnName="from_node_nickname" />
+          <ScalarProperty Name="from_node_id" ColumnName="from_node_id" />
+          <ScalarProperty Name="from_user_id" ColumnName="from_user_id" />
+          <ScalarProperty Name="nooch_fee_note" ColumnName="nooch_fee_note" />
+          <ScalarProperty Name="synapse_fee_note" ColumnName="synapse_fee_note" />
+          <ScalarProperty Name="nooch_fee_id" ColumnName="nooch_fee_id" />
+          <ScalarProperty Name="nooch_fee_fee" ColumnName="nooch_fee_fee" />
+          <ScalarProperty Name="synapse_fee_id" ColumnName="synapse_fee_id" />
+          <ScalarProperty Name="synapse_fee_fee" ColumnName="synapse_fee_fee" />
+          <ScalarProperty Name="extra_supp_id" ColumnName="extra_supp_id" />
+          <ScalarProperty Name="extra_process_on_date" ColumnName="extra_process_on_date" />
+          <ScalarProperty Name="extra_created_on_date" ColumnName="extra_created_on_date" />
+          <ScalarProperty Name="client_name" ColumnName="client_name" />
+          <ScalarProperty Name="client_id" ColumnName="client_id" />
+          <ScalarProperty Name="trans_currency" ColumnName="trans_currency" />
+          <ScalarProperty Name="trans_amount" ColumnName="trans_amount" />
+          <ScalarProperty Name="trans_id_oid" ColumnName="trans_id_oid" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

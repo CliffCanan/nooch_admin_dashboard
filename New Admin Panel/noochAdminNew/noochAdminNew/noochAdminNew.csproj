@@ -183,6 +183,8 @@
     <Compile Include="Classes\ModelClasses\MemberDetailsClass.cs" />
     <Compile Include="Classes\ModelClasses\MembersListDataClass.cs" />
     <Compile Include="Classes\ModelClasses\OfacList.cs" />
+    <Compile Include="Classes\ModelClasses\SynapseRelatedClasses.cs" />
+    <Compile Include="Classes\PushNotification\ApplePushNotification.cs" />
     <Compile Include="Classes\ResponseClasses\CreateAdminResultClass.cs" />
     <Compile Include="Classes\ResponseClasses\CreateNewReferralCodeResultClass.cs" />
     <Compile Include="Classes\ResponseClasses\DisputeDetailsResultClass.cs" />
@@ -239,6 +241,9 @@
     <Compile Include="Models\KnoxAccountDetail.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Landlord.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Member.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
@@ -266,6 +271,15 @@
     <Compile Include="Models\PasswordResetRequest.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Property.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PropertyUnit.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RentTransaction.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SDN.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
@@ -284,7 +298,19 @@
     <Compile Include="Models\SynapseSupportedBank.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SynapseV3CreateTransResults.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tenant.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TenantsIdDocument.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Transaction.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UnitsOccupiedByTenant.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

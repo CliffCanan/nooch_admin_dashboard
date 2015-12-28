@@ -38,11 +38,7 @@ namespace noochAdminNew.Models
         public Nullable<System.Guid> RaisedById { get; set; }
         public string Memo { get; set; }
         public byte[] Picture { get; set; }
-        public Nullable<System.Guid> BankAccountId { get; set; }
         public string InvitationSentTo { get; set; }
-        public string SenderUpdatedBalanceAfterTransaction { get; set; }
-        public string ReceiverUpdatedBalanceAfterTransaction { get; set; }
-        public Nullable<System.Guid> BankId { get; set; }
         public Nullable<bool> IsPhoneInvitation { get; set; }
         public string PhoneNumberInvited { get; set; }
     

@@ -88,6 +88,7 @@ namespace noochAdminNew.Models
         public Nullable<bool> IsVerifiedWithSynapse { get; set; }
         public string TransferLimit { get; set; }
         public string FacebookUserId { get; set; }
+        public string GoogleUserId { get; set; }
     
         public virtual ICollection<KnoxAccountDetail> KnoxAccountDetails { get; set; }
         public virtual ICollection<MemberNotification> MemberNotifications { get; set; }

@@ -63,6 +63,60 @@ C:\nooch_server_asp\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.W
 C:\nooch_server_asp\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.Razor.xml
 C:\nooch_server_asp\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.dll
 C:\nooch_server_asp\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.pdb
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\noochAdminNew.dll.config
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\noochAdminNew.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\noochAdminNew.pdb
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\EntityFramework.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\log4net.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Microsoft.CSharp.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Microsoft.Web.Mvc.FixedDisplayModes.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Newtonsoft.Json.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.ComponentModel.DataAnnotations.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Configuration.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Data.DataSetExtensions.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Data.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Data.Entity.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Drawing.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.EnterpriseServices.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Net.Http.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Net.Http.WebRequest.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Runtime.Serialization.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Security.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.Abstractions.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.ApplicationServices.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.DynamicData.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.Entity.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.Extensions.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.Helpers.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.Mvc.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.Razor.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.Routing.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.Services.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.Deployment.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.Razor.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Xml.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Xml.Linq.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\EntityFramework.xml
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\log4net.xml
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Newtonsoft.Json.xml
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.Helpers.xml
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.Mvc.xml
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.Razor.xml
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.xml
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.Deployment.xml
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.Razor.xml
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.csprojResolveAssemblyReference.cache
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.Resources.Constants.resources
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.csproj.GenerateResource.Cache
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.dll
+C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.pdb
+C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.csprojResolveAssemblyReference.cache
+C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.Resources.Constants.resources
+C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.csproj.GenerateResource.Cache
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\noochAdminNew.dll.config
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\noochAdminNew.dll
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\noochAdminNew.pdb
@@ -115,11 +169,9 @@ C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.Ra
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.xml
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.Deployment.xml
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.Razor.xml
-C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.csprojResolveAssemblyReference.cache
-C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.Resources.Constants.resources
-C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.csproj.GenerateResource.Cache
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.dll
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.pdb
+<<<<<<< HEAD
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\noochAdminNew.dll.config
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\noochAdminNew.dll
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\noochAdminNew.pdb
@@ -171,3 +223,5 @@ C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.dll
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.pdb
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.csprojResolveAssemblyReference.cache
+=======
+>>>>>>> 03e264827802827066219223def1ad01f3a59cd4
