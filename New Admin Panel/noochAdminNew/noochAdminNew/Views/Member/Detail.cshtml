@@ -789,6 +789,7 @@
                                                 @if (mdc.IsSynapseDetailAvailable)
                                                 {
                                                     <div class="col-md-6">
+
                                                         <div class="form-group">
                                                             <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
                                                                 <b>Bank Name</b>
@@ -798,6 +799,16 @@
                                                                 <p> @synpsDetail.SynapseBankNickName </p>
                                                             </div>
                                                         </div>
+
+                                                        <div class="form-group">
+                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
+                                                                <b>Synapse User ID</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
+                                                                <p>@synpsDetail.UserId</p>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
                                                 }
 

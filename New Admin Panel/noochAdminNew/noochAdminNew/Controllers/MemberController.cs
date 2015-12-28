@@ -788,6 +788,7 @@ namespace noochAdminNew.Controllers
 
                         string synapseAuthToken = synapseCreateUserObj.access_token;
                         string synapseRefreshToken = synapseCreateUserObj.refresh_token;
+                        string synapseUserId = synapseCreateUserObj.user_id.ToString();
 
                         SynapseDetailOFMember synapseDetail = new SynapseDetailOFMember();
 
@@ -823,6 +824,8 @@ namespace noochAdminNew.Controllers
                                                                   : "";
 
                             synapseDetail.SynapseBankName = !String.IsNullOrEmpty(synapseDetailFromDb.bank_name) ? CommonHelper.GetDecryptedData(synapseDetailFromDb.bank_name) : "Not Found";
+
+                            synapseDetail.synapseUserId = synapseUserId;
                         }
                         mdc.SynapseDetails = synapseDetail;
                     }

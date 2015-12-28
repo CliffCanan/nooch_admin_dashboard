@@ -150,5 +150,6 @@ namespace noochAdminNew.Classes.ModelClasses
         public int? synapseBankId { get; set; }
         public string synapseConsumerKey { get; set; }
         public string synapseRefreshKey { get; set; }
+        public string synapseUserId { get; set; }
     }
 }
