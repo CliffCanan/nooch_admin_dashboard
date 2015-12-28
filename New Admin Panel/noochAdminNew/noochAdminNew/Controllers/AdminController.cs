@@ -1441,9 +1441,9 @@ namespace noochAdminNew.Controllers
                         {
                             #region Query Synapse Order API
 
-                            string sender_oauth = adminSynapseDetails.UserDetails.access_token;
+                            string sender_oauth = CommonHelper.GetDecryptedData( adminSynapseDetails.UserDetails.access_token);
                             string sender_fingerPrint = adminUserDetails.UDID1;
-                            string sender_bank_node_id = adminSynapseDetails.BankDetails.bankid.ToString();
+                            string sender_bank_node_id = adminSynapseDetails.BankDetails.oid.ToString();
                             string amount = transferAmount;
                             string fee = "0";
                             if (transactionAmount > 10)
@@ -1454,9 +1454,9 @@ namespace noochAdminNew.Controllers
                             {
                                 fee = "0.10"; //to offset the Synapse fee so the user doesn't pay it
                             }
-                            string receiver_oauth = recipientBankDetails.UserDetails.access_token;
+                            string receiver_oauth = CommonHelper.GetDecryptedData(recipientBankDetails.UserDetails.access_token);
                             string receiver_fingerprint = recipientMemberDetails.UDID1;
-                            string receiver_bank_node_id = recipientBankDetails.BankDetails.bankid.ToString();
+                            string receiver_bank_node_id = recipientBankDetails.BankDetails.oid.ToString();
                             string suppID_or_transID = TransactionIdToUse.ToString();
 
                             string iPForTransaction = CommonHelper.GetRecentOrDefaultIPOfMember(AdminMemberId);

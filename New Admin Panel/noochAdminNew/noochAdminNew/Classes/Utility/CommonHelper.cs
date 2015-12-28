@@ -362,6 +362,9 @@ namespace noochAdminNew.Classes.Utility
                 bool SenderSynapsePermissionOK = false;
                 bool RecipientSynapsePermissionOK = false;
 
+                senderUserName = senderUserName.ToLower();
+                receiverUserName = receiverUserName.ToLower();
+
                 #region Check Sender Synapse Permissions
 
                 // 1. Check USER permissions for SENDER
