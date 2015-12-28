@@ -373,7 +373,7 @@ namespace noochAdminNew.Controllers
 
                 return Json(mr);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 mr.IsSuccess = false;
                 mr.Message = "Error";
