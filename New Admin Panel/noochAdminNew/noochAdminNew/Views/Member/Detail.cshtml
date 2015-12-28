@@ -55,6 +55,10 @@
                     {
                         <a href="ListAllLandlords">Landlords</a>
                     }
+                    else if (mdc.type == "Tenant")
+                    {
+                        <a href="ListAllTenants">Tenants</a>
+                    }
                     else
                     {
                         <a href="ListAll">Members</a>
@@ -79,6 +83,10 @@
                             if (mdc.type == "Landlord")
                             {
                                 <span>Landlord </span>
+                            }
+                            else if (mdc.type == "Tenant")
+                            {
+                                <span>TENANT </span>
                             }
                             else
                             {
@@ -317,10 +325,16 @@
 
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#tab-1"><i class="fa fa-fw fa-user m-r-sm"></i> Profile Info</a></li>
-                <li class=""><a data-toggle="tab" href="#tab-2"><i class="fa fa-fw fa-bank m-r-sm"></i> Banks</a></li>
-                <li class=""><a data-toggle="tab" href="#tab-3"><i class="fa fa-fw fa-wrench m-r-sm"></i> Admin Actions</a></li>
-                <li class=""><a data-toggle="tab" href="#tab-4"><i class="fa fa-fw fa-exchange m-r-sm"></i> Recent Transactions</a></li>
-                <li class=""><a data-toggle="tab" href="#tab-5"><i class="fa fa-fw fa-exclamation-circle m-r-sm"></i> Disputed Transactions</a></li>
+                @{
+                    if (mdc.type == "Tenant")
+                    {
+                        <li><a data-toggle="tab" href="#tab-1a"><i class="fa fa-fw fa-user m-r-sm"></i> Tenant Info</a></li>
+                    }
+                }
+                <li><a data-toggle="tab" href="#tab-2"><i class="fa fa-fw fa-bank m-r-sm"></i> Banks</a></li>
+                <li><a data-toggle="tab" href="#tab-3"><i class="fa fa-fw fa-wrench m-r-sm"></i> Admin Actions</a></li>
+                <li><a data-toggle="tab" href="#tab-4"><i class="fa fa-fw fa-exchange m-r-sm"></i> Recent Transactions</a></li>
+                <li><a data-toggle="tab" href="#tab-5"><i class="fa fa-fw fa-exclamation-circle m-r-sm"></i> Disputes</a></li>
             </ul>
 
             <div class="tab-content ">
@@ -385,6 +399,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
                                             </div>
 
                                             <div class="row">
@@ -485,6 +500,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
                                             </div>
 
                                             <div class="row">
@@ -513,6 +529,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
                                             </div>
 
                                             <div class="row">
@@ -541,8 +558,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
+                                            </div>
 
                                             <div class="row">
 
@@ -570,12 +587,13 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
                                             </div>
 
 
                                             <div class="row">
-                                                <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
-                                                    <a class="btn btn-danger center-block" onclick="Member.EditMember()"><i class="fa fa-save"></i>  Save Changes to Profile</a>
+                                                <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4 m-t-sm">
+                                                    <a class="btn btn-danger btn-lg center-block" onclick="Member.EditMember()"><i class="fa fa-save"></i> Save Changes</a>
                                                 </div>
                                             </div>
 
@@ -589,6 +607,168 @@
                     </div>
                 </div>
 
+                @{
+                    if (mdc.type == "Tenant")
+                    {
+                        <div id="tab-1a" class="tab-pane fade">
+                            <div class="panel-body">
+                                <div class="row">
+
+                                    <div class="col-lg-12">
+                                        <div class="ibox">
+                                            <div class="ibox-title">
+                                                <h5>Tenant & Unit Info</h5>
+                                            </div>
+                                            <div class="ibox-content">
+                                                <form class="form-horizontal" method="get">
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Property</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><i class="fa fa-fw fa-building"></i></span>
+                                                                        <input type="text" id="property" class="form-control" value="@mdc.ContactNumber">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Status</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <p class="form-control-static">@mdc.UserName</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Unit</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><i class="fa fa-fw fa-home"></i></span>
+                                                                        <input type="text" value="@mdc.Address" class="form-control" id="unitNum">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Last Payment</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    @if (!String.IsNullOrEmpty(mdc.SecondaryEmail.Trim()))
+                                                                    {
+                                                                        <p id="lastPayment" class="form-control-static">@mdc.SecondaryEmail</p>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <p id="lastPayment" class="form-control-static">@mdc.SecondaryEmail</p>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Rent</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><i class="fa fa-fw fa-usd"></i></span>
+                                                                        <input type="text" value="@mdc.City" class="form-control" id="rentAmount">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Auto Pay</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <input type="checkbox" class="form-control" id="autoPay">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row">
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Due On</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <p class="form-control-static" id="dueOn">@mdc.State</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Admin Notes</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <p class="form-control-static" style="word-wrap:break-word;">@mdc.UDID1</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Lease Length</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <p class="form-control-static" id="leaseLength">@mdc.State</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4 m-t-md">
+                                                            <a class="btn btn-danger btn-lg center-block" onclick="Member.EditMember()"><i class="fa fa-save"></i> Save Changes</a>
+                                                        </div>
+                                                    </div>
+
+                                                </form>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
                 <div id="tab-2" class="tab-pane fade">
                     <div class="panel-body">
                         <div class="row">
@@ -599,6 +779,7 @@
                                     <div class="ibox-title">
                                         <h5>Synapse Details</h5>
                                         <img class="" src="~/img/synapse_sm.png" />
+                                        <span class="pull-right hidden-xs">IsVerifiedWithSynapse: &nbsp;<strong>@mdc.IsVerifiedWithSynapse</strong></span>
                                     </div>
                                     <div class="ibox-content">
                                         <form class="form-horizontal">
@@ -621,6 +802,7 @@
                                                 }
 
                                                 <div class="col-md-6">
+
                                                     <div class="form-group">
                                                         <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
                                                             <b>Status</b>
@@ -645,7 +827,6 @@
                                                                             <button type="button" class="btn btn-link" onclick="Member.VerifyBankAccount(); "><i class="fa fa-check"></i>Verify</button>
                                                                         </p>
                                                                     }
-                                                                    <p>IsVerifiedWithSynapse:&nbsp; <strong>@mdc.IsVerifiedWithSynapse</strong></p>
                                                                     <input type="hidden" id="bnkIdHidden" value="@synpsDetail.BankId" />
                                                                 </div>
                                                             }
@@ -657,6 +838,17 @@
                                                             }
                                                         </div>
                                                     </div>
+                                                    @if (mdc.IsSynapseDetailAvailable)
+                                                    {
+                                                        <div class="form-group">
+                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
+                                                                <b>MFA Verified</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
+                                                                <p>@synpsDetail.mfaVerified</p>
+                                                            </div>
+                                                        </div>
+                                                    }
                                                 </div>
 
                                             </div>
@@ -679,7 +871,6 @@
                                                     </div>
 
                                                     <div class="col-md-6">
-
 
                                                         <div class="form-group">
                                                             <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
@@ -708,10 +899,10 @@
                                                     <div class="col-md-6">
                                                         <div class="form-group m-b-none">
                                                             <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
-                                                                <b>SSN Submitted To Synapse?</b>
+                                                                <b>IsVerifiedWithSynapse</b>
                                                             </span>
                                                             <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p>YES or NO</p>
+                                                                <p><strong>@mdc.IsVerifiedWithSynapse</strong></p>
                                                             </div>
                                                         </div>
 

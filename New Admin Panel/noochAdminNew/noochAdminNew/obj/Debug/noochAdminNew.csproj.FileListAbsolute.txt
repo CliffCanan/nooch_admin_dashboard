@@ -166,7 +166,6 @@ C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.xml
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.Deployment.xml
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\System.Web.WebPages.Razor.xml
-C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.csprojResolveAssemblyReference.cache
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.Resources.Constants.resources
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.csproj.GenerateResource.Cache
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.dll
