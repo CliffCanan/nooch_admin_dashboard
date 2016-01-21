@@ -438,7 +438,8 @@ namespace noochAdminNew.Controllers
                 {
                     All_Members_In_Records = (from t in obj.Members
                                               where t.Type == "Personal" ||
-                                                    t.Type == "Business"
+                                                    t.Type == "Business" ||
+                                                    t.Type == "Personal - Browser"
                                               select t).ToList();
                 }
                 else if (type == "Landlord")
