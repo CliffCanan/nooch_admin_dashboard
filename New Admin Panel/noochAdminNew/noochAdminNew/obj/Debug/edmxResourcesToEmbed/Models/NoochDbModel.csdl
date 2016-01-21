@@ -8,7 +8,6 @@
     <EntitySet Name="AuthenticationTokens" EntityType="NOOCHModel.AuthenticationToken" />
     <EntitySet Name="GeoLocations" EntityType="NOOCHModel.GeoLocation" />
     <EntitySet Name="InviteCodes" EntityType="NOOCHModel.InviteCode" />
-    <EntitySet Name="KnoxAccountDetails" EntityType="NOOCHModel.KnoxAccountDetail" />
     <EntitySet Name="MemberNotifications" EntityType="NOOCHModel.MemberNotification" />
     <EntitySet Name="PasswordResetRequests" EntityType="NOOCHModel.PasswordResetRequest" />
     <EntitySet Name="SDNs" EntityType="NOOCHModel.SDN" />
@@ -45,10 +44,6 @@
     <AssociationSet Name="FK_Transactions_GeoLocations" Association="NOOCHModel.FK_Transactions_GeoLocations">
       <End Role="GeoLocation" EntitySet="GeoLocations" />
       <End Role="Transaction" EntitySet="Transactions" />
-    </AssociationSet>
-    <AssociationSet Name="FK_KnoxAccountDetails_Members" Association="NOOCHModel.FK_KnoxAccountDetails_Members">
-      <End Role="Member" EntitySet="Members" />
-      <End Role="KnoxAccountDetail" EntitySet="KnoxAccountDetails" />
     </AssociationSet>
     <AssociationSet Name="FK_RentTransactions_Landlords" Association="NOOCHModel.FK_RentTransactions_Landlords">
       <End Role="Landlord" EntitySet="Landlords" />
@@ -176,24 +171,6 @@
     <Property Name="CreatedOn" Type="DateTime" Precision="3" />
     <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
     <Property Type="Guid" Name="CreatedBy" />
-  </EntityType>
-  <EntityType Name="KnoxAccountDetail">
-    <Key>
-      <PropertyRef Name="AccountId" />
-    </Key>
-    <Property Name="AccountId" Type="Guid" Nullable="false" />
-    <Property Name="MemberId" Type="Guid" />
-    <Property Name="TransId" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-    <Property Name="UserKey" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-    <Property Name="UserPass" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-    <Property Name="DateCreated" Type="DateTime" Precision="3" />
-    <Property Name="DateModified" Type="DateTime" Precision="3" />
-    <Property Name="IsDeleted" Type="Boolean" />
-    <Property Name="BankName" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-    <Property Name="AccountNum" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-    <Property Name="BankImageURL" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-    <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <NavigationProperty Name="Member" Relationship="NOOCHModel.FK_KnoxAccountDetails_Members" FromRole="KnoxAccountDetail" ToRole="Member" />
   </EntityType>
   <EntityType Name="MemberNotification">
     <Key>
@@ -560,7 +537,6 @@
     <Property Name="TransferLimit" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
     <Property Name="FacebookUserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
     <Property Name="GoogleUserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-    <NavigationProperty Name="KnoxAccountDetails" Relationship="NOOCHModel.FK_KnoxAccountDetails_Members" FromRole="Member" ToRole="KnoxAccountDetail" />
     <NavigationProperty Name="MemberNotifications" Relationship="NOOCHModel.FK_MemberNotifications_Members" FromRole="Member" ToRole="MemberNotification" />
     <NavigationProperty Name="PasswordResetRequests" Relationship="NOOCHModel.FK_PasswordResetRequests_Members" FromRole="Member" ToRole="PasswordResetRequest" />
     <NavigationProperty Name="SynapseBankLoginResults" Relationship="NOOCHModel.FK_SynapseBankLoginResults_Members" FromRole="Member" ToRole="SynapseBankLoginResult" />
@@ -733,18 +709,6 @@
       </Principal>
       <Dependent Role="Transaction">
         <PropertyRef Name="LocationId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_KnoxAccountDetails_Members">
-    <End Type="NOOCHModel.Member" Role="Member" Multiplicity="0..1" />
-    <End Type="NOOCHModel.KnoxAccountDetail" Role="KnoxAccountDetail" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Member">
-        <PropertyRef Name="MemberId" />
-      </Principal>
-      <Dependent Role="KnoxAccountDetail">
-        <PropertyRef Name="MemberId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

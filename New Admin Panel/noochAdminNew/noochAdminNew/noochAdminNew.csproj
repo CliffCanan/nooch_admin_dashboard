@@ -58,6 +58,9 @@
     <Reference Include="Microsoft.CSharp">
       <Private>True</Private>
     </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.105.2.2\lib\net45\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <Private>True</Private>
     </Reference>
@@ -171,6 +174,9 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="Twilio.Api">
+      <HintPath>..\packages\Twilio.4.4.1\lib\3.5\Twilio.Api.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Crypto\AES.cs" />
@@ -236,9 +242,6 @@
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\InviteCode.cs">
-      <DependentUpon>NoochDbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\KnoxAccountDetail.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Landlord.cs">
@@ -897,7 +900,9 @@
     <Content Include="Scripts\knockout-2.2.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

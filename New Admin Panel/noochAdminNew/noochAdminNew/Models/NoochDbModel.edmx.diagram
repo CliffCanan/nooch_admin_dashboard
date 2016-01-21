@@ -12,7 +12,6 @@
         <EntityTypeShape EntityType="NOOCHModel.AuthenticationToken" Width="1.5" PointX="7.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.GeoLocation" Width="1.5" PointX="3.75" PointY="1.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.InviteCode" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="NOOCHModel.KnoxAccountDetail" Width="1.5" PointX="3" PointY="6" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.MemberNotification" Width="1.5" PointX="3" PointY="10.125" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.PasswordResetRequest" Width="1.5" PointX="3" PointY="17.125" IsExpanded="true" />
         <EntityTypeShape EntityType="NOOCHModel.SDN" Width="1.5" PointX="10.75" PointY="4.75" IsExpanded="true" />
@@ -32,7 +31,6 @@
         <EntityTypeShape EntityType="NOOCHModel.Transaction" Width="1.5" PointX="6" PointY="8.5" />
         <EntityTypeShape EntityType="NOOCHModel.UnitsOccupiedByTenant" Width="1.5" PointX="15.375" PointY="15.75" />
         <AssociationConnector Association="NOOCHModel.FK_Transactions_GeoLocations" />
-        <AssociationConnector Association="NOOCHModel.FK_KnoxAccountDetails_Members" />
         <AssociationConnector Association="NOOCHModel.FK_RentTransactions_Landlords" />
         <AssociationConnector Association="NOOCHModel.FK_MemberNotifications_Members" />
         <AssociationConnector Association="NOOCHModel.FK_PasswordResetRequests_Members" />

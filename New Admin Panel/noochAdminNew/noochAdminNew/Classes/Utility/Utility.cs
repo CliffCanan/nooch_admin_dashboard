@@ -55,6 +55,44 @@ namespace noochAdminNew.Classes.Utility
             return "1";
         }
 
+
+
+        public static string SendSMS(string phoneto, string msg, string accessToken, string memberId)
+        {
+            try
+            {
+                if (phoneto.Substring(0, 3) != "555")
+                {
+                    string AccountSid = GetValueFromConfig("AccountSid");
+                    string AuthToken = GetValueFromConfig("AuthToken");
+                    string from = GetValueFromConfig("AccountPhone");
+                    string to = "";
+
+                    if (!phoneto.Trim().Contains("+"))
+                        to = GetValueFromConfig("SMSInternationalCode") + phoneto.Trim();
+                    else
+                        to = phoneto.Trim();
+
+                    var client = new Twilio.TwilioRestClient(AccountSid, AuthToken);
+                    var sms = client.SendMessage(from, to, msg);
+
+                    return sms.Status;
+                }
+                else
+                {
+                    Logger.Info("Utility-> Send SMS Aborted - Test Phone # Detected: [" + phoneto + "]");
+                    return "Test phone number detected - SMS not sent";
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Info("Utility -> SEND SMS FAILED - [To #: " + phoneto + "], [MemberID: " +
+                                       memberId + "], [Exception: " + ex.InnerException + "]");
+            }
+            return "Failure";
+        }
+
+
         public class GameThriveContents
         {
             public string en;
