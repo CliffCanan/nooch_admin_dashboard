@@ -16,7 +16,6 @@ namespace noochAdminNew.Models
     {
         public Member()
         {
-            this.KnoxAccountDetails = new HashSet<KnoxAccountDetail>();
             this.MemberNotifications = new HashSet<MemberNotification>();
             this.PasswordResetRequests = new HashSet<PasswordResetRequest>();
             this.SynapseBankLoginResults = new HashSet<SynapseBankLoginResult>();
@@ -90,7 +89,6 @@ namespace noochAdminNew.Models
         public string FacebookUserId { get; set; }
         public string GoogleUserId { get; set; }
     
-        public virtual ICollection<KnoxAccountDetail> KnoxAccountDetails { get; set; }
         public virtual ICollection<MemberNotification> MemberNotifications { get; set; }
         public virtual ICollection<PasswordResetRequest> PasswordResetRequests { get; set; }
         public virtual ICollection<SynapseBankLoginResult> SynapseBankLoginResults { get; set; }

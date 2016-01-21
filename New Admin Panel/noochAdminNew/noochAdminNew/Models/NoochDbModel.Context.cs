@@ -35,7 +35,6 @@ namespace noochAdminNew.Models
         public DbSet<AuthenticationToken> AuthenticationTokens { get; set; }
         public DbSet<GeoLocation> GeoLocations { get; set; }
         public DbSet<InviteCode> InviteCodes { get; set; }
-        public DbSet<KnoxAccountDetail> KnoxAccountDetails { get; set; }
         public DbSet<MemberNotification> MemberNotifications { get; set; }
         public DbSet<PasswordResetRequest> PasswordResetRequests { get; set; }
         public DbSet<SDN> SDNs { get; set; }

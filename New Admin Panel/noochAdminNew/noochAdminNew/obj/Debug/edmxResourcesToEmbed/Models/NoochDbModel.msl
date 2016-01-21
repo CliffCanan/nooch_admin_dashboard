@@ -100,24 +100,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="KnoxAccountDetails">
-      <EntityTypeMapping TypeName="NOOCHModel.KnoxAccountDetail">
-        <MappingFragment StoreEntitySet="KnoxAccountDetails">
-          <ScalarProperty Name="Status" ColumnName="Status" />
-          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
-          <ScalarProperty Name="TransId" ColumnName="TransId" />
-          <ScalarProperty Name="UserKey" ColumnName="UserKey" />
-          <ScalarProperty Name="UserPass" ColumnName="UserPass" />
-          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-          <ScalarProperty Name="BankName" ColumnName="BankName" />
-          <ScalarProperty Name="AccountNum" ColumnName="AccountNum" />
-          <ScalarProperty Name="BankImageURL" ColumnName="BankImageURL" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="MemberNotifications">
       <EntityTypeMapping TypeName="NOOCHModel.MemberNotification">
         <MappingFragment StoreEntitySet="MemberNotifications">

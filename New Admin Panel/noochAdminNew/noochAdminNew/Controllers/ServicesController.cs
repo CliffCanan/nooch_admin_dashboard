@@ -26,11 +26,9 @@ namespace noochAdminNew.Controllers
 
                 // getting all users with active knox bank account
 
-                var allActiveUsersWithKnox = (from c in obj.KnoxAccountDetails
-                                              where c.IsDeleted == false
-                                              select c).ToList();
+                var allActiveUsersWithKnox = (from c in obj.Members where c.IsVerifiedWithSynapse== true && c.IsDeleted==false select c).ToList();
 
-                foreach (KnoxAccountDetail kad in allActiveUsersWithKnox)
+                foreach (Member kad in allActiveUsersWithKnox)
                 {
                     var mem = (from c in obj.Members where c.MemberId == kad.MemberId select c).SingleOrDefault();
 

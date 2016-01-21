@@ -170,3 +170,8 @@ C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.csproj.GenerateResource.Cache
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.dll
 C:\Users\Cliff Canan\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.pdb
+C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\RestSharp.dll
+C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Twilio.Api.dll
+C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\RestSharp.xml
+C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Twilio.Api.pdb
+C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Twilio.Api.xml
