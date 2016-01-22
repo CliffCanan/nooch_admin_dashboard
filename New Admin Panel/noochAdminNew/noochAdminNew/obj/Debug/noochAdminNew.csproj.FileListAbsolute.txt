@@ -59,3 +59,4 @@ C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAd
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.csproj.GenerateResource.Cache
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.dll
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.pdb
+C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Debug\noochAdminNew.csprojResolveAssemblyReference.cache

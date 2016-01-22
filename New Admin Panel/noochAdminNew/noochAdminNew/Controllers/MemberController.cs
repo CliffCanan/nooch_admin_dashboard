@@ -456,7 +456,7 @@ namespace noochAdminNew.Controllers
                 }
 
                 foreach (Member m in All_Members_In_Records)
-                {
+                { 
                     int TransCount = (from tr in obj.Transactions
                                       where (tr.Member.MemberId == m.MemberId || tr.Member1.MemberId == m.MemberId) &&
                                              tr.TransactionStatus == "Success"
