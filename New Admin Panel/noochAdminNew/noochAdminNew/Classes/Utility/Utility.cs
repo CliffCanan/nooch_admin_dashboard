@@ -55,7 +55,39 @@ namespace noochAdminNew.Classes.Utility
             return "1";
         }
 
+        public static string FormatPhoneNumber(string sourcePhone)
+        {
+            sourcePhone.Trim();
+            if (String.IsNullOrEmpty(sourcePhone) || sourcePhone.Length != 10)
+            {
+                return sourcePhone;
+            }
+            sourcePhone = "(" + sourcePhone;
+            sourcePhone = sourcePhone.Insert(4, ")");
+            sourcePhone = sourcePhone.Insert(5, " ");
+            sourcePhone = sourcePhone.Insert(9, "-");
+            return sourcePhone;
+        }
 
+        public static string RemovePhoneNumberFormatting(string sourceNum)
+        {
+            sourceNum.Trim();
+
+            if (!String.IsNullOrEmpty(sourceNum))
+            {
+                // removing extra stuff from phone number
+                sourceNum = sourceNum.Replace("(", "");
+                sourceNum = sourceNum.Replace(")", "");
+                sourceNum = sourceNum.Replace(" ", "");
+                sourceNum = sourceNum.Replace("-", "");
+                sourceNum = sourceNum.Replace("+", "");
+            }
+            else
+            {
+                Logger.Info("Utility -> RemovePhoneNumberFormatting Source String was NULL or EMPTY - [SourceData: " + sourceNum + "]");
+            }
+            return sourceNum;
+        }
 
         public static string SendSMS(string phoneto, string msg,  string memberId)
         {

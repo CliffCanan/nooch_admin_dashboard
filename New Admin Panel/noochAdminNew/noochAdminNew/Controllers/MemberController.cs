@@ -891,7 +891,7 @@ namespace noochAdminNew.Controllers
                 {
                     string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
                     string MessageBody = "Hi " + fname + ", This is Nooch - just need to verify this is your phone number. Please reply 'Go' to confirm your phone number.";
-                    res.Message =  Utility.SendSMS("9041661525", "", member.MemberId.ToString());
+                    res.Message = Utility.SendSMS(Utility.RemovePhoneNumberFormatting( member.ContactNumber), MessageBody, member.MemberId.ToString());
                     if (res.Message != "Failure")
                     {
                         res.IsSuccess = true;
