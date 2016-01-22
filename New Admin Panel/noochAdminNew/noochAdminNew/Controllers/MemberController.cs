@@ -461,7 +461,7 @@ namespace noochAdminNew.Controllers
                                       where (tr.Member.MemberId == m.MemberId || tr.Member1.MemberId == m.MemberId) &&
                                              tr.TransactionStatus == "Success"
                                       select tr).Count();
-
+                     
                     // transaction - Transfer Type - 5dt4HUwCue532sNmw3LKDQ==
                     // invite - DrRr1tU1usk7nNibjtcZkA==
                     // request - T3EMY1WWZ9IscHIj3dbcNw==
