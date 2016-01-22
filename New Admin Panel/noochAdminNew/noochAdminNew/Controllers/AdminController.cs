@@ -125,7 +125,7 @@ namespace noochAdminNew.Controllers
             //        {
             //            try
             //            {
-            //                var transtLive = (from Livetranstp in obj.Transactions
+            //                var transtLive = (from Livetranstp in obj.TrSendEmailansactions
             //                                  join member in obj.Members on Livetranstp.SenderId equals member.MemberId
             //                                  join membr1 in obj.Members on Livetranstp.RecipientId equals membr1.MemberId
             //                                  join loc in obj.GeoLocations on Livetranstp.LocationId equals loc.LocationId

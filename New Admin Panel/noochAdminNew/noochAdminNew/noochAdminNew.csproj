@@ -214,9 +214,6 @@
     <Compile Include="Models\ADD.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\AdminLevelAccessRight.cs">
-      <DependentUpon>NoochDbModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\AdminUser.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>

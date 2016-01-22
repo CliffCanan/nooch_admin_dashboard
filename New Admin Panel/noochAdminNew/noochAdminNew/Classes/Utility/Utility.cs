@@ -57,7 +57,7 @@ namespace noochAdminNew.Classes.Utility
 
 
 
-        public static string SendSMS(string phoneto, string msg, string accessToken, string memberId)
+        public static string SendSMS(string phoneto, string msg,  string memberId)
         {
             try
             {
@@ -74,7 +74,7 @@ namespace noochAdminNew.Classes.Utility
                         to = phoneto.Trim();
 
                     var client = new Twilio.TwilioRestClient(AccountSid, AuthToken);
-                    var sms = client.SendMessage(from, to, msg);
+                    var sms= client.SendMessage(from, to, msg);
 
                     return sms.Status;
                 }

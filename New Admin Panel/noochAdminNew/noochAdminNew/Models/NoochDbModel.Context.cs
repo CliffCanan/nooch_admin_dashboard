@@ -29,7 +29,6 @@ namespace noochAdminNew.Models
         }
     
         public DbSet<ADD> ADDs { get; set; }
-        public DbSet<AdminLevelAccessRight> AdminLevelAccessRights { get; set; }
         public DbSet<AdminUser> AdminUsers { get; set; }
         public DbSet<ALT> ALTs { get; set; }
         public DbSet<AuthenticationToken> AuthenticationTokens { get; set; }
@@ -43,7 +42,6 @@ namespace noochAdminNew.Models
         public DbSet<SynapseBankLoginResult> SynapseBankLoginResults { get; set; }
         public DbSet<SynapseCreateOrderResult> SynapseCreateOrderResults { get; set; }
         public DbSet<SynapseBanksOfMember> SynapseBanksOfMembers { get; set; }
-        public DbSet<SynapseCreateUserResult> SynapseCreateUserResults { get; set; }
         public DbSet<TenantsIdDocument> TenantsIdDocuments { get; set; }
         public DbSet<Landlord> Landlords { get; set; }
         public DbSet<Member> Members { get; set; }
@@ -54,6 +52,7 @@ namespace noochAdminNew.Models
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<UnitsOccupiedByTenant> UnitsOccupiedByTenants { get; set; }
         public DbSet<SynapseV3CreateTransResults> SynapseV3CreateTransResults { get; set; }
+        public DbSet<SynapseCreateUserResult> SynapseCreateUserResults { get; set; }
     
         public virtual ObjectResult<string> GetReportsForMember(string memberId, string getWhat)
         {

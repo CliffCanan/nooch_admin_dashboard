@@ -782,9 +782,9 @@ namespace noochAdminNew.Controllers
 
                         // Get Auth Token (It's not in the banks table... it's in the SynapseCreateUserResults Table)
                         var synapseCreateUserObj = (from Syn in obj.SynapseCreateUserResults
-                                                   join mem in obj.Members on Syn.MemberId equals mem.MemberId
-                                                   where Syn.IsDeleted == false && mem.Nooch_ID == NoochId
-                                                   select Syn).FirstOrDefault();
+                                                    join mem in obj.Members on Syn.MemberId equals mem.MemberId
+                                                    where Syn.IsDeleted == false && mem.Nooch_ID == NoochId
+                                                    select Syn).FirstOrDefault();
 
                         string synapseAuthToken = synapseCreateUserObj.access_token;
                         string synapseRefreshToken = synapseCreateUserObj.refresh_token;
@@ -876,6 +876,35 @@ namespace noochAdminNew.Controllers
                 }
             }
             return View(mdc);
+        }
+        [HttpPost]
+        [ActionName("ReSendVrificationSMS")]
+        public ActionResult ReSendVrificationSMS(string noochIds)
+        {
+
+            MemberOperationsResult res = new MemberOperationsResult();
+            using (NOOCHEntities obj = new NOOCHEntities())
+            {
+                var member = (from t in obj.Members where t.Nooch_ID == noochIds && t.IsDeleted == false select t).SingleOrDefault();
+                if (member != null)
+                {
+                    string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
+                    string MessageBody = "Hi " + fname + ", This is Nooch - just need to verify this is your phone number. Please reply 'Go' to confirm your phone number.";
+                    res.Message =  Utility.SendSMS("9041661525", "", member.MemberId.ToString());
+                    if (res.Message != "Failure")
+                    {
+                        res.IsSuccess = true;
+                    }
+                    else
+                    {
+                        res.IsSuccess = false;
+                    }
+
+                }
+            }
+
+            return Json(res);
+
         }
 
         /// <summary>

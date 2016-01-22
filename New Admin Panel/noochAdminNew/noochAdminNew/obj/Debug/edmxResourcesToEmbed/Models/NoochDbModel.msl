@@ -14,17 +14,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="AdminLevelAccessRights">
-      <EntityTypeMapping TypeName="NOOCHModel.AdminLevelAccessRight">
-        <MappingFragment StoreEntitySet="AdminLevelAccessRights">
-          <ScalarProperty Name="id" ColumnName="id" />
-          <ScalarProperty Name="MenuId" ColumnName="MenuId" />
-          <ScalarProperty Name="MainMenu" ColumnName="MainMenu" />
-          <ScalarProperty Name="SubMenu" ColumnName="SubMenu" />
-          <ScalarProperty Name="RedirectUrl" ColumnName="RedirectUrl" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="AdminUsers">
       <EntityTypeMapping TypeName="NOOCHModel.AdminUser">
         <MappingFragment StoreEntitySet="AdminUsers">
@@ -301,34 +290,6 @@
           <ScalarProperty Name="account_type" ColumnName="account_type" />
           <ScalarProperty Name="account_number_string" ColumnName="account_number_string" />
           <ScalarProperty Name="account_class" ColumnName="account_class" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="SynapseCreateUserResults">
-      <EntityTypeMapping TypeName="NOOCHModel.SynapseCreateUserResult">
-        <MappingFragment StoreEntitySet="SynapseCreateUserResults">
-          <ScalarProperty Name="photos" ColumnName="photos" />
-          <ScalarProperty Name="Phone_number" ColumnName="Phone_number" />
-          <ScalarProperty Name="permission" ColumnName="permission" />
-          <ScalarProperty Name="legal_name" ColumnName="legal_name" />
-          <ScalarProperty Name="is_business" ColumnName="is_business" />
-          <ScalarProperty Name="MemberIdAfterSignup" ColumnName="MemberIdAfterSignup" />
-          <ScalarProperty Name="HasNonNoochUserSignedUp" ColumnName="HasNonNoochUserSignedUp" />
-          <ScalarProperty Name="TransactionIdFromWhichInvited" ColumnName="TransactionIdFromWhichInvited" />
-          <ScalarProperty Name="NonNoochUserEmail" ColumnName="NonNoochUserEmail" />
-          <ScalarProperty Name="IsForNonNoochUser" ColumnName="IsForNonNoochUser" />
-          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
-          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-          <ScalarProperty Name="user_id" ColumnName="user_id" />
-          <ScalarProperty Name="username" ColumnName="username" />
-          <ScalarProperty Name="success" ColumnName="success" />
-          <ScalarProperty Name="refresh_token" ColumnName="refresh_token" />
-          <ScalarProperty Name="reason" ColumnName="reason" />
-          <ScalarProperty Name="expires_in" ColumnName="expires_in" />
-          <ScalarProperty Name="access_token" ColumnName="access_token" />
-          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -661,6 +622,34 @@
           <ScalarProperty Name="trans_currency" ColumnName="trans_currency" />
           <ScalarProperty Name="trans_amount" ColumnName="trans_amount" />
           <ScalarProperty Name="trans_id_oid" ColumnName="trans_id_oid" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SynapseCreateUserResults">
+      <EntityTypeMapping TypeName="NOOCHModel.SynapseCreateUserResult">
+        <MappingFragment StoreEntitySet="SynapseCreateUserResults">
+          <ScalarProperty Name="photos" ColumnName="photos" />
+          <ScalarProperty Name="Phone_number" ColumnName="Phone_number" />
+          <ScalarProperty Name="permission" ColumnName="permission" />
+          <ScalarProperty Name="legal_name" ColumnName="legal_name" />
+          <ScalarProperty Name="is_business" ColumnName="is_business" />
+          <ScalarProperty Name="MemberIdAfterSignup" ColumnName="MemberIdAfterSignup" />
+          <ScalarProperty Name="HasNonNoochUserSignedUp" ColumnName="HasNonNoochUserSignedUp" />
+          <ScalarProperty Name="TransactionIdFromWhichInvited" ColumnName="TransactionIdFromWhichInvited" />
+          <ScalarProperty Name="NonNoochUserEmail" ColumnName="NonNoochUserEmail" />
+          <ScalarProperty Name="IsForNonNoochUser" ColumnName="IsForNonNoochUser" />
+          <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+          <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+          <ScalarProperty Name="user_id" ColumnName="user_id" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="success" ColumnName="success" />
+          <ScalarProperty Name="refresh_token" ColumnName="refresh_token" />
+          <ScalarProperty Name="reason" ColumnName="reason" />
+          <ScalarProperty Name="expires_in" ColumnName="expires_in" />
+          <ScalarProperty Name="access_token" ColumnName="access_token" />
+          <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+          <ScalarProperty Name="MemberId" ColumnName="MemberId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

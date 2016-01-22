@@ -12,16 +12,6 @@
     <Property Name="Country" Type="varchar" MaxLength="500" />
     <Property Name="Add_remarks" Type="varchar" MaxLength="500" />
   </EntityType>
-  <EntityType Name="AdminLevelAccessRights">
-    <Key>
-      <PropertyRef Name="id" />
-    </Key>
-    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="MenuId" Type="int" />
-    <Property Name="MainMenu" Type="nvarchar" MaxLength="15" />
-    <Property Name="SubMenu" Type="nvarchar" MaxLength="50" />
-    <Property Name="RedirectUrl" Type="nvarchar" MaxLength="100" />
-  </EntityType>
   <EntityType Name="AdminUsers">
     <Key>
       <PropertyRef Name="UserId" />
@@ -451,7 +441,7 @@
     <Property Name="refresh_token" Type="varchar(max)" />
     <Property Name="success" Type="bit" />
     <Property Name="username" Type="varchar(max)" />
-    <Property Name="user_id" Type="int" />
+    <Property Name="user_id" Type="varchar(max)" />
     <Property Name="IsDeleted" Type="bit" />
     <Property Name="ModifiedOn" Type="datetime" />
     <Property Name="IsForNonNoochUser" Type="bit" />
@@ -724,7 +714,6 @@
   </Function>
   <EntityContainer Name="NOOCHModelStoreContainer">
     <EntitySet Name="ADD" EntityType="Self.ADD" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="AdminLevelAccessRights" EntityType="Self.AdminLevelAccessRights" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="AdminUsers" EntityType="Self.AdminUsers" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ALT" EntityType="Self.ALT" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="AuthenticationTokens" EntityType="Self.AuthenticationTokens" Schema="dbo" store:Type="Tables" />

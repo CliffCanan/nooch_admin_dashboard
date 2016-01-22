@@ -121,6 +121,10 @@ $('#DeleteUser').click(function () {
     $('#myModalConfirmDelete').modal('show');
 });
 
+ 
+ 
+ 
+
 var Member = function () {
     function applyOperation(operation) {
         if (NoochId == '') {
@@ -415,6 +419,31 @@ var Member = function () {
         });
     }
 
+    // Manually set bank account's status to 'Verified'
+    function sendSmsReminderForVerification() {
+       var contactNumber= $('#contactNumber').val();
+       var data = {};
+        
+       data.noochIds = NoochId;
+       var url = "../Member/ReSendVrificationSMS";
+       
+       $.post(url, data, function (result) {
+          if (result.IsSuccess) {
+               
+               toastr.success(result.Message, 'Verification message sent successfully.');
+                
+           }
+           else {
+              
+               toastr.error(result.Message, 'Error');
+                
+           }
+       });
+        
+    }
+
+     
+
     return {
         ApplyChoosenOperation: applyOperation,
         EditMember: editdetails,
@@ -423,6 +452,9 @@ var Member = function () {
         AdminNoteForUser: SaveAdminNoteForUser,
         VerifyBankAccount: verifyBankAccount,
         UnVerifyBankAccount: unVerifyBankAccount,
-        getSynapseInfo: getSynapseInfo
+        getSynapseInfo: getSynapseInfo,
+        sendSmsReminder: sendSmsReminderForVerification,
+         
+       
     };
 }();
