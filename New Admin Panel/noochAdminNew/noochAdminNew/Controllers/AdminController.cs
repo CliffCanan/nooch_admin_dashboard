@@ -2300,47 +2300,24 @@ namespace noochAdminNew.Controllers
         public CreateAdminResultClass CreateOrUpdateAdmin(string adminId, string userName, string emailAddress,
             string firstName, string lastName, string level, Guid loggedInUserId)
         {
-            CreateAdminResultClass car = new CreateAdminResultClass();
-            Logger.Info("New Admin - CreateOrUpdateAdmin [" + userName + "].");
+            CreateAdminResultClass res = new CreateAdminResultClass();
+            res.IsSuccess = false;
+
+            Logger.Info("AdminController -> CreateOrUpdateAdmin: [" + userName + "]");
+
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-
-                // create new admin
                 if (String.IsNullOrEmpty(adminId))
                 {
                     #region to create new admin
 
                     if (GetAdminDetailsByUserName(userName.Trim()) == null)
                     {
-                        //send default password mail to user
-                        var fromAddress = Utility.GetValueFromConfig("adminMail");
+                        Guid g = Guid.NewGuid();
+
                         var password = GenerateRandomPassword();
                         string encryptedPassword = CommonHelper.GetEncryptedData((password.Trim()));
 
-                        var tokens = new Dictionary<string, string>
-                        {
-                            {Constants.PLACEHOLDER_FIRST_NAME, firstName},
-                            {Constants.PLACEHOLDER_LAST_NAME, lastName},
-                            {Constants.PLACEHOLDER_PASSWORD, password}
-                        };
-                        try
-                        {
-                            Logger.Info("New Admin Attempt to send email [" + emailAddress + "].");
-
-                            Utility.SendEmail("AdminPasswordMailTemplate", fromAddress, emailAddress, "Nooch password.",
-                                null, tokens, null, null, null);
-                        }
-                        catch (Exception)
-                        {
-                            Logger.Error("New Admin  CreateOrUpdateAdmin - Admin default password mail not sent to [" +
-                                         userName + "].");
-
-                            car.IsSuccess = false;
-                            car.Message = "Problem occured in sending password mail. Please retry.";
-                            return car;
-                        }
-
-                        Guid g = Guid.NewGuid();
                         var admin = new AdminUser
                         {
                             UserId = g,
@@ -2359,31 +2336,53 @@ namespace noochAdminNew.Controllers
                         admin.Password = encryptedPassword;
 
                         obj.AdminUsers.Add(admin);
-                        obj.SaveChanges();
-                        car.IsSuccess = true;
-                        car.Message = "Success";
+                        var i = obj.SaveChanges();
 
-                        return car;
+                        if (i > -1)
+                        {
+                            var fromAddress = Utility.GetValueFromConfig("adminMail");
+
+                            var tokens = new Dictionary<string, string>
+                        {
+                            {Constants.PLACEHOLDER_FIRST_NAME, firstName},
+                            {Constants.PLACEHOLDER_LAST_NAME, lastName},
+                            {"$UserName$", userName},
+                            {Constants.PLACEHOLDER_PASSWORD, password}
+                        };
+                            try
+                            {
+                                Logger.Info("AdminController -> CreateOrUpdateAdmin - Attempt to send email [" + emailAddress + "].");
+
+                                Utility.SendEmail("AdminPasswordMailTemplate", fromAddress, emailAddress, "Nooch password.",
+                                    null, tokens, null, null, null);
+
+                                res.IsSuccess = true;
+                                res.Message = "Success";
+                            }
+                            catch (Exception)
+                            {
+                                Logger.Error("New Admin  CreateOrUpdateAdmin - Admin default password mail not sent to [" +
+                                             userName + "].");
+
+                                res.Message = "Problem occured in sending password mail. Please retry.";
+                            }
+                        }
                     }
-                    car.IsSuccess = false;
-                    car.Message = "User name already exists. Please try with some other name.";
-                    return car;
+
+                    res.Message = "User name already exists. Please try with some other name.";
+                    return res;
 
                     #endregion
                 }
-
-                Logger.Info("New Admin - Update admin user [" + userName + "].");
-
-                // edit admin details
 
                 var id = Utility.ConvertToGuid(adminId);
 
                 var adminUser = (from c in obj.AdminUsers where c.UserName == userName select c).SingleOrDefault();
                 if (adminUser != null)
                 {
-                    car.IsSuccess = false;
-                    car.Message = "User name already exists. Please try with some other name.";
-                    return car;
+                    res.IsSuccess = false;
+                    res.Message = "User name already exists. Please try with some other name.";
+                    return res;
                 }
 
                 return UpdateAdminUser(userName, emailAddress, firstName, lastName, level, loggedInUserId);
