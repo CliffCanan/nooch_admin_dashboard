@@ -42,6 +42,69 @@
 <link rel="stylesheet" href="../css/plugins/jasny/jasny-bootstrap.min.css" />
 <link rel="stylesheet" href="../css/plugins/sweetalert-override.min.css" />
 
+@*Css for toggling button --Surya 21 JAN*@
+<script>
+    $(document).on('click', '.toggle-button', function () {
+        if ($('#pwd').val().length > 0) {
+            $('#pwd').val('');
+        }
+        $(this).toggleClass('toggle-button-selected');
+        if ($(this).hasClass('toggle-button-selected')) {
+            Member.GenerateNewPassword();
+        }
+
+    });
+</script>
+<style>
+    .toggle-button {
+        background-color: white;
+        margin: 5px 0;
+        border-radius: 20px;
+        border: 2px solid #D0D0D0;
+        height: 24px;
+        cursor: pointer;
+        width: 50px;
+        position: relative;
+        display: inline-block;
+        user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        -moz-user-select: none;
+    }
+
+        .toggle-button button {
+            cursor: pointer;
+            outline: 0;
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 100%;
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            float: left;
+            margin: -3px 0 0 -3px;
+            border: 2px solid #D0D0D0;
+            transition: left 0.3s;
+        }
+
+    .toggle-button-selected {
+        background-color: #83B152;
+        border: 2px solid #7DA652;
+    }
+
+        .toggle-button-selected button {
+            left: 26px;
+            top: 0;
+            margin: 0;
+            border: none;
+            width: 24px;
+            height: 24px;
+            box-shadow: 0 0 4px rgba(0,0,0,0.1);
+        }
+</style>
+
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>@mdc.FirstName @mdc.LastName | <small>@mdc.Nooch_ID</small></h2>
@@ -1046,6 +1109,10 @@
                                                             <div class="col-xs-3 col-lg-2 form-control-static">
                                                                 <a href="#" id="DeleteUser" class="btn btn-sm btn-default  btn-danger">Delete User</a>
                                                             </div>
+
+                                                            <div class="col-xs-3 col-lg-2 form-control-static">
+                                                                <a href="#" id="ChangePassword" class="btn btn-sm btn-info">Change Password</a>
+                                                            </div>
                                                             
                                                         </div>
                                                     </div>
@@ -1083,10 +1150,8 @@
                                                                     <button type="button" class="btn btn-link btn-xs pull-right" onclick="Member.ResetPin();">Reset PIN</button>
                                                                 </p>
                                                             </div>
+                                                                                                                          
                                                             
-                                                                
-                                                            
-
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1381,9 +1446,36 @@
     </div>
 </div>
 
+<!--change password $ toggel button Surya 21 Jan 16 -->
+<div id="myModalchangePwd" class="modal fade" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Update Password ?</h4>
+            </div>
+            <form method="get" id="someName">
+                <div class="modal-body">
+                    <p>Update Password! <input type="text" id="pwd" required><br><br><p>Generate Password</p>
+                    <div class="toggle-button" id="toggle-button-selected">
+                        <button id="btnToggle"></button>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnChangePassword" class="btn btn-danger" type="submit" onclick="Member.ChangePassword()">Yes - Update</button>
+                    <button data-dismiss="modal" class="btn btn-primary">No - Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 
 <!-- update password-->
-<div id="myModalUpdatePassword" class="modal fade" role="dialog" aria-hidden="true">
+@*<div id="myModalUpdatePassword" class="modal fade" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -1399,7 +1491,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 <!-- View ID Doc  -->
 <div id="idDocModal" class="modal fade" role="dialog" aria-hidden="true">
     <div class="modal-dialog">

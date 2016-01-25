@@ -1427,5 +1427,61 @@ namespace noochAdminNew.Controllers
                 return "Fail";
             }
         }
+
+        [HttpPost]
+        [ActionName("UpdatePassword")]
+        public ActionResult UpdatePassword(string noochIds, string newPassword)
+        {
+
+            MemberOperationsResult res = new MemberOperationsResult();
+            using (NOOCHEntities obj = new NOOCHEntities())
+            {
+                var temp = CommonHelper.GetRandomTransactionTrackingId();
+                var member = (from t in obj.Members where t.Nooch_ID == noochIds && t.IsDeleted == false select t).SingleOrDefault();
+                if (member != null)
+                {
+                    member.Password = CommonHelper.GetEncryptedData(newPassword);
+                    var o = obj.SaveChanges();
+                    if (o == 1)
+                    {
+                        res.Message = "Password updated";
+                        res.IsSuccess = true;
+                        string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
+                        string MessageBody = "Hi " + fname + ", This is Nooch - Your password has been updated to" + member.Password;
+                        String msg = Utility.SendSMS("member.ContactNumber", "", member.MemberId.ToString());
+                        var fromAddress = Utility.GetValueFromConfig("adminMail");
+                        var tokens = new Dictionary<string, string>
+                        {
+                            {Constants.PLACEHOLDER_FIRST_NAME, fname},
+                           // {Constants.PLACEHOLDER_LAST_NAME, member.LastName},
+                            {Constants.PLACEHOLDER_PASSWORD, member.Password}
+                        };
+                        string toAddress = CommonHelper.GetDecryptedData(member.UserName);
+                        bool emailSent = Utility.SendEmail("passwordChangedByAdmin",
+                                                fromAddress, toAddress, "Your password is chnaged by Nooch", null,
+                                                tokens, null, null, null);
+                        if (msg != "Failure")
+                        {
+                            res.Message += " & SMS has been sent";
+                        }
+                        if (emailSent)
+                            res.Message += "& Email has been Sent";
+                    }
+                    else
+                        res.IsSuccess = false;
+                }
+            }
+            return Json(res);
+        }
+
+        [HttpPost]
+        [ActionName("GenerateNewPassword")]
+        public ActionResult GenerateNewPassword()
+        {
+            MemberOperationsResult res = new MemberOperationsResult();
+            res.Message = CommonHelper.GetRandomTransactionTrackingId();
+            res.IsSuccess = true;
+            return Json(res);
+        }
     }
 }

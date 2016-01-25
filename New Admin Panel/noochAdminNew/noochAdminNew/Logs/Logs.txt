@@ -497,3 +497,24 @@ INFO  2016-01-22 12:40:01,907 8769347ms Logger          Info            - Admin 
 INFO  2016-01-22 12:40:02,438 8769878ms Logger          Info            - Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [3032222222], Street Address: [1750 Market St.], City: [], State: [], ZIP: [19102], secondaryEmail: [], NoochID: [2NXwE4ab], SSN [2222], DOB: [6/6/1965]
 INFO  2016-01-22 13:04:42,710 103560ms Logger          Info            - Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [0002222222], Street Address: [1750 Market St.], City: [], State: [], ZIP: [19102], secondaryEmail: [], NoochID: [2NXwE4ab], SSN [2222], DOB: [6/6/1965]
 INFO  2016-01-22 13:05:03,660 124511ms Logger          Info            - Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [0002221111], Street Address: [1750 Market St.], City: [], State: [], ZIP: [19102], secondaryEmail: [], NoochID: [2NXwE4ab], SSN [2222], DOB: [6/6/1965]
+INFO  2016-01-25 12:03:51,629 84205ms Logger          Info            - Utility-> Send SMS Aborted - Test Phone # Detected: [5554949888]
+INFO  2016-01-25 12:48:06,111 66902ms Logger          Info            - Utility-> Send SMS Aborted - Test Phone # Detected: [5554949888]
+ERROR 2016-01-25 12:48:21,988 82778ms Logger          Error           - VerifyPhone - Attempt to verify member phone[ memberId:757614cf-823f-4a2e-9243-2c1dee087768].
+INFO  2016-01-25 12:58:00,791 52305ms Logger          Info            - Utility -> SEND SMS FAILED - [To #: member.ContactNumber], [MemberID: ebbc4695-d8d0-42c2-b636-c93f01d8f6f5], [Exception: ]
+ERROR 2016-01-25 12:58:01,596 53110ms Logger          Error           - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'C:\noochweb.venturepact.com\EmailTemplates\passwordChangedByAdmin.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 159
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 175]
+INFO  2016-01-25 12:58:06,467 57981ms Logger          Info            - Utility -> SEND SMS FAILED - [To #: member.ContactNumber], [MemberID: ebbc4695-d8d0-42c2-b636-c93f01d8f6f5], [Exception: ]
+ERROR 2016-01-25 12:58:06,603 58117ms Logger          Error           - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'C:\noochweb.venturepact.com\EmailTemplates\passwordChangedByAdmin.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 159
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 175]
