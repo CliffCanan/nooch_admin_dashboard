@@ -365,3 +365,156 @@ ERROR 2015-12-28 10:48:22,273 3941685ms Logger          Error           - Admin 
    at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 89
    at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 105]
 INFO  2015-12-28 10:48:22,831 3942242ms Logger          Info            - Add fund to members account New Admin  ->  TransferReceived Email sent to [cliff@nooch.com] successfully
+INFO  2016-01-21 14:29:21,482  4984ms Logger          Info            - test message
+ERROR 2016-01-21 14:29:21,519  5021ms Logger          Error           - Schema specified is not valid. Errors: 
+Models.NoochDbModel.msl(312,12) : error 2019: Member Mapping specified is not valid. The type 'Edm.Int32[Nullable=True,DefaultValue=]' of member 'user_id' in type 'NOOCHModel.SynapseCreateUserResult' is not compatible with 'SqlServer.varchar(max)[Nullable=True,DefaultValue=,MaxLength=2147483647,Unicode=False,FixedLength=False]' of member 'user_id' in type 'NOOCHModel.Store.SynapseCreateUserResults'.
+System.Data.MappingException: Schema specified is not valid. Errors: 
+Models.NoochDbModel.msl(312,12) : error 2019: Member Mapping specified is not valid. The type 'Edm.Int32[Nullable=True,DefaultValue=]' of member 'user_id' in type 'NOOCHModel.SynapseCreateUserResult' is not compatible with 'SqlServer.varchar(max)[Nullable=True,DefaultValue=,MaxLength=2147483647,Unicode=False,FixedLength=False]' of member 'user_id' in type 'NOOCHModel.Store.SynapseCreateUserResults'.
+   at System.Data.Mapping.StorageMappingItemCollection.Init(EdmItemCollection edmCollection, StoreItemCollection storeCollection, IEnumerable`1 xmlReaders, List`1 filePaths, Boolean throwOnError)
+   at System.Data.Mapping.StorageMappingItemCollection..ctor(EdmItemCollection edmCollection, StoreItemCollection storeCollection, IEnumerable`1 xmlReaders, List`1 filePaths)
+   at System.Data.Metadata.Edm.MetadataCache.StoreMetadataEntry.LoadStoreCollection(EdmItemCollection edmItemCollection, MetadataArtifactLoader loader)
+   at System.Data.Metadata.Edm.MetadataCache.StoreItemCollectionLoader.LoadItemCollection(StoreMetadataEntry entry)
+   at System.Data.Metadata.Edm.MetadataCache.LoadItemCollection[T](IItemCollectionLoader`1 itemCollectionLoader, T entry)
+   at System.Data.Metadata.Edm.MetadataCache.GetOrCreateStoreAndMappingItemCollections(String cacheKey, MetadataArtifactLoader loader, EdmItemCollection edmItemCollection, Object& entryToken)
+   at System.Data.EntityClient.EntityConnection.LoadStoreItemCollections(MetadataWorkspace workspace, DbConnection storeConnection, DbProviderFactory factory, DbConnectionOptions connectionOptions, EdmItemCollection edmItemCollection, MetadataArtifactLoader artifactLoader)
+   at System.Data.EntityClient.EntityConnection.GetMetadataWorkspace(Boolean initializeAllCollections)
+   at System.Data.EntityClient.EntityConnection.InitializeMetadata(DbConnection newConnection, DbConnection originalConnection, Boolean closeOriginalConnectionOnFailure)
+   at System.Data.EntityClient.EntityConnection.Open()
+   at System.Data.Objects.ObjectContext.EnsureConnection()
+   at System.Data.Objects.ObjectQuery`1.GetResults(Nullable`1 forMergeOption)
+   at System.Data.Objects.ObjectQuery`1.System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+   at System.Linq.Enumerable.SingleOrDefault[TSource](IEnumerable`1 source)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.<GetElementFunction>b__2[TResult](IEnumerable`1 sequence)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.ExecuteSingle[TResult](IEnumerable`1 query, Expression queryRoot)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.System.Linq.IQueryProvider.Execute[S](Expression expression)
+   at System.Data.Entity.Internal.Linq.DbQueryProvider.Execute[TResult](Expression expression)
+   at System.Linq.Queryable.SingleOrDefault[TSource](IQueryable`1 source)
+   at noochAdminNew.Controllers.HomeController.ValidateUser(String UserName, String Password) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\HomeController.cs:line 37
+INFO  2016-01-21 14:30:37,686 81189ms Logger          Info            - test message
+ERROR 2016-01-21 14:30:37,690 81193ms Logger          Error           - Schema specified is not valid. Errors: 
+Models.NoochDbModel.msl(312,12) : error 2019: Member Mapping specified is not valid. The type 'Edm.Int32[Nullable=True,DefaultValue=]' of member 'user_id' in type 'NOOCHModel.SynapseCreateUserResult' is not compatible with 'SqlServer.varchar(max)[Nullable=True,DefaultValue=,MaxLength=2147483647,Unicode=False,FixedLength=False]' of member 'user_id' in type 'NOOCHModel.Store.SynapseCreateUserResults'.
+System.Data.MappingException: Schema specified is not valid. Errors: 
+Models.NoochDbModel.msl(312,12) : error 2019: Member Mapping specified is not valid. The type 'Edm.Int32[Nullable=True,DefaultValue=]' of member 'user_id' in type 'NOOCHModel.SynapseCreateUserResult' is not compatible with 'SqlServer.varchar(max)[Nullable=True,DefaultValue=,MaxLength=2147483647,Unicode=False,FixedLength=False]' of member 'user_id' in type 'NOOCHModel.Store.SynapseCreateUserResults'.
+   at System.Data.Mapping.StorageMappingItemCollection.Init(EdmItemCollection edmCollection, StoreItemCollection storeCollection, IEnumerable`1 xmlReaders, List`1 filePaths, Boolean throwOnError)
+   at System.Data.Mapping.StorageMappingItemCollection..ctor(EdmItemCollection edmCollection, StoreItemCollection storeCollection, IEnumerable`1 xmlReaders, List`1 filePaths)
+   at System.Data.Metadata.Edm.MetadataCache.StoreMetadataEntry.LoadStoreCollection(EdmItemCollection edmItemCollection, MetadataArtifactLoader loader)
+   at System.Data.Metadata.Edm.MetadataCache.StoreItemCollectionLoader.LoadItemCollection(StoreMetadataEntry entry)
+   at System.Data.Metadata.Edm.MetadataCache.LoadItemCollection[T](IItemCollectionLoader`1 itemCollectionLoader, T entry)
+   at System.Data.Metadata.Edm.MetadataCache.GetOrCreateStoreAndMappingItemCollections(String cacheKey, MetadataArtifactLoader loader, EdmItemCollection edmItemCollection, Object& entryToken)
+   at System.Data.EntityClient.EntityConnection.LoadStoreItemCollections(MetadataWorkspace workspace, DbConnection storeConnection, DbProviderFactory factory, DbConnectionOptions connectionOptions, EdmItemCollection edmItemCollection, MetadataArtifactLoader artifactLoader)
+   at System.Data.EntityClient.EntityConnection.GetMetadataWorkspace(Boolean initializeAllCollections)
+   at System.Data.EntityClient.EntityConnection.InitializeMetadata(DbConnection newConnection, DbConnection originalConnection, Boolean closeOriginalConnectionOnFailure)
+   at System.Data.EntityClient.EntityConnection.Open()
+   at System.Data.Objects.ObjectContext.EnsureConnection()
+   at System.Data.Objects.ObjectQuery`1.GetResults(Nullable`1 forMergeOption)
+   at System.Data.Objects.ObjectQuery`1.System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+   at System.Linq.Enumerable.SingleOrDefault[TSource](IEnumerable`1 source)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.<GetElementFunction>b__2[TResult](IEnumerable`1 sequence)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.ExecuteSingle[TResult](IEnumerable`1 query, Expression queryRoot)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.System.Linq.IQueryProvider.Execute[S](Expression expression)
+   at System.Data.Entity.Internal.Linq.DbQueryProvider.Execute[TResult](Expression expression)
+   at System.Linq.Queryable.SingleOrDefault[TSource](IQueryable`1 source)
+   at noochAdminNew.Controllers.HomeController.ValidateUser(String UserName, String Password) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\HomeController.cs:line 37
+INFO  2016-01-21 14:41:23,960 28745ms Logger          Info            - test message
+ERROR 2016-01-21 14:41:23,997 28783ms Logger          Error           - An error occurred while preparing the command definition. See the inner exception for details.
+System.Data.EntityCommandCompilationException: An error occurred while preparing the command definition. See the inner exception for details. ---> System.Data.MappingException: 
+Models.NoochDbModel.msl(3,4) : error 3027: No mapping specified for the following EntitySet/AssociationSet - AdminLevelAccessRights.
+   at System.Data.Mapping.StorageMappingItemCollection.ViewDictionary.SerializedGenerateViews(StorageEntityContainerMapping entityContainerMap, Dictionary`2 resultDictionary)
+   at System.Data.Mapping.StorageMappingItemCollection.ViewDictionary.SerializedGetGeneratedViews(EntityContainer container)
+   at System.Data.Common.Utils.Memoizer`2.<>c__DisplayClass2.<Evaluate>b__0()
+   at System.Data.Common.Utils.Memoizer`2.Result.GetValue()
+   at System.Data.Common.Utils.Memoizer`2.Evaluate(TArg arg)
+   at System.Data.Mapping.StorageMappingItemCollection.ViewDictionary.GetGeneratedView(EntitySetBase extent, MetadataWorkspace workspace, StorageMappingItemCollection storageMappingItemCollection)
+   at System.Data.Metadata.Edm.MetadataWorkspace.GetGeneratedView(EntitySetBase extent)
+   at System.Data.Query.PlanCompiler.PreProcessor.ExpandView(Node node, ScanTableOp scanTableOp, IsOfOp& typeFilter)
+   at System.Data.Query.PlanCompiler.PreProcessor.ProcessScanTable(Node scanTableNode, ScanTableOp scanTableOp, IsOfOp& typeFilter)
+   at System.Data.Query.PlanCompiler.PreProcessor.Visit(ScanTableOp op, Node n)
+   at System.Data.Query.InternalTrees.ScanTableOp.Accept[TResultType](BasicOpVisitorOfT`1 v, Node n)
+   at System.Data.Query.InternalTrees.BasicOpVisitorOfT`1.VisitNode(Node n)
+   at System.Data.Query.PlanCompiler.SubqueryTrackingVisitor.VisitChildren(Node n)
+   at System.Data.Query.PlanCompiler.SubqueryTrackingVisitor.VisitRelOpDefault(RelOp op, Node n)
+   at System.Data.Query.PlanCompiler.PreProcessor.Visit(FilterOp op, Node n)
+   at System.Data.Query.InternalTrees.FilterOp.Accept[TResultType](BasicOpVisitorOfT`1 v, Node n)
+   at System.Data.Query.InternalTrees.BasicOpVisitorOfT`1.VisitNode(Node n)
+   at System.Data.Query.PlanCompiler.SubqueryTrackingVisitor.VisitChildren(Node n)
+   at System.Data.Query.PlanCompiler.SubqueryTrackingVisitor.VisitRelOpDefault(RelOp op, Node n)
+   at System.Data.Query.InternalTrees.BasicOpVisitorOfT`1.VisitSortOp(SortBaseOp op, Node n)
+   at System.Data.Query.InternalTrees.BasicOpVisitorOfT`1.Visit(ConstrainedSortOp op, Node n)
+   at System.Data.Query.InternalTrees.ConstrainedSortOp.Accept[TResultType](BasicOpVisitorOfT`1 v, Node n)
+   at System.Data.Query.InternalTrees.BasicOpVisitorOfT`1.VisitNode(Node n)
+   at System.Data.Query.PlanCompiler.SubqueryTrackingVisitor.VisitChildren(Node n)
+   at System.Data.Query.InternalTrees.BasicOpVisitorOfNode.VisitDefault(Node n)
+   at System.Data.Query.InternalTrees.BasicOpVisitorOfNode.VisitPhysicalOpDefault(PhysicalOp op, Node n)
+   at System.Data.Query.InternalTrees.BasicOpVisitorOfT`1.Visit(PhysicalProjectOp op, Node n)
+   at System.Data.Query.InternalTrees.PhysicalProjectOp.Accept[TResultType](BasicOpVisitorOfT`1 v, Node n)
+   at System.Data.Query.InternalTrees.BasicOpVisitorOfT`1.VisitNode(Node n)
+   at System.Data.Query.PlanCompiler.PreProcessor.Process(Dictionary`2& tvfResultKeys)
+   at System.Data.Query.PlanCompiler.PreProcessor.Process(PlanCompiler planCompilerState, StructuredTypeInfo& typeInfo, Dictionary`2& tvfResultKeys)
+   at System.Data.Query.PlanCompiler.PlanCompiler.Compile(List`1& providerCommands, ColumnMap& resultColumnMap, Int32& columnCount, Set`1& entitySets)
+   at System.Data.EntityClient.EntityCommandDefinition..ctor(DbProviderFactory storeProviderFactory, DbCommandTree commandTree)
+   --- End of inner exception stack trace ---
+   at System.Data.EntityClient.EntityCommandDefinition..ctor(DbProviderFactory storeProviderFactory, DbCommandTree commandTree)
+   at System.Data.EntityClient.EntityProviderServices.CreateCommandDefinition(DbProviderFactory storeProviderFactory, DbCommandTree commandTree)
+   at System.Data.EntityClient.EntityProviderServices.CreateDbCommandDefinition(DbProviderManifest providerManifest, DbCommandTree commandTree)
+   at System.Data.Common.DbProviderServices.CreateCommandDefinition(DbCommandTree commandTree)
+   at System.Data.Objects.Internal.ObjectQueryExecutionPlan.Prepare(ObjectContext context, DbQueryCommandTree tree, Type elementType, MergeOption mergeOption, Span span, ReadOnlyCollection`1 compiledQueryParameters, AliasGenerator aliasGenerator)
+   at System.Data.Objects.ELinq.ELinqQueryState.GetExecutionPlan(Nullable`1 forMergeOption)
+   at System.Data.Objects.ObjectQuery`1.GetResults(Nullable`1 forMergeOption)
+   at System.Data.Objects.ObjectQuery`1.System.Collections.Generic.IEnumerable<T>.GetEnumerator()
+   at System.Linq.Enumerable.SingleOrDefault[TSource](IEnumerable`1 source)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.<GetElementFunction>b__2[TResult](IEnumerable`1 sequence)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.ExecuteSingle[TResult](IEnumerable`1 query, Expression queryRoot)
+   at System.Data.Objects.ELinq.ObjectQueryProvider.System.Linq.IQueryProvider.Execute[S](Expression expression)
+   at System.Data.Entity.Internal.Linq.DbQueryProvider.Execute[TResult](Expression expression)
+   at System.Linq.Queryable.SingleOrDefault[TSource](IQueryable`1 source)
+   at noochAdminNew.Controllers.HomeController.ValidateUser(String UserName, String Password) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\HomeController.cs:line 37
+ERROR 2016-01-21 15:07:20,976 271917ms Logger          Error           - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'C:\noochweb.venturepact.com\EmailTemplates\userSuspended.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 127
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 143]
+INFO  2016-01-21 15:07:20,987 271928ms Logger          Info            - Admin Dash -> MemberController - SupendMember email sent to: [joshuavnicholson@gmail.com]; Member [memberId:40723c33-8612-4d2f-acce-28cd20ad1645]
+ERROR 2016-01-21 15:07:30,003 280943ms Logger          Error           - ActivateAccount - Attempt to ActivateAccount member [ memberId:40723c33-8612-4d2f-acce-28cd20ad1645].
+INFO  2016-01-21 16:21:57,431 57936ms Logger          Info            - Utility -> SEND SMS FAILED - [To #: ], [MemberID: 84b87da1-b5eb-45c3-b8a9-a6ece71ffe96], [Exception: ]
+INFO  2016-01-21 16:26:40,883 80293ms Logger          Info            - GetDecryptedData FAILED -> SourceData was too short - [SourceData: 3039568981]
+INFO  2016-01-21 16:28:10,480 169890ms Logger          Info            - Utility -> SEND SMS FAILED - [To #: ], [MemberID: 84b87da1-b5eb-45c3-b8a9-a6ece71ffe96], [Exception: ]
+INFO  2016-01-21 16:31:33,644 123383ms Logger          Info            - Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [9040000000], Street Address: [1750 Market St.], City: [], State: [], ZIP: [19102], secondaryEmail: [], NoochID: [2NXwE4ab], SSN [2222], DOB: [6/6/1965]
+INFO  2016-01-21 16:32:51,038 200776ms Logger          Info            - GetDecryptedData FAILED -> SourceData was too short - [SourceData: 9040000000]
+INFO  2016-01-21 16:37:56,752 60411ms Logger          Info            - GetDecryptedData FAILED -> SourceData was too short - [SourceData: 9040000000]
+INFO  2016-01-21 16:38:41,168 104827ms Logger          Info            - Utility -> SEND SMS FAILED - [To #: ], [MemberID: 3d98ec49-72a0-4546-bb13-787d71dcac25], [Exception: ]
+INFO  2016-01-21 16:39:32,517 156176ms Logger          Info            - GetDecryptedData FAILED -> SourceData was too short - [SourceData: 9040000000]
+INFO  2016-01-21 16:39:34,142 157801ms Logger          Info            - Utility -> SEND SMS FAILED - [To #: ], [MemberID: 3d98ec49-72a0-4546-bb13-787d71dcac25], [Exception: ]
+INFO  2016-01-21 16:41:48,407 292066ms Logger          Info            - Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [3032222222], Street Address: [1750 Market St.], City: [], State: [], ZIP: [19102], secondaryEmail: [], NoochID: [2NXwE4ab], SSN [2222], DOB: [6/6/1965]
+INFO  2016-01-21 16:44:13,113 436772ms Logger          Info            - GetDecryptedData FAILED -> SourceData was too short - [SourceData: 3032222222]
+INFO  2016-01-21 16:46:58,907 46345ms Logger          Info            - GetDecryptedData FAILED -> SourceData was too short - [SourceData: 3032222222]
+INFO  2016-01-21 16:47:07,926 55365ms Logger          Info            - Utility -> SEND SMS FAILED - [To #: ], [MemberID: 3d98ec49-72a0-4546-bb13-787d71dcac25], [Exception: ]
+INFO  2016-01-22 11:58:38,689 6286128ms Logger          Info            - Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [], Street Address: [1750 Market St.], City: [], State: [], ZIP: [19102], secondaryEmail: [], NoochID: [2NXwE4ab], SSN [2222], DOB: [6/6/1965]
+INFO  2016-01-22 11:58:45,734 6293174ms Logger          Info            - Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [], Street Address: [1750 Market St.], City: [], State: [], ZIP: [19102], secondaryEmail: [], NoochID: [2NXwE4ab], SSN [2222], DOB: [6/6/1965]
+INFO  2016-01-22 12:40:01,907 8769347ms Logger          Info            - Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [3032222222], Street Address: [1750 Market St.], City: [], State: [], ZIP: [19102], secondaryEmail: [], NoochID: [2NXwE4ab], SSN [2222], DOB: [6/6/1965]
+INFO  2016-01-22 12:40:02,438 8769878ms Logger          Info            - Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [3032222222], Street Address: [1750 Market St.], City: [], State: [], ZIP: [19102], secondaryEmail: [], NoochID: [2NXwE4ab], SSN [2222], DOB: [6/6/1965]
+INFO  2016-01-22 13:04:42,710 103560ms Logger          Info            - Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [0002222222], Street Address: [1750 Market St.], City: [], State: [], ZIP: [19102], secondaryEmail: [], NoochID: [2NXwE4ab], SSN [2222], DOB: [6/6/1965]
+INFO  2016-01-22 13:05:03,660 124511ms Logger          Info            - Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [0002221111], Street Address: [1750 Market St.], City: [], State: [], ZIP: [19102], secondaryEmail: [], NoochID: [2NXwE4ab], SSN [2222], DOB: [6/6/1965]
+INFO  2016-01-25 12:03:51,629 84205ms Logger          Info            - Utility-> Send SMS Aborted - Test Phone # Detected: [5554949888]
+INFO  2016-01-25 12:48:06,111 66902ms Logger          Info            - Utility-> Send SMS Aborted - Test Phone # Detected: [5554949888]
+ERROR 2016-01-25 12:48:21,988 82778ms Logger          Error           - VerifyPhone - Attempt to verify member phone[ memberId:757614cf-823f-4a2e-9243-2c1dee087768].
+INFO  2016-01-25 12:58:00,791 52305ms Logger          Info            - Utility -> SEND SMS FAILED - [To #: member.ContactNumber], [MemberID: ebbc4695-d8d0-42c2-b636-c93f01d8f6f5], [Exception: ]
+ERROR 2016-01-25 12:58:01,596 53110ms Logger          Error           - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'C:\noochweb.venturepact.com\EmailTemplates\passwordChangedByAdmin.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 159
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 175]
+INFO  2016-01-25 12:58:06,467 57981ms Logger          Info            - Utility -> SEND SMS FAILED - [To #: member.ContactNumber], [MemberID: ebbc4695-d8d0-42c2-b636-c93f01d8f6f5], [Exception: ]
+ERROR 2016-01-25 12:58:06,603 58117ms Logger          Error           - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'C:\noochweb.venturepact.com\EmailTemplates\passwordChangedByAdmin.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 159
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 175]

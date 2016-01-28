@@ -12,16 +12,6 @@
     <Property Name="Country" Type="varchar" MaxLength="500" />
     <Property Name="Add_remarks" Type="varchar" MaxLength="500" />
   </EntityType>
-  <EntityType Name="AdminLevelAccessRights">
-    <Key>
-      <PropertyRef Name="id" />
-    </Key>
-    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="MenuId" Type="int" />
-    <Property Name="MainMenu" Type="nvarchar" MaxLength="15" />
-    <Property Name="SubMenu" Type="nvarchar" MaxLength="50" />
-    <Property Name="RedirectUrl" Type="nvarchar" MaxLength="100" />
-  </EntityType>
   <EntityType Name="AdminUsers">
     <Key>
       <PropertyRef Name="UserId" />
@@ -91,23 +81,6 @@
     <Property Name="CreatedOn" Type="datetime" />
     <Property Name="ModifiedOn" Type="datetime" />
     <Property Name="CreatedBy" Type="uniqueidentifier" />
-  </EntityType>
-  <EntityType Name="KnoxAccountDetails">
-    <Key>
-      <PropertyRef Name="AccountId" />
-    </Key>
-    <Property Name="AccountId" Type="uniqueidentifier" Nullable="false" />
-    <Property Name="MemberId" Type="uniqueidentifier" />
-    <Property Name="TransId" Type="varchar(max)" />
-    <Property Name="UserKey" Type="varchar(max)" />
-    <Property Name="UserPass" Type="varchar(max)" />
-    <Property Name="DateCreated" Type="datetime" />
-    <Property Name="DateModified" Type="datetime" />
-    <Property Name="IsDeleted" Type="bit" />
-    <Property Name="BankName" Type="varchar(max)" />
-    <Property Name="AccountNum" Type="varchar(max)" />
-    <Property Name="BankImageURL" Type="varchar(max)" />
-    <Property Name="Status" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="Landlords">
     <Key>
@@ -468,7 +441,7 @@
     <Property Name="refresh_token" Type="varchar(max)" />
     <Property Name="success" Type="bit" />
     <Property Name="username" Type="varchar(max)" />
-    <Property Name="user_id" Type="int" />
+    <Property Name="user_id" Type="varchar(max)" />
     <Property Name="IsDeleted" Type="bit" />
     <Property Name="ModifiedOn" Type="datetime" />
     <Property Name="IsForNonNoochUser" Type="bit" />
@@ -616,18 +589,6 @@
     <Property Name="LastPaymentAmount" Type="varchar" MaxLength="50" />
     <Property Name="IsPaymentDueForThisMonth" Type="bit" />
   </EntityType>
-  <Association Name="FK_KnoxAccountDetails_Members">
-    <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
-    <End Role="KnoxAccountDetails" Type="Self.KnoxAccountDetails" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Members">
-        <PropertyRef Name="MemberId" />
-      </Principal>
-      <Dependent Role="KnoxAccountDetails">
-        <PropertyRef Name="MemberId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_MemberNotifications_Members">
     <End Role="Members" Type="Self.Members" Multiplicity="1" />
     <End Role="MemberNotifications" Type="Self.MemberNotifications" Multiplicity="*" />
@@ -753,13 +714,11 @@
   </Function>
   <EntityContainer Name="NOOCHModelStoreContainer">
     <EntitySet Name="ADD" EntityType="Self.ADD" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="AdminLevelAccessRights" EntityType="Self.AdminLevelAccessRights" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="AdminUsers" EntityType="Self.AdminUsers" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ALT" EntityType="Self.ALT" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="AuthenticationTokens" EntityType="Self.AuthenticationTokens" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="GeoLocations" EntityType="Self.GeoLocations" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="InviteCodes" EntityType="Self.InviteCodes" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="KnoxAccountDetails" EntityType="Self.KnoxAccountDetails" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Landlords" EntityType="Self.Landlords" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="MemberNotifications" EntityType="Self.MemberNotifications" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Members" EntityType="Self.Members" Schema="dbo" store:Type="Tables" />
@@ -779,10 +738,6 @@
     <EntitySet Name="TenantsIdDocuments" EntityType="Self.TenantsIdDocuments" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Transactions" EntityType="Self.Transactions" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UnitsOccupiedByTenants" EntityType="Self.UnitsOccupiedByTenants" Schema="dbo" store:Type="Tables" />
-    <AssociationSet Name="FK_KnoxAccountDetails_Members" Association="Self.FK_KnoxAccountDetails_Members">
-      <End Role="Members" EntitySet="Members" />
-      <End Role="KnoxAccountDetails" EntitySet="KnoxAccountDetails" />
-    </AssociationSet>
     <AssociationSet Name="FK_MemberNotifications_Members" Association="Self.FK_MemberNotifications_Members">
       <End Role="Members" EntitySet="Members" />
       <End Role="MemberNotifications" EntitySet="MemberNotifications" />

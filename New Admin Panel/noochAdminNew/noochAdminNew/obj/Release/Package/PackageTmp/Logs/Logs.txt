@@ -225,3 +225,143 @@ Models.NoochDbModel.msl(538,12) : error 2019: Member Mapping specified is not va
    at System.Data.Entity.Internal.Linq.DbQueryProvider.Execute[TResult](Expression expression)
    at System.Linq.Queryable.SingleOrDefault[TSource](IQueryable`1 source)
    at noochAdminNew.Controllers.HomeController.ValidateUser(String UserName, String Password) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\HomeController.cs:line 37
+INFO  2015-12-19 12:03:03,547 471428ms Logger          Info            - Common Helper-> SynapseV3AddTrans_ReusableClass Initiated - [Sender Username: Team@nooch.com], [Recipient Username: Cliff@nooch.com], [Amount: 2]
+ERROR 2015-12-19 12:03:12,277 480158ms Logger          Error           - Landlords API -> Common Helper -> getUserPermissionsForSynapseV3 FAILED: Outer Catch Error - [User Email: Team@nooch.com], [Exception: ]
+ERROR 2015-12-19 12:03:29,659 497540ms Logger          Error           - Landlords API -> Common Helper -> SynapseV3AddTrans_ReusableClass - SENDER's Synapse Permissions were NULL or not successful :-(
+INFO  2015-12-19 12:03:29,916 497797ms Logger          Info            - Common Helper-> SynapseV3AddTrans_ReusableClass Initiated - [Sender Username: Team@nooch.com], [Recipient Username: Cliff@nooch.com], [Amount: 2]
+ERROR 2015-12-19 12:03:32,600 500481ms Logger          Error           - Landlords API -> Common Helper -> getUserPermissionsForSynapseV3 FAILED: Outer Catch Error - [User Email: Team@nooch.com], [Exception: ]
+ERROR 2015-12-19 12:03:33,145 501026ms Logger          Error           - Landlords API -> Common Helper -> SynapseV3AddTrans_ReusableClass - SENDER's Synapse Permissions were NULL or not successful :-(
+INFO  2015-12-19 12:03:33,756 501637ms Logger          Info            - Add fund to members account New Admin -> Transfer FAILED. Error occur in call order API
+INFO  2015-12-19 12:03:34,875 502756ms Logger          Info            - Add fund to members account New Admin - THERE WAS A FAILURE - Sending Failure Notifications to both Users
+INFO  2015-12-19 12:03:39,943 507824ms Logger          Info            - Add fund to members account New Admin -> Transfer FAILED. Error occur in call order API
+INFO  2015-12-19 12:03:41,585 509466ms Logger          Info            - Add fund to members account New Admin - THERE WAS A FAILURE - Sending Failure Notifications to both Users
+INFO  2015-12-19 12:04:00,891 528772ms Logger          Info            - Add fund to members account New Admin --> TransferMoneyUsingSynapse FAILED - Push notif FAILED also, SMS NOT sent to [Team Nooch],  [Exception: System.Net.WebException: The remote server returned an error: (400) Bad Request.
+   at System.Net.WebClient.UploadDataInternal(Uri address, String method, Byte[] data, WebRequest& request)
+   at System.Net.WebClient.UploadString(Uri address, String method, String data)
+   at System.Net.WebClient.UploadString(String address, String data)
+   at noochAdminNew.Classes.PushNotification.ApplePushNotification.SendNotificationMessage(String alertText, Int32 badge, String sound, String devicetokens, String username, String password) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\PushNotification\ApplePushNotification.cs:line 29
+   at noochAdminNew.Controllers.AdminController.CreditFundToMemberPostSynapseV3Test(String transferfundto, String transferAmount, String transferNotes, String adminPin) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\AdminController.cs:line 1657]
+INFO  2015-12-19 12:04:00,901 528782ms Logger          Info            - Add fund to members account New Admin --> TransferMoneyUsingSynapse FAILED - Push notif FAILED also, SMS NOT sent to [Team Nooch],  [Exception: System.Net.WebException: The remote server returned an error: (400) Bad Request.
+   at System.Net.WebClient.UploadDataInternal(Uri address, String method, Byte[] data, WebRequest& request)
+   at System.Net.WebClient.UploadString(Uri address, String method, String data)
+   at System.Net.WebClient.UploadString(String address, String data)
+   at noochAdminNew.Classes.PushNotification.ApplePushNotification.SendNotificationMessage(String alertText, Int32 badge, String sound, String devicetokens, String username, String password) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\PushNotification\ApplePushNotification.cs:line 29
+   at noochAdminNew.Controllers.AdminController.CreditFundToMemberPostSynapseV3Test(String transferfundto, String transferAmount, String transferNotes, String adminPin) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\AdminController.cs:line 1657]
+ERROR 2015-12-19 12:04:09,528 537409ms Logger          Error           - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'C:\noochweb.venturepact.com\EmailTemplates\transferFailure.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 89
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 105]
+INFO  2015-12-19 12:04:09,534 537415ms Logger          Info            - Add fund to members account New Admin -> TransferMoneyUsingSynapse FAILED - Email sent to Sender: [team@nooch.com] successfully.
+ERROR 2015-12-19 12:04:15,950 543831ms Logger          Error           - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'C:\noochweb.venturepact.com\EmailTemplates\transferFailure.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 89
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 105]
+INFO  2015-12-19 12:04:16,722 544603ms Logger          Info            - Add fund to members account New Admin -> TransferMoneyUsingSynapse FAILED - Email sent to Sender: [team@nooch.com] successfully.
+INFO  2015-12-19 12:05:25,275 613156ms Logger          Info            - Common Helper-> SynapseV3AddTrans_ReusableClass Initiated - [Sender Username: Team@nooch.com], [Recipient Username: Cliff@nooch.com], [Amount: 2]
+INFO  2015-12-19 12:25:58,070 23520ms Logger          Info            - Common Helper-> SynapseV3AddTrans_ReusableClass Initiated - [Sender Username: Team@nooch.com], [Recipient Username: Cliff@nooch.com], [Amount: 2]
+INFO  2015-12-19 12:57:17,644 34542ms Logger          Info            - Common Helper-> SynapseV3AddTrans_ReusableClass Initiated - [Sender Username: Team@nooch.com], [Recipient Username: Cliff@nooch.com], [Amount: 2]
+ERROR 2015-12-19 12:58:57,759 134657ms Logger          Error           - Landlords API -> Common Helper -> getUserPermissionsForSynapseV3 FAILED: Outer Catch Error - [User Email: team@nooch.com], [Exception: ]
+ERROR 2015-12-19 12:58:57,760 134658ms Logger          Error           - Landlords API -> Common Helper -> SynapseV3AddTrans_ReusableClass - SENDER's Synapse Permissions were NULL or not successful :-(
+INFO  2015-12-19 12:58:57,761 134659ms Logger          Info            - Add fund to members account New Admin -> Transfer FAILED. Error occur in call order API
+INFO  2015-12-19 12:58:57,762 134660ms Logger          Info            - Add fund to members account New Admin - THERE WAS A FAILURE - Sending Failure Notifications to both Users
+INFO  2015-12-19 12:58:59,121 136019ms Logger          Info            - Add fund to members account New Admin --> TransferMoneyUsingSynapse FAILED - Push notif FAILED also, SMS NOT sent to [Team Nooch],  [Exception: System.Net.WebException: The remote server returned an error: (400) Bad Request.
+   at System.Net.WebClient.UploadDataInternal(Uri address, String method, Byte[] data, WebRequest& request)
+   at System.Net.WebClient.UploadString(Uri address, String method, String data)
+   at System.Net.WebClient.UploadString(String address, String data)
+   at noochAdminNew.Classes.PushNotification.ApplePushNotification.SendNotificationMessage(String alertText, Int32 badge, String sound, String devicetokens, String username, String password) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\PushNotification\ApplePushNotification.cs:line 29
+   at noochAdminNew.Controllers.AdminController.CreditFundToMemberPostSynapseV3Test(String transferfundto, String transferAmount, String transferNotes, String adminPin) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\AdminController.cs:line 1657]
+ERROR 2015-12-19 12:58:59,163 136061ms Logger          Error           - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'C:\noochweb.venturepact.com\EmailTemplates\transferFailure.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 89
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 105]
+INFO  2015-12-19 12:58:59,164 136062ms Logger          Info            - Add fund to members account New Admin -> TransferMoneyUsingSynapse FAILED - Email sent to Sender: [team@nooch.com] successfully.
+INFO  2015-12-19 12:59:04,518 141416ms Logger          Info            - Common Helper-> SynapseV3AddTrans_ReusableClass Initiated - [Sender Username: Team@nooch.com], [Recipient Username: Cliff@nooch.com], [Amount: 2]
+INFO  2015-12-19 13:05:41,589 21150ms Logger          Info            - Common Helper-> SynapseV3AddTrans_ReusableClass Initiated - [Sender Username: Team@nooch.com], [Recipient Username: Cliff@nooch.com], [Amount: 2]
+ERROR 2015-12-19 13:06:37,011 76573ms Logger          Error           - Landlords API -> Common Helper -> getUserPermissionsForSynapseV3 FAILED: Outer Catch Error - [User Email: Team@nooch.com], [Exception: ]
+ERROR 2015-12-19 13:06:37,015 76577ms Logger          Error           - Landlords API -> Common Helper -> SynapseV3AddTrans_ReusableClass - SENDER's Synapse Permissions were NULL or not successful :-(
+INFO  2015-12-19 13:06:37,016 76578ms Logger          Info            - Add fund to members account New Admin -> Transfer FAILED. Error occur in call order API
+INFO  2015-12-19 13:06:37,017 76579ms Logger          Info            - Add fund to members account New Admin - THERE WAS A FAILURE - Sending Failure Notifications to both Users
+INFO  2015-12-19 13:06:38,473 78035ms Logger          Info            - Add fund to members account New Admin --> TransferMoneyUsingSynapse FAILED - Push notif FAILED also, SMS NOT sent to [Team Nooch],  [Exception: System.Net.WebException: The remote server returned an error: (400) Bad Request.
+   at System.Net.WebClient.UploadDataInternal(Uri address, String method, Byte[] data, WebRequest& request)
+   at System.Net.WebClient.UploadString(Uri address, String method, String data)
+   at System.Net.WebClient.UploadString(String address, String data)
+   at noochAdminNew.Classes.PushNotification.ApplePushNotification.SendNotificationMessage(String alertText, Int32 badge, String sound, String devicetokens, String username, String password) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\PushNotification\ApplePushNotification.cs:line 29
+   at noochAdminNew.Controllers.AdminController.CreditFundToMemberPostSynapseV3Test(String transferfundto, String transferAmount, String transferNotes, String adminPin) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\AdminController.cs:line 1657]
+ERROR 2015-12-19 13:06:38,521 78083ms Logger          Error           - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'C:\noochweb.venturepact.com\EmailTemplates\transferFailure.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 89
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 105]
+INFO  2015-12-19 13:06:38,522 78084ms Logger          Info            - Add fund to members account New Admin -> TransferMoneyUsingSynapse FAILED - Email sent to Sender: [team@nooch.com] successfully.
+INFO  2015-12-19 13:06:42,661 82223ms Logger          Info            - Common Helper-> SynapseV3AddTrans_ReusableClass Initiated - [Sender Username: Team@nooch.com], [Recipient Username: Cliff@nooch.com], [Amount: 2]
+INFO  2015-12-19 13:09:31,784 28305ms Logger          Info            - Common Helper-> SynapseV3AddTrans_ReusableClass Initiated - [Sender Username: Team@nooch.com], [Recipient Username: Cliff@nooch.com], [Amount: 2]
+INFO  2015-12-19 13:11:53,821 170342ms Logger          Info            - Add fund to members account New Admin -> Transfer FAILED. Error occur in call order API
+INFO  2015-12-19 13:11:53,832 170353ms Logger          Info            - Add fund to members account New Admin - THERE WAS A FAILURE - Sending Failure Notifications to both Users
+INFO  2015-12-19 13:11:54,021 170542ms Logger          Info            - Common Helper-> SynapseV3AddTrans_ReusableClass Initiated - [Sender Username: Team@nooch.com], [Recipient Username: Cliff@nooch.com], [Amount: 2]
+INFO  2015-12-19 13:12:04,556 181078ms Logger          Info            - Add fund to members account New Admin --> TransferMoneyUsingSynapse FAILED - Push notif FAILED also, SMS NOT sent to [Team Nooch],  [Exception: System.Net.WebException: The remote server returned an error: (400) Bad Request.
+   at System.Net.WebClient.UploadDataInternal(Uri address, String method, Byte[] data, WebRequest& request)
+   at System.Net.WebClient.UploadString(Uri address, String method, String data)
+   at System.Net.WebClient.UploadString(String address, String data)
+   at noochAdminNew.Classes.PushNotification.ApplePushNotification.SendNotificationMessage(String alertText, Int32 badge, String sound, String devicetokens, String username, String password) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\PushNotification\ApplePushNotification.cs:line 29
+   at noochAdminNew.Controllers.AdminController.CreditFundToMemberPostSynapseV3Test(String transferfundto, String transferAmount, String transferNotes, String adminPin) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\AdminController.cs:line 1657]
+ERROR 2015-12-19 13:12:05,816 182338ms Logger          Error           - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'C:\noochweb.venturepact.com\EmailTemplates\transferFailure.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 89
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 105]
+INFO  2015-12-19 13:12:05,817 182339ms Logger          Info            - Add fund to members account New Admin -> TransferMoneyUsingSynapse FAILED - Email sent to Sender: [team@nooch.com] successfully.
+INFO  2015-12-19 13:12:31,417 207938ms Logger          Info            - Add fund to members account New Admin -> Transfer FAILED. Error occur in call order API
+INFO  2015-12-19 13:12:31,417 207938ms Logger          Info            - Add fund to members account New Admin - THERE WAS A FAILURE - Sending Failure Notifications to both Users
+INFO  2015-12-19 13:12:32,039 208560ms Logger          Info            - Add fund to members account New Admin --> TransferMoneyUsingSynapse FAILED - Push notif FAILED also, SMS NOT sent to [Team Nooch],  [Exception: System.Net.WebException: The remote server returned an error: (400) Bad Request.
+   at System.Net.WebClient.UploadDataInternal(Uri address, String method, Byte[] data, WebRequest& request)
+   at System.Net.WebClient.UploadString(Uri address, String method, String data)
+   at System.Net.WebClient.UploadString(String address, String data)
+   at noochAdminNew.Classes.PushNotification.ApplePushNotification.SendNotificationMessage(String alertText, Int32 badge, String sound, String devicetokens, String username, String password) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\PushNotification\ApplePushNotification.cs:line 29
+   at noochAdminNew.Controllers.AdminController.CreditFundToMemberPostSynapseV3Test(String transferfundto, String transferAmount, String transferNotes, String adminPin) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Controllers\AdminController.cs:line 1657]
+ERROR 2015-12-19 13:12:32,075 208596ms Logger          Error           - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'C:\noochweb.venturepact.com\EmailTemplates\transferFailure.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 89
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 105]
+INFO  2015-12-19 13:12:32,076 208597ms Logger          Info            - Add fund to members account New Admin -> TransferMoneyUsingSynapse FAILED - Email sent to Sender: [team@nooch.com] successfully.
+INFO  2015-12-28 10:36:09,362 3208774ms Logger          Info            - Common Helper-> SynapseV3AddTrans_ReusableClass Initiated - [Sender Username: team@nooch.com], [Recipient Username: cliff@nooch.com], [Amount: 2]
+ERROR 2015-12-28 10:47:44,664 3904075ms Logger          Error           - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'C:\noochweb.venturepact.com\EmailTemplates\TransferSent.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 89
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 105]
+INFO  2015-12-28 10:47:45,837 3905248ms Logger          Info            - Add fund to members account New Admin -> TransferSent email sent to [team@nooch.com] successfully
+INFO  2015-12-28 10:48:00,419 3919830ms Logger          Info            - Add fund to members account New Admin -> SUCCESS - Push notification sent to Recipient [Cliff Canan] successfully.
+ERROR 2015-12-28 10:48:22,273 3941685ms Logger          Error           - Admin Dash - Utility.cs -> SendEmail FAILED - [Exception: System.IO.DirectoryNotFoundException: Could not find a part of the path 'C:\noochweb.venturepact.com\EmailTemplates\TransferReceived.txt'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy, Boolean useLongPath, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path, Encoding encoding, Boolean detectEncodingFromByteOrderMarks, Int32 bufferSize, Boolean checkHost)
+   at System.IO.StreamReader..ctor(String path)
+   at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 89
+   at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 105]
+INFO  2015-12-28 10:48:22,831 3942242ms Logger          Info            - Add fund to members account New Admin  ->  TransferReceived Email sent to [cliff@nooch.com] successfully

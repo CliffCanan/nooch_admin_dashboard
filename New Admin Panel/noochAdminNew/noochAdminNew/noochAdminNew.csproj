@@ -43,13 +43,13 @@
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="FileHelpers">
-      <HintPath>..\..\..\Nooch.Website.CR\Nooch.Administration.Web\bin\FileHelpers.dll</HintPath>
+      <HintPath>..\packages\FileHelpers.3.1.5\lib\net45\FileHelpers.dll</HintPath>
     </Reference>
     <Reference Include="FileHelpers.DataLink">
       <HintPath>..\..\..\Nooch.Website.CR\Nooch.Administration.Web\bin\FileHelpers.DataLink.dll</HintPath>
     </Reference>
     <Reference Include="FileHelpers.ExcelStorage">
-      <HintPath>..\..\..\Nooch.Website.CR\Nooch.Administration.Web\bin\FileHelpers.ExcelStorage.dll</HintPath>
+      <HintPath>..\packages\FileHelpers.ExcelStorage.3.1.5\lib\net45\FileHelpers.ExcelStorage.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -214,9 +214,6 @@
     <Compile Include="Models\ADD.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\AdminLevelAccessRight.cs">
-      <DependentUpon>NoochDbModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\AdminUser.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
@@ -242,9 +239,6 @@
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\InviteCode.cs">
-      <DependentUpon>NoochDbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\KnoxAccountDetail.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Landlord.cs">
@@ -883,6 +877,7 @@
     <Content Include="Scripts\App\Login.js" />
     <None Include="Properties\PublishProfiles\nooch admin new.pubxml" />
     <None Include="Properties\PublishProfiles\nooch admin pub.pubxml" />
+    <None Include="Properties\PublishProfiles\sdfs.pubxml" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\App\MemberDetail.js" />
     <Content Include="Scripts\App\MembersList.js" />
@@ -903,7 +898,9 @@
     <Content Include="Scripts\knockout-2.2.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

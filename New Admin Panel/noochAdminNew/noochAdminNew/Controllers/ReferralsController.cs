@@ -12,11 +12,6 @@ namespace noochAdminNew.Controllers
 {
     public class ReferralsController : Controller
     {
-        //
-        // GET: /Referrals/
-
-
-
         // to read all invite codes from db
         private List<InviteCodeDataClass> GetAllInviteCodes()
         {
@@ -24,12 +19,7 @@ namespace noochAdminNew.Controllers
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 var all_invite_codes = (from t in obj.InviteCodes
-
-                                        select t
-                    ).ToList();
-
-
-
+                                        select t).ToList();
 
                 foreach (InviteCode m in all_invite_codes)
                 {
@@ -74,18 +64,13 @@ namespace noochAdminNew.Controllers
                         idc.DateModified = "";
                     }
 
-
-
                     // idc.createdbyadmin_id = m.CreatedBy.ToString();
-
-
 
                     li.Add(idc);
                 }
             }
+
             return li;
-
-
         }
 
 
@@ -98,14 +83,13 @@ namespace noochAdminNew.Controllers
             ViewBag.TopReferringMembersWeekly = GetTopReferrals(2);
             ViewBag.TopReferringMembersDay = GetTopReferrals(3);
             return View(allinvitecodes);
-
         }
+
         public ActionResult JoinningsWithGivenReferralCode(string RefCode)
         {
             List<MembersListDataClass> AllMemberFormtted = GetAllMembersJoinedWithGivenRefCode(RefCode);
 
             return View(AllMemberFormtted);
-
         }
 
         private List<ReferralsResultClass> GetTopReferrals(int filterType)
@@ -128,8 +112,6 @@ namespace noochAdminNew.Controllers
                     default:
                         allRef = obj.GetTopReferringMembers(1).ToList();
                     break;
-                        
-
                 }
                
                 foreach (GetTopReferringMembers_Result v in allRef)
@@ -153,7 +135,6 @@ namespace noochAdminNew.Controllers
                 }
                 return li;
             }
-
         }
 
         private List<MembersListDataClass> GetAllMembersJoinedWithGivenRefCode(string RefCode)
@@ -366,6 +347,7 @@ namespace noochAdminNew.Controllers
         {
             Guid d = Utility.ConvertToGuid(Session["UserId"].ToString());
             CreateNewReferralCodeResultClass s = new CreateNewReferralCodeResultClass();
+
             if (!String.IsNullOrEmpty(newCode.Trim()) && !String.IsNullOrEmpty(allowedUses.Trim()) && !String.IsNullOrEmpty(newCodeNotes.Trim()))
             {
                 // checking if valid int passed

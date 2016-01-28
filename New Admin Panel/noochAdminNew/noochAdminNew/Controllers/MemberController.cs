@@ -438,7 +438,8 @@ namespace noochAdminNew.Controllers
                 {
                     All_Members_In_Records = (from t in obj.Members
                                               where t.Type == "Personal" ||
-                                                    t.Type == "Business"
+                                                    t.Type == "Business" ||
+                                                    t.Type == "Personal - Browser"
                                               select t).ToList();
                 }
                 else if (type == "Landlord")
@@ -455,12 +456,12 @@ namespace noochAdminNew.Controllers
                 }
 
                 foreach (Member m in All_Members_In_Records)
-                {
+                { 
                     int TransCount = (from tr in obj.Transactions
                                       where (tr.Member.MemberId == m.MemberId || tr.Member1.MemberId == m.MemberId) &&
                                              tr.TransactionStatus == "Success"
                                       select tr).Count();
-
+                     
                     // transaction - Transfer Type - 5dt4HUwCue532sNmw3LKDQ==
                     // invite - DrRr1tU1usk7nNibjtcZkA==
                     // request - T3EMY1WWZ9IscHIj3dbcNw==
@@ -782,9 +783,9 @@ namespace noochAdminNew.Controllers
 
                         // Get Auth Token (It's not in the banks table... it's in the SynapseCreateUserResults Table)
                         var synapseCreateUserObj = (from Syn in obj.SynapseCreateUserResults
-                                                   join mem in obj.Members on Syn.MemberId equals mem.MemberId
-                                                   where Syn.IsDeleted == false && mem.Nooch_ID == NoochId
-                                                   select Syn).FirstOrDefault();
+                                                    join mem in obj.Members on Syn.MemberId equals mem.MemberId
+                                                    where Syn.IsDeleted == false && mem.Nooch_ID == NoochId
+                                                    select Syn).FirstOrDefault();
 
                         string synapseAuthToken = synapseCreateUserObj.access_token;
                         string synapseRefreshToken = synapseCreateUserObj.refresh_token;
@@ -876,6 +877,35 @@ namespace noochAdminNew.Controllers
                 }
             }
             return View(mdc);
+        }
+        [HttpPost]
+        [ActionName("ReSendVrificationSMS")]
+        public ActionResult ReSendVrificationSMS(string noochIds)
+        {
+
+            MemberOperationsResult res = new MemberOperationsResult();
+            using (NOOCHEntities obj = new NOOCHEntities())
+            {
+                var member = (from t in obj.Members where t.Nooch_ID == noochIds && t.IsDeleted == false select t).SingleOrDefault();
+                if (member != null)
+                {
+                    string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
+                    string MessageBody = "Hi " + fname + ", This is Nooch - just need to verify this is your phone number. Please reply 'Go' to confirm your phone number.";
+                    res.Message = Utility.SendSMS(Utility.RemovePhoneNumberFormatting( member.ContactNumber), MessageBody, member.MemberId.ToString());
+                    if (res.Message != "Failure")
+                    {
+                        res.IsSuccess = true;
+                    }
+                    else
+                    {
+                        res.IsSuccess = false;
+                    }
+
+                }
+            }
+
+            return Json(res);
+
         }
 
         /// <summary>
@@ -1396,6 +1426,62 @@ namespace noochAdminNew.Controllers
 
                 return "Fail";
             }
+        }
+
+        [HttpPost]
+        [ActionName("UpdatePassword")]
+        public ActionResult UpdatePassword(string noochIds, string newPassword)
+        {
+
+            MemberOperationsResult res = new MemberOperationsResult();
+            using (NOOCHEntities obj = new NOOCHEntities())
+            {
+                var temp = CommonHelper.GetRandomTransactionTrackingId();
+                var member = (from t in obj.Members where t.Nooch_ID == noochIds && t.IsDeleted == false select t).SingleOrDefault();
+                if (member != null)
+                {
+                    member.Password = CommonHelper.GetEncryptedData(newPassword);
+                    var o = obj.SaveChanges();
+                    if (o == 1)
+                    {
+                        res.Message = "Password updated";
+                        res.IsSuccess = true;
+                        string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
+                        string MessageBody = "Hi " + fname + ", This is Nooch - Your password has been updated to" + member.Password;
+                        String msg = Utility.SendSMS("member.ContactNumber", "", member.MemberId.ToString());
+                        var fromAddress = Utility.GetValueFromConfig("adminMail");
+                        var tokens = new Dictionary<string, string>
+                        {
+                            {Constants.PLACEHOLDER_FIRST_NAME, fname},
+                           // {Constants.PLACEHOLDER_LAST_NAME, member.LastName},
+                            {Constants.PLACEHOLDER_PASSWORD, member.Password}
+                        };
+                        string toAddress = CommonHelper.GetDecryptedData(member.UserName);
+                        bool emailSent = Utility.SendEmail("passwordChangedByAdmin",
+                                                fromAddress, toAddress, "Your password is chnaged by Nooch", null,
+                                                tokens, null, null, null);
+                        if (msg != "Failure")
+                        {
+                            res.Message += " & SMS has been sent";
+                        }
+                        if (emailSent)
+                            res.Message += "& Email has been Sent";
+                    }
+                    else
+                        res.IsSuccess = false;
+                }
+            }
+            return Json(res);
+        }
+
+        [HttpPost]
+        [ActionName("GenerateNewPassword")]
+        public ActionResult GenerateNewPassword()
+        {
+            MemberOperationsResult res = new MemberOperationsResult();
+            res.Message = CommonHelper.GetRandomTransactionTrackingId();
+            res.IsSuccess = true;
+            return Json(res);
         }
     }
 }

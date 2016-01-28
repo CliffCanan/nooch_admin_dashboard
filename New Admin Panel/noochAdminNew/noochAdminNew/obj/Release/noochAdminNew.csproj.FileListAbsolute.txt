@@ -120,3 +120,8 @@ C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Release\nooch
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Release\noochAdminNew.csproj.GenerateResource.Cache
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Release\noochAdminNew.dll
 C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\obj\Release\noochAdminNew.pdb
+C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\RestSharp.dll
+C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Twilio.Api.dll
+C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\RestSharp.xml
+C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Twilio.Api.pdb
+C:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\bin\Twilio.Api.xml

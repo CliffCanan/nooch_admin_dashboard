@@ -121,6 +121,16 @@ $('#DeleteUser').click(function () {
     $('#myModalConfirmDelete').modal('show');
 });
 
+$('#ChangePassword').click(function () {
+    $('#myModalchangePwd').modal('show');
+});
+$('#btntoggle').click(function () {
+    $('#myModalchangePwd').modal('show');
+});
+ 
+ 
+ 
+
 var Member = function () {
     function applyOperation(operation) {
         if (NoochId == '') {
@@ -415,6 +425,73 @@ var Member = function () {
         });
     }
 
+    // Manually set bank account's status to 'Verified'
+    function sendSmsReminderForVerification() {
+       var contactNumber= $('#contactNumber').val();
+       var data = {};
+        
+       data.noochIds = NoochId;
+       var url = "../Member/ReSendVrificationSMS";
+       
+       $.post(url, data, function (result) {
+          if (result.IsSuccess) {
+               
+               toastr.success(result.Message, 'Verification message sent successfully.');
+                
+           }
+           else {
+              
+               toastr.error(result.Message, 'Error');
+                
+           }
+       });
+        
+    }
+
+    function ChangePassword() {
+        if ($("#pwd").val() == '')      //Button will be disabled till pwd is not updated and all the field will be clear for next time. 
+            return false;
+        $("#btnChangePassword").text('Updating...');
+        $('#btnChangePassword').attr('disabled', 'disabled');
+
+        var data = {};
+        data.newPassword = $("#pwd").val();
+        data.noochIds = NoochId;
+        var url = "../Member/UpdatePassword";
+        $.post(url, data, function (result) {
+            if (result.IsSuccess) {
+                toastr.success(result.Message, 'Updated successfully.');
+            }
+            else {
+                toastr.error(result.Message, 'Error');
+            }
+            $('#myModalchangePwd').modal('toggle');
+            $("#btnChangePassword").text('Yes - Update');
+            $('#pwd').val('');
+            $('#btnChangePassword').removeAttr("disabled");
+            if ($('#toggle-button-selected').hasClass('toggle-button')) {
+                $('#toggle-button-selected').removeClass('toggle-button-selected');
+            }
+        });
+    }
+
+    function GenerateNewPassword() {
+
+        var data = {};
+        var url = "../Member/GenerateNewPassword";
+        $.post(url, data, function (result) {
+            if (result.IsSuccess) {
+                $("#pwd").val(result.Message);
+            }
+            else {
+
+                toastr.error(result.Message, 'Error');
+
+            }
+        });
+    }
+     
+
     return {
         ApplyChoosenOperation: applyOperation,
         EditMember: editdetails,
@@ -423,6 +500,11 @@ var Member = function () {
         AdminNoteForUser: SaveAdminNoteForUser,
         VerifyBankAccount: verifyBankAccount,
         UnVerifyBankAccount: unVerifyBankAccount,
-        getSynapseInfo: getSynapseInfo
+        getSynapseInfo: getSynapseInfo,
+        sendSmsReminder: sendSmsReminderForVerification,
+        ChangePassword: ChangePassword,
+        GenerateNewPassword: GenerateNewPassword
+         
+       
     };
 }();

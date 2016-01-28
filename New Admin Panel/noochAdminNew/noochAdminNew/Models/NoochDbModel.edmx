@@ -17,16 +17,6 @@
           <Property Name="Country" Type="varchar" MaxLength="500" />
           <Property Name="Add_remarks" Type="varchar" MaxLength="500" />
         </EntityType>
-        <EntityType Name="AdminLevelAccessRights">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="MenuId" Type="int" />
-          <Property Name="MainMenu" Type="nvarchar" MaxLength="15" />
-          <Property Name="SubMenu" Type="nvarchar" MaxLength="50" />
-          <Property Name="RedirectUrl" Type="nvarchar" MaxLength="100" />
-        </EntityType>
         <EntityType Name="AdminUsers">
           <Key>
             <PropertyRef Name="UserId" />
@@ -96,23 +86,6 @@
           <Property Name="CreatedOn" Type="datetime" />
           <Property Name="ModifiedOn" Type="datetime" />
           <Property Name="CreatedBy" Type="uniqueidentifier" />
-        </EntityType>
-        <EntityType Name="KnoxAccountDetails">
-          <Key>
-            <PropertyRef Name="AccountId" />
-          </Key>
-          <Property Name="AccountId" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="MemberId" Type="uniqueidentifier" />
-          <Property Name="TransId" Type="varchar(max)" />
-          <Property Name="UserKey" Type="varchar(max)" />
-          <Property Name="UserPass" Type="varchar(max)" />
-          <Property Name="DateCreated" Type="datetime" />
-          <Property Name="DateModified" Type="datetime" />
-          <Property Name="IsDeleted" Type="bit" />
-          <Property Name="BankName" Type="varchar(max)" />
-          <Property Name="AccountNum" Type="varchar(max)" />
-          <Property Name="BankImageURL" Type="varchar(max)" />
-          <Property Name="Status" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Landlords">
           <Key>
@@ -473,7 +446,7 @@
           <Property Name="refresh_token" Type="varchar(max)" />
           <Property Name="success" Type="bit" />
           <Property Name="username" Type="varchar(max)" />
-          <Property Name="user_id" Type="int" />
+          <Property Name="user_id" Type="varchar(max)" />
           <Property Name="IsDeleted" Type="bit" />
           <Property Name="ModifiedOn" Type="datetime" />
           <Property Name="IsForNonNoochUser" Type="bit" />
@@ -621,18 +594,6 @@
           <Property Name="LastPaymentAmount" Type="varchar" MaxLength="50" />
           <Property Name="IsPaymentDueForThisMonth" Type="bit" />
         </EntityType>
-        <Association Name="FK_KnoxAccountDetails_Members">
-          <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
-          <End Role="KnoxAccountDetails" Type="Self.KnoxAccountDetails" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Members">
-              <PropertyRef Name="MemberId" />
-            </Principal>
-            <Dependent Role="KnoxAccountDetails">
-              <PropertyRef Name="MemberId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_MemberNotifications_Members">
           <End Role="Members" Type="Self.Members" Multiplicity="1" />
           <End Role="MemberNotifications" Type="Self.MemberNotifications" Multiplicity="*" />
@@ -758,13 +719,11 @@
         </Function>
         <EntityContainer Name="NOOCHModelStoreContainer">
           <EntitySet Name="ADD" EntityType="Self.ADD" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="AdminLevelAccessRights" EntityType="Self.AdminLevelAccessRights" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AdminUsers" EntityType="Self.AdminUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ALT" EntityType="Self.ALT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AuthenticationTokens" EntityType="Self.AuthenticationTokens" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GeoLocations" EntityType="Self.GeoLocations" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="InviteCodes" EntityType="Self.InviteCodes" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="KnoxAccountDetails" EntityType="Self.KnoxAccountDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Landlords" EntityType="Self.Landlords" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MemberNotifications" EntityType="Self.MemberNotifications" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Members" EntityType="Self.Members" Schema="dbo" store:Type="Tables" />
@@ -784,10 +743,6 @@
           <EntitySet Name="TenantsIdDocuments" EntityType="Self.TenantsIdDocuments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Transactions" EntityType="Self.Transactions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UnitsOccupiedByTenants" EntityType="Self.UnitsOccupiedByTenants" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_KnoxAccountDetails_Members" Association="Self.FK_KnoxAccountDetails_Members">
-            <End Role="Members" EntitySet="Members" />
-            <End Role="KnoxAccountDetails" EntitySet="KnoxAccountDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_MemberNotifications_Members" Association="Self.FK_MemberNotifications_Members">
             <End Role="Members" EntitySet="Members" />
             <End Role="MemberNotifications" EntitySet="MemberNotifications" />
@@ -831,13 +786,11 @@
       <Schema Namespace="NOOCHModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="NOOCHEntities" p1:LazyLoadingEnabled="true">
           <EntitySet Name="ADDs" EntityType="NOOCHModel.ADD" />
-          <EntitySet Name="AdminLevelAccessRights" EntityType="NOOCHModel.AdminLevelAccessRight" />
           <EntitySet Name="AdminUsers" EntityType="NOOCHModel.AdminUser" />
           <EntitySet Name="ALTs" EntityType="NOOCHModel.ALT" />
           <EntitySet Name="AuthenticationTokens" EntityType="NOOCHModel.AuthenticationToken" />
           <EntitySet Name="GeoLocations" EntityType="NOOCHModel.GeoLocation" />
           <EntitySet Name="InviteCodes" EntityType="NOOCHModel.InviteCode" />
-          <EntitySet Name="KnoxAccountDetails" EntityType="NOOCHModel.KnoxAccountDetail" />
           <EntitySet Name="MemberNotifications" EntityType="NOOCHModel.MemberNotification" />
           <EntitySet Name="PasswordResetRequests" EntityType="NOOCHModel.PasswordResetRequest" />
           <EntitySet Name="SDNs" EntityType="NOOCHModel.SDN" />
@@ -860,7 +813,6 @@
             <Parameter Name="vStatsType" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="SynapseBanksOfMembers" EntityType="NOOCHModel.SynapseBanksOfMember" />
-          <EntitySet Name="SynapseCreateUserResults" EntityType="NOOCHModel.SynapseCreateUserResult" />
           <FunctionImport Name="GetMembersInEachSynapseBank" ReturnType="Collection(NOOCHModel.GetMembersInEachSynapseBank_Result)" />
           <EntitySet Name="TenantsIdDocuments" EntityType="NOOCHModel.TenantsIdDocument" />
           <EntitySet Name="Landlords" EntityType="NOOCHModel.Landlord" />
@@ -874,10 +826,6 @@
           <AssociationSet Name="FK_Transactions_GeoLocations" Association="NOOCHModel.FK_Transactions_GeoLocations">
             <End Role="GeoLocation" EntitySet="GeoLocations" />
             <End Role="Transaction" EntitySet="Transactions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_KnoxAccountDetails_Members" Association="NOOCHModel.FK_KnoxAccountDetails_Members">
-            <End Role="Member" EntitySet="Members" />
-            <End Role="KnoxAccountDetail" EntitySet="KnoxAccountDetails" />
           </AssociationSet>
           <AssociationSet Name="FK_RentTransactions_Landlords" Association="NOOCHModel.FK_RentTransactions_Landlords">
             <End Role="Landlord" EntitySet="Landlords" />
@@ -912,6 +860,7 @@
             <End Role="RentTransaction" EntitySet="RentTransactions" />
           </AssociationSet>
           <EntitySet Name="SynapseV3CreateTransResults" EntityType="NOOCHModel.SynapseV3CreateTransResults" />
+          <EntitySet Name="SynapseCreateUserResults" EntityType="NOOCHModel.SynapseCreateUserResult" />
           </EntityContainer>
         <EntityType Name="ADD">
           <Key>
@@ -924,16 +873,6 @@
           <Property Name="CityStateProvincePostalCode" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
           <Property Name="Country" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
           <Property Name="Add_remarks" Type="String" MaxLength="500" Unicode="false" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="AdminLevelAccessRight">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <Property Name="MenuId" Type="Int32" />
-          <Property Name="MainMenu" Type="String" MaxLength="15" Unicode="true" FixedLength="false" />
-          <Property Name="SubMenu" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="RedirectUrl" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
         </EntityType>
         <EntityType Name="AdminUser">
           <Key>
@@ -1005,24 +944,6 @@
           <Property Name="CreatedOn" Type="DateTime" Precision="3" />
           <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
           <Property Type="Guid" Name="CreatedBy" />
-        </EntityType>
-        <EntityType Name="KnoxAccountDetail">
-          <Key>
-            <PropertyRef Name="AccountId" />
-          </Key>
-          <Property Name="AccountId" Type="Guid" Nullable="false" />
-          <Property Name="MemberId" Type="Guid" />
-          <Property Name="TransId" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-          <Property Name="UserKey" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-          <Property Name="UserPass" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-          <Property Name="DateCreated" Type="DateTime" Precision="3" />
-          <Property Name="DateModified" Type="DateTime" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" />
-          <Property Name="BankName" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-          <Property Name="AccountNum" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-          <Property Name="BankImageURL" Type="String" MaxLength="Max" Unicode="false" FixedLength="false" />
-          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Member" Relationship="NOOCHModel.FK_KnoxAccountDetails_Members" FromRole="KnoxAccountDetail" ToRole="Member" />
         </EntityType>
         <EntityType Name="MemberNotification">
           <Key>
@@ -1228,33 +1149,6 @@
           <Property Name="type_synapse" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="is_active" Type="Boolean" />
         </EntityType>
-        <EntityType Name="SynapseCreateUserResult">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="MemberId" Type="Guid" />
-          <Property Name="DateCreated" Type="DateTime" Precision="3" />
-          <Property Name="access_token" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="expires_in" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="refresh_token" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="success" Type="Boolean" />
-          <Property Name="username" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="user_id" Type="Int32" />
-          <Property Name="IsDeleted" Type="Boolean" />
-          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
-          <Property Name="IsForNonNoochUser" Type="Boolean" />
-          <Property Name="NonNoochUserEmail" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="TransactionIdFromWhichInvited" Type="Guid" />
-          <Property Name="HasNonNoochUserSignedUp" Type="Boolean" />
-          <Property Name="MemberIdAfterSignup" Type="Guid" />
-          <Property Name="is_business" Type="Boolean" />
-          <Property Name="legal_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="permission" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Phone_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="photos" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-        </EntityType>
         <ComplexType Name="GetMembersInEachSynapseBank_Result">
           <Property Type="Int32" Name="CountInBank" Nullable="true" />
           <Property Type="String" Name="bank_name" Nullable="true" />
@@ -1389,7 +1283,6 @@
           <Property Name="TransferLimit" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="FacebookUserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="GoogleUserId" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="KnoxAccountDetails" Relationship="NOOCHModel.FK_KnoxAccountDetails_Members" FromRole="Member" ToRole="KnoxAccountDetail" />
           <NavigationProperty Name="MemberNotifications" Relationship="NOOCHModel.FK_MemberNotifications_Members" FromRole="Member" ToRole="MemberNotification" />
           <NavigationProperty Name="PasswordResetRequests" Relationship="NOOCHModel.FK_PasswordResetRequests_Members" FromRole="Member" ToRole="PasswordResetRequest" />
           <NavigationProperty Name="SynapseBankLoginResults" Relationship="NOOCHModel.FK_SynapseBankLoginResults_Members" FromRole="Member" ToRole="SynapseBankLoginResult" />
@@ -1565,18 +1458,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_KnoxAccountDetails_Members">
-          <End Type="NOOCHModel.Member" Role="Member" Multiplicity="0..1" />
-          <End Type="NOOCHModel.KnoxAccountDetail" Role="KnoxAccountDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Member">
-              <PropertyRef Name="MemberId" />
-            </Principal>
-            <Dependent Role="KnoxAccountDetail">
-              <PropertyRef Name="MemberId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_RentTransactions_Landlords">
           <End Type="NOOCHModel.Landlord" Role="Landlord" Multiplicity="0..1" />
           <End Type="NOOCHModel.RentTransaction" Role="RentTransaction" Multiplicity="*" />
@@ -1708,6 +1589,33 @@
           <Property Name="NoochAdminNotes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="NoochTransactionId" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="SynapseCreateUserResult">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MemberId" Type="Guid" />
+          <Property Name="DateCreated" Type="DateTime" Precision="3" />
+          <Property Name="access_token" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="expires_in" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="reason" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="refresh_token" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="success" Type="Boolean" />
+          <Property Name="username" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="user_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="IsDeleted" Type="Boolean" />
+          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
+          <Property Name="IsForNonNoochUser" Type="Boolean" />
+          <Property Name="NonNoochUserEmail" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="TransactionIdFromWhichInvited" Type="Guid" />
+          <Property Name="HasNonNoochUserSignedUp" Type="Boolean" />
+          <Property Name="MemberIdAfterSignup" Type="Guid" />
+          <Property Name="is_business" Type="Boolean" />
+          <Property Name="legal_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="permission" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Phone_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="photos" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1724,17 +1632,6 @@
                 <ScalarProperty Name="CityStateProvincePostalCode" ColumnName="CityStateProvincePostalCode" />
                 <ScalarProperty Name="Country" ColumnName="Country" />
                 <ScalarProperty Name="Add_remarks" ColumnName="Add_remarks" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AdminLevelAccessRights">
-            <EntityTypeMapping TypeName="NOOCHModel.AdminLevelAccessRight">
-              <MappingFragment StoreEntitySet="AdminLevelAccessRights">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="MenuId" ColumnName="MenuId" />
-                <ScalarProperty Name="MainMenu" ColumnName="MainMenu" />
-                <ScalarProperty Name="SubMenu" ColumnName="SubMenu" />
-                <ScalarProperty Name="RedirectUrl" ColumnName="RedirectUrl" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1810,24 +1707,6 @@
                 <ScalarProperty Name="AdminNotes" ColumnName="AdminNotes" />
                 <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
                 <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="KnoxAccountDetails">
-            <EntityTypeMapping TypeName="NOOCHModel.KnoxAccountDetail">
-              <MappingFragment StoreEntitySet="KnoxAccountDetails">
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
-                <ScalarProperty Name="TransId" ColumnName="TransId" />
-                <ScalarProperty Name="UserKey" ColumnName="UserKey" />
-                <ScalarProperty Name="UserPass" ColumnName="UserPass" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="BankName" ColumnName="BankName" />
-                <ScalarProperty Name="AccountNum" ColumnName="AccountNum" />
-                <ScalarProperty Name="BankImageURL" ColumnName="BankImageURL" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2032,34 +1911,6 @@
                 <ScalarProperty Name="account_type" ColumnName="account_type" />
                 <ScalarProperty Name="account_number_string" ColumnName="account_number_string" />
                 <ScalarProperty Name="account_class" ColumnName="account_class" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SynapseCreateUserResults">
-            <EntityTypeMapping TypeName="NOOCHModel.SynapseCreateUserResult">
-              <MappingFragment StoreEntitySet="SynapseCreateUserResults">
-                <ScalarProperty Name="photos" ColumnName="photos" />
-                <ScalarProperty Name="Phone_number" ColumnName="Phone_number" />
-                <ScalarProperty Name="permission" ColumnName="permission" />
-                <ScalarProperty Name="legal_name" ColumnName="legal_name" />
-                <ScalarProperty Name="is_business" ColumnName="is_business" />
-                <ScalarProperty Name="MemberIdAfterSignup" ColumnName="MemberIdAfterSignup" />
-                <ScalarProperty Name="HasNonNoochUserSignedUp" ColumnName="HasNonNoochUserSignedUp" />
-                <ScalarProperty Name="TransactionIdFromWhichInvited" ColumnName="TransactionIdFromWhichInvited" />
-                <ScalarProperty Name="NonNoochUserEmail" ColumnName="NonNoochUserEmail" />
-                <ScalarProperty Name="IsForNonNoochUser" ColumnName="IsForNonNoochUser" />
-                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="user_id" ColumnName="user_id" />
-                <ScalarProperty Name="username" ColumnName="username" />
-                <ScalarProperty Name="success" ColumnName="success" />
-                <ScalarProperty Name="refresh_token" ColumnName="refresh_token" />
-                <ScalarProperty Name="reason" ColumnName="reason" />
-                <ScalarProperty Name="expires_in" ColumnName="expires_in" />
-                <ScalarProperty Name="access_token" ColumnName="access_token" />
-                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2392,6 +2243,34 @@
                 <ScalarProperty Name="trans_currency" ColumnName="trans_currency" />
                 <ScalarProperty Name="trans_amount" ColumnName="trans_amount" />
                 <ScalarProperty Name="trans_id_oid" ColumnName="trans_id_oid" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SynapseCreateUserResults">
+            <EntityTypeMapping TypeName="NOOCHModel.SynapseCreateUserResult">
+              <MappingFragment StoreEntitySet="SynapseCreateUserResults">
+                <ScalarProperty Name="photos" ColumnName="photos" />
+                <ScalarProperty Name="Phone_number" ColumnName="Phone_number" />
+                <ScalarProperty Name="permission" ColumnName="permission" />
+                <ScalarProperty Name="legal_name" ColumnName="legal_name" />
+                <ScalarProperty Name="is_business" ColumnName="is_business" />
+                <ScalarProperty Name="MemberIdAfterSignup" ColumnName="MemberIdAfterSignup" />
+                <ScalarProperty Name="HasNonNoochUserSignedUp" ColumnName="HasNonNoochUserSignedUp" />
+                <ScalarProperty Name="TransactionIdFromWhichInvited" ColumnName="TransactionIdFromWhichInvited" />
+                <ScalarProperty Name="NonNoochUserEmail" ColumnName="NonNoochUserEmail" />
+                <ScalarProperty Name="IsForNonNoochUser" ColumnName="IsForNonNoochUser" />
+                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="success" ColumnName="success" />
+                <ScalarProperty Name="refresh_token" ColumnName="refresh_token" />
+                <ScalarProperty Name="reason" ColumnName="reason" />
+                <ScalarProperty Name="expires_in" ColumnName="expires_in" />
+                <ScalarProperty Name="access_token" ColumnName="access_token" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
