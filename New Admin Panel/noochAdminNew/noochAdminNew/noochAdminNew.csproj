@@ -190,6 +190,7 @@
     <Compile Include="Classes\ModelClasses\MembersListDataClass.cs" />
     <Compile Include="Classes\ModelClasses\OfacList.cs" />
     <Compile Include="Classes\ModelClasses\SynapseRelatedClasses.cs" />
+    <Compile Include="Classes\ModelClasses\TransactionsPageData.cs" />
     <Compile Include="Classes\PushNotification\ApplePushNotification.cs" />
     <Compile Include="Classes\ResponseClasses\CreateAdminResultClass.cs" />
     <Compile Include="Classes\ResponseClasses\CreateNewReferralCodeResultClass.cs" />
@@ -982,6 +983,7 @@
     <Content Include="Views\Member\ListAllLandlords.cshtml" />
     <Content Include="Views\Member\ListAllTenants.cshtml" />
     <Content Include="Views\Admin\UsersOverTime.cshtml" />
+    <Content Include="Views\Admin\Transaction.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

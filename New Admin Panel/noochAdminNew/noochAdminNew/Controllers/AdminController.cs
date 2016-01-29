@@ -2689,5 +2689,104 @@ namespace noochAdminNew.Controllers
         {
             public string[] durationData { get; set; }
         }
+
+        public ActionResult Transaction()
+        {
+            TransactionsPageData res = new TransactionsPageData();
+
+            List<TransactionClass> adminUser = new List<TransactionClass>();
+
+            using (NOOCHEntities obj = new NOOCHEntities())
+            {
+                List<Transaction> admin = new List<Transaction>();
+
+                adminUser = (from t in obj.Transactions
+
+                             join g in obj.GeoLocations
+                             on
+                              t.LocationId equals g.LocationId
+
+                             select new TransactionClass
+                             {
+                                 TransactionId = t.TransactionId,
+                                 TransactionType = t.TransactionType,
+                                 TransactionStatus = t.TransactionStatus,
+                                 Amount = t.Amount,
+                                 TransactionDate = t.TransactionDate,
+                                 SenderId = t.SenderId,
+                                 RecipientId = t.RecipientId,
+                                 TransLongi = g.Longitude,
+                                 TransAlti = g.Altitude,
+                                 TransLati = g.Latitude,
+                                 state = g.State,
+                                 city = g.City
+
+                             }
+
+                              ).ToList();
+
+                foreach (var transaction in adminUser.ToList())
+                {
+                    //+C1+zhVafHdXQXCIqjU/Zg== -- Disputed
+                    // 5/KChkAfEoa6N2oo8FHwWQ== -- Reward
+                    // 5dt4HUwCue532sNmw3LKDQ== - Transfer
+
+                    // DrRr1tU1usk7nNibjtcZkA== - Invite
+                    // EnOIzpmFFTEaAP16hm9Wsw== -- Rent
+                    // T3EMY1WWZ9IscHIj3dbcNw== - Request
+
+                    if (transaction.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw==")
+                    {
+                        transaction.TransactionType = "Reward";
+                        // sender user
+                        Member sender = CommonHelper.GetMemberUsingGivenMemberId(transaction.RecipientId.ToString());
+                        transaction.SenderNoochId = sender.Nooch_ID.ToString();
+                        transaction.SenderName = CommonHelper.GetDecryptedData(sender.FirstName) + " " + CommonHelper.GetDecryptedData(sender.LastName);
+                        transaction.SenderId = sender.MemberId;
+
+                        Member receiver = CommonHelper.GetMemberUsingGivenMemberId(transaction.SenderId.ToString());
+                        transaction.RecepientNoochId = receiver.Nooch_ID.ToString();
+                        transaction.RecipienName = CommonHelper.GetDecryptedData(receiver.FirstName) + " " + CommonHelper.GetDecryptedData(receiver.LastName);
+                        transaction.RecipientId = receiver.MemberId;
+                    }
+                    else
+                    {
+                        transaction.TransactionType = CommonHelper.GetDecryptedData(transaction.TransactionType);
+                        // sender user
+                        Member sender = CommonHelper.GetMemberUsingGivenMemberId(transaction.SenderId.ToString());
+                        transaction.SenderNoochId = sender.Nooch_ID.ToString();
+                        transaction.SenderName = CommonHelper.GetDecryptedData(sender.FirstName) + " " + CommonHelper.GetDecryptedData(sender.LastName);
+
+                        Member receiver = CommonHelper.GetMemberUsingGivenMemberId(transaction.RecipientId.ToString());
+                        transaction.RecepientNoochId = receiver.Nooch_ID.ToString();
+                        transaction.RecipienName = CommonHelper.GetDecryptedData(receiver.FirstName) + " " + CommonHelper.GetDecryptedData(receiver.LastName);
+                        transaction.RecipientId = receiver.MemberId;
+                    }
+
+                    adminUser.Add(transaction);
+                }
+            }
+            return View(adminUser);
+        }
+
+        public ActionResult CancelTransaction(string transactionId)
+        {
+            MemberOperationsResult res = new MemberOperationsResult();
+
+            using (NOOCHEntities obj = new NOOCHEntities())
+            {
+                Guid g = new Guid(transactionId);
+                var member = (from t in obj.Transactions where t.TransactionId == g select t).SingleOrDefault();
+                if (member != null)
+                {
+                    member.TransactionStatus = "Cancelled";
+                    int v = obj.SaveChanges();
+                    res.Message = "Transaction Cancelled";
+                    res.IsSuccess = true;
+                }
+            }
+            return Json(res);
+        }
+    
     }
 }

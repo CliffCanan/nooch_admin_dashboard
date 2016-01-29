@@ -79,6 +79,18 @@ namespace noochAdminNew.Classes.Utility
             }
         }
 
+        public static Member GetMemberUsingGivenMemberId(string memberId)
+        {
+            using (var noochConnection = new NOOCHEntities())
+            {
+                Guid memId = Utility.ConvertToGuid(memberId);
+
+                var memberNotifications = (from c in noochConnection.Members where c.MemberId == memId select c).SingleOrDefault();
+
+                return memberNotifications;
+            }
+        }
+
 
         public static string GetMemberNameFromMemberId(string memberId)
         {
