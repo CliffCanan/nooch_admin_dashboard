@@ -2547,5 +2547,147 @@ namespace noochAdminNew.Controllers
                     return "something went wrong while adding ALT list, please retry.";
             }
         }
+
+        public ActionResult UsersOverTime()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ActionName("GetUsersOverTimeOverTimeData")]
+        public ActionResult GetUsersOverTimeOverTimeData(string recordType,string status)
+        {
+
+            getUserOverTimeResult res = new getUserOverTimeResult();
+            using (NOOCHEntities obj = new NOOCHEntities())
+            {
+
+                //List<getUserOverTimeResult> users_over_time = new List<getUserOverTimeResult>();
+                List<internalDataArray> extList = new List<internalDataArray>();
+                List<Member> memList = new List<Member>();
+                List<DurationArray> duraionList = new List<DurationArray>();
+                
+                 
+
+                if (recordType == "weekly")
+                {
+                    DateTime todayDate = DateTime.Now;
+                    DateTime past7days = DateTime.Now.AddDays(-7);
+                    int i = 0;
+                    while (past7days <= todayDate)
+                    {
+                        string[] nre = new string[2];
+                        nre[0] = i.ToString();// past7days.DayOfWeek.ToString();
+                        if (status == "0")
+                        {
+                            nre[1] = (from t in obj.Members where t.DateCreated == past7days && (t.Status=="Active" || t.Status=="Registered")  select t).Count().ToString();
+                        }
+                        else if (status == "1")
+                        {
+                            nre[1] = (from t in obj.Members where t.DateCreated == past7days && (t.Status != "Active" && t.Status != "Registered" && t.Status != "Suspended" && t.Status != "Deleted") select t).Count().ToString();
+                        }
+                        
+                        string[] nda = new string[2];
+                        nda[0] = i.ToString();
+                        nda[1] = past7days.DayOfWeek.ToString();
+                        internalDataArray id = new internalDataArray();
+                        id.internalData = nre;
+                        DurationArray da = new DurationArray();
+                        da.durationData = nda;
+
+                        extList.Add(id);
+                        duraionList.Add(da);
+                        past7days = past7days.AddDays(1);
+                        i++;
+                    }
+                }
+
+                else if (recordType == "monthly")
+                {
+                    DateTime todayDate = DateTime.Now;
+                    DateTime past7days = DateTime.Now.AddMonths(-7);
+                    int i = 0;
+                    while (past7days <= todayDate)
+                    {
+                        string[] nre = new string[2];
+                        nre[0] = i.ToString();// past7days.DayOfWeek.ToString();
+                        if (status == "0")
+                        {
+                            nre[1] = (from t in obj.Members where t.DateCreated.Value.Month == past7days.Month && (t.Status == "Active" || t.Status == "Registered") select t).Count().ToString();
+                        }else if (status == "1")
+                            nre[1] = (from t in obj.Members where t.DateCreated.Value.Month == past7days.Month && (t.Status != "Active" && t.Status != "Registered" && t.Status != "Suspended" && t.Status != "Deleted") select t).Count().ToString();
+                        string[] nda = new string[2];
+                        nda[0] = i.ToString();
+                        nda[1] = past7days.ToString("MMM");
+                        internalDataArray id = new internalDataArray();
+                        id.internalData = nre;
+                        DurationArray da = new DurationArray();
+                        da.durationData = nda;
+                        extList.Add(id);
+                        duraionList.Add(da);
+                        past7days = past7days.AddMonths(1);
+                        i++;
+                    }
+                }
+
+
+                else if (recordType == "yearly")
+                {
+                    DateTime todayDate = DateTime.Now;
+                    DateTime past7days = DateTime.Now.AddYears(-7);
+                    int i = 0;
+                    while (past7days <= todayDate)
+                    {
+                        string[] nre = new string[2];
+                        nre[0] = i.ToString();// past7days.DayOfWeek.ToString();
+                        if (status == "0")
+                        {
+                            nre[1] = (from t in obj.Members where t.DateCreated.Value.Year == past7days.Year && (t.Status == "Active" || t.Status == "Registered") select t).Count().ToString();
+                        }else if(status=="1")
+                            nre[1] = (from t in obj.Members where t.DateCreated.Value.Year == past7days.Year && (t.Status != "Active" && t.Status != "Registered" && t.Status != "Suspended" && t.Status != "Deleted") select t).Count().ToString();
+                            
+                            string[] nda = new string[2];
+                        nda[0] = i.ToString();
+                        nda[1] = past7days.Year.ToString();
+                        internalDataArray id = new internalDataArray();
+
+                        id.internalData = nre;
+                        DurationArray da = new DurationArray();
+                        da.durationData = nda;
+                        extList.Add(id);
+                        duraionList.Add(da);
+                        past7days = past7days.AddYears(1);
+                        i++;
+                    }
+                }
+
+
+                res.externalData = extList;
+                res.Duration = duraionList;
+            }
+            res.IsSuccess = true;
+            res.ErrorMessage = "OK";
+
+            return Json(res);
+        }
+
+        public class getUserOverTimeResult
+        {
+            public bool IsSuccess { get; set; }
+            public string ErrorMessage { get; set; }
+            public List<DurationArray> Duration { get; set; }
+
+            public List<internalDataArray> externalData { get; set; }
+
+        }
+        public class internalDataArray
+        {
+            public string[] internalData { get; set; }
+        }
+
+        public class DurationArray
+        {
+            public string[] durationData { get; set; }
+        }
     }
 }

@@ -1,0 +1,576 @@
+﻿.card {
+  position: relative;
+  background: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+  margin-bottom: 30px;
+}
+.card-body .lv-item {
+  padding: 12px 20px;
+}
+
+ 
+
+.card .card-header {
+  position: relative;
+}
+
+
+@media screen and (min-width: 768px) {
+  .card .card-header:not(.ch-alt) {
+    padding: 23px 26px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .card .card-header:not(.ch-alt) {
+    padding: 18px;
+  }
+}
+
+.card .card-header h2 {
+  margin: 0;
+  line-height: 100%;
+  font-size: 17px;
+  font-weight: 400;
+}
+
+.card .card-header h2 small {
+  display: block;
+  margin-top: 8px;
+  color: #AEAEAE;
+  line-height: 160%;
+}
+
+@media screen and (min-width: 768px) {
+  .card .card-header.ch-alt {
+    padding: 23px 26px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .card .card-header.ch-alt {
+    padding: 18px 18px 28px;
+  }
+}
+
+.card .card-header.ch-alt:not([class*="bgm-"]) {
+  background-color: #f7f7f7;
+}
+
+.card .card-header[class*="bgm-"] h2,
+.card .card-header[class*="bgm-"] h2 small {
+  color: #fff;
+}
+
+.card .card-header .actions {
+  position: absolute;
+  right: 10px;
+  z-index: 2;
+  top: 15px;
+}
+
+.card .card-header .btn-float {
+  right: 25px;
+  bottom: -23px;
+  z-index: 1;
+}
+
+@media screen and (min-width: 768px) {
+  .card .card-body.card-padding {
+    padding: 23px 26px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .card .card-body.card-padding {
+    padding: 18px;
+  }
+}
+
+.card .card-body.card-padding-sm {
+  padding: 15px;
+}
+
+.chart-edge {
+  margin: 20px -8px 0 -10px;
+  overflow: hidden;
+}
+
+.chart-edge .flot-chart {
+  bottom: -14px;
+}
+
+.charts-row {
+  margin-top: 50px;
+  margin-bottom: 20px;
+}
+
+.mini-charts-item {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.mini-charts-item .chart {
+  padding: 15px;
+  float: left;
+}
+
+.mini-charts-item .chart.chart-pie {
+  margin: 0 20px;
+}
+
+.mini-charts-item .count {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 16px 12px;
+}
+
+.mini-charts-item .count > h2 {
+  margin: 0;
+  line-height: 100%;
+  font-size: 22px;
+  font-weight: 300;
+  color: #fff;
+}
+
+.mini-charts-item .count > small {
+  margin-bottom: 2px;
+  display: block;
+}
+
+.mini-charts-item .count > h2,
+.mini-charts-item .count > small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mini-charts-item > .clearfix,
+.mini-charts-item > .dl-horizontal dd,
+.mini-charts-item > .container,
+.mini-charts-item > .container-fluid,
+.mini-charts-item > .row,
+.mini-charts-item > .form-horizontal .form-group,
+.mini-charts-item > .btn-toolbar,
+.mini-charts-item > .btn-group-vertical > .btn-group,
+.mini-charts-item > .nav,
+.mini-charts-item > .navbar,
+.mini-charts-item > .navbar-header,
+.mini-charts-item > .navbar-collapse,
+.mini-charts-item > .pager,
+.mini-charts-item > .panel-body,
+.mini-charts-item > .modal-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.mini-charts-item:before {
+  -webkit-transition: width;
+  -o-transition: width;
+  transition: width;
+  -webkit-transition-duration: 500ms;
+  transition-duration: 500ms;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+  content: "";
+  width: 113px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.mini-charts-item:hover .count {
+  color: #fff !important;
+}
+
+.mini-charts-item:hover:before {
+  width: 100%;
+}
+
+/*
+ * Sparkline Tooltip
+ */
+
+#jqstooltip {
+  min-width: 21px;
+  min-height: 23px;
+  text-align: center;
+  border: 0;
+  background: #fff;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  background-color: #fff;
+}
+
+#jqstooltip .jqsfield {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: inherit;
+  text-align: center;
+  color: #333;
+}
+
+#jqstooltip .jqsfield > span {
+  display: none;
+}
+
+/*
+ * Easy Pie Charts
+ */
+
+.epc-item {
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+  position: relative;
+  margin-bottom: 30px;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.easy-pie {
+  display: inline-block;
+  position: relative;
+  padding: 0 5px 10px;
+}
+
+.easy-pie .percent {
+  position: absolute;
+  font-weight: 300;
+  width: 100%;
+  line-height: 100%;
+  left: 0;
+}
+
+.easy-pie .percent:after {
+  content: "%";
+}
+
+.easy-pie.main-pie .percent {
+  margin-top: 49px;
+  font-size: 50px;
+  text-align: center;
+}
+
+.easy-pie.main-pie .percent:not([class*="c-"]) {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.easy-pie.main-pie .percent:after {
+  font-size: 30px;
+}
+
+.easy-pie.main-pie .pie-title {
+  color: #fff;
+}
+
+.easy-pie:not(.main-pie) .percent {
+  font-size: 26px;
+  margin-top: 37px;
+}
+
+.easy-pie:not(.main-pie) .percent:after {
+  font-size: 20px;
+}
+
+.easy-pie .pie-title {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  bottom: -3px;
+  left: 0;
+}
+
+/*
+ * Recet Items Table Chart
+ */
+
+#recent-items-chart {
+  width: calc(100% + 19px);
+  height: 150px;
+  margin: -20px -10px 0;
+  bottom: -10px;
+}
+
+/*
+ * Flot Chart
+ */
+
+[class*="flot-chart"] {
+  width: 100%;
+  display: block;
+}
+
+.flot-chart {
+  height: 200px;
+}
+
+.flot-chart-pie {
+  height: 300px;
+}
+
+@media (min-width: 768px) {
+  .flot-chart-pie {
+    margin-bottom: 20px;
+  }
+}
+
+.flot-tooltip,
+#flotTip {
+  position: absolute;
+  color: #333;
+  display: none;
+  font-size: 12px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 3px 10px;
+  background-color: #fff;
+  z-index: 99999;
+}
+
+.actions {
+  list-style: none;
+  padding: 0;
+  z-index: 2;
+  margin: 0;
+}
+
+.actions > li {
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+.actions > li > a,
+.actions > a {
+  width: 30px;
+  height: 30px;
+  line-height: 29px;
+  display: inline-block;
+  text-align: center;
+  position: relative;
+}
+
+.actions > li > a > i,
+.actions > a > i {
+  -webkit-transition: color;
+  -o-transition: color;
+  transition: color;
+  -webkit-transition-duration: 1300ms;
+  transition-duration: 1300ms;
+  color: #adadad;
+  font-size: 20px;
+}
+
+.actions > li > a:hover > i,
+.actions > a:hover > i {
+  color: #000;
+}
+
+.actions > li > a:before,
+.actions > a:before {
+  left: 0;
+  top: 0;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-transform: scale3d(0, 0, 0);
+  -moz-transform: scale3d(0, 0, 0);
+  -ms-transform: scale3d(0, 0, 0);
+  -o-transform: scale3d(0, 0, 0);
+  transform: scale3d(0, 0, 0);
+  -webkit-transition: all;
+  -o-transition: all;
+  transition: all;
+  -webkit-transition-duration: 250ms;
+  transition-duration: 250ms;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: 0;
+  border-radius: 50%;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+
+.actions > li > a:hover:before,
+.actions > a:hover:before {
+  -webkit-transform: scale3d(1, 1, 1);
+  -moz-transform: scale3d(1, 1, 1);
+  -ms-transform: scale3d(1, 1, 1);
+  -o-transform: scale3d(1, 1, 1);
+  transform: scale3d(1, 1, 1);
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+
+.actions > li.open > a > i,
+.actions.open > a > i {
+  color: #000;
+}
+
+.actions > li.open > a:before,
+.actions.open > a:before {
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  -o-transform: scale(1);
+  transform: scale(1);
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+
+.actions.actions-alt > li > a > i {
+  color: #fff;
+}
+
+.actions.actions-alt > li > a > i:hover {
+  color: #fff;
+}
+
+.actions.actions-alt > li.open > a > i {
+  color: #fff;
+}
+
+.actions.open {
+  z-index: 3;
+}
+
+dropup,
+.dropdown {
+  position: relative;
+}
+.dropdown-toggle:focus {
+  outline: 0;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 9;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 13px;
+  text-align: left;
+  background-color: #ffffff;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+}
+.dropdown-menu.pull-right {
+  right: 0;
+  left: auto;
+}
+.dropdown-menu .divider {
+  height: 1px;
+  margin: 8px 0;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+.dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.42857143;
+  color: #333333;
+  white-space: nowrap;
+}
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  text-decoration: none;
+  color: #333333;
+  background-color: rgba(0, 0, 0, 0.075);
+}
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #333333;
+  text-decoration: none;
+  outline: 0;
+  background-color: rgba(0, 0, 0, 0.075);
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #e4e4e4;
+}
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  text-decoration: none;
+  background-color: transparent;
+  background-image: none;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  cursor: not-allowed;
+}
+.open > .dropdown-menu {
+  display: block;
+}
+.open > a {
+  outline: 0;
+}
+.dropdown-menu-right {
+  left: auto;
+  right: 0;
+}
+.dropdown-menu-left {
+  left: 0;
+  right: auto;
+}
+.dropdown-header {
+  display: block;
+  padding: 3px 20px;
+  font-size: 12px;
+  line-height: 1.42857143;
+  color: #777777;
+  white-space: nowrap;
+}
+.dropdown-backdrop {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  z-index: -1;
+}
+.pull-right > .dropdown-menu {
+  right: 0;
+  left: auto;
+}
+.dropup .caret,
+.navbar-fixed-bottom .dropdown .caret {
+  border-top: 0;
+  border-bottom: 4px solid;
+  content: "";
+}
+.dropup .dropdown-menu,
+.navbar-fixed-bottom .dropdown .dropdown-menu {
+  top: auto;
+  bottom: 100%;
+  margin-bottom: 2px;
+}
+@media (min-width: 768px) {
+  .navbar-right .dropdown-menu {
+    left: auto;
+    right: 0;
+  }
+  .navbar-right .dropdown-menu-left {
+    left: 0;
+    right: auto;
+  }
+}
+
+.cap 
+{
+    text-transform:capitalize;
+}
+
+ 
+
+ 
