@@ -2553,6 +2553,82 @@ namespace noochAdminNew.Controllers
             return View();
         }
 
+        public ActionResult UsersInBanks()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ActionName("getUsersInBanks")]
+        public ActionResult getUsersInBanks() {
+            getUserOverTimeResult resl = new getUserOverTimeResult();
+            using (NOOCHEntities obj = new NOOCHEntities())
+            {
+
+
+                List<internalDataArray> extList = new List<internalDataArray>();
+                List<DurationArray> duraionList = new List<DurationArray>();
+                var allSyanpseSupportedBanks = (from ce in obj.SynapseSupportedBanks
+                                                where ce.IsDeleted == false
+                                                select ce).ToList();
+
+                var membersInEachBank = obj.GetMembersInEachSynapseBank().ToList();
+
+                List<GetMembersInEachSynapseBank_Result> decryptedList = new List<GetMembersInEachSynapseBank_Result>();
+
+                foreach (GetMembersInEachSynapseBank_Result mem in membersInEachBank)
+                {
+                    GetMembersInEachSynapseBank_Result m = new GetMembersInEachSynapseBank_Result();
+                    m.bank_name = CommonHelper.GetDecryptedData(mem.bank_name).ToLower().Trim();
+                    m.CountInBank = mem.CountInBank;
+                    decryptedList.Add(m);
+                }
+
+                List<NoOfUsersInEachBank> UserCountInEachBankPrep = new List<NoOfUsersInEachBank>();
+                int i = 0;
+                foreach (SynapseSupportedBank ssb in allSyanpseSupportedBanks)
+                {
+                    NoOfUsersInEachBank nusi = new NoOfUsersInEachBank();
+                    internalDataArray id = new internalDataArray();
+                    DurationArray da = new DurationArray();
+                    nusi.BankName =  ssb.BankName;
+                    nusi.NoOfUsers = 0;
+                    string[] nBnks = new string[2];
+                     string[] nda = new string[2];
+                        
+                        
+                         
+                        
+                    foreach (GetMembersInEachSynapseBank_Result res in decryptedList)
+                    {
+                        if (res.bank_name == ssb.BankName.ToLower().Trim())
+                        {
+                            nusi.NoOfUsers = Convert.ToInt16(res.CountInBank);
+                            nda[0] = i++.ToString();
+                            nda[1] = (res.CountInBank).ToString();
+                            nBnks[0] = nda[0];
+                            nBnks[1] = ssb.BankName;
+                            da.durationData = nBnks;
+                            duraionList.Add(da);
+                             
+                        }
+                    }
+                    
+                    id.internalData = nda;
+                    extList.Add(id);
+
+                    UserCountInEachBankPrep.Add(nusi);
+                }
+
+                resl.IsSuccess = true;
+                resl.externalData = extList;
+                resl.Duration = duraionList;
+
+                return Json(resl);
+            }
+            
+        }
+
         [HttpPost]
         [ActionName("GetUsersOverTimeOverTimeData")]
         public ActionResult GetUsersOverTimeOverTimeData(string recordType,string status)
