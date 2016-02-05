@@ -34,25 +34,41 @@ namespace noochAdminNew.Models
         public DbSet<AuthenticationToken> AuthenticationTokens { get; set; }
         public DbSet<GeoLocation> GeoLocations { get; set; }
         public DbSet<InviteCode> InviteCodes { get; set; }
-        public DbSet<MemberNotification> MemberNotifications { get; set; }
-        public DbSet<PasswordResetRequest> PasswordResetRequests { get; set; }
-        public DbSet<SDN> SDNs { get; set; }
-        public DbSet<SynapseSupportedBank> SynapseSupportedBanks { get; set; }
-        public DbSet<MembersIPAddress> MembersIPAddresses { get; set; }
-        public DbSet<SynapseBankLoginResult> SynapseBankLoginResults { get; set; }
-        public DbSet<SynapseCreateOrderResult> SynapseCreateOrderResults { get; set; }
-        public DbSet<SynapseBanksOfMember> SynapseBanksOfMembers { get; set; }
-        public DbSet<TenantsIdDocument> TenantsIdDocuments { get; set; }
         public DbSet<Landlord> Landlords { get; set; }
+        public DbSet<LanlordAppInterestedEmail> LanlordAppInterestedEmails { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<MemberNotification> MemberNotifications { get; set; }
+        public DbSet<MemberPrivacySetting> MemberPrivacySettings { get; set; }
+        public DbSet<MemberReportEntity> MemberReportEntities { get; set; }
+        public DbSet<MemberReportResultEntity> MemberReportResultEntities { get; set; }
         public DbSet<Member> Members { get; set; }
+        public DbSet<MembersIPAddress> MembersIPAddresses { get; set; }
+        public DbSet<MemberTargusReportEntity> MemberTargusReportEntities { get; set; }
+        public DbSet<MostFrequentFriendsTemp> MostFrequentFriendsTemps { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<PasswordResetRequest> PasswordResetRequests { get; set; }
         public DbSet<Property> Properties { get; set; }
         public DbSet<PropertyUnit> PropertyUnits { get; set; }
+        public DbSet<ReferalCodeRequest> ReferalCodeRequests { get; set; }
         public DbSet<RentTransaction> RentTransactions { get; set; }
+        public DbSet<SDN> SDNs { get; set; }
+        public DbSet<SDNSearchResult> SDNSearchResults { get; set; }
+        public DbSet<SocialMediaPost> SocialMediaPosts { get; set; }
+        public DbSet<SpecificUserTransReportEntity> SpecificUserTransReportEntities { get; set; }
+        public DbSet<SynapseBankLoginResult> SynapseBankLoginResults { get; set; }
+        public DbSet<SynapseBanksOfMember> SynapseBanksOfMembers { get; set; }
+        public DbSet<SynapseCreateOrderResult> SynapseCreateOrderResults { get; set; }
+        public DbSet<SynapseCreateUserResult> SynapseCreateUserResults { get; set; }
+        public DbSet<SynapseIdVerificationQuestion> SynapseIdVerificationQuestions { get; set; }
+        public DbSet<SynapseSupportedBank> SynapseSupportedBanks { get; set; }
+        public DbSet<SynapseV3CreateTransResults> SynapseV3CreateTransResults { get; set; }
         public DbSet<Tenant> Tenants { get; set; }
+        public DbSet<TenantsIdDocument> TenantsIdDocuments { get; set; }
+        public DbSet<TransactionCustomReportEntity> TransactionCustomReportEntities { get; set; }
+        public DbSet<TransactionReportEntity> TransactionReportEntities { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<UnitsOccupiedByTenant> UnitsOccupiedByTenants { get; set; }
-        public DbSet<SynapseV3CreateTransResults> SynapseV3CreateTransResults { get; set; }
-        public DbSet<SynapseCreateUserResult> SynapseCreateUserResults { get; set; }
+        public DbSet<User> Users { get; set; }
     
         public virtual ObjectResult<string> GetReportsForMember(string memberId, string getWhat)
         {

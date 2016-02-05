@@ -3,6 +3,9 @@
 
 $(document).ready(function () {
      
+    $("#GraphMenuExpander").trigger("click");
+    $('#UserOverTimeMenu').addClass('active');
+
     Member.getUserOverTime("weekly");
     
    

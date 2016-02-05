@@ -5,40 +5,57 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="0bde9728970f49d9b3b3887a6d1e9ee7" Name="Diagram1" ZoomLevel="89">
-        <EntityTypeShape EntityType="NOOCHModel.ADD" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="NOOCHModel.AdminUser" Width="1.5" PointX="5.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="NOOCHModel.ALT" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="NOOCHModel.AuthenticationToken" Width="1.5" PointX="7.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="NOOCHModel.GeoLocation" Width="1.5" PointX="3.75" PointY="1.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="NOOCHModel.InviteCode" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="NOOCHModel.MemberNotification" Width="1.5" PointX="3" PointY="10.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="NOOCHModel.PasswordResetRequest" Width="1.5" PointX="3" PointY="17.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="NOOCHModel.SDN" Width="1.5" PointX="10.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="NOOCHModel.SynapseSupportedBank" Width="1.5" PointX="12.375" PointY="0.75" />
-        <EntityTypeShape EntityType="NOOCHModel.MembersIPAddress" Width="1.5" PointX="13.375" PointY="3.75" />
-        <EntityTypeShape EntityType="NOOCHModel.SynapseBankLoginResult" Width="1.5" PointX="3" PointY="19.875" />
-        <EntityTypeShape EntityType="NOOCHModel.SynapseCreateOrderResult" Width="1.5" PointX="13.375" PointY="6.75" />
-        <EntityTypeShape EntityType="NOOCHModel.SynapseBanksOfMember" Width="1.5" PointX="8.375" PointY="9.75" />
-        <EntityTypeShape EntityType="NOOCHModel.TenantsIdDocument" Width="1.5" PointX="10.375" PointY="15.75" />
-        <EntityTypeShape EntityType="NOOCHModel.Landlord" Width="1.5" PointX="15.375" PointY="19.375" />
-        <EntityTypeShape EntityType="NOOCHModel.Member" Width="1.5" PointX="0.75" PointY="7.375" />
-        <EntityTypeShape EntityType="NOOCHModel.Property" Width="1.5" PointX="15.375" PointY="7.75" />
-        <EntityTypeShape EntityType="NOOCHModel.PropertyUnit" Width="1.5" PointX="12.375" PointY="15.75" />
-        <EntityTypeShape EntityType="NOOCHModel.RentTransaction" Width="1.5" PointX="17.625" PointY="1.125" />
-        <EntityTypeShape EntityType="NOOCHModel.Tenant" Width="1.5" PointX="15.375" PointY="1.25" />
-        <EntityTypeShape EntityType="NOOCHModel.Transaction" Width="1.5" PointX="6" PointY="8.5" />
-        <EntityTypeShape EntityType="NOOCHModel.UnitsOccupiedByTenant" Width="1.5" PointX="15.375" PointY="15.75" />
+        <EntityTypeShape EntityType="NOOCHModel.ADD" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="NOOCHModel.AdminUser" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="NOOCHModel.ALT" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="NOOCHModel.AuthenticationToken" Width="1.5" PointX="5.75" PointY="3.75" />
+        <EntityTypeShape EntityType="NOOCHModel.GeoLocation" Width="1.5" PointX="3.75" PointY="12.25" />
+        <EntityTypeShape EntityType="NOOCHModel.InviteCode" Width="1.5" PointX="10.75" PointY="9.75" />
+        <EntityTypeShape EntityType="NOOCHModel.Landlord" Width="1.5" PointX="8.75" PointY="1.25" />
+        <EntityTypeShape EntityType="NOOCHModel.LanlordAppInterestedEmail" Width="1.5" PointX="5.75" PointY="7.75" />
+        <EntityTypeShape EntityType="NOOCHModel.Location" Width="1.5" PointX="12.75" PointY="9.75" />
+        <EntityTypeShape EntityType="NOOCHModel.MemberNotification" Width="1.5" PointX="3" PointY="19.125" />
+        <EntityTypeShape EntityType="NOOCHModel.MemberPrivacySetting" Width="1.5" PointX="3" PointY="8.375" />
+        <EntityTypeShape EntityType="NOOCHModel.MemberReportEntity" Width="1.5" PointX="13.75" PointY="0.75" />
+        <EntityTypeShape EntityType="NOOCHModel.MemberReportResultEntity" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="NOOCHModel.Member" Width="1.5" PointX="0.75" PointY="6.625" />
+        <EntityTypeShape EntityType="NOOCHModel.MembersIPAddress" Width="1.5" PointX="13.75" PointY="5.75" />
+        <EntityTypeShape EntityType="NOOCHModel.MemberTargusReportEntity" Width="1.5" PointX="10.75" PointY="13.75" />
+        <EntityTypeShape EntityType="NOOCHModel.MostFrequentFriendsTemp" Width="1.5" PointX="12.75" PointY="13.75" />
+        <EntityTypeShape EntityType="NOOCHModel.Notification" Width="1.5" PointX="14.75" PointY="8.75" />
+        <EntityTypeShape EntityType="NOOCHModel.PasswordResetRequest" Width="1.5" PointX="3" PointY="5.75" />
+        <EntityTypeShape EntityType="NOOCHModel.Property" Width="1.5" PointX="14.75" PointY="12.75" />
+        <EntityTypeShape EntityType="NOOCHModel.PropertyUnit" Width="1.5" PointX="15.75" PointY="0.75" />
+        <EntityTypeShape EntityType="NOOCHModel.ReferalCodeRequest" Width="1.5" PointX="16.75" PointY="6.75" />
+        <EntityTypeShape EntityType="NOOCHModel.RentTransaction" Width="1.5" PointX="11" PointY="2.75" />
+        <EntityTypeShape EntityType="NOOCHModel.SDN" Width="1.5" PointX="16.75" PointY="9.75" />
+        <EntityTypeShape EntityType="NOOCHModel.SDNSearchResult" Width="1.5" PointX="16.75" PointY="14.75" />
+        <EntityTypeShape EntityType="NOOCHModel.SocialMediaPost" Width="1.5" PointX="17.75" PointY="0.75" />
+        <EntityTypeShape EntityType="NOOCHModel.SpecificUserTransReportEntity" Width="1.5" PointX="18.75" PointY="3.75" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseBankLoginResult" Width="1.5" PointX="3" PointY="26.125" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseBanksOfMember" Width="1.5" PointX="5.75" PointY="18.75" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseCreateOrderResult" Width="1.5" PointX="18.75" PointY="7.75" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseCreateUserResult" Width="1.5" PointX="10.75" PointY="18.75" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseIdVerificationQuestion" Width="1.5" PointX="12.75" PointY="18.75" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseSupportedBank" Width="1.5" PointX="14.75" PointY="18.75" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseV3CreateTransResults" Width="1.5" PointX="18.75" PointY="16.75" />
+        <EntityTypeShape EntityType="NOOCHModel.Tenant" Width="1.5" PointX="8.75" PointY="11" />
+        <EntityTypeShape EntityType="NOOCHModel.TenantsIdDocument" Width="1.5" PointX="20.75" PointY="0.75" />
+        <EntityTypeShape EntityType="NOOCHModel.TransactionCustomReportEntity" Width="1.5" PointX="20.75" PointY="4.75" />
+        <EntityTypeShape EntityType="NOOCHModel.TransactionReportEntity" Width="1.5" PointX="20.75" PointY="8.75" />
+        <EntityTypeShape EntityType="NOOCHModel.Transaction" Width="1.5" PointX="6" PointY="10.5" />
+        <EntityTypeShape EntityType="NOOCHModel.UnitsOccupiedByTenant" Width="1.5" PointX="8.75" PointY="17.5" />
+        <EntityTypeShape EntityType="NOOCHModel.User" Width="1.5" PointX="2.75" PointY="16.75" />
         <AssociationConnector Association="NOOCHModel.FK_Transactions_GeoLocations" />
         <AssociationConnector Association="NOOCHModel.FK_RentTransactions_Landlords" />
         <AssociationConnector Association="NOOCHModel.FK_MemberNotifications_Members" />
+        <AssociationConnector Association="NOOCHModel.FK_MemberPrivacySettings_Members" />
         <AssociationConnector Association="NOOCHModel.FK_PasswordResetRequests_Members" />
         <AssociationConnector Association="NOOCHModel.FK_SynapseBankLoginResults_Members" />
         <AssociationConnector Association="NOOCHModel.FK_Transactions_Members2" />
         <AssociationConnector Association="NOOCHModel.FK_Transactions_Members3" />
         <AssociationConnector Association="NOOCHModel.FK_RentTransactions_Tenants" />
         <AssociationConnector Association="NOOCHModel.FK_RentTransactions_UnitsOccupiedByTenants" />
-        <EntityTypeShape EntityType="NOOCHModel.SynapseV3CreateTransResults" Width="1.5" PointX="5.375" PointY="16.75" />
-        <EntityTypeShape EntityType="NOOCHModel.SynapseCreateUserResult" Width="1.5" PointX="10.375" PointY="9.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

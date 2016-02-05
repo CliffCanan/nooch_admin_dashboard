@@ -17,6 +17,7 @@ namespace noochAdminNew.Models
         public Member()
         {
             this.MemberNotifications = new HashSet<MemberNotification>();
+            this.MemberPrivacySettings = new HashSet<MemberPrivacySetting>();
             this.PasswordResetRequests = new HashSet<PasswordResetRequest>();
             this.SynapseBankLoginResults = new HashSet<SynapseBankLoginResult>();
             this.Transactions = new HashSet<Transaction>();
@@ -90,6 +91,7 @@ namespace noochAdminNew.Models
         public string GoogleUserId { get; set; }
     
         public virtual ICollection<MemberNotification> MemberNotifications { get; set; }
+        public virtual ICollection<MemberPrivacySetting> MemberPrivacySettings { get; set; }
         public virtual ICollection<PasswordResetRequest> PasswordResetRequests { get; set; }
         public virtual ICollection<SynapseBankLoginResult> SynapseBankLoginResults { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }

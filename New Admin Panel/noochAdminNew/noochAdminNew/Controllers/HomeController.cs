@@ -59,7 +59,8 @@ namespace noochAdminNew.Controllers
                 Logger.Info("test message");
                 Logger.Error(ex);
                 lr.IsSuccess = false;
-                lr.Message = "Invalid username or password";
+                //lr.Message = "Invalid username or password";
+                lr.Message = ex.ToString();
                 return Json(lr);
             }
         }

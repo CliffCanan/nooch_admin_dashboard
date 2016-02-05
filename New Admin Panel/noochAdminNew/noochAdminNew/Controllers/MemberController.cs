@@ -1454,7 +1454,7 @@ namespace noochAdminNew.Controllers
                         {
                             {Constants.PLACEHOLDER_FIRST_NAME, fname},
                            // {Constants.PLACEHOLDER_LAST_NAME, member.LastName},
-                            {Constants.PLACEHOLDER_PASSWORD, member.Password}
+                            {Constants.PLACEHOLDER_PASSWORD, CommonHelper.GetDecryptedData( member.Password)}
                         };
                         string toAddress = CommonHelper.GetDecryptedData(member.UserName);
                         bool emailSent = Utility.SendEmail("passwordChangedByAdmin",

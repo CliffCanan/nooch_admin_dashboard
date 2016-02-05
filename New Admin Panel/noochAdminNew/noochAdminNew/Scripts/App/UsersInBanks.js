@@ -2,6 +2,10 @@
 
 
 $(document).ready(function () {
+
+
+    $("#GraphMenuExpander").trigger("click");
+    $('#UserInBanksMenu').addClass('active');
     
     Member.getUsersInBanks();
 

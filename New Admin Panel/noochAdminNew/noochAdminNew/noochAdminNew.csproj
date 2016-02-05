@@ -245,13 +245,34 @@
     <Compile Include="Models\Landlord.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\LanlordAppInterestedEmail.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Location.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Member.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MemberNotification.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\MemberPrivacySetting.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MemberReportEntity.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MemberReportResultEntity.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\MembersIPAddress.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MemberTargusReportEntity.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MostFrequentFriendsTemp.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\NoochDbModel.Context.cs">
@@ -269,6 +290,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>NoochDbModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Notification.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\PasswordResetRequest.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
@@ -278,10 +302,22 @@
     <Compile Include="Models\PropertyUnit.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ReferalCodeRequest.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\RentTransaction.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SDN.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SDNSearchResult.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SocialMediaPost.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SpecificUserTransReportEntity.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SynapseBankLoginResult.cs">
@@ -294,6 +330,9 @@
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SynapseCreateUserResult.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SynapseIdVerificationQuestion.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SynapseSupportedBank.cs">
@@ -311,7 +350,16 @@
     <Compile Include="Models\Transaction.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TransactionCustomReportEntity.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TransactionReportEntity.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\UnitsOccupiedByTenant.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\User.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -940,6 +988,7 @@
     <Content Include="Scripts\App\MembersList.js" />
     <Content Include="Scripts\App\ReferralCodes.js" />
     <Content Include="Scripts\App\UserOverTime.js" />
+    <Content Include="Scripts\App\UsersInBanks.js" />
     <Content Include="Scripts\App\Utility.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
@@ -984,6 +1033,7 @@
     <Content Include="Views\Member\ListAllTenants.cshtml" />
     <Content Include="Views\Admin\UsersOverTime.cshtml" />
     <Content Include="Views\Admin\Transaction.cshtml" />
+    <Content Include="Views\Admin\UsersInBanks.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
