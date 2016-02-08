@@ -42,6 +42,7 @@ namespace noochAdminNew.Classes.Utility
             return char.ToUpper(s[0]) + s.Substring(1);
         }
 
+
         public static string GetDecryptedData(string sourceData)
         {
             if (!String.IsNullOrEmpty(sourceData))

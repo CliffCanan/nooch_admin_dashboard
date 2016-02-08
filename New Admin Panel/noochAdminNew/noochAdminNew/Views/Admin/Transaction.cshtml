@@ -98,12 +98,14 @@
 
                                 <th>Transaction ID</th>
                                 <th>Transaction Type</th>
-                                <th>Status  </th>
-                                <th>Date & time </th>
+                                <th>Status</th>
+                                <th>Date / Time</th>
                                 <th>Sender's Name</th>
                                 <th>Recipient's Name</th>
                                 <th>Amount</th>
+                                <th>Memo</th>
                                 <th>Location</th>
+                                
                             </tr>
                         </thead>
 
@@ -119,22 +121,21 @@
                                     <td>@ad.TransactionId</td>
                                     <td>@ad.TransactionType</td>
                                     <td id="@ad.TransactionId">
-                                        @ad.TransactionStatus <br />
+                                     @ad.TransactionStatus <br />
 
-                                        @if (ad.TransactionStatus == "Pending")
-                                        {
-                                            <button type="button" data-val="@ad.TransactionId" class="btn btn-danger btn-xs btnCancel" onclick="statusCancel(@ad.TransactionId)">Cancel</button>
-                                        }
+                                     @if (ad.TransactionStatus == "Pending")
+                                     {
+                                      <button type="button" data-val="@ad.TransactionId" class="btn btn-danger btn-xs btnCancel" onclick="statusCancel(@ad.TransactionId)">Cancel</button>
+                                     }
                                     </td>
-                                    <td>@ad.TransactionDate</td>
-
+                                    <td>@ad.TransactionDate1 <small>@ad.TransactionTime</small></td>
                                     <td><a href="@Url.Action("Detail", "Member", new { NoochId=@ad.SenderNoochId} )">@ad.SenderName</a></td>
 
                                     <td><a href="@Url.Action("Detail", "Member", new { NoochId=@ad.RecepientNoochId} )">@ad.RecipienName</a></td>
-                                    <td>@ad.Amount</td>
-
+                                    <td><b>$ @ad.Amount</b></td>
+                                    <td>@ad.Memo</td>
                                     <td><button type="button" id="btnLocation" class="btn btn-link btn-xs " onclick="showLocationModal('@ad.TransLati','@ad.TransLongi','@ad.state')">@ad.city @ad.state</button></td>
-
+                                    
                                 </tr>
                             }
                         </tbody>

@@ -2775,13 +2775,10 @@ namespace noochAdminNew.Controllers
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 List<Transaction> admin = new List<Transaction>();
-
-                adminUser = (from t in obj.Transactions
-
+              
+                adminUser = (from t in obj.Transactions                              
                              join g in obj.GeoLocations
-                             on
-                              t.LocationId equals g.LocationId
-
+                             on t.LocationId equals g.LocationId                              
                              select new TransactionClass
                              {
                                  TransactionId = t.TransactionId,
@@ -2795,12 +2792,12 @@ namespace noochAdminNew.Controllers
                                  TransAlti = g.Altitude,
                                  TransLati = g.Latitude,
                                  state = g.State,
-                                 city = g.City
-
+                                 city = g.City,
+                                 Memo =t.Memo
                              }
 
                               ).ToList();
-
+                
                 foreach (var transaction in adminUser.ToList())
                 {
                     //+C1+zhVafHdXQXCIqjU/Zg== -- Disputed
@@ -2817,12 +2814,12 @@ namespace noochAdminNew.Controllers
                         // sender user
                         Member sender = CommonHelper.GetMemberUsingGivenMemberId(transaction.RecipientId.ToString());
                         transaction.SenderNoochId = sender.Nooch_ID.ToString();
-                        transaction.SenderName = CommonHelper.GetDecryptedData(sender.FirstName) + " " + CommonHelper.GetDecryptedData(sender.LastName);
+                        transaction.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(sender.FirstName)) + " " +CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(sender.LastName));
                         transaction.SenderId = sender.MemberId;
 
                         Member receiver = CommonHelper.GetMemberUsingGivenMemberId(transaction.SenderId.ToString());
                         transaction.RecepientNoochId = receiver.Nooch_ID.ToString();
-                        transaction.RecipienName = CommonHelper.GetDecryptedData(receiver.FirstName) + " " + CommonHelper.GetDecryptedData(receiver.LastName);
+                        transaction.RecipienName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(receiver.FirstName)) + " " +CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(receiver.LastName)); ;
                         transaction.RecipientId = receiver.MemberId;
                     }
                     else
@@ -2831,13 +2828,16 @@ namespace noochAdminNew.Controllers
                         // sender user
                         Member sender = CommonHelper.GetMemberUsingGivenMemberId(transaction.SenderId.ToString());
                         transaction.SenderNoochId = sender.Nooch_ID.ToString();
-                        transaction.SenderName = CommonHelper.GetDecryptedData(sender.FirstName) + " " + CommonHelper.GetDecryptedData(sender.LastName);
+                        transaction.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(sender.FirstName)) + " " + CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(sender.LastName));
 
                         Member receiver = CommonHelper.GetMemberUsingGivenMemberId(transaction.RecipientId.ToString());
                         transaction.RecepientNoochId = receiver.Nooch_ID.ToString();
-                        transaction.RecipienName = CommonHelper.GetDecryptedData(receiver.FirstName) + " " + CommonHelper.GetDecryptedData(receiver.LastName);
+                        transaction.RecipienName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(receiver.FirstName)) + " " +CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(receiver.LastName));
                         transaction.RecipientId = receiver.MemberId;
-                    }
+                    }                                
+                    transaction.TransactionDate1 = Convert.ToDateTime(transaction.TransactionDate).ToString("MMM d, yyyy");
+                    transaction.TransactionTime = Convert.ToDateTime(transaction.TransactionDate).ToString("h:mm tt");
+                    transaction.Amount = Math.Round(transaction.Amount, 2);
 
                     adminUser.Add(transaction);
                 }
