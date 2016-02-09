@@ -2558,6 +2558,300 @@ namespace noochAdminNew.Controllers
             return View();
         }
 
+        public ActionResult TransactionVolumeOverTime()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ActionName("GetTransactionVolumeOverTimeData")]
+        public ActionResult GetTransactionVolumeOverTimeData(string recordType, string status, string fromDate = null, string toDate = null)
+        {
+
+            getUserOverTimeResult res = new getUserOverTimeResult();
+            using (NOOCHEntities obj = new NOOCHEntities())
+            {
+
+                //List<getUserOverTimeResult> users_over_time = new List<getUserOverTimeResult>();
+                List<internalDataArray> extList = new List<internalDataArray>();
+                List<Member> memList = new List<Member>();
+                List<DurationArray> duraionList = new List<DurationArray>();
+
+                if (recordType == "dateRange")
+                {
+                    DateTime todayDate = Convert.ToDateTime(toDate);
+                    DateTime past7days = Convert.ToDateTime(fromDate);
+                    var dateOnlyString = past7days.ToShortDateString();
+                    int i = 0;
+                    while (past7days <= todayDate)
+                    {
+                        string[] nre = new string[2];
+                        nre[0] = i.ToString();// past7days.DayOfWeek.ToString();
+                        if (status == "0")
+                        {
+                            var SumOfAmount = obj.Transactions.Where(c => c.TransactionStatus == "Success" && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == 0).Sum(x => (double?)(x.Amount)) ?? 0;
+
+                            if (SumOfAmount > 0)
+                            {
+                                nre[1] = SumOfAmount.ToString();
+                                string[] nda = new string[2];
+                                nda[0] = i.ToString();
+                                nda[1] = past7days.ToString("dd/MM/yyyy");
+                                i++;
+                                DurationArray da = new DurationArray();
+                                da.durationData = nda;
+                                duraionList.Add(da);
+                            }
+
+                        }
+                        else if (status == "1")
+                        {
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Cancelled" ||c.TransactionStatus=="Rejected") && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == 0).Sum(x => (double?)(x.Amount)) ?? 0;
+
+                            if (SumOfAmount > 0)
+                            {
+                                nre[1] = SumOfAmount.ToString();
+                                string[] nda = new string[2];
+                                nda[0] = i.ToString();
+                                nda[1] = past7days.ToShortDateString();
+                                i++;
+                                DurationArray da = new DurationArray();
+                                da.durationData = nda;
+                                duraionList.Add(da);
+                            }
+                        }
+                        else if (status == "2")
+                        {
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Pending" ) && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == 0).Sum(x => (double?)(x.Amount)) ?? 0;
+
+                            if (SumOfAmount > 0)
+                            {
+                                nre[1] = SumOfAmount.ToString();
+                                string[] nda = new string[2];
+                                nda[0] = i.ToString();
+                                nda[1] = past7days.ToString("dd/MM/yyyy");
+                                i++;
+                                DurationArray da = new DurationArray();
+                                da.durationData = nda;
+                                duraionList.Add(da);
+                            }
+                        }
+
+
+                        internalDataArray id = new internalDataArray();
+                        id.internalData = nre;
+
+
+                        extList.Add(id);
+
+                        past7days = past7days.AddDays(1);
+
+                    }
+                }
+
+                if (recordType == "daily")
+                {
+                    DateTime todayDate = DateTime.Now;
+                    DateTime past7days = DateTime.Now.AddDays(-7);
+                    int i = 0;
+                    while (past7days <= todayDate)
+                    {
+                        string[] nre = new string[2];
+                        nre[0] = i.ToString();// past7days.DayOfWeek.ToString();
+                        if (status == "0")
+                        {
+                            var SumOfAmount = obj.Transactions.Where(c => c.TransactionStatus == "Success" && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == 0).Sum(x => (double?)(x.Amount)) ?? 0;
+                            nre[1] = SumOfAmount.ToString();
+                        }
+                        else if (status == "1")
+                        {
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Cancelled" || c.TransactionStatus == "Rejected") && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == 0).Sum(x => (double?)(x.Amount)) ?? 0;
+                            nre[1] = SumOfAmount.ToString();
+                        }
+                        else if (status == "2")
+                        {
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Pending" ) && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == 0).Sum(x => (double?)(x.Amount)) ?? 0;
+                            nre[1] = SumOfAmount.ToString();
+                        }
+
+                        string[] nda = new string[2];
+                        nda[0] = i.ToString();
+                        nda[1] = past7days.DayOfWeek.ToString();
+                        internalDataArray id = new internalDataArray();
+                        id.internalData = nre;
+                        DurationArray da = new DurationArray();
+                        da.durationData = nda;
+
+                        extList.Add(id);
+                        duraionList.Add(da);
+                        past7days = past7days.AddDays(1);
+                        i++;
+                    }
+                }
+
+                if (recordType == "weekly")
+                {
+                    DateTime todayDate = DateTime.Now;
+                    DateTime past7days = DateTime.Now.AddDays(-70);
+                    int j = 0;
+                    while (past7days <= todayDate)
+                    {
+                        Double SumOfAmount = 0;
+                        string[] nre = new string[2];
+                        string[] nda = new string[2];
+                        nre[0] = j.ToString();
+                        nda[0] = j.ToString();
+                        if (status == "0")
+                        {
+
+                            for (int i = 0; i < 7; i++)
+                            {
+
+                                  SumOfAmount += obj.Transactions.Where(c => c.TransactionStatus == "Success" && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == (7 - i)).Sum(x => (double?)(x.Amount)) ?? 0;
+                                 
+                            }
+                            nre[1] = SumOfAmount.ToString();
+                        }
+                        else if (status == "1")
+                        {
+
+                            for (int i = 0; i < 7; i++)
+                            {
+
+
+                                SumOfAmount += obj.Transactions.Where(c => (c.TransactionStatus == "Cancelled" || c.TransactionStatus == "Rejected") && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == (7 - i)).Sum(x => (double?)(x.Amount)) ?? 0;
+
+
+                            }
+                            nre[1] = SumOfAmount.ToString();
+                        }
+
+                        else if (status == "2")
+                        {
+
+                            for (int i = 0; i < 7; i++)
+                            {
+
+
+                                SumOfAmount += obj.Transactions.Where(c => (c.TransactionStatus == "Pending") && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == (7 - i)).Sum(x => (double?)(x.Amount)) ?? 0;
+
+
+                            }
+                            nre[1] = SumOfAmount.ToString();
+                        }
+
+                        if (-(j - 10) == 0)
+                            nda[1] = "This Week ";
+                        else if (-(j - 10) == 1)
+                            nda[1] = "Last Week ";
+                        else if (-(j - 10) == 2)
+                            nda[1] = "2nd Last Week ";
+                        else if (-(j - 10) == 3)
+                            nda[1] = "3rd Last Week ";
+                        else
+                            nda[1] = -(j - 10) + " th Last Week ";
+                        internalDataArray id = new internalDataArray();
+                        id.internalData = nre;
+                        DurationArray da = new DurationArray();
+                        da.durationData = nda;
+
+                        extList.Add(id);
+                        duraionList.Add(da);
+                        j++;
+                        past7days = past7days.AddDays(7);
+                    }
+                }
+
+                else if (recordType == "monthly")
+                {
+                    DateTime todayDate = DateTime.Now;
+                    DateTime past7days = DateTime.Now.AddMonths(-10);
+                    int i = 0;
+                    while (past7days <= todayDate)
+                    {
+                        string[] nre = new string[2];
+                        nre[0] = i.ToString();// past7days.DayOfWeek.ToString();
+                        if (status == "0")
+                        {
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Success") && c.TransactionDate.Value.Month == past7days.Month).Sum(x => (double?)(x.Amount)) ?? 0;
+                           nre[1] = SumOfAmount.ToString();
+                        }
+                        else if (status == "1")
+                        {
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Cancelled" || c.TransactionStatus == "Rejected")&& c.TransactionDate.Value.Month == past7days.Month).Sum(x => (double?)(x.Amount)) ?? 0;
+                            nre[1] = SumOfAmount.ToString();
+                        }
+                        else if (status == "2")
+                        {
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Pending") && c.TransactionDate.Value.Month == past7days.Month).Sum(x => (double?)(x.Amount)) ?? 0;
+                            nre[1] = SumOfAmount.ToString();
+                        } 
+                        string[] nda = new string[2];
+                        nda[0] = i.ToString();
+                        nda[1] = past7days.ToString("MMM");
+                        internalDataArray id = new internalDataArray();
+                        id.internalData = nre;
+                        DurationArray da = new DurationArray();
+                        da.durationData = nda;
+                        extList.Add(id);
+                        duraionList.Add(da);
+                        past7days = past7days.AddMonths(1);
+                        i++;
+                    }
+                }
+
+
+                else if (recordType == "yearly")
+                {
+                    DateTime todayDate = DateTime.Now;
+                    DateTime past7days = DateTime.Now.AddYears(-10);
+                    int i = 0;
+                    while (past7days <= todayDate)
+                    {
+                        string[] nre = new string[2];
+                        nre[0] = i.ToString();// past7days.DayOfWeek.ToString();
+                        if (status == "0")
+                        {
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Success") && c.TransactionDate.Value.Year == past7days.Year).Sum(x => (double?)(x.Amount)) ?? 0;
+                            nre[1] = SumOfAmount.ToString();
+                        }
+                        else if (status == "1")
+                        {
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Cancelled" || c.TransactionStatus == "Rejected")&& c.TransactionDate.Value.Year == past7days.Year).Sum(x => (double?)(x.Amount)) ?? 0;
+                            nre[1] = SumOfAmount.ToString();
+                        }
+                        else if (status == "2")
+                        {
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Pending" ) && c.TransactionDate.Value.Year == past7days.Year).Sum(x => (double?)(x.Amount)) ?? 0;
+                            nre[1] = SumOfAmount.ToString();
+                        }
+
+                        string[] nda = new string[2];
+                        nda[0] = i.ToString();
+                        nda[1] = past7days.Year.ToString();
+                        internalDataArray id = new internalDataArray();
+
+                        id.internalData = nre;
+                        DurationArray da = new DurationArray();
+                        da.durationData = nda;
+                        extList.Add(id);
+                        duraionList.Add(da);
+                        past7days = past7days.AddYears(1);
+                        i++;
+                    }
+                }
+
+
+                res.externalData = extList;
+                res.Duration = duraionList;
+            }
+            res.IsSuccess = true;
+            res.ErrorMessage = "OK";
+
+            return Json(res);
+        }
+
+
         [HttpPost]
         [ActionName("getUsersInBanks")]
         public ActionResult getUsersInBanks() {
@@ -2631,7 +2925,7 @@ namespace noochAdminNew.Controllers
 
         [HttpPost]
         [ActionName("GetUsersOverTimeOverTimeData")]
-        public ActionResult GetUsersOverTimeOverTimeData(string recordType,string status)
+        public ActionResult GetUsersOverTimeOverTimeData(string recordType,string status,string fromDate=null,string toDate=null)
         {
 
             getUserOverTimeResult res = new getUserOverTimeResult();
@@ -2642,13 +2936,12 @@ namespace noochAdminNew.Controllers
                 List<internalDataArray> extList = new List<internalDataArray>();
                 List<Member> memList = new List<Member>();
                 List<DurationArray> duraionList = new List<DurationArray>();
-                
-                 
 
-                if (recordType == "weekly")
+                if (recordType == "dateRange")
                 {
-                    DateTime todayDate = DateTime.Now;
-                    DateTime past7days = DateTime.Now.AddDays(-7);
+                    DateTime todayDate = Convert.ToDateTime(toDate);
+                    DateTime past7days = Convert.ToDateTime(fromDate);
+                    var dateOnlyString = past7days.ToShortDateString(); 
                     int i = 0;
                     while (past7days <= todayDate)
                     {
@@ -2656,11 +2949,126 @@ namespace noochAdminNew.Controllers
                         nre[0] = i.ToString();// past7days.DayOfWeek.ToString();
                         if (status == "0")
                         {
-                            nre[1] = (from t in obj.Members where t.DateCreated == past7days && (t.Status=="Active" || t.Status=="Registered")  select t).Count().ToString();
+                            int usersCount = (from t in obj.Members where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 && (t.Status == "Active" || t.Status == "Registered") select t).Count();
+                            if (usersCount > 0)
+                            {
+                                nre[1] = usersCount.ToString();
+                                string[] nda = new string[2];
+                                nda[0] = i.ToString();
+                                nda[1] = past7days.ToShortDateString(); 
+                                i++;
+                                DurationArray da = new DurationArray();
+                                da.durationData = nda;
+                                duraionList.Add(da);
+                            }
+
                         }
                         else if (status == "1")
                         {
-                            nre[1] = (from t in obj.Members where t.DateCreated == past7days && (t.Status != "Active" && t.Status != "Registered" && t.Status != "Suspended" && t.Status != "Deleted") select t).Count().ToString();
+                            int usersCount = (from t in obj.Members where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 && (t.Status != "Active" && t.Status != "Registered" && t.Status != "Suspended" && t.Status != "Deleted") select t).Count();
+                            if (usersCount > 0)
+                            {
+                                nre[1] = usersCount.ToString();
+                                string[] nda = new string[2];
+                                nda[0] = i.ToString();
+                                nda[1] = dateOnlyString;
+                                i++;
+                                DurationArray da = new DurationArray();
+                                da.durationData = nda;
+                                duraionList.Add(da);
+                            }
+                        }
+
+                        
+                        internalDataArray id = new internalDataArray();
+                        id.internalData = nre;
+                        
+
+                        extList.Add(id);
+                        
+                        past7days = past7days.AddDays(1);
+                        
+                    }
+                }
+
+                if (recordType == "weekly")
+                {
+                    DateTime todayDate = DateTime.Now;
+                    DateTime past7days = DateTime.Now.AddDays(-70);
+                    int j = 0;
+                    while (past7days <= todayDate)
+                    {
+                        int count = 0;
+                        string[] nre = new string[2];
+                        string[] nda = new string[2];
+                        nre[0] = j.ToString();
+                        nda[0] = j.ToString();
+                        if (status == "0")
+                        {
+                            
+                            for (int i = 0; i < 7; i++)
+                            {
+
+
+                                count += (from t in obj.Members where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == (7 - i) && (t.Status == "Active" || t.Status == "Registered") select t).Count();
+
+
+                            }
+                            nre[1] = count.ToString();
+                        }
+                        else if (status == "1")
+                        {
+                            
+                            for (int i = 0; i < 7; i++)
+                            {
+
+
+                                count += (from t in obj.Members where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == (7 - i) && (t.Status != "Registered" && t.Status != "Suspended" && t.Status != "Deleted") select t).Count();
+
+
+                            }
+                            nre[1] = count.ToString();
+                        }
+
+                        if (-(j - 10)==0)
+                            nda[1] = "This Week ";
+                        else if(-(j - 10)==1)
+                            nda[1] = "Last Week ";
+                        else if (-(j - 10) == 2)
+                            nda[1] = "2nd Last Week ";
+                        else if (-(j - 10) == 3)
+                            nda[1] = "3rd Last Week ";
+                        else
+                            nda[1] = -(j - 10) + " th Last Week ";
+                         internalDataArray id = new internalDataArray();
+                         id.internalData = nre;
+                         DurationArray da = new DurationArray();
+                         da.durationData = nda;
+
+                         extList.Add(id);
+                         duraionList.Add(da);
+                         j++;
+                         past7days= past7days.AddDays(7);
+                    }
+                }
+
+                if (recordType == "daily")
+                {
+                    DateTime todayDate = DateTime.Now;
+                    DateTime past7days = DateTime.Now.AddDays(-7);
+                    int i = 0;
+                    while (past7days <= todayDate)
+                    { 
+
+                        string[] nre = new string[2];
+                        nre[0] = i.ToString();// past7days.DayOfWeek.ToString();
+                        if (status == "0")
+                        {
+                            nre[1] = (from t in obj.Members where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 && (t.Status == "Active" || t.Status == "Registered") select t).Count().ToString();
+                        }
+                        else if (status == "1")
+                        {
+                            nre[1] = (from t in obj.Members where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 && (t.Status != "Active" && t.Status != "Registered" && t.Status != "Suspended" && t.Status != "Deleted") select t).Count().ToString();
                         }
                         
                         string[] nda = new string[2];
