@@ -21,7 +21,7 @@
                         <div class="showDate hide">
                             <form id="frmTarget" method="get" data-parsley-validate="" onsubmit="return false;">
                                 <div class="row col-md-12"  > 
-                                Start Date  <input data-parsley-required="true"   data-parsley-required-message="Date is required!" type="text" id="startDate" class="date" />  End Date <input type="text" id="endDate" data-parsley-required="true" data-parsley-required-message="Date is required!" class="date" />
+                                Start Date  <input data-parsley-required="true"  readonly data-parsley-required-message="Date is required!" type="text" id="startDate" class="date" />  End Date <input readonly type="text" id="endDate" data-parsley-required="true" data-parsley-required-message="Date is required!" class="date" />
                                 </div>
                                     <button id="btnShow" type="submit" class="btn-info" onclick="Member.GetTransactionVolumeOverTimeData('dateRange');">show</button>
                             </form>
