@@ -27,6 +27,9 @@ namespace noochAdminNew.Classes.ModelClasses
 
         public decimal Amount { get; set; }
         public DateTime? TransactionDate { get; set; }
+
+        public string TransactionDate1 { get; set; }
+        public string TransactionTime { get; set; }
        
         public string TransactionStatus { get; set; }
         public string TransactionType { get; set; }
@@ -48,6 +51,7 @@ namespace noochAdminNew.Classes.ModelClasses
 
         public string FirstName { get; set; }
 
+        public string Memo { get; set; }
              
     }
 }

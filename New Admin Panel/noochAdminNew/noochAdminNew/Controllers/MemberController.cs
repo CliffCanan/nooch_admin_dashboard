@@ -1448,7 +1448,7 @@ namespace noochAdminNew.Controllers
                         res.IsSuccess = true;
                         string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
                         string MessageBody = "Hi " + fname + ", This is Nooch - Your password has been updated to" + member.Password;
-                        String msg = Utility.SendSMS("member.ContactNumber", "", member.MemberId.ToString());
+                       // String msg = Utility.SendSMS("member.ContactNumber", "", member.MemberId.ToString());
                         var fromAddress = Utility.GetValueFromConfig("adminMail");
                         var tokens = new Dictionary<string, string>
                         {
@@ -1456,16 +1456,17 @@ namespace noochAdminNew.Controllers
                            // {Constants.PLACEHOLDER_LAST_NAME, member.LastName},
                             {Constants.PLACEHOLDER_PASSWORD, CommonHelper.GetDecryptedData( member.Password)}
                         };
+                        
                         string toAddress = CommonHelper.GetDecryptedData(member.UserName);
                         bool emailSent = Utility.SendEmail("passwordChangedByAdmin",
-                                                fromAddress, toAddress, "Your password is chnaged by Nooch", null,
+                                                fromAddress, toAddress, "Your Nooch password has been changed", null,
                                                 tokens, null, null, null);
-                        if (msg != "Failure")
-                        {
-                            res.Message += " & SMS has been sent";
-                        }
+                        //if (msg != "Failure")
+                        //{
+                        //    res.Message += "& SMS has been sent";
+                        //}
                         if (emailSent)
-                            res.Message += "& Email has been Sent";
+                            res.Message += " & Email has been Sent.";
                     }
                     else
                         res.IsSuccess = false;
