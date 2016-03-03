@@ -456,12 +456,12 @@ namespace noochAdminNew.Controllers
                 }
 
                 foreach (Member m in All_Members_In_Records)
-                { 
+                {
                     int TransCount = (from tr in obj.Transactions
                                       where (tr.Member.MemberId == m.MemberId || tr.Member1.MemberId == m.MemberId) &&
                                              tr.TransactionStatus == "Success"
                                       select tr).Count();
-                     
+
                     // transaction - Transfer Type - 5dt4HUwCue532sNmw3LKDQ==
                     // invite - DrRr1tU1usk7nNibjtcZkA==
                     // request - T3EMY1WWZ9IscHIj3dbcNw==
@@ -871,8 +871,15 @@ namespace noochAdminNew.Controllers
                         }
 
                         mdc.Referrals = memreferred;
+
                     }
                     #endregion Get any members referred by this user
+
+                    if (mdc.type == "Tenant")
+                    {
+                        List<Tenants> tenants = GetTenants(Member.Nooch_ID);
+                        mdc.tenant = tenants.FirstOrDefault();
+                    }
 
                 }
             }
@@ -891,7 +898,7 @@ namespace noochAdminNew.Controllers
                 {
                     string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
                     string MessageBody = "Hi " + fname + ", This is Nooch - just need to verify this is your phone number. Please reply 'Go' to confirm your phone number.";
-                    res.Message = Utility.SendSMS(Utility.RemovePhoneNumberFormatting( member.ContactNumber), MessageBody, member.MemberId.ToString());
+                    res.Message = Utility.SendSMS(Utility.RemovePhoneNumberFormatting(member.ContactNumber), MessageBody, member.MemberId.ToString());
                     if (res.Message != "Failure")
                     {
                         res.IsSuccess = true;
@@ -1448,7 +1455,7 @@ namespace noochAdminNew.Controllers
                         res.IsSuccess = true;
                         string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
                         string MessageBody = "Hi " + fname + ", This is Nooch - Your password has been updated to" + member.Password;
-                       // String msg = Utility.SendSMS("member.ContactNumber", "", member.MemberId.ToString());
+                        // String msg = Utility.SendSMS("member.ContactNumber", "", member.MemberId.ToString());
                         var fromAddress = Utility.GetValueFromConfig("adminMail");
                         var tokens = new Dictionary<string, string>
                         {
@@ -1456,7 +1463,7 @@ namespace noochAdminNew.Controllers
                            // {Constants.PLACEHOLDER_LAST_NAME, member.LastName},
                             {Constants.PLACEHOLDER_PASSWORD, CommonHelper.GetDecryptedData( member.Password)}
                         };
-                        
+
                         string toAddress = CommonHelper.GetDecryptedData(member.UserName);
                         bool emailSent = Utility.SendEmail("passwordChangedByAdmin",
                                                 fromAddress, toAddress, "Your Nooch password has been changed", null,
@@ -1484,5 +1491,63 @@ namespace noochAdminNew.Controllers
             res.IsSuccess = true;
             return Json(res);
         }
+
+
+        public List<Tenants> GetTenants(String NoochId)
+        {
+            using (NOOCHEntities obj = new NOOCHEntities())
+            {
+                List<Tenants> tenants = new List<Tenants>();
+
+                //var tenant = ( from uot in obj.UnitsOccupiedByTenants
+                //join pu in obj.PropertyUnits
+                //    on uot.UnitId equals pu.UnitId
+                //join prop in obj.Properties on pu.PropertyId equals prop.PropertyId
+                //join ten in obj.Tenants on pu.MemberId equals ten.MemberId
+                //join mem in obj.Members on pu.MemberId equals mem.MemberId
+                //where mem.Nooch_ID == NoochId                                                                                     
+
+                var tenant = (from t in obj.Tenants
+                              join ut in obj.UnitsOccupiedByTenants on t.TenantId equals ut.TenantId
+                              join pu in obj.PropertyUnits on ut.UnitId equals pu.UnitId
+                              join p in obj.Properties on pu.PropertyId equals p.PropertyId
+                              join m in obj.Members on t.MemberId equals m.MemberId
+                              where m.Nooch_ID == NoochId
+
+                              select new Tenants
+                              {
+                                  LastPayment = ut.LastPaymentAmount,
+                                  Status = pu.Status,
+                                  Rent = pu.UnitRent,
+                                  Unit = pu.UnitNumber,
+                                  dueDate = pu.DueDate,
+                                  LeaseLength = pu.LeaseLength,
+                                  Property = p.PropName,
+                                  AutoPay = t.IsAutopayOn,
+                                  AdminNote = m.AdminNotes,
+                                  LastPaymentDate= ut.LastPaymentDate
+                              });
+
+                foreach (var t in tenant)
+                {
+                    Tenants tn = new Tenants();
+                    tn.LastPayment = t.LastPayment;
+                    tn.Status = t.Status;
+                    tn.Rent = t.Rent;
+                    tn.Unit = t.Unit;
+                    tn.dueDate = t.dueDate;
+                    tn.Property = t.Property;
+                    tn.LeaseLength = t.LeaseLength;
+                    tn.AutoPay = t.AutoPay;
+                    if (t.LastPaymentDate != null)
+                    {
+                        tn.LastPaymentDate1 = Convert.ToDateTime(t.LastPaymentDate).ToString("MMM d, yyyy");
+                    }
+                    tenants.Add(tn);
+                }               
+                return tenants;
+            }
+        }
+
     }
 }

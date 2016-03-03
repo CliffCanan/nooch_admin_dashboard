@@ -1,5 +1,6 @@
 @using noochAdminNew.Classes.ModelClasses
 @using noochAdminNew.Classes.Utility
+@using noochAdminNew.Models
 @{
     ViewBag.Title = "Member Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -14,6 +15,9 @@
     MemIpAddr = mdc.MemberIpAddr;
 
     List<MemberDetailsTrans> Transactionsss = new List<MemberDetailsTrans>();
+    
+    List<Tenants> tn =new List<Tenants>();
+    tn=mdc.tenants;
 
     foreach (MemberDetailsTrans mdtt in mdc.Transactions)
     {
@@ -670,9 +674,9 @@
                     </div>
                 </div>
 
-                @{
+               @{
                     if (mdc.type == "Tenant")
-                    {
+                    {                    
                         <div id="tab-1a" class="tab-pane fade">
                             <div class="panel-body">
                                 <div class="row">
@@ -682,7 +686,9 @@
                                             <div class="ibox-title">
                                                 <h5>Tenant & Unit Info</h5>
                                             </div>
-                                            <div class="ibox-content">
+                                            <div class="ibox-content">                                             
+
+                                                @if (mdc.tenant != null) { 
                                                 <form class="form-horizontal" method="get">
 
                                                     <div class="row">
@@ -694,7 +700,8 @@
                                                                 <div class="col-xs-9 col-sm-8 col-lg-7">
                                                                     <div class="input-group">
                                                                         <span class="input-group-addon"><i class="fa fa-fw fa-building"></i></span>
-                                                                        <input type="text" id="property" class="form-control" value="@mdc.ContactNumber">
+                                                                        @*<input type="text" id="property" class="form-control" value="@mdc.tenant.Property">*@
+                                                                        <p class="form-control-static" id="property">@mdc.tenant.Property</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -706,7 +713,7 @@
                                                                     <b>Status</b>
                                                                 </span>
                                                                 <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                                    <p class="form-control-static">@mdc.UserName</p>
+                                                                    <p class="form-control-static">@mdc.tenant.Status</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -721,7 +728,8 @@
                                                                 <div class="col-xs-9 col-sm-8 col-lg-7">
                                                                     <div class="input-group">
                                                                         <span class="input-group-addon"><i class="fa fa-fw fa-home"></i></span>
-                                                                        <input type="text" value="@mdc.Address" class="form-control" id="unitNum">
+                                                                        @*<input type="text" value="@mdc.tenant.Unit" class="form-control" id="unitNum">*@
+                                                                        <p class="form-control-static" id="unitNum">@mdc.tenant.Unit</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -733,14 +741,20 @@
                                                                     <b>Last Payment</b>
                                                                 </span>
                                                                 <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                                    @if (!String.IsNullOrEmpty(mdc.SecondaryEmail.Trim()))
+                                                                    @*@if (!String.IsNullOrEmpty(mdc.SecondaryEmail.Trim()))
                                                                     {
                                                                         <p id="lastPayment" class="form-control-static">@mdc.SecondaryEmail</p>
                                                                     }
                                                                     else
                                                                     {
                                                                         <p id="lastPayment" class="form-control-static">@mdc.SecondaryEmail</p>
-                                                                    }
+                                                                    }*@
+                                                                    <p id="lastPayment" class="form-control-static">@mdc.tenant.LastPayment &nbsp;
+                                                                    @if(mdc.tenant.LastPaymentDate1 != null) 
+                                                                    {
+                                                                     @mdc.tenant.LastPaymentDate1 }</p>
+                                                                    
+                                                          
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -755,7 +769,9 @@
                                                                 <div class="col-xs-9 col-sm-8 col-lg-7">
                                                                     <div class="input-group">
                                                                         <span class="input-group-addon"><i class="fa fa-fw fa-usd"></i></span>
-                                                                        <input type="text" value="@mdc.City" class="form-control" id="rentAmount">
+                                                                        @*<input type="text" value="@mdc.tenant.Rent" class="form-control" id="rentAmount">*@
+                                                                        <p id="rentAmount" class="form-control-static"> @mdc.tenant.Rent</p>
+
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -767,7 +783,15 @@
                                                                     <b>Auto Pay</b>
                                                                 </span>
                                                                 <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                                                                                     
+                                                                    @if (mdc.tenant.AutoPay != null) {                                                                     
+                                                                    <input type="checkbox" class="form-control" id="autoPay" checked>
+                                                                    }
+                                                                 else
+                                                                    { 
                                                                     <input type="checkbox" class="form-control" id="autoPay">
+                                                                    }
+                                                                    
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -782,7 +806,7 @@
                                                                     <b>Due On</b>
                                                                 </span>
                                                                 <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                                    <p class="form-control-static" id="dueOn">@mdc.State</p>
+                                                                    <p class="form-control-static" id="dueOn">@mdc.tenant.dueDate</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -793,7 +817,7 @@
                                                                     <b>Admin Notes</b>
                                                                 </span>
                                                                 <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                                    <p class="form-control-static" style="word-wrap:break-word;">@mdc.UDID1</p>
+                                                                    <p class="form-control-static" style="word-wrap:break-word;">@mdc.tenant.AdminNote</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -807,31 +831,32 @@
                                                                     <b>Lease Length</b>
                                                                 </span>
                                                                 <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                                    <p class="form-control-static" id="leaseLength">@mdc.State</p>
+                                                                    <p class="form-control-static" id="leaseLength">@mdc.tenant.LeaseLength</p>
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                     </div>
-
                                                     <div class="row">
                                                         <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4 m-t-md">
-                                                            <a class="btn btn-danger btn-lg center-block" onclick="Member.EditMember()"><i class="fa fa-save"></i> Save Changes</a>
+                                                            @*<a class="btn btn-danger btn-lg center-block" onclick="Member.UpdateTenantInfo()"><i class="fa fa-save"></i> Save Changes</a>*@
                                                         </div>
                                                     </div>
 
                                                 </form>
-
+                                                }
+                                                else
+                                                {
+                                                <h1>No Record found for this tenant</h1>
+                                                }
                                             </div>
                                         </div>
                                     </div>
 
                                 </div>
                             </div>
-                        </div>
+                        </div>                    
                     }
                 }
-
                 <div id="tab-2" class="tab-pane fade">
                     <div class="panel-body">
                         <div class="row">

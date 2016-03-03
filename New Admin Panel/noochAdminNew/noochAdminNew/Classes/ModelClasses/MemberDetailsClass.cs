@@ -63,6 +63,9 @@ namespace noochAdminNew.Classes.ModelClasses
         public bool? IsVerifiedWithSynapse { get; set; }
         public SynapseDetailOFMember SynapseDetails { get; set; }
         public List<MemberIpAddrreses> MemberIpAddr { get; set; }
+
+        public List<Tenants> tenants { get; set; }
+        public Tenants tenant { get; set; }
     }
 
     public class MemberDetailsTrans
@@ -151,5 +154,20 @@ namespace noochAdminNew.Classes.ModelClasses
         public string synapseConsumerKey { get; set; }
         public string synapseRefreshKey { get; set; }
         public string synapseUserId { get; set; }
+    }
+    public class Tenants
+    {
+        public string Property { get; set; }
+        public string Unit { get; set; }
+        public string Rent { get; set; }
+        public string Status { get; set; }
+        public string LastPayment { get; set; }
+
+        public DateTime? LastPaymentDate { get; set; }
+        public string LastPaymentDate1 { get; set; }
+        public string dueDate { get; set; }
+        public bool? AutoPay { get; set; }
+        public string LeaseLength { get; set; }
+        public string AdminNote { get; set; }
     }
 }

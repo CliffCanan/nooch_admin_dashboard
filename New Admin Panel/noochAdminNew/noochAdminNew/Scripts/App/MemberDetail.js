@@ -490,7 +490,7 @@ var Member = function () {
             }
         });
     }
-     
+       
 
     return {
         ApplyChoosenOperation: applyOperation,
@@ -503,8 +503,8 @@ var Member = function () {
         getSynapseInfo: getSynapseInfo,
         sendSmsReminder: sendSmsReminderForVerification,
         ChangePassword: ChangePassword,
-        GenerateNewPassword: GenerateNewPassword
-         
+        GenerateNewPassword: GenerateNewPassword,
+        UpdateTenantInfo:UpdateTenantInfo
        
     };
 }();

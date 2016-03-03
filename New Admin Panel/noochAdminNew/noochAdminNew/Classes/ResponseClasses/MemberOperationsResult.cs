@@ -41,4 +41,5 @@ namespace noochAdminNew.Classes.ResponseClasses
         public string ssn { get; set; }
         public string dob { get; set; }
     }
+   
 }
