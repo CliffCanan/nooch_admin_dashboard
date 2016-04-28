@@ -246,7 +246,7 @@
                         {
                             i++;
                             <tr>
-                                <td> <a href="#"  onclick="showEditpopup(' @c.code','@c.totalallowed','@c.adminnotes' ) ;return false;"> @c.InviteCode_Id</a></td>
+                                <td> <a href="#" onclick='showEditpopup("@c.code","@c.totalallowed","@c.adminnotes");return false;'> @c.InviteCode_Id</a></td>
                                 <td><a href="@Url.Action("JoinningsWithGivenReferralCode", "Referrals", new {RefCode = @c.code})">@c.code</a></td>
                                 <td>@c.count</td>
                                 <td>@c.totalallowed</td>
