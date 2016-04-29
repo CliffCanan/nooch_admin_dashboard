@@ -18,6 +18,14 @@
 <!-- Gritter -->
 <link href="~/js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
 
+
+<!-- Data Tables CSS -->
+<link href="~/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/dataTables.responsive.css" rel="stylesheet">
+<link href="~/css/plugins/dataTables/dataTables.tableTools.min.css" rel="stylesheet">
+
+
+
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>Dashboard</h2>
@@ -348,13 +356,15 @@
                                 <th>Sender</th>
                                 <th>Recipient</th>
                                 <th>Amount</th>
-                                <th>Disputed?</th>
-                                <th>Locatison</th>
+                                <th>Disputed</th>
+                                <th>Location</th>
                             </tr>
                         </thead>
 
                         <tbody id="TBOdy"></tbody>
-                    </table>
+                    </table>             
+
+
                 </div>
             </div>
 
@@ -568,3 +578,36 @@
         var myNewChart = new Chart(ctx).Doughnut(doughnutData, doughnutOptions);
     });
 </script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#TransactionMaster").trigger("click");
+
+        $('#transMenuItem').addClass('active');       
+       
+        $('#AllTrans').dataTable({
+            responsive: true,
+            "order": [1, "desc"],
+            "aoColumnDefs": [{ 'bSortable': false, 'aTargets': [0] }],
+           // "order": [[6,'desc'], [7,'asc'], [3,'asc'], [2,'asc']],
+            //"dom": 'T<"clear">lfrtip',
+            //"tableTools": {
+            //    "sSwfPath": "../js/plugins/dataTables/swf/copy_csv_xls_pdf.swf"
+            //}
+            //"columnDefs": [
+            //       { "orderable": false, "targets": [ 0,5 ] }
+            // ]          
+
+        });
+        $('#AllTrans').dataTable();
+    });
+</script>
+
+
+<!-- Data Tables JS-->
+<script src="~/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="~/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="~/js/plugins/dataTables/dataTables.responsive.js"></script>
+<script src="~/js/plugins/dataTables/dataTables.tableTools.min.js"></script>
+

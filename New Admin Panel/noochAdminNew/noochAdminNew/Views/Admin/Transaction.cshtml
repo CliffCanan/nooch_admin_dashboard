@@ -172,9 +172,11 @@
         $("#TransactionMaster").trigger("click");
 
         $('#transMenuItem').addClass('active');
-
-        //$('#AllMembers').dataTable({
-        //    responsive: true,
+        
+        $('#AllMembers').dataTable({
+            responsive: true,
+            "order": [1, "desc"],
+            "aoColumnDefs": [{ 'bSortable': false, 'aTargets': [0]}],
         //   // "order": [[6,'desc'], [7,'asc'], [3,'asc'], [2,'asc']],
         //    "dom": 'T<"clear">lfrtip',
         //    "tableTools": {
@@ -183,7 +185,7 @@
         //  //  "columnDefs": [
         //  //         { "orderable": false, "targets": [ 0,5 ] }
         //   // ]
-        //});
+        });
         $('#AllMembers').dataTable();
     });
 </script>
