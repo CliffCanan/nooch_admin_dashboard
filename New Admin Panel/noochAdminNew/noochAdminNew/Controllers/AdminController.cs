@@ -3176,6 +3176,8 @@ namespace noochAdminNew.Controllers
 
         public ActionResult Transaction()
         {
+            CheckSession();
+
             TransactionsPageData res = new TransactionsPageData();
 
             List<TransactionClass> adminUser = new List<TransactionClass>();

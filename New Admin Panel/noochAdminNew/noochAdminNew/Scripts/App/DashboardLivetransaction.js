@@ -42,7 +42,6 @@ $(document).ready(function () {
 
     //Click Event For Label
     $("#dash_TransPanel2 .btn-group label").click(function () {
-        alert('came in click');
         var c = $(this).attr("For");
         var val = $('#' + c + '').val();
 

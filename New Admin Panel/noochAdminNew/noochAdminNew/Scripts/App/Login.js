@@ -5,7 +5,7 @@ $(document).ready(function () {
 var User = function () {
 
     function doLogin() {
-		var url = "ValidateUser";
+        var url = $('#urlToHit').val();
         var data = {};
         data.UserName = $("#Username").val();
         data.Password = $("#Password").val();
