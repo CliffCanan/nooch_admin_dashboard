@@ -36,6 +36,7 @@
         ms.RecipientId = mdtt.RecipientId;
         ms.RecipientName = mdtt.RecipientName;
         ms.Memo = mdtt.Memo;
+        ms.IsUnUsualTrans=  mdtt.IsUnUsualTrans;
         Transactionsss.Add(ms);
     }
 
@@ -1267,7 +1268,11 @@
                                                                     }
                                                                 </td>
                                                                 <td>@mn.TransDate<br /><small>@mn.TransTime</small></td>
-                                                                <td><a href="@Url.Action("Detail", "Member", new { NoochId = @mn.SenderId })">@mn.SenderName</a></td>
+                                                                <td>
+                                                                  
+                                                                <a href="@Url.Action("Detail", "Member", new { NoochId = @mn.SenderId })">@mn.SenderName</a>
+                                                                  
+                                                                </td>
                                                                 <td>
                                                                     @if (mn.AmountNew != "0")
                                                                     {
@@ -1276,7 +1281,17 @@
                                                                         <h4>$ @transAmountFormatted</h4>
                                                                     }
                                                                 </td>
-                                                                <td><a href="@Url.Action("Detail", "Member", new { NoochId = @mn.RecipientId })">@mn.RecipientName</a></td>
+                                                                <td>
+                                                                    @if (mn.IsUnUsualTrans==false)
+                                                                    {
+                                                                        <a href="@Url.Action("Detail", "Member", new { NoochId = @mn.RecipientId })">@mn.RecipientName</a>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <a href="#">@mn.RecipientName</a>
+                                                                    }
+                                                                    
+                                                                </td>
                                                                 <td>@mn.Memo</td>
                                                                 @if (!String.IsNullOrEmpty(@mn.GeoLocation))
                                                                 {

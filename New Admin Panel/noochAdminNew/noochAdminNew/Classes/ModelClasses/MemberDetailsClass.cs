@@ -89,6 +89,8 @@ namespace noochAdminNew.Classes.ModelClasses
         public string UDID { get; set; }
         public string DeviceToken { get; set; }
         public string AccessToken { get; set; }
+        public bool IsUnUsualTrans { get; set; }
+
     }
 
     public class MemberDetailsStats

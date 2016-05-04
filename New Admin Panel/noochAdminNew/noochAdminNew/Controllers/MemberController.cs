@@ -643,31 +643,42 @@ namespace noochAdminNew.Controllers
                                 payment.SenderName = memberFullName;
                                 payment.SenderId = Member.Nooch_ID;
 
-                                if (String.IsNullOrEmpty(t.InvitationSentTo) &&
-                                    t.IsPhoneInvitation != true)
+                                if (String.IsNullOrEmpty(t.InvitationSentTo) && 
+                                    t.IsPhoneInvitation != true)                     
                                 {
-                                    payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
-                                                            CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
-                                    payment.RecipientId = t.Member1.Nooch_ID;
+                                  
+                                        payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
+                                                                CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
+                                        payment.RecipientId = t.Member1.Nooch_ID;
+                                   
                                 }
                                 else if (t.IsPhoneInvitation != true) // Request to Non-Nooch user via EMAIL
                                 {
                                     payment.RecipientName = CommonHelper.GetDecryptedData(t.InvitationSentTo);
                                     payment.RecipientId = "";
+                                    payment.IsUnUsualTrans = true;
                                 }
                                 else // Request to Non-Nooch user via EMAIL
                                 {
                                     payment.RecipientName = CommonHelper.GetDecryptedData(t.PhoneNumberInvited);
                                     payment.RecipientId = "";
+                                    payment.IsUnUsualTrans = true;
                                 }
                             }
                             else // This member RECEIVED the request
                             {
-                                payment.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.FirstName)) + " " +
-                                                        CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.LastName));
-                                payment.SenderId = t.Member.Nooch_ID;
-                                payment.RecipientName = memberFullName;
-                                payment.RecipientId = Member.Nooch_ID;
+                                //payment.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.FirstName)) + " " +
+                                //                        CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.LastName));
+                                //payment.SenderId = t.Member.Nooch_ID;
+                                //payment.RecipientName = memberFullName;
+                                //payment.RecipientId = Member.Nooch_ID;
+
+                                payment.SenderName = memberFullName;
+                                payment.SenderId = Member.Nooch_ID;
+                                payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
+                                                      CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
+                                payment.RecipientId = t.Member1.Nooch_ID;
+
                             }
                         }
                         else
