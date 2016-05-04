@@ -1560,8 +1560,8 @@ namespace noochAdminNew.Controllers
                 if ((DocumentDetails.imgPath != ""))
                 {
 
-                   // ImageUrlMade = Utility.GetValueFromConfig("PhotoUrl") + DocumentDetails.MemberId + ".png";
-                    ImageUrlMade = DocumentDetails.imgPath;
+                    ImageUrlMade = Utility.GetValueFromConfig("PhotoUrl") + DocumentDetails.MemberId + ".png";
+                   
                 }
                 else
                 {
