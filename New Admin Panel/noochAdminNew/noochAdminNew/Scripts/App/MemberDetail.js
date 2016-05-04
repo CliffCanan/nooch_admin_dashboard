@@ -4,7 +4,7 @@ var escapeKeyPressed = false;
 
 $(document).ready(function () {
     $("#MemberMenuExpander").trigger("click");
-
+     
     function getParameterByName(name) {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -13,7 +13,7 @@ $(document).ready(function () {
     }
 
     NoochId = getParameterByName('NoochId');
-
+     
     // Format the contact number if present
     if ($("#contactNumber").val().length > 1) {
         $("#contactNumber").val(function (i, text) {
@@ -129,7 +129,10 @@ $('#btntoggle').click(function () {
 });
  
  
+
  
+
+
 
 var Member = function () {
     function applyOperation(operation) {

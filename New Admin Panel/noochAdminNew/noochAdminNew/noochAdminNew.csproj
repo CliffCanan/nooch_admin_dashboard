@@ -186,6 +186,7 @@
     <Compile Include="Classes\ModelClasses\DisputeClassDetails.cs" />
     <Compile Include="Classes\ModelClasses\InviteCodeDataClass.cs" />
     <Compile Include="Classes\ModelClasses\KnoxResponseClasses.cs" />
+    <Compile Include="Classes\ModelClasses\kycInfoResponseFromSynapse.cs" />
     <Compile Include="Classes\ModelClasses\MemberDetailsClass.cs" />
     <Compile Include="Classes\ModelClasses\MembersListDataClass.cs" />
     <Compile Include="Classes\ModelClasses\OfacList.cs" />
@@ -198,7 +199,9 @@
     <Compile Include="Classes\ResponseClasses\LoginResult.cs" />
     <Compile Include="Classes\ResponseClasses\MemberOperationsResult.cs" />
     <Compile Include="Classes\ResponseClasses\ReferralsResultClass.cs" />
+    <Compile Include="Classes\ResponseClasses\SaveVerificationIdDocument.cs" />
     <Compile Include="Classes\ResponseClasses\SearchAdminResultClass.cs" />
+    <Compile Include="Classes\ResponseClasses\synapseV3GenericResponse.cs" />
     <Compile Include="Classes\Utility\CommonHelper.cs" />
     <Compile Include="Classes\Utility\Logger.cs" />
     <Compile Include="Classes\Utility\Utility.cs" />
@@ -1109,6 +1112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="UploadedPhotos\Photos\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

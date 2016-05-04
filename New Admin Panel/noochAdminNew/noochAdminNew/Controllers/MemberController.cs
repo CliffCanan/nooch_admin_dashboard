@@ -10,6 +10,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using noochAdminNew.Resources;
+using System.IO;
+using System.Net;
+using System.Text;
+using Newtonsoft.Json;
+using System.Web;
+using System.Drawing;
+
 
 namespace noochAdminNew.Controllers
 {
@@ -1493,6 +1500,235 @@ namespace noochAdminNew.Controllers
         }
 
 
+        [HttpPost]
+        [ActionName("UploadDoc")]
+        public ActionResult UploadDoc(HttpPostedFileBase file, string NoochId)
+         {
+             
+                SaveVerificationIdDocument DocumentDetails = new SaveVerificationIdDocument();
+
+
+                using (var noochConnection = new NOOCHEntities())
+                {
+                    var member = noochConnection.Members.Where(m => m.Nooch_ID == NoochId).FirstOrDefault();
+                    DocumentDetails.MemberId = member.MemberId.ToString();
+                    var MemberId = Utility.ConvertToGuid(DocumentDetails.MemberId.ToString());
+                    var accesToken = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == MemberId).FirstOrDefault();
+                    DocumentDetails.AccessToken = accesToken.access_token;
+                    string pic = MemberId.ToString() + ".png";
+                    string path = System.IO.Path.Combine(
+                                     Server.MapPath("~/UploadedPhotos/Photos"), pic);
+                    // file is uploaded
+
+                    file.SaveAs(path);
+                    DocumentDetails.imgPath = path;
+                    var mdaResult = submitDocumentToSynapseV3(DocumentDetails);
+                    ViewData["IsSuccess"] = mdaResult.isSuccess; 
+                    return RedirectToAction("Detail", "Member", new { NoochId });
+                        
+            }
+
+             
+        }
+
+        public synapseV3GenericResponse submitDocumentToSynapseV3(SaveVerificationIdDocument DocumentDetails)
+        {
+            synapseV3GenericResponse res = new synapseV3GenericResponse();
+
+            try
+            {
+                Logger.Info("Service layer - submitDocumentToSynapseV3 [MemberId: " + DocumentDetails.MemberId + "]");
+
+
+
+
+                // making url from byte array...coz submitDocumentToSynapseV3 expects url of image.
+
+                string ImageUrlMade = "";
+
+                if ((DocumentDetails.imgPath != ""))
+                {
+
+                   // ImageUrlMade = Utility.GetValueFromConfig("PhotoUrl") + DocumentDetails.MemberId + ".png";
+                    ImageUrlMade = DocumentDetails.imgPath;
+                }
+                else
+                {
+                    ImageUrlMade = Utility.GetValueFromConfig("PhotoUrl") + "gv_no_photo.png";
+                }
+
+
+                var mdaResult = submitDocumentToSynapseV3(DocumentDetails.MemberId, ImageUrlMade);
+
+                res.isSuccess = mdaResult.isSuccess;
+                res.msg = mdaResult.msg;
+
+                return res;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Service Layer - submitDocumentToSynapseV3 FAILED - [userName: " + DocumentDetails.MemberId + "]. Exception: [" + ex + "]");
+
+                throw new Exception("Server Error.");
+            }
+
+
+        }
+
+        public synapseV3GenericResponse submitDocumentToSynapseV3(string MemberId, string ImageUrl)
+        {
+            Logger.Info("MDA -> submitDocumentToSynapseV3 Initialized - [MemberId: " + MemberId + "]");
+
+            var id = Utility.ConvertToGuid(MemberId);
+
+            synapseV3GenericResponse res = new synapseV3GenericResponse();
+
+
+            #region Get User's Synapse OAuth Consumer Key
+
+            string usersSynapseOauthKey = "";
+
+
+            using (var noochConnection = new NOOCHEntities())
+            {
+
+                var usersSynapseDetails = noochConnection.SynapseCreateUserResults.FirstOrDefault(m => m.MemberId == id && m.IsDeleted == false);
+
+
+
+
+                if (usersSynapseDetails == null)
+                {
+                    Logger.Info("MDA -> submitDocumentToSynapseV3 ABORTED: Member's Synapse User Details not found. [MemberId: " + MemberId + "]");
+
+                    res.msg = "Could not find this member's account info";
+
+                    return res;
+                }
+                else
+                {
+
+                    usersSynapseOauthKey = CommonHelper.GetDecryptedData(usersSynapseDetails.access_token);
+                }
+            }
+            #endregion Get User's Synapse OAuth Consumer Key
+
+
+            #region Get User's Fingerprint
+
+            string usersFingerprint = "";
+
+            using (var noochConnection = new NOOCHEntities())
+            {
+                var member = noochConnection.Members.FirstOrDefault(m => m.MemberId == id);
+
+                if (member == null)
+                {
+                    Logger.Info("MDA -> submitDocumentToSynapseV3 ABORTED: Member not found. [MemberId: " + MemberId + "]");
+                    res.msg = "Member not found";
+                    return res;
+                }
+                else
+                {
+                    if (String.IsNullOrEmpty(member.UDID1))
+                    {
+                        Logger.Info("MDA -> submitDocumentToSynapseV3 ABORTED: Member's Fingerprint not found. [MemberId: " + MemberId + "]");
+                        res.msg = "Could not find this member's fingerprint";
+                        return res;
+                    }
+                    else
+                    {
+                        usersFingerprint = member.UDID1;
+                    }
+                }
+            }
+            #endregion Get User's Fingerprint
+
+            #region Call Synapse /user/doc/attachments/add API
+
+            submitDocToSynapseV3Class answers = new submitDocToSynapseV3Class();
+
+            SynapseV3Input_login s_log = new SynapseV3Input_login();
+            s_log.oauth_key = usersSynapseOauthKey;
+            answers.login = s_log;
+            //answers.login.oauth_key = usersSynapseOauthKey;
+
+            submitDocToSynapse_user sdtu = new submitDocToSynapse_user();
+            submitDocToSynapse_user_doc doc = new submitDocToSynapse_user_doc();
+            //doc.attachment = "data:text/csv;base64," + CommonHelper.ConvertImageURLToBase64(ImageUrl).Replace("\\","");
+            doc.attachment = "data:text/csv;base64,SUQsTmFtZSxUb3RhbCAoaW4gJCksRmVlIChpbiAkKSxOb3RlLFRyYW5zYWN0aW9uIFR5cGUsRGF0ZSxTdGF0dXMNCjUxMTksW0RlbW9dIEJlbHogRW50ZXJwcmlzZXMsLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0MzMxNjMwNTEsU2V0dGxlZA0KNTExOCxbRGVtb10gQmVseiBFbnRlcnByaXNlcywtMS4wMCwwLjAwLCxCYW5rIEFjY291bnQsMTQzMzE2MjkxOSxTZXR0bGVkDQo1MTE3LFtEZW1vXSBCZWx6IEVudGVycHJpc2VzLC0xLjAwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDMzMTYyODI4LFNldHRsZWQNCjUxMTYsW0RlbW9dIEJlbHogRW50ZXJwcmlzZXMsLTEuMDAsMC4wMCwsQmFuayBBY2NvdW50LDE0MzMxNjI2MzQsU2V0dGxlZA0KNTExNSxbRGVtb10gQmVseiBFbnRlcnByaXNlcywtMS4wMCwwLjAwLCxCYW5rIEFjY291bnQsMTQzMzE2MjQ5OCxTZXR0bGVkDQo0ODk1LFtEZW1vXSBMRURJQyBBY2NvdW50LC03LjAwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDMyMjUwNTYyLFNldHRsZWQNCjQ4MTIsS2FyZW4gUGF1bCwtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQzMTk5NDAzNixTZXR0bGVkDQo0NzgwLFNhbmthZXQgUGF0aGFrLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDMxODQ5NDgxLFNldHRsZWQNCjQzMTUsU2Fua2FldCBQYXRoYWssLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0Mjk3NzU5MzcsU2V0dGxlZA0KNDMxNCxTYW5rYWV0IFBhdGhhaywtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQyOTc3NTQzNCxTZXR0bGVkDQo0MzEzLFNhbmthZXQgUGF0aGFrLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDI5Nzc1MzY0LFNldHRsZWQNCjQzMTIsU2Fua2FldCBQYXRoYWssLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0Mjk3NzUyNTAsU2V0dGxlZA0KNDMxMSxTYW5rYWV0IFBhdGhhaywtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQyOTc3NTAxMyxTZXR0bGVkDQo0MjM1LFtEZW1vXSBCZWx6IEVudGVycHJpc2VzLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDI5MzMxODA2LFNldHRsZWQNCjQxMzYsU2Fua2FldCBQYXRoYWssLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0Mjg4OTA4NjMsU2V0dGxlZA0KNDAzMCxTYW5rYWV0IFBhdGhhaywtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQyODIxNTM5NixTZXR0bGVkDQo0MDE0LFtEZW1vXSBCZWx6IEVudGVycHJpc2VzLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDI4MTI1MzgwLENhbmNsZWQNCjM4MzIsU2Fua2FldCBQYXRoYWssLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0MjcxMDc0NzAsU2V0dGxlZA0KMzgyNixTYW5rYWV0IFBhdGhhaywtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQyNzAzNTM5MixTZXR0bGVkDQozODI1LFNhbmthZXQgUGF0aGFrLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDI3MDMyOTM3LFNldHRsZWQNCg==";
+
+
+            sdtu.fingerprint = usersFingerprint;
+
+            sdtu.doc = doc;
+
+            answers.user = sdtu;
+
+            //answers.user.doc.attachment = "data:text/csv;base64," + ConvertImageURLToBase64(ImageUrl).Replace("\\", ""); // NEED TO GET THE ACTUAL DOC... EITHER PASS THE BYTES TO THIS METHOD, OR GET FROM DB
+            //answers.user.fingerprint = usersFingerprint;
+
+            string baseAddress = "";
+
+            baseAddress = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) ? "https://sandbox.synapsepay.com/api/v3/user/doc/attachments/add" : "https://synapsepay.com/api/v3/user/doc/attachments/add";
+
+
+            try
+            {
+                var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
+                http.Accept = "application/json";
+                http.ContentType = "application/json";
+                http.Method = "POST";
+
+                string parsedContent = JsonConvert.SerializeObject(answers);
+                ASCIIEncoding encoding = new ASCIIEncoding();
+                Byte[] bytes = encoding.GetBytes(parsedContent);
+
+                Stream newStream = http.GetRequestStream();
+                newStream.Write(bytes, 0, bytes.Length);
+                newStream.Close();
+
+                var response = http.GetResponse();
+                var stream = response.GetResponseStream();
+                var sr = new StreamReader(stream);
+                var content = sr.ReadToEnd();
+
+                kycInfoResponseFromSynapse resFromSynapse = new kycInfoResponseFromSynapse();
+
+                resFromSynapse = JsonConvert.DeserializeObject<kycInfoResponseFromSynapse>(content);
+
+                if (resFromSynapse != null)
+                {
+                    if (resFromSynapse.success.ToString().ToLower() == "true")
+                    {
+                        Logger.Info("MDA -> submitDocumentToSynapseV3 SUCCESSFUL - [MemberID: " + MemberId + "]");
+                        res.isSuccess = true;
+                        res.msg = "";
+                    }
+                    else
+                    {
+                        res.msg = "Got a response, but success was not true";
+                        Logger.Info("MDA -> submitDocumentToSynapseV3 FAILED - Got Synapse response, but success was NOT 'true' - [MemberID: " + MemberId + "]");
+                    }
+                }
+                else
+                {
+                    res.msg = "Verification response was null";
+                    Logger.Info("MDA -> submitDocumentToSynapseV3 FAILED - Synapse response was NULL - [MemberID: " + MemberId + "]");
+                }
+            }
+            catch (WebException ex)
+            {
+                res.msg = "MDA Exception #9575";
+                Logger.Info("MDA -> submitDocumentToSynapseV3 FAILED - Catch [Exception: " + ex + "]");
+            }
+
+            #endregion Call Synapse /user/doc/attachments/add API
+
+
+            return res;
+        }
+
         public List<Tenants> GetTenants(String NoochId)
         {
             using (NOOCHEntities obj = new NOOCHEntities())
@@ -1525,7 +1761,7 @@ namespace noochAdminNew.Controllers
                                   Property = p.PropName,
                                   AutoPay = t.IsAutopayOn,
                                   AdminNote = m.AdminNotes,
-                                  LastPaymentDate= ut.LastPaymentDate
+                                  LastPaymentDate = ut.LastPaymentDate
                               });
 
                 foreach (var t in tenant)
@@ -1544,7 +1780,7 @@ namespace noochAdminNew.Controllers
                         tn.LastPaymentDate1 = Convert.ToDateTime(t.LastPaymentDate).ToString("MMM d, yyyy");
                     }
                     tenants.Add(tn);
-                }               
+                }
                 return tenants;
             }
         }
