@@ -600,6 +600,7 @@ namespace noochAdminNew.Controllers
                     mdc.AccessToken = !String.IsNullOrEmpty(Member.AccessToken) ? Member.AccessToken : "NULL";
                     mdc.lastlat = (Member.LastLocationLat != null && Member.LastLocationLat != 0) ? Member.LastLocationLat.ToString() : "none";
                     mdc.lastlong = (Member.LastLocationLat != null && Member.LastLocationLng != 0) ? Member.LastLocationLng.ToString() : "none";
+                   
 
                     mdc.TransferLimit = Member.TransferLimit ?? "0.00";
 
@@ -788,7 +789,9 @@ namespace noochAdminNew.Controllers
                                    join mem in obj.Members on Syn.MemberId equals mem.MemberId
                                    where Syn.IsDefault == true && mem.Nooch_ID == NoochId
                                    select Syn).FirstOrDefault();
+                  
 
+               
                     mdc.IsSynapseDetailAvailable = (synapse != null);
 
                     if (mdc.IsSynapseDetailAvailable)
@@ -808,6 +811,8 @@ namespace noochAdminNew.Controllers
                         string synapseAuthToken = synapseCreateUserObj.access_token;
                         string synapseRefreshToken = synapseCreateUserObj.refresh_token;
                         string synapseUserId = synapseCreateUserObj.user_id.ToString();
+                                                                    
+                    
 
                         SynapseDetailOFMember synapseDetail = new SynapseDetailOFMember();
 
@@ -845,6 +850,8 @@ namespace noochAdminNew.Controllers
                             synapseDetail.SynapseBankName = !String.IsNullOrEmpty(synapseDetailFromDb.bank_name) ? CommonHelper.GetDecryptedData(synapseDetailFromDb.bank_name) : "Not Found";
 
                             synapseDetail.synapseUserId = synapseUserId;
+                        
+
                         }
                         mdc.SynapseDetails = synapseDetail;
                     }
@@ -1707,11 +1714,21 @@ namespace noochAdminNew.Controllers
                 kycInfoResponseFromSynapse resFromSynapse = new kycInfoResponseFromSynapse();
 
                 resFromSynapse = JsonConvert.DeserializeObject<kycInfoResponseFromSynapse>(content);
-
+                 
                 if (resFromSynapse != null)
                 {
                     if (resFromSynapse.success.ToString().ToLower() == "true")
                     {
+                        //updating member table in database
+                        using (var noochConnection = new NOOCHEntities())
+                        {
+                             
+                            var synapseUser = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == id).FirstOrDefault();
+                            synapseUser.permission = resFromSynapse.user.permission.ToString();
+                            noochConnection.SaveChanges();
+                             
+                        }
+
                         Logger.Info("MDA -> submitDocumentToSynapseV3 SUCCESSFUL - [MemberID: " + MemberId + "]");
                         res.isSuccess = true;
                         res.msg = "";

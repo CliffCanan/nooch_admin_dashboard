@@ -66,6 +66,7 @@ namespace noochAdminNew.Classes.ModelClasses
 
         public List<Tenants> tenants { get; set; }
         public Tenants tenant { get; set; }
+       
     }
 
     public class MemberDetailsTrans
@@ -90,6 +91,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string DeviceToken { get; set; }
         public string AccessToken { get; set; }
         public bool IsUnUsualTrans { get; set; }
+        
 
     }
 
@@ -156,6 +158,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string synapseConsumerKey { get; set; }
         public string synapseRefreshKey { get; set; }
         public string synapseUserId { get; set; }
+       
     }
     public class Tenants
     {
@@ -172,4 +175,5 @@ namespace noochAdminNew.Classes.ModelClasses
         public string LeaseLength { get; set; }
         public string AdminNote { get; set; }
     }
+
 }
