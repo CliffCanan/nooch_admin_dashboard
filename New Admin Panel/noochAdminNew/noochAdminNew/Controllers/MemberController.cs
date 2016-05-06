@@ -565,7 +565,7 @@ namespace noochAdminNew.Controllers
                     mdc.FBID = !String.IsNullOrEmpty(Member.FacebookAccountLogin) ? CommonHelper.GetDecryptedData(Member.FacebookAccountLogin) : "";
                     mdc.FirstName = !String.IsNullOrEmpty(Member.FirstName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.FirstName)) : "";
                     mdc.LastName = !String.IsNullOrEmpty(Member.LastName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.LastName)) : "";
-                    mdc.UserName = !String.IsNullOrEmpty(Member.UserName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.UserName)) : "";
+                    mdc.UserName = !String.IsNullOrEmpty(Member.UserName) ? CommonHelper.GetDecryptedData(Member.UserName) : "";
                     mdc.SecondaryEmail = !String.IsNullOrEmpty(Member.SecondaryEmail) && Member.SecondaryEmail.Length > 40
                                          ? CommonHelper.GetDecryptedData(Member.SecondaryEmail)
                                          : Member.SecondaryEmail;
