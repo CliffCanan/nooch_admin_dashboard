@@ -41,7 +41,6 @@ namespace noochAdminNew.Classes.ModelClasses
         public bool success { get; set; }
         public string ErrorMessage { get; set; }
         public SynapseV3AddTrans_Resp responseFromSynapse { get; set; }
-
     }
 
     public class SynapseV3AddTrans_Resp
@@ -55,11 +54,11 @@ namespace noochAdminNew.Classes.ModelClasses
     {
         public string en { get; set; }
     }
+
     public class SynapseV3AddTrans_Resp_trans
     {
         public SynapseV3AddTrans_Resp_trans_id _id { get; set; }
         public SynapseV3AddTrans_Resp_trans_amount amount { get; set; }
-
         public SynapseV3AddTrans_Resp_trans_client client { get; set; }
         public SynapseV3AddTrans_Resp_trans_extra extra { get; set; }
         public SynapseV3AddTrans_Resp_trans_fees[] fees { get; set; }
@@ -69,13 +68,13 @@ namespace noochAdminNew.Classes.ModelClasses
         public SynapseV3AddTrans_Resp_trans_to to { get; set; }
     }
 
-
     public class SynapseV3AddTrans_Resp_trans_to
     {
         public SynapseNodeId id { get; set; }
         public string type { get; set; }
         public synapseV3_user_reusable_class user { get; set; }
     }
+
     public class SynapseV3AddTrans_Resp_trans_timeline
     {
         public SynapseV3AddTrans_Resp_trans_timeline_date date { get; set; }
@@ -89,6 +88,7 @@ namespace noochAdminNew.Classes.ModelClasses
         [JsonProperty(PropertyName = "$oid")]
         public string oid { get; set; }
     }
+
     public class SynapseV3AddTrans_Resp_trans_amount
     {
         public string amount { get; set; }
@@ -97,7 +97,6 @@ namespace noochAdminNew.Classes.ModelClasses
 
     public class SynapseV3AddTrans_Resp_trans_client
     {
-
         public string id { get; set; }
         public string name { get; set; }
     }
@@ -107,14 +106,13 @@ namespace noochAdminNew.Classes.ModelClasses
         public string ip { get; set; }
         public string note { get; set; }
         public SynapseV3AddTrans_Resp_trans_extra_date process_on { get; set; }
-
         public SynapseV3AddTrans_Resp_trans_extra_date created_on { get; set; }
         public string supp_id { get; set; }
         public string webhook { get; set; }
     }
+
     public class SynapseV3AddTrans_Resp_trans_extra_date
     {
-
         public DateTime date { get; set; }
     }
 
@@ -139,10 +137,7 @@ namespace noochAdminNew.Classes.ModelClasses
     {
         public SynapseNodeId id { get; set; }
         public string type { get; set; }
-
         public synapseV3_user_reusable_class user { get; set; }
-
-
     }
 
     public class SynapseNodeId
@@ -154,13 +149,11 @@ namespace noochAdminNew.Classes.ModelClasses
     public class synapseV3_user_reusable_class
     {
         public synapseV3Result_user_id _id { get; set; }
-
         public string[] legal_names { get; set; }
-
     }
+
     public class synapseV3Result_user_id
     {
-
         [JsonProperty(PropertyName = "$oid")]
         public string id { get; set; }
     }
@@ -172,12 +165,11 @@ namespace noochAdminNew.Classes.ModelClasses
         public string status { get; set; }
         public string status_id { get; set; }
     }
+
     public class SynapseV3AddTrans_Resp_trans_timeline_date
     {
-
         public DateTime date { get; set; }
     }
-
 
     public class synapseSearchUserResponse
     {
@@ -196,6 +188,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public synapseSearchUser_Client client { get; set; }
         public synapseSearchUser_Filter filter { get; set; }
     }
+
     public class synapseSearchUser_Client
     {
         public string client_id { get; set; }
@@ -214,8 +207,6 @@ namespace noochAdminNew.Classes.ModelClasses
         public bool IsPermissionfound { get; set; }
         public string PermissionType { get; set; }
     }
-    
-
 
     public class synapseSearchUserResponse_User
     {
@@ -226,15 +217,18 @@ namespace noochAdminNew.Classes.ModelClasses
         public synapseSearchUserResponse_Node[] nodes { get; set; }
         public object[] photos { get; set; }
     }
+
     public class synapseSearchUserResponse_Id
     {
         public string oid { get; set; }
     }
+
     public class synapseSearchUserResponse_Client
     {
         public int id { get; set; }
         public string name { get; set; }
     }
+
     public class synapseSearchUserResponse_Node
     {
         public synapseSearchUserResponse_Id1 _id { get; set; }
@@ -243,16 +237,17 @@ namespace noochAdminNew.Classes.ModelClasses
         public bool is_active { get; set; }
         public string type { get; set; }
     }
+
     public class synapseSearchUserResponse_Id1
     {
         [JsonProperty(PropertyName = "$oid")]
         public string oid { get; set; }
     }
+
     public class synapseSearchUserResponse_Info
     {
         public string nickname { get; set; }
     }
-
 
     public class SynapseV3AddTransInput
     {
@@ -265,6 +260,7 @@ namespace noochAdminNew.Classes.ModelClasses
     {
         public string oauth_key { get; set; }
     }
+
     public class SynapseV3Input_user
     {
         public string fingerprint { get; set; }
@@ -278,6 +274,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public SynapseV3AddTransInput_trans_extra extra { get; set; }
         public SynapseV3AddTransInput_trans_fees[] fees { get; set; }
     }
+
     public class SynapseV3AddTransInput_trans_from
     {
         public string type { get; set; }
@@ -311,29 +308,27 @@ namespace noochAdminNew.Classes.ModelClasses
         public string note { get; set; }
         public SynapseV3AddTransInput_trans_fees_to to { get; set; }
     }
+
     public class SynapseV3AddTransInput_trans_fees_to
     {
         public string id { get; set; }
     }
-
 
     public class submitDocToSynapseV3Class
     {
         public SynapseV3Input_login login { get; set; }
         public submitDocToSynapse_user user { get; set; }
     }
+
     public class submitDocToSynapse_user
     {
         public submitDocToSynapse_user_doc doc { get; set; }
         public string fingerprint { get; set; }
     }
 
-
     public class submitDocToSynapse_user_doc
     {
         public object attachment { get; set; } // this should be a Base64 encoded image
     }
-
-
     
 }

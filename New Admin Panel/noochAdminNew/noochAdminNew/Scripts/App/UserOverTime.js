@@ -1,76 +1,73 @@
 ﻿var NoochId = '';
+var dateType = 'daily';
 
-
-$(document).ready(function () {
-    window.onload = function () {
-       
-        new JsDatePick({
+$(document).ready(function ()
+{
+    window.onload = function ()
+    {
+        /*new JsDatePick({
             useMode: 2,
             target: "startDate",
             dateFormat: "%d-%M-%Y"
-
         });
         new JsDatePick({
             useMode: 2,
             target: "endDate",
             dateFormat: "%d-%M-%Y"
-
-        });
+        });*/
     };
-     
+
     $("#GraphMenuExpander").trigger("click");
     $('#UserOverTimeMenu').addClass('active');
 
     Member.getUserOverTime("daily");
-    
-   
-   
-
 });
 
 
-function showDate() {
+function showDate()
+{
     $('.showDate').removeClass('hide');
 }
-function generateBar(data1, label,ticks) {
-     
+
+function generateBar(data1, ticks)
+{
     var barData = new Array();
-     
-     
+
     barData.push({
         data: data1,
-        label: label,
+        label: dateType,
+        highlightColor: '#1d83b7',
         bars: {
+            align: 'center',
             show: true,
-            barWidth: 0.08,
+            barWidth: 0.35,
             order: 1,
             lineWidth: 0,
-            fillColor: '#EDC240'
-        }
+            fillColor: '#3fabe1'
+        },
     });
 
-
-
-    /* Let's create the chart */
+    // Create the chart
     if ($('#bar-chart')[0]) {
         $.plot($("#bar-chart"), barData, {
             grid: {
                 borderWidth: 1,
-                borderColor: '#eee',
+                borderColor: '#ddd',
                 show: true,
                 hoverable: true,
-                clickable: true
+                clickable: false
             },
 
             yaxis: {
-                tickColor: '#eee',
+                tickColor: '#ddd',
                 tickDecimals: 0,
                 font: {
-                    lineHeight: 13,
+                    lineHeight: 18,
+                    size: 14,
                     style: "normal",
-                    color: "#9f9f9f",
+                    color: "#444",
                 },
-                shadowSize: 0
+                shadowSize: 1
             },
 
             xaxis: {
@@ -78,35 +75,30 @@ function generateBar(data1, label,ticks) {
                 tickColor: '#fff',
                 tickDecimals: 0,
                 font: {
-                    lineHeight: 13,
+                    lineHeight: 18,
+                    size: 14,
                     style: "normal",
-                    color: "#9f9f9f"
+                    color: "#444"
                 },
                 shadowSize: 0,
             },
 
             legend: {
+                show: false,
                 container: '.flc-bar',
-                backgroundOpacity: 0.5,
-                noColumns: 0,
-                backgroundColor: "white",
-                lineWidth: 0
             }
         });
     }
 
     /* Tooltips for Flot Charts */
-
     if ($(".flot-chart")[0]) {
-        $(".flot-chart").bind("plothover", function (event, pos, item) {
+        $(".flot-chart").bind("plothover", function (event, pos, item)
+        {
             if (item) {
-                 
-                
                 var x = item.datapoint[0].toFixed(2),
-                    
                     y = item.datapoint[1].toFixed(2);
-                
-                $(".flot-tooltip").html(Math.round(y)+" Users").css({ top: item.pageY + 5, left: item.pageX + 5 }).show();
+
+                $(".flot-tooltip").html(Math.round(y) + " Users").css({ top: item.pageY + 5, left: item.pageX + 5 }).show();
             }
             else {
                 $(".flot-tooltip").hide();
@@ -117,102 +109,123 @@ function generateBar(data1, label,ticks) {
     }
 }
 
+// When selecting a Date Type from the Actions Dropdown Menu
+function updateDateType(newDateType)
+{
+    // Set global var 'dateType'
+    dateType = newDateType;
 
+    Member.getUserOverTime();
+}
 
-var Member = function () {
-    function getUserOverTime(type) {
-         
+// On Clicking the 'Apply' Button
+$('#userFilter').submit(function (event)
+{
+    event.preventDefault();
+
+    Member.getUserOverTime();
+});
+
+var Member = function ()
+{
+    function getUserOverTime()
+    {
         var fromDate = '';
         var toDate = '';
-        if(type=='r')
-            type = $('.legendLabel').html();
-        if (type == 'dateRange') {
+
+        if (dateType == 'dateRange') {
             fromDate = $('#startDate').val();
             toDate = $('#endDate').val();
         }
 
-         
-        $('#headerUserOverTime').text('Bar Chart for showing Graph of Users over time ( ' + type+' )');
-         
-        var status=($('input[name="status"]:checked').val());
+        var userType = ($('input[name="userType"]:checked').val());
+        var userStatus = ($('input[name="userStatus"]:checked').val());
+
+        $('#headerUserOverTime').html('Users Over Time  | <span style="font-size:90%; opacity:.7;">' + dateType + '</span>');
+
         var data1 = [];
         var ticks = [];
-        var url = "GetUsersOverTimeOverTimeData?recordType=" + type + "&status=" + status + "&fromDate="+fromDate+"&toDate="+toDate;
+        var url = "GetUsersOverTimeOverTimeData?dateType=" + dateType + "&userType=" + userType + "&userStatus=" + userStatus + "&fromDate=" + fromDate + "&toDate=" + toDate;
+
+        console.log(url);
+
         var data = {};
 
-        if ((type == 'dateRange')) {
+        var typeString = "&nbsp;<em>ALL</em>";
+        if (userType == 1)
+            typeString = "&nbsp;<em>Registered Only</em>"
+        else if (userType == 2)
+            typeString = "&nbsp;<em>Non-Registered Only</em>"
 
+        var statusString = "&nbsp;<em>ALL</em>";
+        if (userStatus == 1)
+            statusString = "&nbsp;<em>Active Only</em>"
+        else if (userStatus == 2)
+            statusString = "&nbsp;<em>Deleted Only</em>"
+
+        if (dateType == 'dateRange') {
             if ($('#frmTarget').parsley().validate()) {
-                $.post(url, data, function (result) {
-                    console.log(result.Duration.durationdata);
-                    if (result.IsSuccess) {
-                        $('#myModal').css('display', 'none');
-                        $(result.externalData).each(function (index) {
+                $.post(url, data, function (result)
+                {
+                    console.log(result);
 
+                    if (result.IsSuccess) {
+                        $('#customDateModal').modal('hide');
+
+                        $(result.externalData).each(function (index)
+                        {
                             data1.push(this.internalData);
                         });
-                        $(result.Duration).each(function (index) {
 
+                        $(result.Duration).each(function (index)
+                        {
                             ticks.push(this.durationData);
                         });
                         console.log(ticks);
-                        generateBar(data1, type, ticks);
 
+                        generateBar(data1, ticks);
 
-                        toastr.success(result.Message, 'Sucess!');
-
-
+                        toastr.success('<strong>' + statusString + '</strong> users loaded.', 'Success!');
                     }
                     else {
-
                         toastr.error(result.Message, 'Error');
-
                     }
                 });
             }
         }
-        else if (type != 'dateRange') {
-            $.post(url, data, function (result) {
-                $('#myModal').css('display', 'none');
-                console.log(result.Duration.durationdata);
+        else {
+            $.post(url, data, function (result)
+            {
+                console.log(result);
+
                 if (result.IsSuccess) {
 
-                    $(result.externalData).each(function (index) {
-
+                    $(result.externalData).each(function (index)
+                    {
                         data1.push(this.internalData);
                     });
-                    $(result.Duration).each(function (index) {
 
+                    $(result.Duration).each(function (index)
+                    {
                         ticks.push(this.durationData);
                     });
+
                     console.log(ticks);
-                    generateBar(data1, type, ticks);
 
+                    generateBar(data1, ticks);
 
-                    toastr.success(result.Message, 'Sucess!');
-
-
+                    toastr.success('<strong>Type:</strong> ' + typeString + '<br/><strong>Status:</strong> ' + statusString, 'Success!');
                 }
                 else {
-
-                    toastr.error(result.Message, 'Error');
-
+                    toastr.error('Unable to generate chart data from server.', 'Error');
                 }
             });
         }
-       
-        
-
     }
-
-
-
 
 
     return {
         getUserOverTime: getUserOverTime,
-        showDate:showDate
-       
-
+        showDate: showDate
     };
 }();

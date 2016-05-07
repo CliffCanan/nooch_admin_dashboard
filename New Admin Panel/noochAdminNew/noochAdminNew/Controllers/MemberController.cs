@@ -42,7 +42,6 @@ namespace noochAdminNew.Controllers
                 return Json(mr);
             }
 
-
             try
             {
                 noochIds = noochIds.TrimEnd(',');
@@ -398,7 +397,6 @@ namespace noochAdminNew.Controllers
         }
 
 
-
         /// <summary>
         /// For getting the page to view ALL MEMBERS.
         /// </summary>
@@ -411,6 +409,7 @@ namespace noochAdminNew.Controllers
             return View(AllMemberFormtted);
         }
 
+
         [HttpGet, OutputCache(NoStore = true, Duration = 1)]
         public ActionResult ListAllLandlords()
         {
@@ -418,6 +417,7 @@ namespace noochAdminNew.Controllers
 
             return View(AllLandlords);
         }
+
 
         [HttpGet, OutputCache(NoStore = true, Duration = 1)]
         public ActionResult ListAllTenants()
@@ -537,7 +537,6 @@ namespace noochAdminNew.Controllers
         }
 
 
-
         [HttpGet, OutputCache(NoStore = true, Duration = 1)]
         public ActionResult Detail(string NoochId)
         {
@@ -600,8 +599,6 @@ namespace noochAdminNew.Controllers
                     mdc.AccessToken = !String.IsNullOrEmpty(Member.AccessToken) ? Member.AccessToken : "NULL";
                     mdc.lastlat = (Member.LastLocationLat != null && Member.LastLocationLat != 0) ? Member.LastLocationLat.ToString() : "none";
                     mdc.lastlong = (Member.LastLocationLat != null && Member.LastLocationLng != 0) ? Member.LastLocationLng.ToString() : "none";
-                   
-
                     mdc.TransferLimit = Member.TransferLimit ?? "0.00";
 
                     //Get the Refered Code Used
@@ -910,35 +907,37 @@ namespace noochAdminNew.Controllers
             }
             return View(mdc);
         }
+
+
         [HttpPost]
         [ActionName("ReSendVrificationSMS")]
         public ActionResult ReSendVrificationSMS(string noochIds)
         {
-
             MemberOperationsResult res = new MemberOperationsResult();
+            res.IsSuccess = false;
+
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-                var member = (from t in obj.Members where t.Nooch_ID == noochIds && t.IsDeleted == false select t).SingleOrDefault();
+                var member = (from t in obj.Members
+                              where t.Nooch_ID == noochIds && t.IsDeleted == false
+                              select t).SingleOrDefault();
+
                 if (member != null)
                 {
                     string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
                     string MessageBody = "Hi " + fname + ", This is Nooch - just need to verify this is your phone number. Please reply 'Go' to confirm your phone number.";
                     res.Message = Utility.SendSMS(Utility.RemovePhoneNumberFormatting(member.ContactNumber), MessageBody, member.MemberId.ToString());
+
                     if (res.Message != "Failure")
                     {
                         res.IsSuccess = true;
                     }
-                    else
-                    {
-                        res.IsSuccess = false;
-                    }
-
                 }
             }
 
             return Json(res);
-
         }
+
 
         /// <summary>
         /// Updates a member's Nooch account details.
@@ -1443,7 +1442,6 @@ namespace noochAdminNew.Controllers
             {
                 using (var noochConnection = new NOOCHEntities())
                 {
-                    // getting member from db
                     var mem = noochConnection.Members.FirstOrDefault(c => c.Nooch_ID == noochId && c.IsDeleted == false);
 
                     mem.AdminNotes = AdminNote;
@@ -1469,7 +1467,11 @@ namespace noochAdminNew.Controllers
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 var temp = CommonHelper.GetRandomTransactionTrackingId();
-                var member = (from t in obj.Members where t.Nooch_ID == noochIds && t.IsDeleted == false select t).SingleOrDefault();
+
+                var member = (from t in obj.Members 
+                              where t.Nooch_ID == noochIds && t.IsDeleted == false
+                              select t).SingleOrDefault();
+
                 if (member != null)
                 {
                     member.Password = CommonHelper.GetEncryptedData(newPassword);
@@ -1504,6 +1506,7 @@ namespace noochAdminNew.Controllers
                         res.IsSuccess = false;
                 }
             }
+
             return Json(res);
         }
 
@@ -1522,9 +1525,7 @@ namespace noochAdminNew.Controllers
         [ActionName("UploadDoc")]
         public ActionResult UploadDoc(HttpPostedFileBase file, string NoochId)
          {
-             
                 SaveVerificationIdDocument DocumentDetails = new SaveVerificationIdDocument();
-
 
                 using (var noochConnection = new NOOCHEntities())
                 {
@@ -1541,13 +1542,12 @@ namespace noochAdminNew.Controllers
                     file.SaveAs(path);
                     DocumentDetails.imgPath = path;
                     var mdaResult = submitDocumentToSynapseV3(DocumentDetails);
-                    ViewData["IsSuccess"] = mdaResult.isSuccess; 
-                    return RedirectToAction("Detail", "Member", new { NoochId });
-                        
-            }
+                    ViewData["IsSuccess"] = mdaResult.isSuccess;
 
-             
+                    return RedirectToAction("Detail", "Member", new { NoochId });
+            }             
         }
+
 
         public synapseV3GenericResponse submitDocumentToSynapseV3(SaveVerificationIdDocument DocumentDetails)
         {
@@ -1555,26 +1555,19 @@ namespace noochAdminNew.Controllers
 
             try
             {
-                Logger.Info("Service layer - submitDocumentToSynapseV3 [MemberId: " + DocumentDetails.MemberId + "]");
+                Logger.Info("MemberController -> submitDocumentToSynapseV3 [MemberId: " + DocumentDetails.MemberId + "]");
 
-
-
-
-                // making url from byte array...coz submitDocumentToSynapseV3 expects url of image.
-
+                // Make URL from byte array...b/c submitDocumentToSynapseV3() expects URL of image.
                 string ImageUrlMade = "";
 
                 if ((DocumentDetails.imgPath != ""))
                 {
-
                     ImageUrlMade = Utility.GetValueFromConfig("PhotoUrl") + DocumentDetails.MemberId + ".png";
-                   
                 }
                 else
                 {
                     ImageUrlMade = Utility.GetValueFromConfig("PhotoUrl") + "gv_no_photo.png";
                 }
-
 
                 var mdaResult = submitDocumentToSynapseV3(DocumentDetails.MemberId, ImageUrlMade);
 
@@ -1589,9 +1582,8 @@ namespace noochAdminNew.Controllers
 
                 throw new Exception("Server Error.");
             }
-
-
         }
+
 
         public synapseV3GenericResponse submitDocumentToSynapseV3(string MemberId, string ImageUrl)
         {
@@ -1753,23 +1745,15 @@ namespace noochAdminNew.Controllers
 
             #endregion Call Synapse /user/doc/attachments/add API
 
-
             return res;
         }
+
 
         public List<Tenants> GetTenants(String NoochId)
         {
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 List<Tenants> tenants = new List<Tenants>();
-
-                //var tenant = ( from uot in obj.UnitsOccupiedByTenants
-                //join pu in obj.PropertyUnits
-                //    on uot.UnitId equals pu.UnitId
-                //join prop in obj.Properties on pu.PropertyId equals prop.PropertyId
-                //join ten in obj.Tenants on pu.MemberId equals ten.MemberId
-                //join mem in obj.Members on pu.MemberId equals mem.MemberId
-                //where mem.Nooch_ID == NoochId                                                                                     
 
                 var tenant = (from t in obj.Tenants
                               join ut in obj.UnitsOccupiedByTenants on t.TenantId equals ut.TenantId
@@ -1807,11 +1791,11 @@ namespace noochAdminNew.Controllers
                     {
                         tn.LastPaymentDate1 = Convert.ToDateTime(t.LastPaymentDate).ToString("MMM d, yyyy");
                     }
+
                     tenants.Add(tn);
                 }
                 return tenants;
             }
         }
-
     }
 }

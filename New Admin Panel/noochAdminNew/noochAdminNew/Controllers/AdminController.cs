@@ -566,11 +566,11 @@ namespace noochAdminNew.Controllers
                     //     select t).ToList();
 
                     c = (from t in obj.Members
-                         
-                         where t.IsVerifiedWithSynapse==true &&
+
+                         where t.IsVerifiedWithSynapse == true &&
                                t.Status == "Active" &&
-                               t.IsVerifiedPhone == true 
-                             
+                               t.IsVerifiedPhone == true
+
                          select t).ToList();
 
                     dd.TotalActiveAndVerifiedBankAccountUsers = c.Count;
@@ -670,646 +670,644 @@ namespace noochAdminNew.Controllers
             return View();
         }
 
-// Commented out this method coz.. knoxAccountDetails table is no longer in db  -- Malkit 21 Jan 16
-
-//        [HttpPost]
-//        [ActionName("CreditFundToMemberPost")]
-//        public ActionResult CreditFundToMemberPost(string transferfundto, string transferAmount, string transferNotes, string adminPin)
-//        {
-//            LoginResult lr = new LoginResult();
-//            // performing validations over input
-
-//            #region input validations
-
-//            if (String.IsNullOrEmpty(transferfundto))
-//            {
-//                lr.IsSuccess = false;
-//                lr.Message = "Please enter user name or NoochId of Member to transfer fund.";
-//            }
-//            if (String.IsNullOrEmpty(transferAmount))
-//            {
-//                lr.IsSuccess = false;
-//                lr.Message = "Please enter transfer fund amount";
-//            }
-
-//            if (String.IsNullOrEmpty(transferNotes))
-//            {
-//                lr.IsSuccess = false;
-//                lr.Message = "Please enter transfer notes.";
-//            }
-//            if (String.IsNullOrEmpty(adminPin))
-//            {
-//                lr.IsSuccess = false;
-//                lr.Message = "Please enter admin pin.";
-//            }
-
-//            #endregion
-
-//            // CLIFF (9/7/15): THIS MUST BE UPDATED TO USE SYNAPSE V3 INSTEAD OF KNOX
-
-//            // **********************  THIS REMAINS INCOMPLETE!  **********************
-
-//            // 1. check admin user knox account and other details
-//            // 2. check fund receiver knox account details
-
-//            // Check admin user details
-//            using (NOOCHEntities obj = new NOOCHEntities())
-//            {
-//                var adminUserDetails =
-//                    (from c in obj.Members
-//                     where c.UserName == "z2/de4EMabGlzMuO7OocHw==" &&
-//                           c.Status == "Active" &&
-//                           c.PinNumber == CommonHelper.GetEncryptedData(adminPin.Trim())
-//                     select c).SingleOrDefault();
-
-//                if (adminUserDetails != null)
-//                {
-//                    Guid AdminMemberId = Utility.ConvertToGuid(adminUserDetails.MemberId.ToString());
-
-//                    // Get Synapse account details of admin
-//                    var adminSynapseDetails =
-//                        (from c in obj.SynapseBanksOfMembers
-//                         where c.MemberId == AdminMemberId && c.IsDefault == true
-//                         select c).SingleOrDefault();
-
-//                    if (adminSynapseDetails != null)
-//                    {
-//                        // Now get the Recipient's info from Members table
-//                        string recepientusernameencrypted = CommonHelper.GetEncryptedData(transferfundto.ToLower());
-
-//                        var recipientMemberDetails = (from c in obj.Members
-//                                                      where c.Nooch_ID == transferfundto ||
-//                                                            c.UserName == recepientusernameencrypted &&
-//                                                            c.Status == "Active"
-//                                                      select c).SingleOrDefault();
-
-//                        if (recipientMemberDetails != null)
-//                        {
-//                            // Now check recipient's Synapse details
-//                            Guid recepeintGuid = Utility.ConvertToGuid(recipientMemberDetails.MemberId.ToString());
-
-//                            var recipientBankDetails =
-//                                (from c in obj.KnoxAccountDetails
-//                                 where c.MemberId == recepeintGuid && c.IsDeleted == false
-//                                 select c).SingleOrDefault();
-
-//                            if (recipientBankDetails != null)
-//                            {
-//                                string transactionTrackingId = GetRandomTransactionTrackingId();
-
-//                                Transaction trans = new Transaction();
-//                                trans.TransactionId = Guid.NewGuid();
-//                                trans.SenderId = AdminMemberId;
-//                                trans.RecipientId = recepeintGuid;
-//                                trans.Amount = Convert.ToDecimal(transferAmount);
-
-//                                trans.TransactionDate = DateTime.Now;
-//                                trans.DisputeStatus = null;
-//                                trans.TransactionStatus = "Success";
-//                                trans.TransactionType = CommonHelper.GetEncryptedData("Reward");
-//                                trans.DeviceId = null;
-//                                trans.TransactionTrackingId = transactionTrackingId;
-//                                trans.Memo = transferNotes.Trim();
-//                                trans.Picture = null;
-
-//                                GeoLocation geo = new GeoLocation();
-//                                geo.LocationId = Guid.NewGuid();
-//                                geo.Latitude = null;
-//                                geo.Longitude = null;
-//                                geo.Altitude = null;
-//                                geo.AddressLine1 = null;
-//                                geo.AddressLine2 = null;
-//                                geo.City = null;
-//                                geo.State = null;
-//                                geo.Country = null;
-//                                geo.ZipCode = null;
-//                                geo.DateCreated = DateTime.Now;
-
-
-//                                // making api call to knox
-//                                WebClient wc = new WebClient();
-
-//                                string KNoxApiKey = Utility.GetValueFromConfig("KnoxApiKey");
-//                                string KNoxApiPass = Utility.GetValueFromConfig("KnoxApiPass");
-
-//                                string c = "https://knoxpayments.com/json/pinpayment.php?payee_key=" +
-//                                    //RECEPEINT_USER_KEY +
-//                                    //"&payee_pass=" + RECEPEINT_USER_PASS + "&payor_key=" + ADMIN_USER_KEY +
-//                                           "&payor_pass=" +
-//                                    //ADMIN_USER_PASS + "&trans_id=" + trans.TransactionId + "&PARTNER_KEY=" +
-//                                           KNoxApiKey + "&amount=" + trans.Amount + "&recur_status=ot";
-//                                string knoxPinPaymentResults = wc.DownloadString(c);
-
-//                                ResponseClass3 m = JsonConvert.DeserializeObject<ResponseClass3>(knoxPinPaymentResults);
-//                                if (m != null)
-//                                {
-//                                    #region parsed response successfully
-//                                    /*
-//                                    string KnoxTransStatus = m.JSonDataResult.status_code;
-//                                    string KnoxTransErrorCode = m.JSonDataResult.error_code;
-//                                    string KnoxTransId = m.JSonDataResult.trans_id;
-
-//                                    if (KnoxTransStatus != null)
-//                                    {
-//                                        Logger.Info(
-//                                            "TransferFundToMemberFromNEWADMIN_PANLE -> knoxPinPaymentResult Status Code for Nooch TransID [" +
-//                                            trans.TransactionId + "] is: " + KnoxTransStatus);
-//                                    }
-//                                    if (KnoxTransErrorCode != null)
-//                                    {
-//                                        Logger.Info(
-//                                            "TransferFundToMemberFromNEWADMIN_PANLE -> knoxPinPaymentResult ERROR Code for Nooch TransID [" +
-//                                            trans.TransactionId + "] is: " + KnoxTransErrorCode);
-//                                    }
-
-//                                    if (KnoxTransStatus == "PAID" && KnoxTransErrorCode == null)
-//                                    {
-//                                        #region Knox returned Paid
-
-//                                        #region email content preparation
-
-//                                        string senderFirstName =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(adminUserDetails.FirstName));
-//                                        string senderLastName =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(adminUserDetails.LastName));
-//                                        string recipientFirstName =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(recepientdetails.FirstName));
-//                                        string recipientLastName =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(recepientdetails.LastName));
-
-//                                        string wholeAmount = trans.Amount.ToString("n2");
-//                                        string[] s3 = wholeAmount.Split('.');
-//                                        string ce = "";
-//                                        string dl = "";
-//                                        if (s3.Length <= 1)
-//                                        {
-//                                            dl = s3[0].ToString();
-//                                            ce = "00";
-//                                        }
-//                                        else
-//                                        {
-//                                            ce = s3[1].ToString();
-//                                            dl = s3[0].ToString();
-//                                        }
-
-//                                        string memo = "";
-//                                        if (trans.Memo != null && trans.Memo != "")
-//                                        {
-//                                            if (trans.Memo.Length > 3)
-//                                            {
-//                                                string firstThreeChars = trans.Memo.Substring(0, 3).ToLower();
-//                                                bool startWithFor = firstThreeChars.Equals("for");
-
-//                                                if (startWithFor)
-//                                                {
-//                                                    memo = trans.Memo.ToString();
-//                                                }
-//                                                else
-//                                                {
-//                                                    memo = "For " + trans.Memo.ToString();
-//                                                }
-//                                            }
-//                                            else
-//                                            {
-//                                                memo = "For " + trans.Memo.ToString();
-//                                            }
-//                                        }
-
-//                                        #endregion
-
-//                                        string senderPic;
-//                                        string recipientPic;
-//                                        var friendDetails =
-//                                            CommonHelper.GetMemberNotificationSettings(
-//                                                adminUserDetails.MemberId.ToString());
-
-//                                        #region email to admin on successfully sending fund
-
-//                                        if (friendDetails != null)
-//                                        {
-//                                            // for TransferSent email notification
-//                                            if (friendDetails != null && (friendDetails.EmailTransferSent ?? false))
-//                                            {
-//                                                if (recepientdetails.Photo != null && recepientdetails.Photo != "")
-//                                                {
-//                                                    string lastFourOfRecipientsPic =
-//                                                        recepientdetails.Photo.Substring(recepientdetails.Photo.Length -
-//                                                                                         15);
-//                                                    if (lastFourOfRecipientsPic != "gv_no_photo.png")
-//                                                    {
-//                                                        recipientPic = "";
-//                                                    }
-//                                                    else
-//                                                    {
-//                                                        recipientPic = recepientdetails.Photo.ToString();
-//                                                    }
-//                                                }
-
-//                                                var tokens = new Dictionary<string, string>
-//                                                {
-//                                                    {Constants.PLACEHOLDER_FIRST_NAME, senderFirstName},
-//                                                    {
-//                                                        Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
-//                                                        recipientFirstName + " " + recipientLastName
-//                                                    },
-//                                                    {Constants.PLACEHOLDER_TRANSFER_AMOUNT, dl},
-//                                                    {Constants.PLACEHLODER_CENTS, ce},
-//                                                    {Constants.MEMO, memo}
-//                                                };
-
-//                                                var fromAddress = Utility.GetValueFromConfig("transfersMail");
-//                                                var toAddress = CommonHelper.GetDecryptedData(adminUserDetails.UserName);
-
-//                                                try
-//                                                {
-//                                                    // email notification
-//                                                    //Utility.SendEmail("TransferSent", 
-//                                                    //    fromAddress, toAddress, null,
-//                                                    //    "Your $" + wholeAmount + " payment to " + recipientFirstName +
-//                                                    //    " on Nooch",
-//                                                    //    null, tokens, null, null, null);
-
-//                                                    Utility.SendEmail("TransferSent", fromAddress, toAddress,
-//                                                        "Your $ " + wholeAmount + " payment to " + recipientFirstName +
-//                                                        " on Nooch", null,
-//                                                        tokens, null, null, null);
-
-
-//                                                    Logger.Info(
-//                                                        "Add fund to members account New Admin --> TransferSent status mail sent to [" +
-//                                                        toAddress + "].");
-//                                                }
-//                                                catch (Exception)
-//                                                {
-//                                                    Logger.Error(
-//                                                        "Add fund to members account New Admin --> TransferSent mail NOT sent to [" +
-//                                                        toAddress +
-//                                                        "]. Problem occurred in sending mail.");
-//                                                }
-
-
-//                                            }
-//                                        }
-
-//                                        #endregion
-
-
-//                                        #region EmailAndPushNotificationToRecepientOnTransferReceive
-
-//                                        // for push notification
-//                                        //var friendDetails = memberDataAccess.GetMemberNotificationSettingsByUserName(CommonHelper.GetDecryptedData(receiverAccountDetail.UserName));
-//                                        var friendDetails2 =
-//                                            CommonHelper.GetMemberNotificationSettings(
-//                                                recepientdetails.MemberId.ToString());
-//                                        if (friendDetails2 != null)
-//                                        {
-//                                            string deviceId2 = friendDetails2 != null
-//                                                ? recepientdetails.DeviceToken
-//                                                : null;
-
-//                                            string mailBodyText = "You received $" + wholeAmount + " from " +
-//                                                                  senderFirstName +
-//                                                                  " " + senderLastName;
-
-//                                            if ((friendDetails2.TransferReceived == null)
-//                                                ? false
-//                                                : friendDetails2.TransferReceived.Value)
-//                                            {
-//                                                try
-//                                                {
-//                                                    // push notifications
-//                                                    if (friendDetails2 != null && !String.IsNullOrEmpty(deviceId2) &&
-//                                                        (friendDetails2.TransferReceived ?? false))
-//                                                    {
-//                                                        Utility.SendNotificationMessage(mailBodyText, 1,
-//                                                            null, deviceId2,
-//                                                            Utility.GetValueFromConfig("AppKey"),
-//                                                            Utility.GetValueFromConfig("MasterSecret"));
-
-//                                                        Logger.Info(
-//                                                            "Add fund to member from new admin panel --> Push notification sent to Sender DeviceID:[" +
-//                                                            deviceId2 + "] successfully.");
-//                                                    }
-//                                                }
-//                                                catch (Exception)
-//                                                {
-//                                                    Logger.Error(
-//                                                        "Add fund to member from new admin panel --> Error: Push notification NOT sent to Sender DeviceID: [" +
-//                                                        deviceId2 + "]");
-//                                                }
-//                                            }
-
-//                                            // for TransferReceived email notification
-//                                            if (friendDetails2 != null &&
-//                                                (friendDetails2.EmailTransferReceived ?? false))
-//                                            {
-//                                                if (adminUserDetails.Photo != null && adminUserDetails.Photo != "")
-//                                                {
-//                                                    string lastFourOfSendersPic =
-//                                                        adminUserDetails.Photo.Substring(adminUserDetails.Photo.Length -
-//                                                                                         15);
-//                                                    if (lastFourOfSendersPic != "gv_no_photo.png")
-//                                                    {
-//                                                        senderPic = "";
-//                                                    }
-//                                                    else
-//                                                    {
-//                                                        senderPic = adminUserDetails.Photo.ToString();
-//                                                    }
-//                                                }
-
-//                                                var tokensR = new Dictionary<string, string>
-//                                                {
-//                                                    {Constants.PLACEHOLDER_FIRST_NAME, recipientFirstName},
-//                                                    {
-//                                                        Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
-//                                                        senderFirstName + " " + senderLastName
-//                                                    },
-//                                                    {Constants.PLACEHOLDER_TRANSFER_AMOUNT, wholeAmount},
-//                                                    {
-//                                                        Constants.PLACEHOLDER_TRANSACTION_DATE,
-//                                                        Convert.ToDateTime(trans.TransactionDate)
-//                                                            .ToString("MMM dd")
-//                                                    },
-//                                                    {Constants.MEMO, memo}
-//                                                };
-
-//                                                // for TransferReceived email notification                            
-//                                                var fromAddress = Utility.GetValueFromConfig("transfersMail");
-//                                                var toAddress2 = CommonHelper.GetDecryptedData(recepientdetails.UserName);
-
-//                                                try
-//                                                {
-//                                                    // email notification
-//                                                    Utility.SendEmail("TransferReceived", fromAddress, toAddress2,
-//                                                        senderFirstName + " sent you $" + wholeAmount + " with Nooch",
-//                                                        null, tokensR, null, null, null);
-
-//                                                    Logger.Info(
-//                                                        "Add fund to member from new admin panel --> TransferReceived Email sent to [" +
-//                                                        toAddress2 + "] successfully.");
-//                                                }
-//                                                catch (Exception)
-//                                                {
-//                                                    Logger.Error(
-//                                                        "Add fund to member from new admin panel --> Error: TransferReceived Email NOT sent to [" +
-//                                                        toAddress2 + "]");
-//                                                }
-//                                            }
-//                                        }
-
-//                                        #endregion
-
-
-
-//                                        try
-//                                        {
-//                                            obj.GeoLocations.Add(geo);
-
-//                                            obj.SaveChanges();
-
-
-//                                            obj.Transactions.Add(trans);
-//                                            obj.SaveChanges();
-//                                            lr.IsSuccess = true;
-//                                            lr.Message = "fund succesfully added to member account.";
-//                                        }
-//                                        catch (Exception)
-//                                        {
-
-//                                            lr.IsSuccess = false;
-//                                            lr.Message = "Error occured while saving transaction in db.";
-//                                        }
-
-
-//                                        #endregion
-//                                    }
-//                                    else
-//                                    {
-//                                        #region emailSendingonTransferAttemtFailure
-
-//                                        // for push notification in case of failure
-
-//                                        var senderNotificationSettings =
-//                                            CommonHelper.GetMemberNotificationSettings(
-//                                                adminUserDetails.MemberId.ToString());
-
-//                                        if (senderNotificationSettings != null)
-//                                        {
-//                                            string senderFirstNameFailure =
-//                                                CommonHelper.UppercaseFirst(
-//                                                    CommonHelper.GetDecryptedData(adminUserDetails.FirstName));
-//                                            string senderLastNameFailure =
-//                                                CommonHelper.UppercaseFirst(
-//                                                    CommonHelper.GetDecryptedData(adminUserDetails.LastName));
-//                                            string recipientFirstNameFailure =
-//                                                CommonHelper.UppercaseFirst(
-//                                                    CommonHelper.GetDecryptedData(recepientdetails.FirstName));
-//                                            string recipientLastNameFailure =
-//                                                CommonHelper.UppercaseFirst(
-//                                                    CommonHelper.GetDecryptedData(recepientdetails.LastName));
-
-
-//                                            // for TransferAttemptFailure email notification
-//                                            if (senderNotificationSettings != null &&
-//                                                (senderNotificationSettings.EmailTransferAttemptFailure ?? false))
-//                                            {
-//                                                string s2 = trans.Amount.ToString("n2");
-//                                                string[] s3 = s2.Split('.');
-
-//                                                var tokensF = new Dictionary<string, string>
-//                                                {
-//                                                    {
-//                                                        Constants.PLACEHOLDER_FIRST_NAME,
-//                                                        senderFirstNameFailure + " " + senderLastNameFailure
-//                                                    },
-//                                                    {
-//                                                        Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
-//                                                        CommonHelper.GetDecryptedData(recepientdetails.UserName)
-//                                                    },
-//                                                    {Constants.PLACEHOLDER_TRANSFER_AMOUNT, s3[0].ToString()},
-//                                                    {Constants.PLACEHLODER_CENTS, s3[1].ToString()},
-//                                                };
-
-//                                                var fromAddress = Utility.GetValueFromConfig("transfersMail");
-//                                                var toAddress = CommonHelper.GetDecryptedData(adminUserDetails.UserName);
-
-//                                                try
-//                                                {
-//                                                    // email notification
-//                                                    Utility.SendEmail("transferFailure",
-//                                                        fromAddress, toAddress, null,
-//                                                        "Nooch transfer failure", tokensF, null, null, null);
-
-//                                                    Logger.Info(
-//                                                        "Add fund to member new admin panel --> Transfer FAILED --> Email sent to Sender: [" +
-//                                                        toAddress + "] successfully.");
-//                                                }
-//                                                catch (Exception)
-//                                                {
-//                                                    Logger.Error(
-//                                                        "Add fund to member new admin panel --> Error: TransferAttemptFailure mail not sent to [" +
-//                                                        toAddress + "]");
-//                                                }
-//                                            }
-//                                        }
-
-//                                        #endregion
-
-//                                        lr.IsSuccess = false;
-//                                        lr.Message = "Knox payment failed.";
-//                                    }
-
-
-//                                    */
-//                                    #endregion
-//                                }
-//                                else
-//                                {
-//                                    #region emailSendingonTransferAttemtFailure
-//                                    /*
-
-//                                    // for push notification in case of failure
-
-//                                    var senderNotificationSettings =
-//                                        CommonHelper.GetMemberNotificationSettings(adminUserDetails.MemberId.ToString());
-
-//                                    if (senderNotificationSettings != null)
-//                                    {
-//                                        string senderFirstNameFailure =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(adminUserDetails.FirstName));
-//                                        string senderLastNameFailure =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(adminUserDetails.LastName));
-//                                        string recipientFirstNameFailure =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(recepientdetails.FirstName));
-//                                        string recipientLastNameFailure =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(recepientdetails.LastName));
-
-
-//                                        // for TransferAttemptFailure email notification
-//                                        if (senderNotificationSettings != null &&
-//                                            (senderNotificationSettings.EmailTransferAttemptFailure ?? false))
-//                                        {
-//                                            string s2 = trans.Amount.ToString("n2");
-//                                            string[] s3 = s2.Split('.');
-
-//                                            var tokensF = new Dictionary<string, string>
-//                                            {
-//                                                {
-//                                                    Constants.PLACEHOLDER_FIRST_NAME,
-//                                                    senderFirstNameFailure + " " + senderLastNameFailure
-//                                                },
-//                                                {
-//                                                    Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
-//                                                    CommonHelper.GetDecryptedData(recepientdetails.UserName)
-//                                                },
-//                                                {Constants.PLACEHOLDER_TRANSFER_AMOUNT, s3[0].ToString()},
-//                                                {Constants.PLACEHLODER_CENTS, s3[1].ToString()},
-//                                            };
-
-//                                            var fromAddress = Utility.GetValueFromConfig("transfersMail");
-//                                            var toAddress = CommonHelper.GetDecryptedData(adminUserDetails.UserName);
-
-//                                            try
-//                                            {
-//                                                // email notification
-//                                                Utility.SendEmail("transferFailure",
-//                                                    fromAddress, toAddress, null,
-//                                                    "Nooch transfer failure", tokensF, null, null, null);
-
-//                                                Logger.Info(
-//                                                    "Add fund to member new admin panel --> Transfer FAILED --> Email sent to Sender: [" +
-//                                                    toAddress + "] successfully.");
-//                                            }
-//                                            catch (Exception)
-//                                            {
-//                                                Logger.Error(
-//                                                    "Add fund to member new admin panel --> Error: TransferAttemptFailure mail not sent to [" +
-//                                                    toAddress + "]");
-//                                            }
-//                                        }
-//                                    }
-//*/
-//                                    #endregion
-
-//                                    lr.IsSuccess = false;
-//                                    lr.Message = "Synapse payment failed.";
-//                                }
-//                            }
-//                            else
-//                            {
-//                                lr.IsSuccess = false;
-//                                lr.Message = "Recepeint Synapse account not available.";
-//                            }
-//                        }
-//                        else
-//                        {
-//                            lr.IsSuccess = false;
-//                            lr.Message = "Given username/nooch id not found or give username/nooch id not active.";
-//                        }
-//                    }
-//                    else
-//                    {
-//                        lr.IsSuccess = false;
-//                        lr.Message = "Admin Synapse account not available.";
-//                    }
-//                }
-//                else
-//                {
-//                    lr.IsSuccess = false;
-//                    lr.Message = "Admin account team@nooch.com not active or invalid admin PIN passed.";
-//                }
-//            }
-//            return Json(lr);
-//        }
+        // Commented out this method coz.. knoxAccountDetails table is no longer in db  -- Malkit 21 Jan 16
+
+        //        [HttpPost]
+        //        [ActionName("CreditFundToMemberPost")]
+        //        public ActionResult CreditFundToMemberPost(string transferfundto, string transferAmount, string transferNotes, string adminPin)
+        //        {
+        //            LoginResult lr = new LoginResult();
+        //            // performing validations over input
+
+        //            #region input validations
+
+        //            if (String.IsNullOrEmpty(transferfundto))
+        //            {
+        //                lr.IsSuccess = false;
+        //                lr.Message = "Please enter user name or NoochId of Member to transfer fund.";
+        //            }
+        //            if (String.IsNullOrEmpty(transferAmount))
+        //            {
+        //                lr.IsSuccess = false;
+        //                lr.Message = "Please enter transfer fund amount";
+        //            }
+
+        //            if (String.IsNullOrEmpty(transferNotes))
+        //            {
+        //                lr.IsSuccess = false;
+        //                lr.Message = "Please enter transfer notes.";
+        //            }
+        //            if (String.IsNullOrEmpty(adminPin))
+        //            {
+        //                lr.IsSuccess = false;
+        //                lr.Message = "Please enter admin pin.";
+        //            }
+
+        //            #endregion
+
+        //            // CLIFF (9/7/15): THIS MUST BE UPDATED TO USE SYNAPSE V3 INSTEAD OF KNOX
+
+        //            // **********************  THIS REMAINS INCOMPLETE!  **********************
+
+        //            // 1. check admin user knox account and other details
+        //            // 2. check fund receiver knox account details
+
+        //            // Check admin user details
+        //            using (NOOCHEntities obj = new NOOCHEntities())
+        //            {
+        //                var adminUserDetails =
+        //                    (from c in obj.Members
+        //                     where c.UserName == "z2/de4EMabGlzMuO7OocHw==" &&
+        //                           c.Status == "Active" &&
+        //                           c.PinNumber == CommonHelper.GetEncryptedData(adminPin.Trim())
+        //                     select c).SingleOrDefault();
+
+        //                if (adminUserDetails != null)
+        //                {
+        //                    Guid AdminMemberId = Utility.ConvertToGuid(adminUserDetails.MemberId.ToString());
+
+        //                    // Get Synapse account details of admin
+        //                    var adminSynapseDetails =
+        //                        (from c in obj.SynapseBanksOfMembers
+        //                         where c.MemberId == AdminMemberId && c.IsDefault == true
+        //                         select c).SingleOrDefault();
+
+        //                    if (adminSynapseDetails != null)
+        //                    {
+        //                        // Now get the Recipient's info from Members table
+        //                        string recepientusernameencrypted = CommonHelper.GetEncryptedData(transferfundto.ToLower());
+
+        //                        var recipientMemberDetails = (from c in obj.Members
+        //                                                      where c.Nooch_ID == transferfundto ||
+        //                                                            c.UserName == recepientusernameencrypted &&
+        //                                                            c.Status == "Active"
+        //                                                      select c).SingleOrDefault();
+
+        //                        if (recipientMemberDetails != null)
+        //                        {
+        //                            // Now check recipient's Synapse details
+        //                            Guid recepeintGuid = Utility.ConvertToGuid(recipientMemberDetails.MemberId.ToString());
+
+        //                            var recipientBankDetails =
+        //                                (from c in obj.KnoxAccountDetails
+        //                                 where c.MemberId == recepeintGuid && c.IsDeleted == false
+        //                                 select c).SingleOrDefault();
+
+        //                            if (recipientBankDetails != null)
+        //                            {
+        //                                string transactionTrackingId = GetRandomTransactionTrackingId();
+
+        //                                Transaction trans = new Transaction();
+        //                                trans.TransactionId = Guid.NewGuid();
+        //                                trans.SenderId = AdminMemberId;
+        //                                trans.RecipientId = recepeintGuid;
+        //                                trans.Amount = Convert.ToDecimal(transferAmount);
+
+        //                                trans.TransactionDate = DateTime.Now;
+        //                                trans.DisputeStatus = null;
+        //                                trans.TransactionStatus = "Success";
+        //                                trans.TransactionType = CommonHelper.GetEncryptedData("Reward");
+        //                                trans.DeviceId = null;
+        //                                trans.TransactionTrackingId = transactionTrackingId;
+        //                                trans.Memo = transferNotes.Trim();
+        //                                trans.Picture = null;
+
+        //                                GeoLocation geo = new GeoLocation();
+        //                                geo.LocationId = Guid.NewGuid();
+        //                                geo.Latitude = null;
+        //                                geo.Longitude = null;
+        //                                geo.Altitude = null;
+        //                                geo.AddressLine1 = null;
+        //                                geo.AddressLine2 = null;
+        //                                geo.City = null;
+        //                                geo.State = null;
+        //                                geo.Country = null;
+        //                                geo.ZipCode = null;
+        //                                geo.DateCreated = DateTime.Now;
+
+
+        //                                // making api call to knox
+        //                                WebClient wc = new WebClient();
+
+        //                                string KNoxApiKey = Utility.GetValueFromConfig("KnoxApiKey");
+        //                                string KNoxApiPass = Utility.GetValueFromConfig("KnoxApiPass");
+
+        //                                string c = "https://knoxpayments.com/json/pinpayment.php?payee_key=" +
+        //                                    //RECEPEINT_USER_KEY +
+        //                                    //"&payee_pass=" + RECEPEINT_USER_PASS + "&payor_key=" + ADMIN_USER_KEY +
+        //                                           "&payor_pass=" +
+        //                                    //ADMIN_USER_PASS + "&trans_id=" + trans.TransactionId + "&PARTNER_KEY=" +
+        //                                           KNoxApiKey + "&amount=" + trans.Amount + "&recur_status=ot";
+        //                                string knoxPinPaymentResults = wc.DownloadString(c);
+
+        //                                ResponseClass3 m = JsonConvert.DeserializeObject<ResponseClass3>(knoxPinPaymentResults);
+        //                                if (m != null)
+        //                                {
+        //                                    #region parsed response successfully
+        //                                    /*
+        //                                    string KnoxTransStatus = m.JSonDataResult.status_code;
+        //                                    string KnoxTransErrorCode = m.JSonDataResult.error_code;
+        //                                    string KnoxTransId = m.JSonDataResult.trans_id;
+
+        //                                    if (KnoxTransStatus != null)
+        //                                    {
+        //                                        Logger.Info(
+        //                                            "TransferFundToMemberFromNEWADMIN_PANLE -> knoxPinPaymentResult Status Code for Nooch TransID [" +
+        //                                            trans.TransactionId + "] is: " + KnoxTransStatus);
+        //                                    }
+        //                                    if (KnoxTransErrorCode != null)
+        //                                    {
+        //                                        Logger.Info(
+        //                                            "TransferFundToMemberFromNEWADMIN_PANLE -> knoxPinPaymentResult ERROR Code for Nooch TransID [" +
+        //                                            trans.TransactionId + "] is: " + KnoxTransErrorCode);
+        //                                    }
+
+        //                                    if (KnoxTransStatus == "PAID" && KnoxTransErrorCode == null)
+        //                                    {
+        //                                        #region Knox returned Paid
+
+        //                                        #region email content preparation
+
+        //                                        string senderFirstName =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(adminUserDetails.FirstName));
+        //                                        string senderLastName =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(adminUserDetails.LastName));
+        //                                        string recipientFirstName =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(recepientdetails.FirstName));
+        //                                        string recipientLastName =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(recepientdetails.LastName));
+
+        //                                        string wholeAmount = trans.Amount.ToString("n2");
+        //                                        string[] s3 = wholeAmount.Split('.');
+        //                                        string ce = "";
+        //                                        string dl = "";
+        //                                        if (s3.Length <= 1)
+        //                                        {
+        //                                            dl = s3[0].ToString();
+        //                                            ce = "00";
+        //                                        }
+        //                                        else
+        //                                        {
+        //                                            ce = s3[1].ToString();
+        //                                            dl = s3[0].ToString();
+        //                                        }
+
+        //                                        string memo = "";
+        //                                        if (trans.Memo != null && trans.Memo != "")
+        //                                        {
+        //                                            if (trans.Memo.Length > 3)
+        //                                            {
+        //                                                string firstThreeChars = trans.Memo.Substring(0, 3).ToLower();
+        //                                                bool startWithFor = firstThreeChars.Equals("for");
+
+        //                                                if (startWithFor)
+        //                                                {
+        //                                                    memo = trans.Memo.ToString();
+        //                                                }
+        //                                                else
+        //                                                {
+        //                                                    memo = "For " + trans.Memo.ToString();
+        //                                                }
+        //                                            }
+        //                                            else
+        //                                            {
+        //                                                memo = "For " + trans.Memo.ToString();
+        //                                            }
+        //                                        }
+
+        //                                        #endregion
+
+        //                                        string senderPic;
+        //                                        string recipientPic;
+        //                                        var friendDetails =
+        //                                            CommonHelper.GetMemberNotificationSettings(
+        //                                                adminUserDetails.MemberId.ToString());
+
+        //                                        #region email to admin on successfully sending fund
+
+        //                                        if (friendDetails != null)
+        //                                        {
+        //                                            // for TransferSent email notification
+        //                                            if (friendDetails != null && (friendDetails.EmailTransferSent ?? false))
+        //                                            {
+        //                                                if (recepientdetails.Photo != null && recepientdetails.Photo != "")
+        //                                                {
+        //                                                    string lastFourOfRecipientsPic =
+        //                                                        recepientdetails.Photo.Substring(recepientdetails.Photo.Length -
+        //                                                                                         15);
+        //                                                    if (lastFourOfRecipientsPic != "gv_no_photo.png")
+        //                                                    {
+        //                                                        recipientPic = "";
+        //                                                    }
+        //                                                    else
+        //                                                    {
+        //                                                        recipientPic = recepientdetails.Photo.ToString();
+        //                                                    }
+        //                                                }
+
+        //                                                var tokens = new Dictionary<string, string>
+        //                                                {
+        //                                                    {Constants.PLACEHOLDER_FIRST_NAME, senderFirstName},
+        //                                                    {
+        //                                                        Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
+        //                                                        recipientFirstName + " " + recipientLastName
+        //                                                    },
+        //                                                    {Constants.PLACEHOLDER_TRANSFER_AMOUNT, dl},
+        //                                                    {Constants.PLACEHLODER_CENTS, ce},
+        //                                                    {Constants.MEMO, memo}
+        //                                                };
+
+        //                                                var fromAddress = Utility.GetValueFromConfig("transfersMail");
+        //                                                var toAddress = CommonHelper.GetDecryptedData(adminUserDetails.UserName);
+
+        //                                                try
+        //                                                {
+        //                                                    // email notification
+        //                                                    //Utility.SendEmail("TransferSent", 
+        //                                                    //    fromAddress, toAddress, null,
+        //                                                    //    "Your $" + wholeAmount + " payment to " + recipientFirstName +
+        //                                                    //    " on Nooch",
+        //                                                    //    null, tokens, null, null, null);
+
+        //                                                    Utility.SendEmail("TransferSent", fromAddress, toAddress,
+        //                                                        "Your $ " + wholeAmount + " payment to " + recipientFirstName +
+        //                                                        " on Nooch", null,
+        //                                                        tokens, null, null, null);
+
+
+        //                                                    Logger.Info(
+        //                                                        "Add fund to members account New Admin --> TransferSent status mail sent to [" +
+        //                                                        toAddress + "].");
+        //                                                }
+        //                                                catch (Exception)
+        //                                                {
+        //                                                    Logger.Error(
+        //                                                        "Add fund to members account New Admin --> TransferSent mail NOT sent to [" +
+        //                                                        toAddress +
+        //                                                        "]. Problem occurred in sending mail.");
+        //                                                }
+
+
+        //                                            }
+        //                                        }
+
+        //                                        #endregion
+
+
+        //                                        #region EmailAndPushNotificationToRecepientOnTransferReceive
+
+        //                                        // for push notification
+        //                                        //var friendDetails = memberDataAccess.GetMemberNotificationSettingsByUserName(CommonHelper.GetDecryptedData(receiverAccountDetail.UserName));
+        //                                        var friendDetails2 =
+        //                                            CommonHelper.GetMemberNotificationSettings(
+        //                                                recepientdetails.MemberId.ToString());
+        //                                        if (friendDetails2 != null)
+        //                                        {
+        //                                            string deviceId2 = friendDetails2 != null
+        //                                                ? recepientdetails.DeviceToken
+        //                                                : null;
+
+        //                                            string mailBodyText = "You received $" + wholeAmount + " from " +
+        //                                                                  senderFirstName +
+        //                                                                  " " + senderLastName;
+
+        //                                            if ((friendDetails2.TransferReceived == null)
+        //                                                ? false
+        //                                                : friendDetails2.TransferReceived.Value)
+        //                                            {
+        //                                                try
+        //                                                {
+        //                                                    // push notifications
+        //                                                    if (friendDetails2 != null && !String.IsNullOrEmpty(deviceId2) &&
+        //                                                        (friendDetails2.TransferReceived ?? false))
+        //                                                    {
+        //                                                        Utility.SendNotificationMessage(mailBodyText, 1,
+        //                                                            null, deviceId2,
+        //                                                            Utility.GetValueFromConfig("AppKey"),
+        //                                                            Utility.GetValueFromConfig("MasterSecret"));
+
+        //                                                        Logger.Info(
+        //                                                            "Add fund to member from new admin panel --> Push notification sent to Sender DeviceID:[" +
+        //                                                            deviceId2 + "] successfully.");
+        //                                                    }
+        //                                                }
+        //                                                catch (Exception)
+        //                                                {
+        //                                                    Logger.Error(
+        //                                                        "Add fund to member from new admin panel --> Error: Push notification NOT sent to Sender DeviceID: [" +
+        //                                                        deviceId2 + "]");
+        //                                                }
+        //                                            }
+
+        //                                            // for TransferReceived email notification
+        //                                            if (friendDetails2 != null &&
+        //                                                (friendDetails2.EmailTransferReceived ?? false))
+        //                                            {
+        //                                                if (adminUserDetails.Photo != null && adminUserDetails.Photo != "")
+        //                                                {
+        //                                                    string lastFourOfSendersPic =
+        //                                                        adminUserDetails.Photo.Substring(adminUserDetails.Photo.Length -
+        //                                                                                         15);
+        //                                                    if (lastFourOfSendersPic != "gv_no_photo.png")
+        //                                                    {
+        //                                                        senderPic = "";
+        //                                                    }
+        //                                                    else
+        //                                                    {
+        //                                                        senderPic = adminUserDetails.Photo.ToString();
+        //                                                    }
+        //                                                }
+
+        //                                                var tokensR = new Dictionary<string, string>
+        //                                                {
+        //                                                    {Constants.PLACEHOLDER_FIRST_NAME, recipientFirstName},
+        //                                                    {
+        //                                                        Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
+        //                                                        senderFirstName + " " + senderLastName
+        //                                                    },
+        //                                                    {Constants.PLACEHOLDER_TRANSFER_AMOUNT, wholeAmount},
+        //                                                    {
+        //                                                        Constants.PLACEHOLDER_TRANSACTION_DATE,
+        //                                                        Convert.ToDateTime(trans.TransactionDate)
+        //                                                            .ToString("MMM dd")
+        //                                                    },
+        //                                                    {Constants.MEMO, memo}
+        //                                                };
+
+        //                                                // for TransferReceived email notification                            
+        //                                                var fromAddress = Utility.GetValueFromConfig("transfersMail");
+        //                                                var toAddress2 = CommonHelper.GetDecryptedData(recepientdetails.UserName);
+
+        //                                                try
+        //                                                {
+        //                                                    // email notification
+        //                                                    Utility.SendEmail("TransferReceived", fromAddress, toAddress2,
+        //                                                        senderFirstName + " sent you $" + wholeAmount + " with Nooch",
+        //                                                        null, tokensR, null, null, null);
+
+        //                                                    Logger.Info(
+        //                                                        "Add fund to member from new admin panel --> TransferReceived Email sent to [" +
+        //                                                        toAddress2 + "] successfully.");
+        //                                                }
+        //                                                catch (Exception)
+        //                                                {
+        //                                                    Logger.Error(
+        //                                                        "Add fund to member from new admin panel --> Error: TransferReceived Email NOT sent to [" +
+        //                                                        toAddress2 + "]");
+        //                                                }
+        //                                            }
+        //                                        }
+
+        //                                        #endregion
+
+
+
+        //                                        try
+        //                                        {
+        //                                            obj.GeoLocations.Add(geo);
+
+        //                                            obj.SaveChanges();
+
+
+        //                                            obj.Transactions.Add(trans);
+        //                                            obj.SaveChanges();
+        //                                            lr.IsSuccess = true;
+        //                                            lr.Message = "fund succesfully added to member account.";
+        //                                        }
+        //                                        catch (Exception)
+        //                                        {
+
+        //                                            lr.IsSuccess = false;
+        //                                            lr.Message = "Error occured while saving transaction in db.";
+        //                                        }
+
+
+        //                                        #endregion
+        //                                    }
+        //                                    else
+        //                                    {
+        //                                        #region emailSendingonTransferAttemtFailure
+
+        //                                        // for push notification in case of failure
+
+        //                                        var senderNotificationSettings =
+        //                                            CommonHelper.GetMemberNotificationSettings(
+        //                                                adminUserDetails.MemberId.ToString());
+
+        //                                        if (senderNotificationSettings != null)
+        //                                        {
+        //                                            string senderFirstNameFailure =
+        //                                                CommonHelper.UppercaseFirst(
+        //                                                    CommonHelper.GetDecryptedData(adminUserDetails.FirstName));
+        //                                            string senderLastNameFailure =
+        //                                                CommonHelper.UppercaseFirst(
+        //                                                    CommonHelper.GetDecryptedData(adminUserDetails.LastName));
+        //                                            string recipientFirstNameFailure =
+        //                                                CommonHelper.UppercaseFirst(
+        //                                                    CommonHelper.GetDecryptedData(recepientdetails.FirstName));
+        //                                            string recipientLastNameFailure =
+        //                                                CommonHelper.UppercaseFirst(
+        //                                                    CommonHelper.GetDecryptedData(recepientdetails.LastName));
+
+
+        //                                            // for TransferAttemptFailure email notification
+        //                                            if (senderNotificationSettings != null &&
+        //                                                (senderNotificationSettings.EmailTransferAttemptFailure ?? false))
+        //                                            {
+        //                                                string s2 = trans.Amount.ToString("n2");
+        //                                                string[] s3 = s2.Split('.');
+
+        //                                                var tokensF = new Dictionary<string, string>
+        //                                                {
+        //                                                    {
+        //                                                        Constants.PLACEHOLDER_FIRST_NAME,
+        //                                                        senderFirstNameFailure + " " + senderLastNameFailure
+        //                                                    },
+        //                                                    {
+        //                                                        Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
+        //                                                        CommonHelper.GetDecryptedData(recepientdetails.UserName)
+        //                                                    },
+        //                                                    {Constants.PLACEHOLDER_TRANSFER_AMOUNT, s3[0].ToString()},
+        //                                                    {Constants.PLACEHLODER_CENTS, s3[1].ToString()},
+        //                                                };
+
+        //                                                var fromAddress = Utility.GetValueFromConfig("transfersMail");
+        //                                                var toAddress = CommonHelper.GetDecryptedData(adminUserDetails.UserName);
+
+        //                                                try
+        //                                                {
+        //                                                    // email notification
+        //                                                    Utility.SendEmail("transferFailure",
+        //                                                        fromAddress, toAddress, null,
+        //                                                        "Nooch transfer failure", tokensF, null, null, null);
+
+        //                                                    Logger.Info(
+        //                                                        "Add fund to member new admin panel --> Transfer FAILED --> Email sent to Sender: [" +
+        //                                                        toAddress + "] successfully.");
+        //                                                }
+        //                                                catch (Exception)
+        //                                                {
+        //                                                    Logger.Error(
+        //                                                        "Add fund to member new admin panel --> Error: TransferAttemptFailure mail not sent to [" +
+        //                                                        toAddress + "]");
+        //                                                }
+        //                                            }
+        //                                        }
+
+        //                                        #endregion
+
+        //                                        lr.IsSuccess = false;
+        //                                        lr.Message = "Knox payment failed.";
+        //                                    }
+
+
+        //                                    */
+        //                                    #endregion
+        //                                }
+        //                                else
+        //                                {
+        //                                    #region emailSendingonTransferAttemtFailure
+        //                                    /*
+
+        //                                    // for push notification in case of failure
+
+        //                                    var senderNotificationSettings =
+        //                                        CommonHelper.GetMemberNotificationSettings(adminUserDetails.MemberId.ToString());
+
+        //                                    if (senderNotificationSettings != null)
+        //                                    {
+        //                                        string senderFirstNameFailure =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(adminUserDetails.FirstName));
+        //                                        string senderLastNameFailure =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(adminUserDetails.LastName));
+        //                                        string recipientFirstNameFailure =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(recepientdetails.FirstName));
+        //                                        string recipientLastNameFailure =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(recepientdetails.LastName));
+
+
+        //                                        // for TransferAttemptFailure email notification
+        //                                        if (senderNotificationSettings != null &&
+        //                                            (senderNotificationSettings.EmailTransferAttemptFailure ?? false))
+        //                                        {
+        //                                            string s2 = trans.Amount.ToString("n2");
+        //                                            string[] s3 = s2.Split('.');
+
+        //                                            var tokensF = new Dictionary<string, string>
+        //                                            {
+        //                                                {
+        //                                                    Constants.PLACEHOLDER_FIRST_NAME,
+        //                                                    senderFirstNameFailure + " " + senderLastNameFailure
+        //                                                },
+        //                                                {
+        //                                                    Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
+        //                                                    CommonHelper.GetDecryptedData(recepientdetails.UserName)
+        //                                                },
+        //                                                {Constants.PLACEHOLDER_TRANSFER_AMOUNT, s3[0].ToString()},
+        //                                                {Constants.PLACEHLODER_CENTS, s3[1].ToString()},
+        //                                            };
+
+        //                                            var fromAddress = Utility.GetValueFromConfig("transfersMail");
+        //                                            var toAddress = CommonHelper.GetDecryptedData(adminUserDetails.UserName);
+
+        //                                            try
+        //                                            {
+        //                                                // email notification
+        //                                                Utility.SendEmail("transferFailure",
+        //                                                    fromAddress, toAddress, null,
+        //                                                    "Nooch transfer failure", tokensF, null, null, null);
+
+        //                                                Logger.Info(
+        //                                                    "Add fund to member new admin panel --> Transfer FAILED --> Email sent to Sender: [" +
+        //                                                    toAddress + "] successfully.");
+        //                                            }
+        //                                            catch (Exception)
+        //                                            {
+        //                                                Logger.Error(
+        //                                                    "Add fund to member new admin panel --> Error: TransferAttemptFailure mail not sent to [" +
+        //                                                    toAddress + "]");
+        //                                            }
+        //                                        }
+        //                                    }
+        //*/
+        //                                    #endregion
+
+        //                                    lr.IsSuccess = false;
+        //                                    lr.Message = "Synapse payment failed.";
+        //                                }
+        //                            }
+        //                            else
+        //                            {
+        //                                lr.IsSuccess = false;
+        //                                lr.Message = "Recepeint Synapse account not available.";
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            lr.IsSuccess = false;
+        //                            lr.Message = "Given username/nooch id not found or give username/nooch id not active.";
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        lr.IsSuccess = false;
+        //                        lr.Message = "Admin Synapse account not available.";
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    lr.IsSuccess = false;
+        //                    lr.Message = "Admin account team@nooch.com not active or invalid admin PIN passed.";
+        //                }
+        //            }
+        //            return Json(lr);
+        //        }
 
 
         [HttpPost]
         [ActionName("CreditFundToMemberPostSynapseV3Test")]
         public ActionResult CreditFundToMemberPostSynapseV3Test(string transferfundto, string transferAmount, string transferNotes, string adminPin)
         {
-            LoginResult lr = new LoginResult();
+            LoginResult res = new LoginResult();
+            res.IsSuccess = false;
             // performing validations over input
 
-            #region input validations
+            #region Input Validations
 
             if (String.IsNullOrEmpty(transferfundto))
             {
-                lr.IsSuccess = false;
-                lr.Message = "Please enter user name or NoochId of Member to transfer fund.";
+                res.Message = "Please enter user name or NoochId of Member to transfer fund.";
             }
             if (String.IsNullOrEmpty(transferAmount))
             {
-                lr.IsSuccess = false;
-                lr.Message = "Please enter transfer fund amount";
+                res.Message = "Please enter transfer fund amount";
             }
 
             if (String.IsNullOrEmpty(transferNotes))
             {
-                lr.IsSuccess = false;
-                lr.Message = "Please enter transfer notes.";
+                res.Message = "Please enter transfer notes.";
             }
             if (String.IsNullOrEmpty(adminPin))
             {
-                lr.IsSuccess = false;
-                lr.Message = "Please enter admin pin.";
+                res.Message = "Please enter admin pin.";
             }
 
-            #endregion
+            #endregion Input Validations
 
 
             // Check admin user details
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 string adminPinEncrypted = CommonHelper.GetEncryptedData(adminPin.Trim());
+
                 var adminUserDetails =
                     (from c in obj.Members
                      where c.UserName == "z2/de4EMabGlzMuO7OocHw==" &&
@@ -1319,19 +1317,19 @@ namespace noochAdminNew.Controllers
 
                 if (adminUserDetails != null)
                 {
-                    #region Admin Member and synapse details
+                    #region Get Admin Member's Synapse Details
+
                     Guid AdminMemberId = Utility.ConvertToGuid(adminUserDetails.MemberId.ToString());
 
                     // Get Synapse account details of admin
-                    var adminSynapseDetails =
-                        CommonHelper.GetSynapseBankAndUserDetailsforGivenMemberId(AdminMemberId.ToString());
+                    var adminSynapseDetails = CommonHelper.GetSynapseBankAndUserDetailsforGivenMemberId(AdminMemberId.ToString());
 
                     if (adminSynapseDetails.wereBankDetailsFound != true)
                     {
                         Logger.Error("Add fund to members account New Admin -> Transfer FAILED -> Transfer ABORTED: Requester's Synapse bank account NOT FOUND - Trans Creator MemberId is: [" + AdminMemberId + "]");
-                        lr.Message = "Admin does not have any bank added";
-                        lr.IsSuccess = false;
-                        return Json(lr);
+                        res.Message = "Admin does not have any bank added";
+
+                        return Json(res);
                     }
 
                     // Check Admins's Synapse Bank Account status
@@ -1341,11 +1339,12 @@ namespace noochAdminNew.Controllers
                     {
                         Logger.Error("Add fund to members account New Admin -> Transfer FAILED -> Admin's Synapse bank account exists but is not Verified and " +
                             "isVerifiedWithSynapse != true - Admin memberId is: [" + adminUserDetails.MemberId + "]");
-                        lr.Message = "Admin does not have any verified bank account.";
-                        lr.IsSuccess = false;
-                        return Json(lr);
+                        res.Message = "Admin does not have any verified bank account.";
+
+                        return Json(res);
                     }
-                    #endregion
+
+                    #endregion Get Admin Member's Synapse Details
 
                     // Money recepient Member and Synapse Bank Acount Details
                     string recepientusernameencrypted = CommonHelper.GetEncryptedData(transferfundto.ToLower());
@@ -1354,20 +1353,20 @@ namespace noochAdminNew.Controllers
                                                         c.UserName == recepientusernameencrypted &&
                                                         c.Status == "Active"
                                                   select c).SingleOrDefault();
+
                     if (recipientMemberDetails != null)
                     {
                         // Now check recipient's Synapse details
                         Guid recepeintGuid = Utility.ConvertToGuid(recipientMemberDetails.MemberId.ToString());
 
-                        var recipientBankDetails =
-                                                    CommonHelper.GetSynapseBankAndUserDetailsforGivenMemberId(recepeintGuid.ToString());
+                        var recipientBankDetails = CommonHelper.GetSynapseBankAndUserDetailsforGivenMemberId(recepeintGuid.ToString());
 
                         if (recipientBankDetails.wereBankDetailsFound != true)
                         {
                             Logger.Error("Add fund to members account New Admin -> Transfer FAILED -> Transfer ABORTED: Recepient's Synapse bank account NOT FOUND - Trans Creator MemberId is: [" + recepeintGuid + "]");
-                            lr.Message = "Recepient does not have any bank added";
-                            lr.IsSuccess = false;
-                            return Json(lr);
+                            res.Message = "Recepient does not have any bank added";
+
+                            return Json(res);
                         }
 
                         // Check Admins's Synapse Bank Account status
@@ -1377,11 +1376,10 @@ namespace noochAdminNew.Controllers
                         {
                             Logger.Error("Add fund to members account New Admin -> Transfer FAILED -> Recepient's Synapse bank account exists but is not Verified and " +
                                 "isVerifiedWithSynapse != true - Recepient memberId is: [" + adminUserDetails.MemberId + "]");
-                            lr.Message = "Recepient does not have any verified bank account.";
-                            lr.IsSuccess = false;
-                            return Json(lr);
-                        }
+                            res.Message = "Recepient does not have any verified bank account.";
 
+                            return Json(res);
+                        }
 
 
                         // have admin and recepient all details to transfer money
@@ -1451,7 +1449,7 @@ namespace noochAdminNew.Controllers
                         {
                             #region Query Synapse Order API
 
-                            string sender_oauth = CommonHelper.GetDecryptedData( adminSynapseDetails.UserDetails.access_token);
+                            string sender_oauth = CommonHelper.GetDecryptedData(adminSynapseDetails.UserDetails.access_token);
                             string sender_fingerPrint = adminUserDetails.UDID1;
                             string sender_bank_node_id = adminSynapseDetails.BankDetails.oid.ToString();
                             string amount = transferAmount;
@@ -1719,31 +1717,31 @@ namespace noochAdminNew.Controllers
 
                                 if (shouldSendFailureNotifications == 1)
                                 {
-                                    lr.Message = "There was a problem with Synapse.";
-                                    lr.IsSuccess = false;
-                                    return Json(lr);
+                                    res.Message = "There was a problem with Synapse.";
+                                    return Json(res);
 
                                 }
                                 else if (saveToTransTable == 0 || saveToSynapseCreateOrderTable == 0)
                                 {
-                                    lr.Message = "There was a problem updating Nooch DB tables.";
-                                    lr.IsSuccess = false;
-                                    return Json(lr);
+                                    res.Message = "There was a problem updating Nooch DB tables.";
+                                    return Json(res);
                                 }
                                 else
                                 {
-                                    lr.Message = "Unknown Failure";
-                                    lr.IsSuccess = false;
-                                    return Json(lr);
+                                    res.Message = "Unknown Failure";
+                                    return Json(res);
 
                                 }
                             }
                         }
+
                         #endregion Failure Sections
-                        else if (shouldSendFailureNotifications == 0 && saveToSynapseCreateOrderTable == 1 &&
-                            saveToTransTable == 1)
+
+                        else if (shouldSendFailureNotifications == 0 &&
+                                 saveToSynapseCreateOrderTable == 1 &&
+                                 saveToTransTable == 1)
                         {
-                            #region Success notifications
+                            #region Success Notifications
                             #region Send Email to Sender on transfer success
 
                             var sendersNotificationSets = CommonHelper.GetMemberNotificationSettings(adminUserDetails.MemberId.ToString());
@@ -1873,37 +1871,29 @@ namespace noochAdminNew.Controllers
 
                             #endregion Send Notifications to Recipient on transfer success
 
-                            #endregion
-                            lr.Message = "Your cash was sent successfully.";
-                            lr.IsSuccess = true;
-                            return Json(lr);
+                            #endregion Success Notifications
+
+                            res.Message = "Your cash was sent successfully.";
+                            res.IsSuccess = true;
+                            return Json(res);
                         }
                         else
                         {
-                            lr.Message = "Server Error.";
-                            lr.IsSuccess = false;
-                            return Json(lr);
+                            res.Message = "Server Error.";
                         }
-
-
-
                     }
-
                     else
                     {
-                        lr.IsSuccess = false;
-                        lr.Message = "Given username/nooch id not found or give username/nooch id not active.";
-                        return Json(lr);
+                        res.Message = "Given username/Nooch ID not found or give username/Nooch ID not active.";
                     }
-
                 }
                 else
                 {
-                    lr.IsSuccess = false;
-                    lr.Message = "Admin account team@nooch.com not active or invalid admin PIN passed.";
+                    res.Message = "Admin account team@nooch.com not active or invalid admin PIN passed.";
                 }
             }
-            return Json(lr);
+
+            return Json(res);
         }
 
 
@@ -1913,6 +1903,7 @@ namespace noochAdminNew.Controllers
             const string Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var random = new Random();
             int j = 1;
+
             using (var noochConnection = new NOOCHEntities())
             {
                 for (int i = 0; i <= j; i++)
@@ -2567,11 +2558,10 @@ namespace noochAdminNew.Controllers
         [ActionName("GetTransactionVolumeOverTimeData")]
         public ActionResult GetTransactionVolumeOverTimeData(string recordType, string status, string fromDate = null, string toDate = null)
         {
-
             getUserOverTimeResult res = new getUserOverTimeResult();
+
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-
                 //List<getUserOverTimeResult> users_over_time = new List<getUserOverTimeResult>();
                 List<internalDataArray> extList = new List<internalDataArray>();
                 List<Member> memList = new List<Member>();
@@ -2606,7 +2596,7 @@ namespace noochAdminNew.Controllers
                         }
                         else if (status == "1")
                         {
-                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Cancelled" ||c.TransactionStatus=="Rejected") && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == 0).Sum(x => (double?)(x.Amount)) ?? 0;
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Cancelled" || c.TransactionStatus == "Rejected") && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == 0).Sum(x => (double?)(x.Amount)) ?? 0;
 
                             if (SumOfAmount > 0)
                             {
@@ -2622,7 +2612,7 @@ namespace noochAdminNew.Controllers
                         }
                         else if (status == "2")
                         {
-                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Pending" ) && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == 0).Sum(x => (double?)(x.Amount)) ?? 0;
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Pending") && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == 0).Sum(x => (double?)(x.Amount)) ?? 0;
 
                             if (SumOfAmount > 0)
                             {
@@ -2637,15 +2627,12 @@ namespace noochAdminNew.Controllers
                             }
                         }
 
-
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
-
 
                         extList.Add(id);
 
                         past7days = past7days.AddDays(1);
-
                     }
                 }
 
@@ -2670,7 +2657,7 @@ namespace noochAdminNew.Controllers
                         }
                         else if (status == "2")
                         {
-                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Pending" ) && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == 0).Sum(x => (double?)(x.Amount)) ?? 0;
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Pending") && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == 0).Sum(x => (double?)(x.Amount)) ?? 0;
                             nre[1] = SumOfAmount.ToString();
                         }
 
@@ -2701,41 +2688,29 @@ namespace noochAdminNew.Controllers
                         string[] nda = new string[2];
                         nre[0] = j.ToString();
                         nda[0] = j.ToString();
+
                         if (status == "0")
                         {
-
                             for (int i = 0; i < 7; i++)
                             {
-
-                                  SumOfAmount += obj.Transactions.Where(c => c.TransactionStatus == "Success" && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == (7 - i)).Sum(x => (double?)(x.Amount)) ?? 0;
-                                 
+                                SumOfAmount += obj.Transactions.Where(c => c.TransactionStatus == "Success" && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == (7 - i)).Sum(x => (double?)(x.Amount)) ?? 0;
                             }
                             nre[1] = SumOfAmount.ToString();
                         }
                         else if (status == "1")
                         {
-
                             for (int i = 0; i < 7; i++)
                             {
-
-
                                 SumOfAmount += obj.Transactions.Where(c => (c.TransactionStatus == "Cancelled" || c.TransactionStatus == "Rejected") && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == (7 - i)).Sum(x => (double?)(x.Amount)) ?? 0;
-
-
                             }
                             nre[1] = SumOfAmount.ToString();
                         }
-
                         else if (status == "2")
                         {
 
                             for (int i = 0; i < 7; i++)
                             {
-
-
                                 SumOfAmount += obj.Transactions.Where(c => (c.TransactionStatus == "Pending") && SqlFunctions.DateDiff("DAY", c.TransactionDate, past7days) == (7 - i)).Sum(x => (double?)(x.Amount)) ?? 0;
-
-
                             }
                             nre[1] = SumOfAmount.ToString();
                         }
@@ -2774,18 +2749,18 @@ namespace noochAdminNew.Controllers
                         if (status == "0")
                         {
                             var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Success") && c.TransactionDate.Value.Month == past7days.Month).Sum(x => (double?)(x.Amount)) ?? 0;
-                           nre[1] = SumOfAmount.ToString();
+                            nre[1] = SumOfAmount.ToString();
                         }
                         else if (status == "1")
                         {
-                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Cancelled" || c.TransactionStatus == "Rejected")&& c.TransactionDate.Value.Month == past7days.Month).Sum(x => (double?)(x.Amount)) ?? 0;
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Cancelled" || c.TransactionStatus == "Rejected") && c.TransactionDate.Value.Month == past7days.Month).Sum(x => (double?)(x.Amount)) ?? 0;
                             nre[1] = SumOfAmount.ToString();
                         }
                         else if (status == "2")
                         {
                             var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Pending") && c.TransactionDate.Value.Month == past7days.Month).Sum(x => (double?)(x.Amount)) ?? 0;
                             nre[1] = SumOfAmount.ToString();
-                        } 
+                        }
                         string[] nda = new string[2];
                         nda[0] = i.ToString();
                         nda[1] = past7days.ToString("MMM");
@@ -2799,7 +2774,6 @@ namespace noochAdminNew.Controllers
                         i++;
                     }
                 }
-
 
                 else if (recordType == "yearly")
                 {
@@ -2817,12 +2791,12 @@ namespace noochAdminNew.Controllers
                         }
                         else if (status == "1")
                         {
-                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Cancelled" || c.TransactionStatus == "Rejected")&& c.TransactionDate.Value.Year == past7days.Year).Sum(x => (double?)(x.Amount)) ?? 0;
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Cancelled" || c.TransactionStatus == "Rejected") && c.TransactionDate.Value.Year == past7days.Year).Sum(x => (double?)(x.Amount)) ?? 0;
                             nre[1] = SumOfAmount.ToString();
                         }
                         else if (status == "2")
                         {
-                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Pending" ) && c.TransactionDate.Value.Year == past7days.Year).Sum(x => (double?)(x.Amount)) ?? 0;
+                            var SumOfAmount = obj.Transactions.Where(c => (c.TransactionStatus == "Pending") && c.TransactionDate.Value.Year == past7days.Year).Sum(x => (double?)(x.Amount)) ?? 0;
                             nre[1] = SumOfAmount.ToString();
                         }
 
@@ -2841,10 +2815,10 @@ namespace noochAdminNew.Controllers
                     }
                 }
 
-
                 res.externalData = extList;
                 res.Duration = duraionList;
             }
+
             res.IsSuccess = true;
             res.ErrorMessage = "OK";
 
@@ -2854,14 +2828,15 @@ namespace noochAdminNew.Controllers
 
         [HttpPost]
         [ActionName("getUsersInBanks")]
-        public ActionResult getUsersInBanks() {
-            getUserOverTimeResult resl = new getUserOverTimeResult();
+        public ActionResult getUsersInBanks()
+        {
+            getUserOverTimeResult res = new getUserOverTimeResult();
+
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-
-
                 List<internalDataArray> extList = new List<internalDataArray>();
                 List<DurationArray> duraionList = new List<DurationArray>();
+
                 var allSyanpseSupportedBanks = (from ce in obj.SynapseSupportedBanks
                                                 where ce.IsDeleted == false
                                                 select ce).ToList();
@@ -2879,91 +2854,109 @@ namespace noochAdminNew.Controllers
                 }
 
                 List<NoOfUsersInEachBank> UserCountInEachBankPrep = new List<NoOfUsersInEachBank>();
+
                 int i = 0;
+
                 foreach (SynapseSupportedBank ssb in allSyanpseSupportedBanks)
                 {
                     NoOfUsersInEachBank nusi = new NoOfUsersInEachBank();
                     internalDataArray id = new internalDataArray();
                     DurationArray da = new DurationArray();
-                    nusi.BankName =  ssb.BankName;
+
+                    nusi.BankName = ssb.BankName;
                     nusi.NoOfUsers = 0;
+
                     string[] nBnks = new string[2];
-                     string[] nda = new string[2];
-                        
-                        
-                         
-                        
-                    foreach (GetMembersInEachSynapseBank_Result res in decryptedList)
+                    string[] nda = new string[2];
+
+                    foreach (GetMembersInEachSynapseBank_Result bank in decryptedList)
                     {
-                        if (res.bank_name == ssb.BankName.ToLower().Trim())
+                        if (bank.bank_name == ssb.BankName.ToLower().Trim())
                         {
-                            nusi.NoOfUsers = Convert.ToInt16(res.CountInBank);
+                            nusi.NoOfUsers = Convert.ToInt16(bank.CountInBank);
                             nda[0] = i++.ToString();
-                            nda[1] = (res.CountInBank).ToString();
+                            nda[1] = (bank.CountInBank).ToString();
                             nBnks[0] = nda[0];
                             nBnks[1] = ssb.BankName;
                             da.durationData = nBnks;
                             duraionList.Add(da);
-                             
                         }
                     }
-                    
+
                     id.internalData = nda;
                     extList.Add(id);
 
                     UserCountInEachBankPrep.Add(nusi);
                 }
 
-                resl.IsSuccess = true;
-                resl.externalData = extList;
-                resl.Duration = duraionList;
+                res.IsSuccess = true;
+                res.externalData = extList;
+                res.Duration = duraionList;
 
-                return Json(resl);
+                return Json(res);
             }
-            
         }
 
         [HttpPost]
         [ActionName("GetUsersOverTimeOverTimeData")]
-        public ActionResult GetUsersOverTimeOverTimeData(string recordType,string status,string fromDate=null,string toDate=null)
+        public ActionResult GetUsersOverTimeOverTimeData(string dateType, string userType, string userStatus, string fromDate = null, string toDate = null)
         {
-
             getUserOverTimeResult res = new getUserOverTimeResult();
+
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-
-                //List<getUserOverTimeResult> users_over_time = new List<getUserOverTimeResult>();
                 List<internalDataArray> extList = new List<internalDataArray>();
                 List<Member> memList = new List<Member>();
                 List<DurationArray> duraionList = new List<DurationArray>();
 
-                if (recordType == "dateRange")
+                // 'userType'...
+                // 0 = all
+                // 1 = registerd
+                // 2 = non-registered
+
+                // 'UserStatus'...
+                // 0 = all
+                // 1 = active
+                // 2 = deleted
+                var includeDeletedMembers = userStatus.Equals('0') || userStatus.Equals('2') ? true : false;
+
+                #region Custom Date Range
+
+                if (dateType == "dateRange")
                 {
                     DateTime todayDate = Convert.ToDateTime(toDate);
                     DateTime past7days = Convert.ToDateTime(fromDate);
-                    var dateOnlyString = past7days.ToShortDateString(); 
+                    var dateOnlyString = past7days.ToShortDateString();
+
                     int i = 0;
+
                     while (past7days <= todayDate)
                     {
                         string[] nre = new string[2];
-                        nre[0] = i.ToString();// past7days.DayOfWeek.ToString();
-                        if (status == "0")
+                        nre[0] = i.ToString();
+
+                        if (userStatus == "0")
                         {
-                            int usersCount = (from t in obj.Members where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 && (t.Status == "Active" || t.Status == "Registered") select t).Count();
+                            int usersCount = (from t in obj.Members
+                                              where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 && (t.Status == "Active" || t.Status == "Registered")
+                                              select t).Count();
+
                             if (usersCount > 0)
                             {
                                 nre[1] = usersCount.ToString();
                                 string[] nda = new string[2];
                                 nda[0] = i.ToString();
-                                nda[1] = past7days.ToShortDateString(); 
+                                nda[1] = past7days.ToShortDateString();
+
                                 i++;
+
                                 DurationArray da = new DurationArray();
                                 da.durationData = nda;
                                 duraionList.Add(da);
                             }
 
                         }
-                        else if (status == "1")
+                        else if (userStatus == "1")
                         {
                             int usersCount = (from t in obj.Members where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 && (t.Status != "Active" && t.Status != "Registered" && t.Status != "Suspended" && t.Status != "Deleted") select t).Count();
                             if (usersCount > 0)
@@ -2979,23 +2972,26 @@ namespace noochAdminNew.Controllers
                             }
                         }
 
-                        
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
-                        
 
                         extList.Add(id);
-                        
+
                         past7days = past7days.AddDays(1);
-                        
                     }
                 }
 
-                if (recordType == "weekly")
+                #endregion Custom Date Range
+
+                #region Weekly
+
+                if (dateType == "weekly")
                 {
                     DateTime todayDate = DateTime.Now;
                     DateTime past7days = DateTime.Now.AddDays(-70);
+
                     int j = 0;
+
                     while (past7days <= todayDate)
                     {
                         int count = 0;
@@ -3003,79 +2999,267 @@ namespace noochAdminNew.Controllers
                         string[] nda = new string[2];
                         nre[0] = j.ToString();
                         nda[0] = j.ToString();
-                        if (status == "0")
+
+                        #region User Type is ALL
+
+                        if (userType == "0") // 'All' for USER TYPE (Registered/Non-registered)
                         {
-                            
-                            for (int i = 0; i < 7; i++)
+                            if (userStatus == "0") // 'All' for USER STATUS (deleted & non deleted)
                             {
-
-
-                                count += (from t in obj.Members where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == (7 - i) && (t.Status == "Active" || t.Status == "Registered") select t).Count();
-
-
+                                for (int i = 0; i < 7; i++)
+                                {
+                                    count += (from t in obj.Members
+                                              where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == (7 - i) &&
+                                                    !String.IsNullOrEmpty(t.Status)
+                                              select t).Count();
+                                }
                             }
-                            nre[1] = count.ToString();
+                            else if (userStatus == "1") // Not Deleted for USER STATUS (Only IsDeleted = false)
+                            {
+                                for (int i = 0; i < 7; i++)
+                                {
+                                    count += (from t in obj.Members
+                                              where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == (7 - i) &&
+                                                    !String.IsNullOrEmpty(t.Status) &&
+                                                    t.IsDeleted == false
+                                              select t).Count();
+                                }
+                            }
+                            else if (userStatus == "2") // 'Deleted' for USER STATUS (Only IsDeleted = true)
+                            {
+                                for (int i = 0; i < 7; i++)
+                                {
+                                    count += (from t in obj.Members
+                                              where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == (7 - i) &&
+                                                    !String.IsNullOrEmpty(t.Status) &&
+                                                    t.IsDeleted == true
+                                              select t).Count();
+                                }
+                            }
                         }
-                        else if (status == "1")
+
+                        #endregion User Type is ALL
+
+                        #region User Type is REGISTERED
+
+                        else if (userType == "1") // 'Registered' (Also will include 'Active' or 'Accepted'
                         {
-                            
-                            for (int i = 0; i < 7; i++)
+                            if (userStatus == "0") // 'All' for USER STATUS (deleted & non deleted)
                             {
-
-
-                                count += (from t in obj.Members where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == (7 - i) && (t.Status != "Registered" && t.Status != "Suspended" && t.Status != "Deleted") select t).Count();
-
-
+                                for (int i = 0; i < 7; i++)
+                                {
+                                    count += (from t in obj.Members
+                                              where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == (7 - i) &&
+                                                   (t.Status == "Registered" || t.Status == "Active" || t.Status == "Accepted")
+                                              select t).Count();
+                                }
                             }
-                            nre[1] = count.ToString();
+                            else if (userStatus == "1") // Not Deleted for USER STATUS (Only IsDeleted = false)
+                            {
+                                for (int i = 0; i < 7; i++)
+                                {
+                                    count += (from t in obj.Members
+                                              where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == (7 - i) &&
+                                                   (t.Status == "Registered" || t.Status == "Active" || t.Status == "Accepted") &&
+                                                    t.IsDeleted == false
+                                              select t).Count();
+                                }
+                            }
+                            else if (userStatus == "2") // 'Deleted' for USER STATUS (Only IsDeleted = true)
+                            {
+                                for (int i = 0; i < 7; i++)
+                                {
+                                    count += (from t in obj.Members
+                                              where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == (7 - i) &&
+                                                   (t.Status == "Registered" || t.Status == "Active" || t.Status == "Accepted") &&
+                                                    t.IsDeleted == true
+                                              select t).Count();
+                                }
+                            }
                         }
 
-                        if (-(j - 10)==0)
-                            nda[1] = "This Week ";
-                        else if(-(j - 10)==1)
-                            nda[1] = "Last Week ";
-                        else if (-(j - 10) == 2)
-                            nda[1] = "2nd Last Week ";
-                        else if (-(j - 10) == 3)
-                            nda[1] = "3rd Last Week ";
+                        #endregion User Type is REGISTERED
+
+                        #region User Type is NON-REGISTERED
+
+                        else if (userType == "2") // 'Non-Registered'
+                        {
+                            if (userStatus == "0") // 'All' for USER STATUS (deleted & non deleted)
+                            {
+                                for (int i = 0; i < 7; i++)
+                                {
+                                    count += (from t in obj.Members
+                                              where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == (7 - i) &&
+                                                    t.Status != "NonRegistered"
+                                              select t).Count();
+                                }
+                            }
+                            else if (userStatus == "1") // Not Deleted for USER STATUS (Only IsDeleted = false)
+                            {
+                                for (int i = 0; i < 7; i++)
+                                {
+                                    count += (from t in obj.Members
+                                              where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == (7 - i) &&
+                                                    t.Status != "NonRegistered" &&
+                                                    t.IsDeleted == false
+                                              select t).Count();
+                                }
+                            }
+                            else if (userStatus == "2") // 'Deleted' for USER STATUS (Only IsDeleted = true)
+                            {
+                                for (int i = 0; i < 7; i++)
+                                {
+                                    count += (from t in obj.Members
+                                              where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == (7 - i) &&
+                                                    t.Status != "NonRegistered" &&
+                                                    t.IsDeleted == true
+                                              select t).Count();
+                                }
+                            }
+                        }
+
+                        #endregion User Type is NON-REGISTERED
+
+
+                        nre[1] = count.ToString();
+
+
+
+                        if (-(j - 10) == 0)
+                            nda[1] = "This Week";
+                        else if (-(j - 10) == 1)
+                            nda[1] = "Last Week";
                         else
-                            nda[1] = -(j - 10) + " th Last Week ";
-                         internalDataArray id = new internalDataArray();
-                         id.internalData = nre;
-                         DurationArray da = new DurationArray();
-                         da.durationData = nda;
+                            nda[1] = -(j - 10) + " Weeks Ago";
 
-                         extList.Add(id);
-                         duraionList.Add(da);
-                         j++;
-                         past7days= past7days.AddDays(7);
+                        internalDataArray id = new internalDataArray();
+                        id.internalData = nre;
+
+                        DurationArray da = new DurationArray();
+                        da.durationData = nda;
+
+                        extList.Add(id);
+                        duraionList.Add(da);
+                        j++;
+                        past7days = past7days.AddDays(7);
                     }
                 }
 
-                if (recordType == "daily")
+                #endregion Weekly
+
+                #region Daily
+
+                if (dateType == "daily")
                 {
                     DateTime todayDate = DateTime.Now;
                     DateTime past7days = DateTime.Now.AddDays(-7);
                     int i = 0;
-                    while (past7days <= todayDate)
-                    { 
 
+                    while (past7days <= todayDate)
+                    {
                         string[] nre = new string[2];
-                        nre[0] = i.ToString();// past7days.DayOfWeek.ToString();
-                        if (status == "0")
+                        nre[0] = i.ToString();
+
+                        #region User Type is ALL
+
+                        if (userType == "0") // 'All' for USER TYPE (Registered/Non-registered)
                         {
-                            nre[1] = (from t in obj.Members where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 && (t.Status == "Active" || t.Status == "Registered") select t).Count().ToString();
+                            if (userStatus == "0") // 'All' for USER STATUS (deleted & non deleted)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 &&
+                                                !String.IsNullOrEmpty(t.Status)
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "1") // Not Deleted for USER STATUS (Only IsDeleted = false)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 &&
+                                                !String.IsNullOrEmpty(t.Status) &&
+                                                t.IsDeleted == false
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "2") // 'Deleted' for USER STATUS (Only IsDeleted = true)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 &&
+                                                !String.IsNullOrEmpty(t.Status) &&
+                                                t.IsDeleted == true
+                                          select t).Count().ToString();
+                            }
                         }
-                        else if (status == "1")
+
+                        #endregion User Type is ALL
+
+                        #region User Type is REGISTERED
+
+                        else if (userType == "1") // 'Registered' (Also will include 'Active' or 'Accepted'
                         {
-                            nre[1] = (from t in obj.Members where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 && (t.Status != "Active" && t.Status != "Registered" && t.Status != "Suspended" && t.Status != "Deleted") select t).Count().ToString();
+                            if (userStatus == "0") // 'All' for USER STATUS (deleted & non deleted)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 &&
+                                                (t.Status == "Active" || t.Status == "Registered" || t.Status == "Accepted")
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "1") // Not Deleted for USER STATUS (Only IsDeleted = false)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 &&
+                                                (t.Status == "Active" || t.Status == "Registered" || t.Status == "Accepted") &&
+                                                 t.IsDeleted == false
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "2") // 'Deleted' for USER STATUS (Only IsDeleted = true)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 &&
+                                                (t.Status == "Active" || t.Status == "Registered" || t.Status == "Accepted") &&
+                                                 t.IsDeleted == true
+                                          select t).Count().ToString();
+                            }
                         }
-                        
+
+                        #endregion User Type is REGISTERED
+
+                        #region User Type is NON-REGISTERED
+
+                        else if (userType == "2") // 'Non-Registered'
+                        {
+                            if (userStatus == "0") // 'All' for USER STATUS (deleted & non deleted)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 &&
+                                                t.Status != "NonRegistered"
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "1") // Not Deleted for USER STATUS (Only IsDeleted = false)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 &&
+                                                t.Status != "NonRegistered" &&
+                                                t.IsDeleted == false
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "2") // 'Deleted' for USER STATUS (Only IsDeleted = true)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where SqlFunctions.DateDiff("DAY", t.DateCreated, past7days) == 0 &&
+                                                t.Status != "NonRegistered" &&
+                                                t.IsDeleted == true
+                                          select t).Count().ToString();
+                            }
+                        }
+
+                        #endregion User Type is NON-REGISTERED
+
                         string[] nda = new string[2];
                         nda[0] = i.ToString();
                         nda[1] = past7days.DayOfWeek.ToString();
+
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
+
                         DurationArray da = new DurationArray();
                         da.durationData = nda;
 
@@ -3086,74 +3270,274 @@ namespace noochAdminNew.Controllers
                     }
                 }
 
-                else if (recordType == "monthly")
+                #endregion Daily
+
+                #region Monthly
+
+                else if (dateType == "monthly")
                 {
                     DateTime todayDate = DateTime.Now;
-                    DateTime past7days = DateTime.Now.AddMonths(-7);
+                    DateTime past8months = DateTime.Now.AddMonths(-8);
+
                     int i = 0;
-                    while (past7days <= todayDate)
+
+                    while (past8months <= todayDate)
                     {
                         string[] nre = new string[2];
-                        nre[0] = i.ToString();// past7days.DayOfWeek.ToString();
-                        if (status == "0")
+                        nre[0] = i.ToString();
+
+                        #region User Type is ALL
+
+                        if (userType == "0") // 'All' for USER TYPE (Registered/Non-registered)
                         {
-                            nre[1] = (from t in obj.Members where t.DateCreated.Value.Month == past7days.Month && (t.Status == "Active" || t.Status == "Registered") select t).Count().ToString();
-                        }else if (status == "1")
-                            nre[1] = (from t in obj.Members where t.DateCreated.Value.Month == past7days.Month && (t.Status != "Active" && t.Status != "Registered" && t.Status != "Suspended" && t.Status != "Deleted") select t).Count().ToString();
+                            if (userStatus == "0") // 'All' for USER STATUS (deleted & non deleted)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Month == past8months.Month &&
+                                          !String.IsNullOrEmpty(t.Status)
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "1") // Not Deleted for USER STATUS (Only IsDeleted = false)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Month == past8months.Month &&
+                                          !String.IsNullOrEmpty(t.Status) &&
+                                          t.IsDeleted == false
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "2") // 'Deleted' for USER STATUS (Only IsDeleted = true)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Month == past8months.Month &&
+                                          !String.IsNullOrEmpty(t.Status) &&
+                                          t.IsDeleted == true
+                                          select t).Count().ToString();
+                            }
+                        }
+
+                        #endregion User Type is ALL
+
+                        #region User Type is REGISTERED
+
+                        else if (userType == "1") // 'Registered' (Also will include 'Active' or 'Accepted'
+                        {
+                            if (userStatus == "0") // 'All' for USER STATUS (deleted & non deleted)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Month == past8months.Month &&
+                                          (t.Status == "Active" || t.Status == "Registered" || t.Status == "Accepted")
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "1") // Not Deleted for USER STATUS (Only IsDeleted = false)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Month == past8months.Month &&
+                                          (t.Status == "Active" || t.Status == "Registered" || t.Status == "Accepted") &&
+                                           t.IsDeleted == false
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "2") // 'Deleted' for USER STATUS (Only IsDeleted = true)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Month == past8months.Month &&
+                                          (t.Status == "Active" || t.Status == "Registered" || t.Status == "Accepted") &&
+                                           t.IsDeleted == true
+                                          select t).Count().ToString();
+                            }
+                        }
+
+                        #endregion User Type is REGISTERED
+
+                        #region User Type is NON-REGISTERED
+
+                        else if (userType == "2") // 'Non-Registered'
+                        {
+                            if (userStatus == "0") // 'All' for USER STATUS (deleted & non deleted)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Month == past8months.Month &&
+                                          t.Status != "NonRegistered"
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "1") // Not Deleted for USER STATUS (Only IsDeleted = false)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Month == past8months.Month &&
+                                          t.Status != "NonRegistered" &&
+                                          t.IsDeleted == false
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "2") // 'Deleted' for USER STATUS (Only IsDeleted = true)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Month == past8months.Month &&
+                                          t.Status != "NonRegistered" &&
+                                          t.IsDeleted == true
+                                          select t).Count().ToString();
+                            }
+                        }
+
+                        #endregion User Type is NON-REGISTERED
+
+
                         string[] nda = new string[2];
                         nda[0] = i.ToString();
-                        nda[1] = past7days.ToString("MMM");
+                        nda[1] = past8months.ToString("MMM 'yy");
+
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
+
                         DurationArray da = new DurationArray();
                         da.durationData = nda;
                         extList.Add(id);
                         duraionList.Add(da);
-                        past7days = past7days.AddMonths(1);
+                        past8months = past8months.AddMonths(1);
+
                         i++;
                     }
                 }
 
+                #endregion Monthly
 
-                else if (recordType == "yearly")
+                #region Yearly
+
+                else if (dateType == "yearly")
                 {
                     DateTime todayDate = DateTime.Now;
-                    DateTime past7days = DateTime.Now.AddYears(-7);
+                    DateTime past4years = DateTime.Now.AddYears(-4);
+
                     int i = 0;
-                    while (past7days <= todayDate)
+
+                    while (past4years <= todayDate)
                     {
                         string[] nre = new string[2];
-                        nre[0] = i.ToString();// past7days.DayOfWeek.ToString();
-                        if (status == "0")
-                        {
-                            nre[1] = (from t in obj.Members where t.DateCreated.Value.Year == past7days.Year && (t.Status == "Active" || t.Status == "Registered") select t).Count().ToString();
-                        }else if(status=="1")
-                            nre[1] = (from t in obj.Members where t.DateCreated.Value.Year == past7days.Year && (t.Status != "Active" && t.Status != "Registered" && t.Status != "Suspended" && t.Status != "Deleted") select t).Count().ToString();
-                            
-                            string[] nda = new string[2];
-                        nda[0] = i.ToString();
-                        nda[1] = past7days.Year.ToString();
-                        internalDataArray id = new internalDataArray();
+                        nre[0] = i.ToString();
 
+                        #region User Type is ALL
+
+                        if (userType == "0") // 'All' for USER TYPE (Registered/Non-registered)
+                        {
+                            if (userStatus == "0") // 'All' for USER STATUS (deleted & non deleted)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Year == past4years.Year &&
+                                          !String.IsNullOrEmpty(t.Status)
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "1") // Not Deleted for USER STATUS (Only IsDeleted = false)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Year == past4years.Year &&
+                                          !String.IsNullOrEmpty(t.Status) &&
+                                          t.IsDeleted == false
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "2") // 'Deleted' for USER STATUS (Only IsDeleted = true)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Year == past4years.Year &&
+                                          !String.IsNullOrEmpty(t.Status) &&
+                                          t.IsDeleted == true
+                                          select t).Count().ToString();
+                            }
+                        }
+
+                        #endregion User Type is ALL
+
+                        #region User Type is REGISTERED
+
+                        else if (userType == "1") // 'Registered' (Also will include 'Active' or 'Accepted'
+                        {
+                            if (userStatus == "0") // 'All' for USER STATUS (deleted & non deleted)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Year == past4years.Year &&
+                                          (t.Status == "Active" || t.Status == "Registered" || t.Status == "Accepted")
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "1") // Not Deleted for USER STATUS (Only IsDeleted = false)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Year == past4years.Year &&
+                                          (t.Status == "Active" || t.Status == "Registered" || t.Status == "Accepted") &&
+                                          t.IsDeleted == false
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "2") // 'Deleted' for USER STATUS (Only IsDeleted = true)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Year == past4years.Year &&
+                                          (t.Status == "Active" || t.Status == "Registered" || t.Status == "Accepted") &&
+                                          t.IsDeleted == true
+                                          select t).Count().ToString();
+                            }
+                        }
+
+                        #endregion User Type is REGISTERED
+
+                        #region User Type is NON-REGISTERED
+
+                        else if (userType == "2") // 'Non-Registered'
+                        {
+                            if (userStatus == "0") // 'All' for USER STATUS (deleted & non deleted)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Year == past4years.Year &&
+                                          t.Status != "NonRegistered"
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "1") // Not Deleted for USER STATUS (Only IsDeleted = false)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Year == past4years.Year &&
+                                          t.Status != "NonRegistered" &&
+                                          t.IsDeleted == false
+                                          select t).Count().ToString();
+                            }
+                            else if (userStatus == "2") // 'Deleted' for USER STATUS (Only IsDeleted = true)
+                            {
+                                nre[1] = (from t in obj.Members
+                                          where t.DateCreated.Value.Year == past4years.Year &&
+                                          t.Status != "NonRegistered" &&
+                                          t.IsDeleted == true
+                                          select t).Count().ToString();
+                            }
+                        }
+
+                        #endregion User Type is NON-REGISTERED
+
+
+                        string[] nda = new string[2];
+                        nda[0] = i.ToString();
+                        nda[1] = past4years.Year.ToString();
+
+                        internalDataArray id = new internalDataArray();
                         id.internalData = nre;
+
                         DurationArray da = new DurationArray();
                         da.durationData = nda;
+
                         extList.Add(id);
                         duraionList.Add(da);
-                        past7days = past7days.AddYears(1);
+
+                        past4years = past4years.AddYears(1);
+
                         i++;
                     }
                 }
 
+                #endregion Yearly
 
                 res.externalData = extList;
                 res.Duration = duraionList;
             }
+
             res.IsSuccess = true;
             res.ErrorMessage = "OK";
 
             return Json(res);
         }
+
 
         public class getUserOverTimeResult
         {
@@ -3162,8 +3546,8 @@ namespace noochAdminNew.Controllers
             public List<DurationArray> Duration { get; set; }
 
             public List<internalDataArray> externalData { get; set; }
-
         }
+
         public class internalDataArray
         {
             public string[] internalData { get; set; }
@@ -3185,10 +3569,10 @@ namespace noochAdminNew.Controllers
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 List<Transaction> admin = new List<Transaction>();
-              
-                adminUser = (from t in obj.Transactions                              
+
+                adminUser = (from t in obj.Transactions
                              join g in obj.GeoLocations
-                             on t.LocationId equals g.LocationId                              
+                             on t.LocationId equals g.LocationId
                              select new TransactionClass
                              {
                                  TransactionId = t.TransactionId,
@@ -3203,11 +3587,11 @@ namespace noochAdminNew.Controllers
                                  TransLati = g.Latitude,
                                  state = g.State,
                                  city = g.City,
-                                 Memo =t.Memo
+                                 Memo = t.Memo
                              }
 
                               ).ToList();
-                
+
                 foreach (var transaction in adminUser.ToList())
                 {
                     //+C1+zhVafHdXQXCIqjU/Zg== -- Disputed
@@ -3224,12 +3608,12 @@ namespace noochAdminNew.Controllers
                         // sender user
                         Member sender = CommonHelper.GetMemberUsingGivenMemberId(transaction.RecipientId.ToString());
                         transaction.SenderNoochId = sender.Nooch_ID.ToString();
-                        transaction.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(sender.FirstName)) + " " +CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(sender.LastName));
+                        transaction.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(sender.FirstName)) + " " + CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(sender.LastName));
                         transaction.SenderId = sender.MemberId;
 
                         Member receiver = CommonHelper.GetMemberUsingGivenMemberId(transaction.SenderId.ToString());
                         transaction.RecepientNoochId = receiver.Nooch_ID.ToString();
-                        transaction.RecipienName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(receiver.FirstName)) + " " +CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(receiver.LastName)); ;
+                        transaction.RecipienName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(receiver.FirstName)) + " " + CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(receiver.LastName)); ;
                         transaction.RecipientId = receiver.MemberId;
                     }
                     else
@@ -3242,9 +3626,9 @@ namespace noochAdminNew.Controllers
 
                         Member receiver = CommonHelper.GetMemberUsingGivenMemberId(transaction.RecipientId.ToString());
                         transaction.RecepientNoochId = receiver.Nooch_ID.ToString();
-                        transaction.RecipienName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(receiver.FirstName)) + " " +CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(receiver.LastName));
+                        transaction.RecipienName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(receiver.FirstName)) + " " + CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(receiver.LastName));
                         transaction.RecipientId = receiver.MemberId;
-                    }                                
+                    }
                     transaction.TransactionDate1 = Convert.ToDateTime(transaction.TransactionDate).ToString("MMM d, yyyy");
                     transaction.TransactionTime = Convert.ToDateTime(transaction.TransactionDate).ToString("h:mm tt");
                     transaction.Amount = Math.Round(transaction.Amount, 2);
@@ -3273,6 +3657,5 @@ namespace noochAdminNew.Controllers
             }
             return Json(res);
         }
-    
     }
 }

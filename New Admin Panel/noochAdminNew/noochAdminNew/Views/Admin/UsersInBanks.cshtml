@@ -1,28 +1,21 @@
-﻿``@{
+﻿@{
     ViewBag.Title = "UsersinBanks";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-
 <section id="content">
     <div class="container">
 
-
         <div class="row">
-
 
             <div class="col-md-11">
                 <div class="card">
                     <div class="card-header">
-                        <h2 id="headerUserOverTime">Bar Chart for showing Graph of users in banks</h2>
+                        <h2 id="headerUserOverTime">Banks Linked By Users</h2>
 
                         <ul class="actions">
                             <li class="dropdown action-show">
-                                 
-
                                 <div class="dropdown-menu pull-right">
-                                     
                                 </div>
                             </li>
                         </ul>
@@ -31,37 +24,17 @@
                     <div class="card-body card-padding-sm">
                         <div id="bar-chart" class="flot-chart"></div>
                         <div class="flc-bar"></div>
-                         
-                    </div>
 
+                    </div>
                 </div>
             </div>
-
-            
-
-
-
-
         </div>
-
-
-
     </div>
 </section>
 
-
-
 <!-- Javascript Libraries -->
-
-
-
 <script src="~/Scripts/App/flot/jquery.flot.js"></script>
-
-
-
 <script src="~/Scripts/App/UsersInBanks.js"></script>
-
-
 
 <!-- Placeholder for IE9 -->
 <!--[if IE 9 ]>
@@ -69,11 +42,4 @@
 <![endif]-->
 <!-- Charts - Please read the read-me.txt inside the js folder-->
 
-
 <script src="~/Scripts/App/flot-charts/bar-chart.js"></script>
-
-
-
-
-
-
