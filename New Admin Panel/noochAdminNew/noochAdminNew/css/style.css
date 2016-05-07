@@ -5096,6 +5096,12 @@ body.skin-3 {
     background-color: #f5f5f5;
 }
 
+table.table.dataTable tbody tr>td.actions .btn {
+	background: none;
+	text-shadow: none;
+	padding: 0;
+}
+
 @media (min-width: 768px) {
   #page-wrapper {
     position: inherit;

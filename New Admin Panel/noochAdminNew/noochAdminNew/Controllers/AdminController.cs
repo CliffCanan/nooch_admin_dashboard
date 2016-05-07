@@ -3588,9 +3588,7 @@ namespace noochAdminNew.Controllers
                                  state = g.State,
                                  city = g.City,
                                  Memo = t.Memo
-                             }
-
-                              ).ToList();
+                             }).ToList();
 
                 foreach (var transaction in adminUser.ToList())
                 {
@@ -3636,6 +3634,7 @@ namespace noochAdminNew.Controllers
                     adminUser.Add(transaction);
                 }
             }
+
             return View(adminUser);
         }
 
