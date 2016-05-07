@@ -5102,6 +5102,20 @@ table.table.dataTable tbody tr>td.actions .btn {
 	padding: 0;
 }
 
+.panel-heading > small {
+	font-weight: 400;
+}
+
+#dash_UsersPanel .ibox-title {
+	height: 30px;
+	padding: 5px 6px;
+}
+
+#dashboard-home .list-group.clear-list .list-group-item {
+	padding: 4px 6px !important;
+	font-size: 92%;
+}
+
 @media (min-width: 768px) {
   #page-wrapper {
     position: inherit;

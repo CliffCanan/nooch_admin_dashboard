@@ -15,24 +15,17 @@
 }
 
 <link href="~/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet" />
-<!-- Gritter -->
 <link href="~/js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
-
-
 <!-- Data Tables CSS -->
 <link href="~/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
 <link href="~/css/plugins/dataTables/dataTables.responsive.css" rel="stylesheet">
 <link href="~/css/plugins/dataTables/dataTables.tableTools.min.css" rel="stylesheet">
 
-
-
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
         <h2>Dashboard</h2>
         <ol class="breadcrumb">
-            <li>
-                <a href="#">Dashboard</a>
-            </li>
+            <li>Dashboard</li>
             <li class="active">
                 <strong>Home</strong>
             </li>
@@ -40,19 +33,19 @@
     </div>
 </div>
 
-<div class="row wrapper wrapper-content">
+<div id="dashboard-home" class="row wrapper wrapper-content">
 
     <div class="col-lg-9 nopad">
 
-        <div class="panel panel-primary" id="dash_UsersPanel">
-            <div class="panel-heading">Users</div>
+        <div class="panel" id="dash_UsersPanel">
+            <div class="panel-heading">Users | <small>Summary</small></div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-3">
                         <div class="widget blue-bg" id="totalUsersWidg">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <i class="fa fa-users fa-3x"></i>
+                                    <i class="fa fa-users fa-2x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
                                     <span> Total Users </span>
@@ -66,7 +59,7 @@
                         <div class="widget navy-bg">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <i class="fa fa-mobile fa-4x"></i>
+                                    <i class="fa fa-mobile fa-2x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right nopad">
                                     <span> w/ Verified Phone </span>
@@ -80,7 +73,7 @@
                         <div class="widget lazur-bg">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <i class="fa fa-at fa-3x"></i>
+                                    <i class="fa fa-at fa-2x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right nopad">
                                     <span> w/ Verified Email</span>
@@ -94,7 +87,7 @@
                         <div class="widget red-bg">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <i class="fa fa-institution fa-3x"></i>
+                                    <i class="fa fa-institution fa-2x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right nopad">
                                     <span> w/ Bank Account </span>
@@ -109,37 +102,25 @@
                 <div class="row">
 
                     <div class="col-lg-3">
-                        <div class="ibox float-e-margins">
+                        <div class="ibox m-b-0">
                             <div class="ibox-title">
-                                <h5># of NEW Users:</h5>
+                                <h5>New Users:</h5>
                             </div>
                             <div class="ibox-content no-padding">
+
                                 <ul class="list-group list-group-condensed clear-list">
                                     <li class="list-group-item">
-                                        <span class="">
-                                            Today
-                                        </span>
-                                        <span class="pull-right text-navy">
-                                            @dd.TotalNoOfActiveUser_Today
-                                        </span>
+                                        <span class="dateHoverToday">Today</span>
+                                        <span class="pull-right text-navy">@dd.TotalNoOfActiveUser_Today</span>
                                     </li>
                                     <li class="list-group-item">
-                                        <span class="">
-                                            This week
-                                        </span>
-                                        <span class="pull-right text-danger">
-                                            @dd.TotalNoOfActiveUser_Week
-                                        </span>
+                                        <span class="">This week</span>
+                                        <span class="pull-right text-danger">@dd.TotalNoOfActiveUser_Week</span>
                                     </li>
                                     <li class="list-group-item">
-                                        <span class="">
-                                            This month
-                                        </span>
-                                        <span class="pull-right text-navy">
-                                            @dd.TotalNoOfActiveUser_Month
-                                        </span>
+                                        <span class="dateHoverThisMonth">This month</span>
+                                        <span class="pull-right text-navy">@dd.TotalNoOfActiveUser_Month</span>
                                     </li>
-
                                 </ul>
 
                             </div>
@@ -147,37 +128,25 @@
                     </div>
 
                     <div class="col-lg-3">
-                        <div class="ibox float-e-margins">
+                        <div class="ibox m-b-0">
                             <div class="ibox-title">
-                                <h5># of NEW Verified Phones:</h5>
+                                <h5>New Verified Phones:</h5>
                             </div>
                             <div class="ibox-content no-padding">
+
                                 <ul class="list-group list-group-condensed clear-list">
                                     <li class="list-group-item">
-                                        <span class="">
-                                            Today
-                                        </span>
-                                        <span class="pull-right text-navy">
-                                            @dd.TotalNoOfVerifiedPhoneUsers_Today
-                                        </span>
+                                        <span class="dateHoverToday">Today</span>
+                                        <span class="pull-right text-navy">@dd.TotalNoOfVerifiedPhoneUsers_Today</span>
                                     </li>
                                     <li class="list-group-item">
-                                        <span class="">
-                                            This week
-                                        </span>
-                                        <span class="pull-right text-danger">
-                                            @dd.TotalNoOfVerifiedPhoneUsers_Week
-                                        </span>
+                                        <span class="">This week</span>
+                                        <span class="pull-right text-danger">@dd.TotalNoOfVerifiedPhoneUsers_Week</span>
                                     </li>
                                     <li class="list-group-item">
-                                        <span class="">
-                                            This month
-                                        </span>
-                                        <span class="pull-right text-navy">
-                                            @dd.TotalNoOfVerifiedPhoneUsers_Month
-                                        </span>
+                                        <span class="dateHoverThisMonth">This month</span>
+                                        <span class="pull-right text-navy">@dd.TotalNoOfVerifiedPhoneUsers_Month</span>
                                     </li>
-
                                 </ul>
 
                             </div>
@@ -185,37 +154,27 @@
                     </div>
 
                     <div class="col-lg-3">
-                        <div class="ibox float-e-margins">
+                        <div class="ibox m-b-0">
                             <div class="ibox-title">
-                                <h5># of NEW Verified Email:</h5>
+                                <h5>New Verified Emails:</h5>
                             </div>
                             <div class="ibox-content no-padding">
+
                                 <ul class="list-group list-group-condensed clear-list">
                                     <li class="list-group-item">
-                                        <span class="">
-                                            Today
-                                        </span>
+                                        <span class="dateHoverToday">Today</span>
                                         <span class="pull-right text-navy">
                                             @dd.TotalNoOfVerifiedEmailUsers_Today @*<span class=""><small><i class="fa fa-level-up"></i>28%</small></span>*@
                                         </span>
                                     </li>
                                     <li class="list-group-item">
-                                        <span class="">
-                                            This week
-                                        </span>
-                                        <span class="pull-right text-danger">
-                                            @dd.TotalNoOfVerifiedEmailUsers_Week
-                                        </span>
+                                        <span class="">This week</span>
+                                        <span class="pull-right text-danger">@dd.TotalNoOfVerifiedEmailUsers_Week</span>
                                     </li>
                                     <li class="list-group-item">
-                                        <span class="">
-                                            This month
-                                        </span>
-                                        <span class="pull-right text-navy">
-                                            @dd.TotalNoOfVerifiedEmailUsers_Month
-                                        </span>
+                                        <span class="dateHoverThisMonth">This month</span>
+                                        <span class="pull-right text-navy">@dd.TotalNoOfVerifiedEmailUsers_Month</span>
                                     </li>
-
                                 </ul>
 
                             </div>
@@ -223,37 +182,25 @@
                     </div>
 
                     <div class="col-lg-3">
-                        <div class="ibox float-e-margins">
+                        <div class="ibox m-b-0">
                             <div class="ibox-title">
-                                <h5># of NEW Banks:</h5>
+                                <h5>New Banks:</h5>
                             </div>
                             <div class="ibox-content no-padding">
+
                                 <ul class="list-group list-group-condensed clear-list">
                                     <li class="list-group-item">
-                                        <span class="">
-                                            Today
-                                        </span>
-                                        <span class="pull-right text-navy">
-                                            2
-                                        </span>
+                                        <span class="dateHoverToday">Today</span>
+                                        <span class="pull-right text-navy">?</span>
                                     </li>
                                     <li class="list-group-item">
-                                        <span class="">
-                                            This week
-                                        </span>
-                                        <span class="pull-right text-danger">
-                                            20
-                                        </span>
+                                        <span class="">This week</span>
+                                        <span class="pull-right text-danger">20</span>
                                     </li>
                                     <li class="list-group-item">
-                                        <span class="">
-                                            This month
-                                        </span>
-                                        <span class="pull-right text-navy">
-                                            55
-                                        </span>
+                                        <span class="dateHoverThisMonth">This month</span>
+                                        <span class="pull-right text-navy">55</span>
                                     </li>
-
                                 </ul>
 
                             </div>
@@ -264,15 +211,15 @@
         </div>
 
 
-        <div class="panel panel-success" id="dash_TransPanel">
-            <div class="panel-heading">Transactions - Summary</div>
+        <div class="panel" id="dash_TransPanel">
+            <div class="panel-heading">Transactions | <small>Summary</small></div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-3">
                         <div class="widget lazur-bg">
                             <div class="row">
                                 <div class="col-xs-4">
-                                    <i class="fa fa-money fa-3x"></i>
+                                    <i class="fa fa-money fa-2x"></i>
                                 </div>
                                 <div class="col-xs-8 text-right nopad">
                                     <span>Total Volume</span>
@@ -290,7 +237,7 @@
                         <div class="widget navy-bg">
                             <div class="row">
                                 <div class="col-xs-4">
-                                    <i class="fa fa-check-circle fa-3x"></i>
+                                    <i class="fa fa-check-circle fa-2x"></i>
                                 </div>
                                 <div class="col-xs-8 text-right nopad">
                                     <span>Transactions Completed</span>
@@ -304,7 +251,7 @@
                         <div class="widget lazur-bg">
                             <div class="row">
                                 <div class="col-xs-4">
-                                    <i class="fa fa-reply fa-3x"></i>
+                                    <i class="fa fa-reply fa-2x"></i>
                                 </div>
                                 <div class="col-xs-8 text-right nopad">
                                     <span>Total Requests</span>
@@ -318,7 +265,7 @@
                         <div class="widget red-bg">
                             <div class="row">
                                 <div class="col-xs-4">
-                                    <i class="fa fa-clock-o fa-3x"></i>
+                                    <i class="fa fa-clock-o fa-2x"></i>
                                 </div>
                                 <div class="col-xs-8 text-right nopad">
                                     <span>Pending Requests</span>
@@ -334,38 +281,36 @@
 
 
 
-        <div class="panel panel-primary" id="dash_TransPanel2">
+        <div class="panel panel-default" id="dash_TransPanel2">
             <div class="panel-heading">Recent Transactions </div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-12 m-b-sm">
                         <div class="btn-group pull-right" data-toggle="buttons">
-                            <label class="btn btn-white active" for="option1"> <input type="radio" name="options" id="option1" value="0" > Day </label>
-                            <label class="btn btn-white" for="option2"> <input type="radio" name="options" id="option2" value="1" > Week </label>
-                            <label class="btn btn-white" for="option3"> <input type="radio" name="options" id="option3" value="2" > Month </label>
+                            <label class="btn btn-white active" for="option1"> <input type="radio" name="options" id="option1" value="0"> Day </label>
+                            <label class="btn btn-white" for="option2"> <input type="radio" name="options" id="option2" value="1"> Week </label>
+                            <label class="btn btn-white" for="option3"> <input type="radio" name="options" id="option3" value="2"> Month </label>
                         </div>
                     </div>
-
-                    <table class="table table-striped table-bordered table-hover" id="AllTrans">
-                        <thead>
-                            <tr>
-                                <th>Transaction ID</th>
-                                <th>Transaction Type</th>
-                                <th>Status</th>
-                                <th>Date / Time</th>
-                                <th>Sender</th>
-                                <th>Recipient</th>
-                                <th>Amount</th>
-                                <th>Disputed</th>
-                                <th>Location</th>
-                            </tr>
-                        </thead>
-
-                        <tbody id="TBOdy"></tbody>
-                    </table>             
-
-
                 </div>
+
+                <table class="table table-striped table-bordered table-hover" id="AllTrans">
+                    <thead>
+                        <tr>
+                            <th>Trans ID</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Sender</th>
+                            <th>Recipient</th>
+                            <th>Amount</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="TBOdy"></tbody>
+                </table>
+
             </div>
 
         </div>
@@ -375,9 +320,52 @@
 
     <div class="col-lg-3">
 
+
+        <div class="ibox">
+            <div class="ibox-title">
+                <h5>User Status</h5>
+                <div ibox-tools></div>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <div>
+                        <canvas id="doughnutChart" height="140"></canvas>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <ul class="list-group list-group-condensed clear-list m-t-10 m-b-0">
+                            <li class="list-group-item">
+                                <span class="">Registered</span>
+                                <span class="pull-right font-bold">@dd.TotalActiveUsers</span>
+                            </li>
+                            <li class="list-group-item">
+                                <span class="">Active</span>
+                                <span class="pull-right font-bold">@dd.TotalActiveUsers</span> @*All Users w/ Status of "Active" or "Accepted"*@
+                            </li>
+                            <li class="list-group-item">
+                                <span class="">Non-Registered</span>
+                                <span class="pull-right font-bold">@dd.TotalVerifiedPhoneUsers</span> @*All Users w/ Status of "NonRegistered"*@
+                            </li>
+                            <li class="list-group-item">
+                                <span class="">Deleted</span>
+                                <span class="pull-right font-bold">@dd.TotalActiveBankAccountUsers</span> @*All Users w/ isDelete == true*@
+                            </li>
+                            <li class="list-group-item">
+                                <span class="">Suspended</span>
+                                <span class="pull-right font-bold">@dd.TotalActiveBankAccountUsers</span> @*All Users w/ Status of "Suspended" or "Temporary_blocked"*@
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <div class="ibox" id="dash_TransPanel22">
             <div class="ibox-title">
-                <h5># of Users in Banks</h5>
+                <h5>No. of Users Per Bank</h5>
             </div>
             <div class="ibox-content p-t-0">
                 <div class="row">
@@ -403,43 +391,6 @@
                 </div>
             </div>
 
-        </div>
-
-        <div class="ibox">
-            <div class="ibox-title">
-                <h5>Pie </h5>
-                <div ibox-tools></div>
-            </div>
-            <div class="ibox-content">
-                <div class="row">
-                    <div>
-                        <canvas id="doughnutChart" height="140"></canvas>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <ul class="list-group list-group-condensed clear-list">
-                            <li class="list-group-item">
-                                <span class="">Downloads</span>
-                                <span class="pull-right font-bold">@dd.TotalActiveUsers</span>
-                            </li>
-                            <li class="list-group-item">
-                                <span class="">Signups</span>
-                                <span class="pull-right font-bold">20</span> @*All Users w/ Status of "Registered" + "Active" + "Suspended" + "Temporary_blocked"*@
-                            </li>
-                            <li class="list-group-item">
-                                <span class="">Verified Phone</span>
-                                <span class="pull-right font-bold">@dd.TotalVerifiedPhoneUsers</span> @*All Users w/ BOTH Verified Phone AND Status of "Active"*@
-                            </li>
-                            <li class="list-group-item">
-                                <span class="">Bank Added</span>
-                                <span class="pull-right font-bold">@dd.TotalActiveBankAccountUsers</span> @*All Users w/ BOTH Verified Phone AND Status of "Active"*@
-                            </li>
-
-                        </ul>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="ibox">
@@ -478,12 +429,13 @@
     </div>
 
 
-
     <div id="TransData" style="display:block">@dd.TransData</div>
 
 </div>
+
 <script type="text/javascript">
-    function showLocationModal(lati, longi, stte) {
+    function showLocationModal(lati, longi, stte)
+    {
         var v = 'https://www.google.com/maps/embed/v1/place?q=' + lati + ',' + longi + '&center=' + lati + ',' + longi + '&key=AIzaSyDrUnX1gGpPL9fWmsWfhOxIDIy3t7YjcEY&zoom=13';
         $('#googleFrame').attr('src', v);
 
@@ -518,96 +470,9 @@
 <!-- ChartJS-->
 <script src="~/js/plugins/chartJs/Chart.min.js"></script>
 <script src="~/scripts/app/dashboardlivetransaction.js"></script>
-<script type="text/ecmascript">
-    $(document).ready(function () {
-        $('#DashboardMenu').addClass('active');
-    });
-
-    $('#totalUsersWidg').click(function () {
-        var url = window.location.protocol + "//" + window.location.host + "/noochnewadmin/Member/ListAll";
-        window.location.href = url;
-    });
-</script>
-
-<script>
-    $(function () { // Pie Chart
-        var doughnutData = [
-        /*{
-            value: 300,
-            color: "#a3e1d4",
-            highlight: "#1ab394",
-            label: "Downloads"
-        },*/
-        {
-            value: Number(@dd.TotalVerifiedEmailUsers) / Number(@dd.TotalActiveUsers),  // No. of Users w/ Status of "Registered" + "Active" + "Suspended" + "Temporary_blocked"
-            color: "#dedede",
-            highlight: "#1ab394",
-            label: "Signups"
-        },
-        {
-            value: Number(@dd.TotalVerifiedPhoneUsers) / Number(@dd.TotalActiveUsers),  // No. of Users w/ BOTH Verified Phone AND Status of "Active"
-            color: "rgba(63,171,225,1)",
-            highlight: "rgba(63,171,225,.7)",
-            label: "Verified"
-        },
-        {
-            value: Number(@dd.TotalActiveBankAccountUsers) / Number(@dd.TotalActiveUsers),
-            color: "rgba(114,191,68,1)",
-            highlight: "rgba(114,191,68,.7)",
-            label: "Bank Added"
-        }
-        ];
-
-        var doughnutOptions = {
-            segmentShowStroke: true,
-            segmentStrokeColor: "#fff",
-            segmentStrokeWidth: 1,
-            percentageInnerCutout: 25, // This is 0 for Pie charts
-            animationSteps: 150,
-            animationEasing: "easeOutBounce",
-            animateRotate: true,
-            animateScale: true,
-            responsive: true,
-            scaleShowLabels: true,
-            //String - A legend template
-            legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
-
-        };
-
-        var ctx = document.getElementById("doughnutChart").getContext("2d");
-        var myNewChart = new Chart(ctx).Doughnut(doughnutData, doughnutOptions);
-    });
-</script>
-
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#TransactionMaster").trigger("click");
-
-        $('#transMenuItem').addClass('active');       
-       
-        $('#AllTrans').dataTable({
-            responsive: true,
-            "order": [1, "desc"],
-            "aoColumnDefs": [{ 'bSortable': false, 'aTargets': [0] }],
-           // "order": [[6,'desc'], [7,'asc'], [3,'asc'], [2,'asc']],
-            //"dom": 'T<"clear">lfrtip',
-            //"tableTools": {
-            //    "sSwfPath": "../js/plugins/dataTables/swf/copy_csv_xls_pdf.swf"
-            //}
-            //"columnDefs": [
-            //       { "orderable": false, "targets": [ 0,5 ] }
-            // ]          
-
-        });
-        $('#AllTrans').dataTable();
-    });
-</script>
-
 
 <!-- Data Tables JS-->
 <script src="~/js/plugins/dataTables/jquery.dataTables.js"></script>
 <script src="~/js/plugins/dataTables/dataTables.bootstrap.js"></script>
 <script src="~/js/plugins/dataTables/dataTables.responsive.js"></script>
 <script src="~/js/plugins/dataTables/dataTables.tableTools.min.js"></script>
-

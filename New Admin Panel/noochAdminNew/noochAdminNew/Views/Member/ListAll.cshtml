@@ -24,20 +24,18 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>All Nooch Members</h5>
-                    <div class="ibox-tools">
-                        <a class="collapse-link">
-                            <i class="fa fa-chevron-up"></i>
-                        </a>
-                        @* <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="fa fa-wrench"></i>
+                    @* <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
                             </a>
-                            <ul class="dropdown-menu dropdown-user">
-                                <li><a href="#">Config option 1</a>
-                                </li>
-                                <li><a href="#">Config option 2</a>
-                                </li>
-                            </ul>*@
-                    </div>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                    <i class="fa fa-wrench"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user">
+                                    <li><a href="#">Config option 1</a>
+                                    </li>
+                                </ul>
+                        </div>*@
                 </div>
 
                 <div class="ibox-content">
@@ -53,13 +51,7 @@
                                 <option value="5"> Delete Users </option>
                             </select>
                         </div>
-                        @* <div class="col-sm-4 m-b-xs">
-                              <div class="btn-group" data-toggle="buttons">
-                                          <label class="btn btn-sm btn-white active"> <input type="radio" name="options" id="option1"> Day </label>
-                                          <label class="btn btn-sm btn-white"> <input type="radio" name="options" id="option2"> Week </label>
-                                          <label class="btn btn-sm btn-white"> <input type="radio" name="options" id="option3"> Month </label>
-                                      </div>
-                            </div>*@
+
                         <div class="col-xs-3" id="memListAll_ApplyChg">
                             <div class="input-group">
                                 @*<input type="text" class="input-sm form-control" placeholder="Search"> *@
@@ -76,15 +68,15 @@
                                 <th>
                                     <input type="checkbox" id="selecctall" name="chkMaster">
                                 </th>
-                                <th>Nooch ID</th>
+                                <th data-toggle="tooltip" title="Nooch_Id in DB">ID</th>
                                 <th>First Name</th>
                                 <th>Last Name</th>
-                                <th>Username</th>
-                                <th>Contact #</th>
-                                <th>Joined On</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Created</th>
                                 <th>Status</th>
                                 <th>City</th>
-                                <th>Total Transactions</th>
+                                <th>Total Payments</th>
                                 <th>Total $ Sent</th>
                             </tr>
                         </thead>
@@ -95,11 +87,12 @@
                             {
                                 <tr class="gradeX">
                                     <td><input type="checkbox" class="checkbox1" name="chk" value="@M.Nooch_ID" onclick="chkboxClick(this)"></td>
-                                    <td><a href="@Url.Action("Detail", "Member", new { NoochId=@M.Nooch_ID} )">@M.Nooch_ID</a></td>
+                                    <td><a href='@Url.Action("Detail", "Member", new { NoochId=@M.Nooch_ID} )'><small>@M.Nooch_ID</small></a></td>
                                     <td>@M.FirstName</td>
                                     <td>@M.LastName</td>
                                     <td>@M.UserName</td>
-                                    <td>@M.ContactNumber<br />
+                                    <td>
+                                        @M.ContactNumber<br />
                                     @{
                                 if (M.IsVerifiedPhone == true)
                                 {
@@ -145,9 +138,6 @@
                             <li>
                                 <a href="#">Config option 1</a>
                             </li>
-                            <li>
-                                <a href="#">Config option 2</a>
-                            </li>
                         </ul>
                     </div>
                 </div>
@@ -179,39 +169,13 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-sm-12 col-md-6">
-            <div class="ibox float-e-margins">
-                <div class="ibox-title">
-                    <h5>Chart Title</h5>
-                    <div class="ibox-tools">
-                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            <i class="fa fa-wrench"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user">
-                            <li>
-                                <a href="#">Config option 1</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="ibox-content">
-                    <div id="rickshaw_bars_stacked" class="rickshaw_graph"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </div>
-
 
 <!-- Data Tables JS-->
 <script src="~/js/plugins/dataTables/jquery.dataTables.js"></script>
 <script src="~/js/plugins/dataTables/dataTables.bootstrap.js"></script>
 <script src="~/js/plugins/dataTables/dataTables.responsive.js"></script>
 <script src="~/js/plugins/dataTables/dataTables.tableTools.min.js"></script>
-
 <!-- Custom and plugin javascript -->
 <script src="~/Scripts/App/Utility.js"></script>
 <script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
@@ -222,7 +186,7 @@
     $(document).ready(function () {
         $("#MemberMenuExpander").trigger("click");
 
-        $('#ListAllMembersMenu').addClass('active');
+        $('#MemberMenuExpander').parent().addClass('active');
 
         $('#AllMembers').dataTable({
             responsive: true,
