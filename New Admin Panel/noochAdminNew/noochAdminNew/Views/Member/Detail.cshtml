@@ -36,7 +36,7 @@
         ms.RecipientId = mdtt.RecipientId;
         ms.RecipientName = mdtt.RecipientName;
         ms.Memo = mdtt.Memo;
-        ms.IsUnUsualTrans=  mdtt.IsUnUsualTrans;
+        ms.IsUnUsualTrans = mdtt.IsUnUsualTrans;
         Transactionsss.Add(ms);
     }
 
@@ -49,7 +49,8 @@
 
 @*Css for toggling button --Surya 21 JAN*@
 <script>
-    $(document).on('click', '.toggle-button', function () {
+    $(document).on('click', '.toggle-button', function ()
+    {
         if ($('#pwd').val().length > 0) {
             $('#pwd').val('');
         }
@@ -112,7 +113,7 @@
 
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-lg-10">
-        <h2>@mdc.FirstName @mdc.LastName | <small>@mdc.Nooch_ID</small></h2>
+        <h2><strong>@mdc.FirstName @mdc.LastName</strong> | <small>@mdc.Nooch_ID</small></h2>
         <ol class="breadcrumb">
             <li>
                 <a href="../Admin/Dashboard">Dashboard</a>
@@ -164,6 +165,18 @@
                         Details | <small>@mdc.FirstName @mdc.LastName</small>
                     </h5>
                     <span class="pull-right">@mdc.memberId</span>
+                    <div class="pull-right">
+                        <a href="#" class="btn btn-link p-0 m-r-25" onclick="Member.OpenPopupForAdminNote();">
+                            @if (mdc.adminNote != null)
+                            {
+                                <i class="fa fa-sticky-note" title="@mdc.adminNote"></i>
+                            }
+                            else
+                            {
+                                <i class="fa fa-plus f-10"></i><i class="fa fa-sticky-note-o" title="@mdc.adminNote"></i>
+                            }
+                        </a>
+                    </div>
                 </div>
                 <div class="ibox-content">
                     <div class="row">
@@ -208,18 +221,6 @@
                                             }
                                         }
                                     </span>
-                                    <span class="help-block">
-                                        Facebook:  @{
-                                            if (mdc.FBID == null || mdc.FBID == "")
-                                            {
-                                                <span class="text-danger">FB Not Linked</span>
-                                            }
-                                            else
-                                            {
-                                                <a href="https://www.facebook.com/@mdc.FBID" class="text-navy" target="_blank">FBID</a>
-                                            }
-                                        }
-                                    </span>
                                     @if (!String.IsNullOrEmpty(mdc.ReferCodeUsed))
                                     {
                                         <span class="help-block m-b-none">Refer Code Used:<a href="../Referrals/JoinningsWithGivenReferralCode?RefCode=@mdc.ReferCodeUsed" class="text-navy">@mdc.ReferCodeUsed.ToUpper()</a></span>
@@ -233,7 +234,7 @@
                         </div>
 
                         <!-- Transfer Activity -->
-                        <div class="col-xs-12 col-sm-6 col-md-4">
+                        <div id="transSummaryBox" class="col-xs-12 col-sm-6 col-md-4">
                             <div class="ibox float-e-margins" style="margin-bottom:5px;">
                                 <div class="ibox-title">
                                     <h5>Transfer Activity</h5>
@@ -403,7 +404,6 @@
                 <li><a data-toggle="tab" href="#tab-3"><i class="fa fa-fw fa-wrench m-r-sm"></i> Admin Actions</a></li>
                 <li><a data-toggle="tab" href="#tab-4"><i class="fa fa-fw fa-exchange m-r-sm"></i> Recent Transactions</a></li>
                 <li><a data-toggle="tab" href="#tab-5"><i class="fa fa-fw fa-exclamation-circle m-r-sm"></i> Disputes</a></li>
-                <li><a data-toggle="tab" href="#tab-6"><i class="fa fa-fw fa-exclamation-circle m-r-sm"></i>  Identity Verification</a></li>
             </ul>
 
             <div class="tab-content ">
@@ -416,6 +416,20 @@
                                 <div class="ibox">
                                     <div class="ibox-title">
                                         <h5>Contact Info</h5>
+
+                                        <span class="pull-right">
+                                            @{
+                                                if (mdc.FBID == null || mdc.FBID == "")
+                                                {
+                                                    <span class="text-danger">FB Not Linked</span>
+                                                }
+                                                else
+                                                {
+                                                    <a href="https://www.facebook.com/@mdc.FBID" class="text-navy" target="_blank">Facebook</a>
+                                                }
+                                            }
+                                        </span>
+
                                     </div>
                                     <div class="ibox-content">
                                         <form class="form-horizontal" method="post">
@@ -882,37 +896,145 @@
 
                                                 @if (mdc.IsSynapseDetailAvailable)
                                                 {
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-6 p-r-5">
 
-                                                        <div class="form-group">
-                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
-                                                                <b>Bank Name</b>
+                                                        <div class="form-group m-b-0">
+                                                            <span class="col-xs-4 col-sm-5 control-label">
+                                                                <b>Synapse User ID</b>
                                                             </span>
-                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p class="f-600"> @synpsDetail.SynapseBankName </p>
-                                                                <p> @synpsDetail.SynapseBankNickName </p>
+                                                            <div class="col-xs-8 col-sm-7 form-control-static">
+                                                                <span class="f-12">@synpsDetail.synapseUserId</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group m-b-0">
+                                                            <span class="col-xs-4 col-sm-5 control-label">
+                                                                <b>OAuth Token</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 form-control-static p-r-0">
+                                                                <a href="javascript:Member.getSynapseInfo();" id="synAuthKey" style="word-wrap:break-word; font-size: 12px">@synpsDetail.synapseConsumerKey</a>
                                                             </div>
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
-                                                                <b>Synapse User ID</b>
+                                                            <span class="col-xs-4 col-sm-5 control-label">
+                                                                <b>Refresh Token</b>
                                                             </span>
-                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p>@synpsDetail.synapseUserId</p>
+                                                            <div class="col-xs-8 col-sm-7 form-control-static p-r-0">
+                                                                <span class="f-12">@synpsDetail.synapseRefreshKey</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group" data-toggle="tooltip" title="Date this user first created a Synapse account.">
+                                                            <span class="col-xs-4 col-sm-5 control-label">
+                                                                <b>Date Created</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 form-control-static p-r-0">
+                                                                <span>@synpsDetail.userDateCreated</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group m-b-0">
+                                                            <span class="col-xs-4 col-sm-5 control-label">
+                                                                <b>Is ID Verified</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 form-control-static">
+                                                                <strong>@mdc.IsVerifiedWithSynapse</strong>
+                                                                @if (@mdc.IsVerifiedWithSynapse == true)
+                                                                {
+                                                                    <i class="fa fa-check text-success m-l-10"></i>
+                                                                }
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group m-b-0">
+                                                            <span class="col-xs-4 col-sm-5 control-label">
+                                                                <b>Permission</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 form-control-static">
+                                                                <strong>@synpsDetail.userPermission</strong>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <span class="col-xs-4 col-sm-5 control-label">
+                                                                <b>Is Business</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 form-control-static">
+                                                                @synpsDetail.isBusiness
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group m-b-0">
+                                                            <span class="col-xs-4 col-sm-5 control-label">
+                                                                <b>Xtra Verification?</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 form-control-static">
+                                                                <span class="show">YES or NOT NEEDED</span>
+                                                                <small>Question Set ID:&nbsp; </small>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <span class="col-xs-4 col-sm-5 control-label">
+                                                                <b>User Responses Submitted?</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 form-control-static">
+                                                                <span class="show">YES or NOT NEEDED</span>
+                                                                <small>Submitted On:&nbsp; </small>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <span class="col-xs-4 col-sm-5 control-label">
+                                                                <b>ID Doc</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 form-control-static">
+                                                                @if (mdc.idDocUrl != null)
+                                                                {
+                                                                    <a href="#" id="idDocLnk"><img src="@mdc.idDocUrl" class="idDocImg" /></a>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <p>No doc submitted</p>
+
+                                                                    using (Html.BeginForm("UploadDoc", "Member",
+                                                                            FormMethod.Post,
+                                                                            new { enctype = "multipart/form-data" }))
+                                                                    {
+                                                                        <div class="input-group">
+
+                                                                            <input type="hidden" name="NoochId" value="@mdc.Nooch_ID" />
+                                                                            <input type="file" name="file" id="file" required />
+                                                                            <br />
+                                                                            <input type="Submit" class="btn btn-sm btn-primary" value="Upload Image" id="btnUpload" />
+
+                                                                        </div>
+                                                                    }
+                                                                }
                                                             </div>
                                                         </div>
 
                                                     </div>
                                                 }
 
-                                                <div class="col-md-6">
+                                                <div class="col-md-6 p-r-0">
+
+                                                    <div class="form-group m-b-5">
+                                                        <span class="col-xs-4 col-sm-5 control-label">
+                                                            <b>Bank Name</b>
+                                                        </span>
+                                                        <div class="col-xs-8 col-sm-7 form-control-static">
+                                                            <span class="show f-600"> @synpsDetail.SynapseBankName </span>
+                                                            <span> @synpsDetail.SynapseBankNickName </span>
+                                                        </div>
+                                                    </div>
 
                                                     <div class="form-group">
-                                                        <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
+                                                        <span class="col-xs-4 col-sm-5 control-label">
                                                             <b>Status</b>
                                                         </span>
-                                                        <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
+                                                        <div class="col-xs-8 col-sm-7 form-control-static">
                                                             @if (mdc.IsSynapseDetailAvailable)
                                                             {
                                                                 <div id="bankAccountStatusDiv">
@@ -943,141 +1065,56 @@
                                                             }
                                                         </div>
                                                     </div>
-                                                    @if (mdc.IsSynapseDetailAvailable)
-                                                    {
-                                                        <div class="form-group">
-                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
-                                                                <b>MFA Verified</b>
-                                                            </span>
-                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p>@synpsDetail.mfaVerified</p>
-                                                            </div>
+
+                                                    <div class="form-group m-b-5">
+                                                        <span class="col-xs-4 col-sm-5 control-label">
+                                                            <b>Allowed</b>
+                                                        </span>
+                                                        <div class="col-xs-8 col-sm-7 form-control-static">
+                                                            <span class="show f-600"> @synpsDetail.allowed </span>
                                                         </div>
-                                                    }
+                                                    </div>
+
+                                                    <div class="form-group" data-toggle="tooltip" title="Date that this bank was linked to Nooch.">
+                                                        <span class="col-xs-4 col-sm-5 control-label">
+                                                            <b>Date Added</b>
+                                                        </span>
+                                                        <div class="col-xs-8 col-sm-7 form-control-static">
+                                                            <p> @synpsDetail.SynpaseBankAddedOn</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <span class="col-xs-4 col-sm-5 control-label">
+                                                            <b>Bank ID</b>
+                                                        </span>
+                                                        <div class="col-xs-8 col-sm-7 form-control-static">
+                                                            <p>@synpsDetail.synapseBankId</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <span class="col-xs-4 col-sm-5 control-label">
+                                                            <b>Name on Account</b>
+                                                        </span>
+                                                        <div class="col-xs-8 col-sm-7 form-control-static">
+                                                            <span class="f-600">@synpsDetail.nameFromSynapseBank </span>
+                                                            <!--<p><i class="fa fa-fw fa-envelope m-r-sm f-13"></i> @synpsDetail.emailFromSynapseBank </p>
+                                                            <p><i class="fa fa-fw fa-mobile-phone m-r-xs f-19"></i> @synpsDetail.phoneFromSynapseBank </p>-->
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <span class="col-xs-4 col-sm-5 control-label">
+                                                            <b>MFA Verified</b>
+                                                        </span>
+                                                        <div class="col-xs-8 col-sm-7 form-control-static">
+                                                            <p>@synpsDetail.mfaVerified</p>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                             </div>
-
-                                            @if (mdc.IsSynapseDetailAvailable)
-                                            {
-                                                <div class="row">
-
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
-                                                                <b>Account Holder</b>
-                                                            </span>
-                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p class="f-600">@synpsDetail.nameFromSynapseBank </p>
-                                                                <p><i class="fa fa-fw fa-envelope m-r-sm f-13"></i> @synpsDetail.emailFromSynapseBank </p>
-                                                                <p><i class="fa fa-fw fa-mobile-phone m-r-xs f-19"></i> @synpsDetail.phoneFromSynapseBank </p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-md-6">
-
-                                                        <div class="form-group">
-                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
-                                                                <b>Bank ID</b>
-                                                            </span>
-                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p>@synpsDetail.synapseBankId</p>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
-                                                                <b>Added On</b>
-                                                            </span>
-                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p> @synpsDetail.SynpaseBankAddedOn</p>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="row">
-
-                                                    <div class="col-md-6">
-                                                        <div class="form-group m-b-none">
-                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
-                                                                <b>IsVerifiedWithSynapse</b>
-                                                            </span>
-                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p><strong>@mdc.IsVerifiedWithSynapse</strong></p>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group m-b-none">
-                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
-                                                                <b>Xtra Verification?</b>
-                                                            </span>
-                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p>YES or NOT NEEDED</p>
-                                                                <p><small>Question Set ID:&nbsp; </small></p>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
-                                                                <b>User Responses Submitted?</b>
-                                                            </span>
-                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p>YES or NO</p>
-                                                                <p><small>Submitted On:&nbsp; </small></p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="col-md-6">
-
-                                                        <div class="form-group m-b-none">
-                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
-                                                                <b>OAuth Token</b>
-                                                            </span>
-                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <a href="javascript:Member.getSynapseInfo();" id="synAuthKey" style="word-wrap:break-word;">@synpsDetail.synapseConsumerKey</a>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
-                                                                <b>Refresh Token</b>
-                                                            </span>
-                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                <p>@synpsDetail.synapseRefreshKey</p>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-
-                                                </div>
-
-                                                <div class="row">
-
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <span class="col-xs-4 col-sm-5 col-lg-6 control-label">
-                                                                <b>ID Doc</b>
-                                                            </span>
-                                                            <div class="col-xs-8 col-sm-7 col-lg-6 form-control-static">
-                                                                @if (mdc.idDocUrl != null)
-                                                                {
-                                                                    <a href="#" id="idDocLnk"><img src="@mdc.idDocUrl" class="idDocImg" /></a>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <p>No doc submitted</p>
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            }
 
                                         </form>
                                     </div>
@@ -1095,7 +1132,7 @@
                             <div class="col-sm-12">
                                 <div class="ibox">
                                     <div class="ibox-title">
-                                        <h5>Other Admin Functions</h5>
+                                        <h5>Admin Functions</h5>
                                     </div>
                                     <div class="ibox-content">
                                         <form class="form-horizontal">
@@ -1178,11 +1215,9 @@
                                                             <div class="col-xs-8 col-lg-8 form-control-static">
                                                                 <p style="margin-bottom: 0; max-width: 116px;">
                                                                     <span class="text-navy font-bold" id="pinNumber">@mdc.PinNumber</span>
-                                                                    <button type="button" class="btn btn-link btn-xs pull-right" onclick="Member.ResetPin();">Reset PIN</button>
+                                                                    <button type="button" class="btn btn-link btn-sm pull-right" onclick="Member.ResetPin();">Reset PIN</button>
                                                                 </p>
                                                             </div>
-
-
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1274,9 +1309,9 @@
                                                                 </td>
                                                                 <td>@mn.TransDate<br /><small>@mn.TransTime</small></td>
                                                                 <td>
-                                                                  
-                                                                <a href="@Url.Action("Detail", "Member", new { NoochId = @mn.SenderId })">@mn.SenderName</a>
-                                                                  
+
+                                                                    <a href="@Url.Action("Detail", "Member", new { NoochId = @mn.SenderId })">@mn.SenderName</a>
+
                                                                 </td>
                                                                 <td>
                                                                     @if (mn.AmountNew != "0")
@@ -1287,7 +1322,7 @@
                                                                     }
                                                                 </td>
                                                                 <td>
-                                                                    @if (mn.IsUnUsualTrans==false)
+                                                                    @if (mn.IsUnUsualTrans == false)
                                                                     {
                                                                         <a href="@Url.Action("Detail", "Member", new { NoochId = @mn.RecipientId })">@mn.RecipientName</a>
                                                                     }
@@ -1295,7 +1330,7 @@
                                                                     {
                                                                         <a href="#">@mn.RecipientName</a>
                                                                     }
-                                                                    
+
                                                                 </td>
                                                                 <td>@mn.Memo</td>
                                                                 @if (!String.IsNullOrEmpty(@mn.GeoLocation))
@@ -1392,53 +1427,6 @@
                     </div>
                 </div>
 
-
-                <div id="tab-6" class="tab-pane fade">
-                    <div class="panel-body">
-                        <div class="row">
-
-                            <div class="col-lg-12">
-                                <div class="ibox float-e-margins">
-                                    <div class="ibox-title">
-                                        <h5>Identity Verification</h5>
-                                    </div>
-                        
-                                    <div class="ibox-content">
-                                        @using (Html.BeginForm("UploadDoc", "Member",
-                                           FormMethod.Post,
-                                            new { enctype = "multipart/form-data" }))
-                                        {
-
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                            <b>Verify Identity</b>
-                                                        </span>
-                                                        <div class="col-xs-5 col-sm-8 col-lg-7">
-                                                            <div class="input-group">
-
-                                                                <input type="file" name="file" id="file" required />
-                                                                <br/>
-                                                                <input type="Submit" class="btn btn-sm btn-primary" value="Upload Image" id="btnUpload" />
-                                                                
-                                                                <input type="hidden" name="NoochId" value="@mdc.Nooch_ID" />
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                  </div>
-                                            </div>                         
-                                                                                        
-                                        }
-
-                                    </div>                      
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
             </div>
 
         </div>
@@ -1505,8 +1493,8 @@
                         <div class="form-group">
                             <span class="col-sm-3 control-label"><b>Admin Notes</b></span>
                             <div class="col-sm-9">
-                                <textarea class="form-control" rows="3" id="AmdinNotesAboutUser"></textarea>
-                                <p><small>Provide some important fact or info about a user .</small></p>
+                                <textarea class="form-control" rows="4" id="AmdinNotesAboutUser"></textarea>
+                                <p class="m-t-10 m-b-5">Provide additional information about <strong>@mdc.FirstName @mdc.LastName</strong>.</p>
                             </div>
                         </div>
                     </div>
@@ -1530,7 +1518,7 @@
                 <h4 class="modal-title"><span class="fa fa-times pull-left"></span>Delete This User?</h4>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this Nooch Member?</p>
+                <p>Are you sure you want to delete @mdc.FirstName @mdc.LastName?</p>
             </div>
             <div class="modal-footer">
                 <button id="btnYes" class="btn btn-danger" onclick="Member.ApplyChoosenOperation(5)">Yes - Delete</button>
@@ -1567,8 +1555,6 @@
 </div>
 
 
-
-
 <!-- update password-->
 @*<div id="myModalUpdatePassword" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-sm">
@@ -1587,6 +1573,7 @@
             </div>
         </div>
     </div>*@
+
 <!-- View ID Doc  -->
 <div id="idDocModal" class="modal fade" role="dialog" aria-hidden="true">
     <div class="modal-dialog">

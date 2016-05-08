@@ -66,7 +66,7 @@ namespace noochAdminNew.Classes.ModelClasses
 
         public List<Tenants> tenants { get; set; }
         public Tenants tenant { get; set; }
-       
+
     }
 
     public class MemberDetailsTrans
@@ -91,7 +91,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string DeviceToken { get; set; }
         public string AccessToken { get; set; }
         public bool IsUnUsualTrans { get; set; }
-        
+
 
     }
 
@@ -140,7 +140,9 @@ namespace noochAdminNew.Classes.ModelClasses
 
     public class SynapseDetailOFMember
     {
+        // Bank-Related
         public int BankId { get; set; }
+        public int? synapseBankId { get; set; }
 
         public string SynapseBankStatus { get; set; }
         public string SynapseBankName { get; set; }
@@ -153,13 +155,22 @@ namespace noochAdminNew.Classes.ModelClasses
 
         public string SynpaseBankAddedOn { get; set; }
         public string SynpaseBankVerifiedOn { get; set; }
+        public string allowed { get; set; }
 
-        public int? synapseBankId { get; set; }
+        public string bankClass { get; set; }
+        public string bankType { get; set; }
+        public string nodeType { get; set; }
+
+        // User-Related
+        public string userDateCreated { get; set; }
         public string synapseConsumerKey { get; set; }
         public string synapseRefreshKey { get; set; }
         public string synapseUserId { get; set; }
-       
+
+        public bool isBusiness { get; set; }
+        public string userPermission { get; set; }
     }
+
     public class Tenants
     {
         public string Property { get; set; }
