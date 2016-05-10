@@ -648,14 +648,14 @@ namespace noochAdminNew.Controllers
                                 payment.SenderName = memberFullName;
                                 payment.SenderId = Member.Nooch_ID;
 
-                                if (String.IsNullOrEmpty(t.InvitationSentTo) && 
-                                    t.IsPhoneInvitation != true)                     
+                                if (String.IsNullOrEmpty(t.InvitationSentTo) &&
+                                    t.IsPhoneInvitation != true)
                                 {
-                                  
-                                        payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
-                                                                CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
-                                        payment.RecipientId = t.Member1.Nooch_ID;
-                                   
+
+                                    payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
+                                                            CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
+                                    payment.RecipientId = t.Member1.Nooch_ID;
+
                                 }
                                 else if (t.IsPhoneInvitation != true) // Request to Non-Nooch user via EMAIL
                                 {
@@ -781,75 +781,79 @@ namespace noochAdminNew.Controllers
 
                     #region Get Synapse Details
 
-                    // Check whether Synapse Bank details available or not
-                    var synapse = (from Syn in obj.SynapseBanksOfMembers
-                                   join mem in obj.Members on Syn.MemberId equals mem.MemberId
-                                   where Syn.IsDefault == true && mem.Nooch_ID == NoochId
-                                   select Syn).FirstOrDefault();
-                  
+                    // Check whether the user has a Synapse Account
+                    var synapseCreateUserObj = (from Syn in obj.SynapseCreateUserResults
+                                                where Syn.IsDeleted == false && Syn.MemberId == Member.MemberId
+                                                select Syn).FirstOrDefault();
 
-               
-                    mdc.IsSynapseDetailAvailable = (synapse != null);
+                    mdc.IsSynapseDetailAvailable = (synapseCreateUserObj != null);
 
                     if (mdc.IsSynapseDetailAvailable)
                     {
-                        // Get the user's Synapse account details 
-                        var synapseDetailFromDb = (from Syn in obj.SynapseBanksOfMembers
-                                                   join mem in obj.Members on Syn.MemberId equals mem.MemberId
-                                                   where Syn.IsDefault == true && mem.Nooch_ID == NoochId
-                                                   select Syn).FirstOrDefault();
-
-                        // Get Auth Token (It's not in the banks table... it's in the SynapseCreateUserResults Table)
-                        var synapseCreateUserObj = (from Syn in obj.SynapseCreateUserResults
-                                                    join mem in obj.Members on Syn.MemberId equals mem.MemberId
-                                                    where Syn.IsDeleted == false && mem.Nooch_ID == NoochId
-                                                    select Syn).FirstOrDefault();
-
-                        string synapseAuthToken = synapseCreateUserObj.access_token;
-                        string synapseRefreshToken = synapseCreateUserObj.refresh_token;
-                        string synapseUserId = synapseCreateUserObj.user_id.ToString();
-                                                                    
-                    
-
                         SynapseDetailOFMember synapseDetail = new SynapseDetailOFMember();
 
-                        if (synapseDetailFromDb != null)
-                        {
-                            synapseDetail.synapseRefreshKey = !String.IsNullOrEmpty(synapseRefreshToken)
-                                                              ? CommonHelper.GetDecryptedData(synapseRefreshToken)
+                        synapseDetail.userDateCreated = Convert.ToDateTime(synapseCreateUserObj.DateCreated).ToString("MMM dd, yyyy");
+                        synapseDetail.synapseRefreshKey = !String.IsNullOrEmpty(synapseCreateUserObj.refresh_token)
+                                                              ? CommonHelper.GetDecryptedData(synapseCreateUserObj.refresh_token)
                                                               : "REFRESH TOKEN NOT FOUND";
-                            synapseDetail.synapseConsumerKey = !String.IsNullOrEmpty(synapseAuthToken)
-                                                               ? CommonHelper.GetDecryptedData(synapseAuthToken)
-                                                               : "AUTH TOKEN NOT FOUND";
-                            synapseDetail.synapseBankId = synapseDetailFromDb.bankid; // This is the 4 or 5 digit ID from Synapse for this account
-                            synapseDetail.BankId = synapseDetailFromDb.Id; // This is the Nooch DB "ID", which is just the row number of the account... NOT the same as the Synapse Bank ID
-                            synapseDetail.SynapseBankStatus = (string.IsNullOrEmpty(synapseDetailFromDb.Status)
+                        synapseDetail.synapseConsumerKey = !String.IsNullOrEmpty(synapseCreateUserObj.access_token)
+                                                           ? CommonHelper.GetDecryptedData(synapseCreateUserObj.access_token)
+                                                           : "AUTH TOKEN NOT FOUND";
+                        synapseDetail.synapseUserId = synapseCreateUserObj.user_id.ToString();
+                        synapseDetail.isBusiness = synapseCreateUserObj.is_business ?? false;
+                        synapseDetail.userPermission = synapseCreateUserObj.permission;
+
+                        // Now get the user's Synapse Bank details
+                        var synapseBankDetails = (from Syn in obj.SynapseBanksOfMembers
+                                                  where Syn.IsDefault == true && Syn.MemberId == Member.MemberId
+                                                  select Syn).FirstOrDefault(); 
+
+                        if (synapseBankDetails != null)
+                        {
+                            synapseDetail.SynapseBankName = !String.IsNullOrEmpty(synapseBankDetails.bank_name)
+                                                            ? CommonHelper.GetDecryptedData(synapseBankDetails.bank_name)
+                                                            : "Not Found";
+                            synapseDetail.BankId = synapseBankDetails.Id; // This is the Nooch DB "ID", which is just the row number of the account... NOT the same as the Synapse Bank ID
+
+                            synapseDetail.SynapseBankStatus = (String.IsNullOrEmpty(synapseBankDetails.Status)
                                                               ? "Not Verified"
-                                                              : synapseDetailFromDb.Status);
-                            synapseDetail.mfaVerified = synapseDetailFromDb.mfa_verifed ?? false;
-                            synapseDetail.SynapseBankNickName = !String.IsNullOrEmpty(synapseDetailFromDb.nickname)
-                                                                ? CommonHelper.GetDecryptedData(synapseDetailFromDb.nickname) : "";
-                            synapseDetail.nameFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.name_on_account)
-                                                                ? CommonHelper.GetDecryptedData(synapseDetailFromDb.name_on_account) : "No Name Returned";
-                            synapseDetail.emailFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.email)
-                                                                 ? synapseDetailFromDb.email
-                                                                 : "No Email Returned";
-                            synapseDetail.phoneFromSynapseBank = !String.IsNullOrEmpty(synapseDetailFromDb.phone_number)
-                                                                 ? CommonHelper.FormatPhoneNumber(synapseDetailFromDb.phone_number)
-                                                                 : "No Phone Returned";
-                            synapseDetail.SynpaseBankAddedOn = synapseDetailFromDb.AddedOn != null
-                                                               ? Convert.ToDateTime(synapseDetailFromDb.AddedOn).ToString("MMM dd, yyyy")
+                                                              : synapseBankDetails.Status);
+                            synapseDetail.mfaVerified = synapseBankDetails.mfa_verifed ?? false;
+                            synapseDetail.SynapseBankNickName = !String.IsNullOrEmpty(synapseBankDetails.nickname)
+                                                                ? CommonHelper.GetDecryptedData(synapseBankDetails.nickname)
+                                                                : "";
+                            synapseDetail.nameFromSynapseBank = !String.IsNullOrEmpty(synapseBankDetails.name_on_account)
+                                                                ? CommonHelper.GetDecryptedData(synapseBankDetails.name_on_account)
+                                                                : "No Name Returned";
+                            synapseDetail.SynpaseBankAddedOn = synapseBankDetails.AddedOn != null
+                                                               ? Convert.ToDateTime(synapseBankDetails.AddedOn).ToString("MMM dd, yyyy")
                                                                : "";
-                            synapseDetail.SynpaseBankVerifiedOn = synapseDetailFromDb.VerifiedOn != null
-                                                                  ? Convert.ToDateTime(synapseDetailFromDb.VerifiedOn).ToString("MMM dd, yyyy")
+                            synapseDetail.SynpaseBankVerifiedOn = synapseBankDetails.VerifiedOn != null
+                                                                  ? Convert.ToDateTime(synapseBankDetails.VerifiedOn).ToString("MMM dd, yyyy")
                                                                   : "";
 
-                            synapseDetail.SynapseBankName = !String.IsNullOrEmpty(synapseDetailFromDb.bank_name) ? CommonHelper.GetDecryptedData(synapseDetailFromDb.bank_name) : "Not Found";
+                            // CLIFF (5/8/16): Added these V3 fields so we can display on the Member Details page of Admin Dash
+                            synapseDetail.allowed = !String.IsNullOrEmpty(synapseBankDetails.allowed)
+                                                    ? synapseBankDetails.allowed
+                                                    : "no value";
+                            synapseDetail.bankClass = !String.IsNullOrEmpty(synapseBankDetails.@class)
+                                                    ? synapseBankDetails.@class
+                                                    : "no value";
+                            synapseDetail.bankType = !String.IsNullOrEmpty(synapseBankDetails.type_bank)
+                                                    ? synapseBankDetails.type_bank
+                                                    : "no value";
+                            synapseDetail.nodeType = !String.IsNullOrEmpty(synapseBankDetails.type_synapse)
+                                                    ? synapseBankDetails.type_synapse
+                                                    : "no value";
 
-                            synapseDetail.synapseUserId = synapseUserId;
-                        
-
+                            // CLIFF (5/8/16): I don't think these are needed anymore with V3 b/c Synapse no longer sends these data
+                            synapseDetail.synapseBankId = synapseBankDetails.bankid; // CLIFF (5/8/16): I don't think this is needed anymore with V3
+                            synapseDetail.emailFromSynapseBank = !String.IsNullOrEmpty(synapseBankDetails.email) // CLIFF (5/8/16): I don't think this is needed anymore with V3
+                                     ? synapseBankDetails.email : "";
+                            synapseDetail.phoneFromSynapseBank = !String.IsNullOrEmpty(synapseBankDetails.phone_number)
+                                     ? CommonHelper.FormatPhoneNumber(synapseBankDetails.phone_number) : "";
                         }
+
                         mdc.SynapseDetails = synapseDetail;
                     }
 
@@ -857,9 +861,7 @@ namespace noochAdminNew.Controllers
 
                     // Get the 3 most recent IP Addresses for this user
                     mdc.MemberIpAddr = (from memIpADD in obj.MembersIPAddresses
-                                        join mem in obj.Members on
-                                             memIpADD.MemberId equals mem.MemberId
-                                        where mem.Nooch_ID == NoochId
+                                        where memIpADD.MemberId == Member.MemberId
                                         select new MemberIpAddrreses
                                         {
                                             IpAddress = memIpADD.Ip,
@@ -902,9 +904,9 @@ namespace noochAdminNew.Controllers
                         List<Tenants> tenants = GetTenants(Member.Nooch_ID);
                         mdc.tenant = tenants.FirstOrDefault();
                     }
-
                 }
             }
+
             return View(mdc);
         }
 
@@ -1468,7 +1470,7 @@ namespace noochAdminNew.Controllers
             {
                 var temp = CommonHelper.GetRandomTransactionTrackingId();
 
-                var member = (from t in obj.Members 
+                var member = (from t in obj.Members
                               where t.Nooch_ID == noochIds && t.IsDeleted == false
                               select t).SingleOrDefault();
 
@@ -1524,28 +1526,28 @@ namespace noochAdminNew.Controllers
         [HttpPost]
         [ActionName("UploadDoc")]
         public ActionResult UploadDoc(HttpPostedFileBase file, string NoochId)
-         {
-                SaveVerificationIdDocument DocumentDetails = new SaveVerificationIdDocument();
+        {
+            SaveVerificationIdDocument DocumentDetails = new SaveVerificationIdDocument();
 
-                using (var noochConnection = new NOOCHEntities())
-                {
-                    var member = noochConnection.Members.Where(m => m.Nooch_ID == NoochId).FirstOrDefault();
-                    DocumentDetails.MemberId = member.MemberId.ToString();
-                    var MemberId = Utility.ConvertToGuid(DocumentDetails.MemberId.ToString());
-                    var accesToken = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == MemberId).FirstOrDefault();
-                    DocumentDetails.AccessToken = accesToken.access_token;
-                    string pic = MemberId.ToString() + ".png";
-                    string path = System.IO.Path.Combine(
-                                     Server.MapPath("~/UploadedPhotos/Photos"), pic);
-                    // file is uploaded
+            using (var noochConnection = new NOOCHEntities())
+            {
+                var member = noochConnection.Members.Where(m => m.Nooch_ID == NoochId).FirstOrDefault();
+                DocumentDetails.MemberId = member.MemberId.ToString();
+                var MemberId = Utility.ConvertToGuid(DocumentDetails.MemberId.ToString());
+                var accesToken = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == MemberId).FirstOrDefault();
+                DocumentDetails.AccessToken = accesToken.access_token;
+                string pic = MemberId.ToString() + ".png";
+                string path = System.IO.Path.Combine(
+                                 Server.MapPath("~/UploadedPhotos/Photos"), pic);
+                // file is uploaded
 
-                    file.SaveAs(path);
-                    DocumentDetails.imgPath = path;
-                    var mdaResult = submitDocumentToSynapseV3(DocumentDetails);
-                    ViewData["IsSuccess"] = mdaResult.isSuccess;
+                file.SaveAs(path);
+                DocumentDetails.imgPath = path;
+                var mdaResult = submitDocumentToSynapseV3(DocumentDetails);
+                ViewData["IsSuccess"] = mdaResult.isSuccess;
 
-                    return RedirectToAction("Detail", "Member", new { NoochId });
-            }             
+                return RedirectToAction("Detail", "Member", new { NoochId });
+            }
         }
 
 
@@ -1706,7 +1708,7 @@ namespace noochAdminNew.Controllers
                 kycInfoResponseFromSynapse resFromSynapse = new kycInfoResponseFromSynapse();
 
                 resFromSynapse = JsonConvert.DeserializeObject<kycInfoResponseFromSynapse>(content);
-                 
+
                 if (resFromSynapse != null)
                 {
                     if (resFromSynapse.success.ToString().ToLower() == "true")
@@ -1714,11 +1716,11 @@ namespace noochAdminNew.Controllers
                         //updating member table in database
                         using (var noochConnection = new NOOCHEntities())
                         {
-                             
+
                             var synapseUser = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == id).FirstOrDefault();
                             synapseUser.permission = resFromSynapse.user.permission.ToString();
                             noochConnection.SaveChanges();
-                             
+
                         }
 
                         Logger.Info("MDA -> submitDocumentToSynapseV3 SUCCESSFUL - [MemberID: " + MemberId + "]");
