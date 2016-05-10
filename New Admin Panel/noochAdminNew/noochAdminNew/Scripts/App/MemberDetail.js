@@ -506,8 +506,7 @@ var Member = function () {
         getSynapseInfo: getSynapseInfo,
         sendSmsReminder: sendSmsReminderForVerification,
         ChangePassword: ChangePassword,
-        GenerateNewPassword: GenerateNewPassword,
-        UpdateTenantInfo:UpdateTenantInfo
+        GenerateNewPassword: GenerateNewPassword
        
     };
 }();
