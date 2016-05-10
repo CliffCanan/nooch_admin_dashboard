@@ -16,6 +16,7 @@ using System.Data.Objects.SqlClient;
 using System.IO;
 using FileHelpers;
 using System.Data.Entity;
+using System.Text;
 using System.Web.Helpers;
 using noochAdminNew.Classes.PushNotification;
 using Newtonsoft.Json.Linq;
@@ -886,79 +887,7 @@ namespace noochAdminNew.Controllers
 
                                 try
                                 {
-                                    // Add entry in SynapseV3CreateTransResults Table in Nooch DB
-                                    SynapseV3CreateTransResults orderRes = new SynapseV3CreateTransResults();
-
-                                    #region Preparing stuff to save in Synapse Create Order Result Table V3
-
-                                    orderRes.trans_amount = transferAmount;
-                                    orderRes.trans_id_oid =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans._id.ToString();
-                                    orderRes.trans_currency =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.amount.currency;
-
-                                    orderRes.extra_created_on_date =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.extra.created_on
-                                            .ToString();
-                                    orderRes.extra_process_on_date =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.extra.process_on
-                                            .ToString();
-                                    orderRes.extra_supp_id =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.extra.supp_id.ToString
-                                            ();
-
-                                    orderRes.synapse_fee_fee =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.fees[0].fee;
-                                    orderRes.synapse_fee_id =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.fees[0].to.id.oid;
-                                    orderRes.synapse_fee_note =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.fees[0].note;
-
-                                    orderRes.nooch_fee_fee =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.fees[1].fee;
-                                    orderRes.nooch_fee_id =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.fees[1].to.id.oid;
-                                    orderRes.nooch_fee_note =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.fees[1].note;
-
-                                    orderRes.from_user_id =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.from.user._id.id
-                                            .ToString();
-                                    //orderRes.from_node_id= sender_bank_node_id;
-                                    orderRes.from_node_id =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.from.id.oid;
-                                    orderRes.from_node_type =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.from.type;
-                                    //orderRes.from_node_nickname=
-
-
-
-                                    orderRes.recent_status =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.recent_status.status;
-                                    orderRes.recent_note =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.recent_status.note;
-                                    orderRes.recent_status_date =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.recent_status.date
-                                            .ToString();
-                                    orderRes.recent_status_id =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.recent_status
-                                            .status_id;
-
-
-                                    orderRes.to_user_id =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.to.user._id.id;
-                                    orderRes.to_node_id =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.to.id.oid;
-                                    orderRes.to_node_type =
-                                        transactionResultFromSynapseAPI.responseFromSynapse.trans.to.type;
-
-                                    orderRes.NoochTransactionDate = TransactionDateTimeToUSe;
-                                    orderRes.NoochTransactionId = TransactionIdToUse.ToString();
-
-                                    #endregion
-
-                                    obj.SynapseV3CreateTransResults.Add(orderRes);
-                                    saveToSynapseCreateOrderTable = obj.SaveChanges();
+                                    
 
                                     #region save to synapse create trans table returned success -- now saving in Transactions table
 
@@ -3046,6 +2975,191 @@ namespace noochAdminNew.Controllers
                 }
             }
             return Json(res);
+        }
+
+
+        public string showTransactionStatus(string transactionId)
+        {
+            Logger.Info("MDA -> ShowTransactionfromSynapseV3 Initialized - [TransactionId: " + transactionId + "]");
+
+            SynapseV3ShowTransInput transInput = new SynapseV3ShowTransInput();
+            Guid transactionid = Utility.ConvertToGuid(transactionId);
+
+            //get transaction details
+            using (var noochConnection = new NOOCHEntities())
+            {
+                var transaction = (from t in noochConnection.Transactions
+                                   join
+                                   trResult in noochConnection.SynapseAddTransactionResults on t.TransactionId equals trResult.TransactionId
+                                   where t.TransactionId == transactionid
+                                   select t);
+                Transaction tran = (Transaction)transaction;
+                if (transaction != null)
+                {
+                    //get Members and synapseCreateUser details
+
+                    var members = noochConnection.Members.Where(m => m.MemberId == tran.SenderId).FirstOrDefault();
+                    var synapseCreateuserResults = noochConnection.SynapseCreateUserResults.Where(syn => syn.MemberId == tran.SenderId).FirstOrDefault();
+                    var usersSynapseOauthKey = "";
+
+                    #region Check If OAuth Key Still Valid
+                    // if testing
+                    synapseV3checkUsersOauthKey checkTokenResult = CommonHelper.refreshSynapseV3OautKey(synapseCreateuserResults.access_token);
+
+                    // if live
+                    //synapseV3checkUsersOauthKey checkTokenResult = refreshSynapseV3OautKey(createSynapseUserObj.access_token,false);
+                    //                                                                   
+
+                    if (checkTokenResult != null)
+                    {
+                        if (checkTokenResult.success == true)
+                        {
+                            usersSynapseOauthKey = CommonHelper.GetDecryptedData(checkTokenResult.oauth_consumer_key);
+                        }
+                        else
+                        {
+                            Logger.Error("Common Helper -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
+                                                   "CheckTokenResult.msg: [" + checkTokenResult.msg + "], MemberID: [" + tran.SenderId + "]");
+
+                            //res.msg = checkTokenResult.msg;
+                            return "false";
+
+                        }
+                    }
+                    else
+                    {
+                        Logger.Error("Common Helper -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
+                                                   "CheckTokenResult was NULL, MemberID: [" + tran.SenderId + "]");
+
+                        //res.msg = "Unable to check user's Oauth Token";
+                        return "false";
+
+                    }
+
+                    #endregion Check If OAuth Key Still Valid
+
+                    var transactionDetails = noochConnection.SynapseAddTransactionResults.Where(t => t.TransactionId == tran.TransactionId).FirstOrDefault();
+                    var SendersBank = noochConnection.SynapseBanksOfMembers.Where(id => id.MemberId == tran.SenderId).FirstOrDefault();
+                    var RecipientBank = noochConnection.SynapseBanksOfMembers.Where(id => id.MemberId == tran.RecipientId).FirstOrDefault();
+                    if (synapseCreateuserResults != null && transactionDetails != null && SendersBank != null && RecipientBank != null)
+                    {
+                        SynapseV3TransInput_login login = new SynapseV3TransInput_login() { oauth_key = usersSynapseOauthKey };
+                        SynapseV3TransInput_user user = new SynapseV3TransInput_user() { fingerprint = members.UDID1.ToString() };
+
+                        SynapseV3ShowTransInput_filter_Trans_id oid = new SynapseV3ShowTransInput_filter_Trans_id();
+                        if (transactionDetails != null)
+                            oid.oid = transactionDetails.OidFromSynapse.ToString();
+
+                        SynapseV3ShowTransInput_filter_from from = new SynapseV3ShowTransInput_filter_from()
+                        {
+                            type = "SYNAPSE-US",
+                            id = CommonHelper.GetDecryptedData(SendersBank.oid)
+                        };
+
+                        SynapseV3ShowTransInput_filter_to to = new SynapseV3ShowTransInput_filter_to()
+                        {
+                            type = "ACH-US",
+                            id = CommonHelper.GetDecryptedData(RecipientBank.oid)
+                        };
+
+                        SynapseV3ShowTransInput_filter_amount amount = new SynapseV3ShowTransInput_filter_amount()
+                        {
+                            amount = Convert.ToDouble(tran.Amount)
+                        };
+
+                        SynapseV3ShowTransInput_filter_recent_status recent_status = new SynapseV3ShowTransInput_filter_recent_status()
+                        {
+                            status_id = "1"
+                        };
+
+                        SynapseV3ShowTransInput_filter_extra extra = new SynapseV3ShowTransInput_filter_extra();
+                        extra.ip = CommonHelper.GetRecentOrDefaultIPOfMember(members.MemberId);
+                        extra.note = "";
+                        extra.webhook = "http://requestb.in/q94kxtq9";
+                        extra.supp_id = "";
+
+                        SynapseV3ShowTransInput_filter filter = new SynapseV3ShowTransInput_filter();
+                        filter._id = oid;
+                        filter.amount = amount;
+                        filter.from = from;
+                        filter.to = to;
+                        filter.recent_status = recent_status;
+                        filter.extra = extra;
+                        filter.page = "1";
+
+
+                        transInput.login = login;
+                        transInput.user = user;
+
+                        transInput.filter = filter;
+
+                        string baseAddress = "";
+
+                        baseAddress = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) ? "https://sandbox.synapsepay.com/api/v3/trans/show" : "https://synapsepay.com/api/v3/trans/show";
+                        try
+                        {
+                            var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
+                            http.Accept = "application/json";
+                            http.ContentType = "application/json";
+                            http.Method = "POST";
+
+                            string parsedContent = JsonConvert.SerializeObject(transInput);
+                            ASCIIEncoding encoding = new ASCIIEncoding();
+                            Byte[] bytes = encoding.GetBytes(parsedContent);
+
+                            Stream newStream = http.GetRequestStream();
+                            newStream.Write(bytes, 0, bytes.Length);
+                            newStream.Close();
+
+                            var response = http.GetResponse();
+                            var stream = response.GetResponseStream();
+                            var sr = new StreamReader(stream);
+                            var content = sr.ReadToEnd();
+
+                            var resFromSynapse = new kycInfoResponseFromSynapse();
+
+                            resFromSynapse = JsonConvert.DeserializeObject<kycInfoResponseFromSynapse>(content);
+
+                            if (resFromSynapse != null)
+                            {
+                                if (resFromSynapse.success.ToString().ToLower() == "true")
+                                {
+                                    //updating transaction Table in db
+                                    tran.SynapseStatus = resFromSynapse.success.ToString();
+                                    noochConnection.SaveChanges();
+                                    return "true";
+                                }
+                                else
+                                {
+                                    return "false";
+                                }
+                            }
+                            else
+                            {
+                                return "false";
+                            }
+
+                        }
+                        catch (WebException ex)
+                        {
+                            return "false";
+                        }
+
+
+
+                    }
+                    else
+                    {
+                        //res. = "User's Synapse account or User's bank account not found";
+                        Logger.Info("MDA -> showTransactioFromSynapseV3 FAILED - User's Synapse account or User's bank account not found - [MemberID: " + tran.SenderId + "]");
+                        return "false";
+                    }
+                }
+                else
+                    return "false";
+
+
+            }
         }
     }
 }

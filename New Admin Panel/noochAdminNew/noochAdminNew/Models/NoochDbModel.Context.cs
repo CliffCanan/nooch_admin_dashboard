@@ -57,10 +57,8 @@ namespace noochAdminNew.Models
         public DbSet<SpecificUserTransReportEntity> SpecificUserTransReportEntities { get; set; }
         public DbSet<SynapseBankLoginResult> SynapseBankLoginResults { get; set; }
         public DbSet<SynapseBanksOfMember> SynapseBanksOfMembers { get; set; }
-        public DbSet<SynapseCreateOrderResult> SynapseCreateOrderResults { get; set; }
         public DbSet<SynapseIdVerificationQuestion> SynapseIdVerificationQuestions { get; set; }
         public DbSet<SynapseSupportedBank> SynapseSupportedBanks { get; set; }
-        public DbSet<SynapseV3CreateTransResults> SynapseV3CreateTransResults { get; set; }
         public DbSet<Tenant> Tenants { get; set; }
         public DbSet<TenantsIdDocument> TenantsIdDocuments { get; set; }
         public DbSet<TransactionCustomReportEntity> TransactionCustomReportEntities { get; set; }
@@ -69,6 +67,7 @@ namespace noochAdminNew.Models
         public DbSet<UnitsOccupiedByTenant> UnitsOccupiedByTenants { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<SynapseCreateUserResult> SynapseCreateUserResults { get; set; }
+        public DbSet<SynapseAddTransactionResult> SynapseAddTransactionResults { get; set; }
     
         public virtual ObjectResult<string> GetReportsForMember(string memberId, string getWhat)
         {

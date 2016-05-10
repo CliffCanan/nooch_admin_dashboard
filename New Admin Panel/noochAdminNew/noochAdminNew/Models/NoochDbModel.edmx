@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="NOOCHModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="NOOCHModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ADD">
           <Key>
             <PropertyRef Name="Id" />
@@ -488,6 +488,18 @@
           <Property Name="Age" Type="int" />
           <Property Name="TotalRows" Type="varchar" MaxLength="5" />
         </EntityType>
+        <EntityType Name="SynapseAddTransactionResults">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="TransactionId" Type="uniqueidentifier" />
+          <Property Name="OidFromSynapse" Type="varchar(max)" />
+          <Property Name="Status_DateTimeStamp" Type="varchar(max)" />
+          <Property Name="Status_Id" Type="varchar(max)" />
+          <Property Name="Status_Text" Type="varchar(max)" />
+          <Property Name="Status_Note" Type="varchar(max)" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
         <EntityType Name="SynapseBankLoginResults">
           <Key>
             <PropertyRef Name="Id" />
@@ -540,44 +552,6 @@
           <Property Name="type_bank" Type="varchar(max)" />
           <Property Name="type_synapse" Type="varchar(max)" />
           <Property Name="is_active" Type="bit" />
-        </EntityType>
-        <EntityType Name="SynapseCreateOrderResults">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="TransAmount" Type="varchar" MaxLength="50" />
-          <Property Name="TransSellerId" Type="varchar(max)" />
-          <Property Name="TransOAuthConsumberKey" Type="varchar(max)" />
-          <Property Name="TransBankId" Type="int" />
-          <Property Name="Result_blanace" Type="varchar(max)" />
-          <Property Name="Result_balance_verified" Type="bit" />
-          <Property Name="Result_success" Type="bit" />
-          <Property Name="Result_order_account_type" Type="int" />
-          <Property Name="Result_order_amount" Type="varchar(max)" />
-          <Property Name="Result_order_bank_id" Type="int" />
-          <Property Name="Result_order_bank_nickname" Type="varchar(max)" />
-          <Property Name="Result_date" Type="varchar(max)" />
-          <Property Name="Result_date_settled" Type="varchar(max)" />
-          <Property Name="Result_discount" Type="varchar" MaxLength="50" />
-          <Property Name="Result_facilitator_fee" Type="varchar" MaxLength="50" />
-          <Property Name="Result_fee" Type="varchar" MaxLength="50" />
-          <Property Name="Result_id" Type="varchar" MaxLength="50" />
-          <Property Name="Result_is_buyer" Type="bit" />
-          <Property Name="Result_note" Type="varchar(max)" />
-          <Property Name="Result_resource_uri" Type="varchar(max)" />
-          <Property Name="Result_seller_accept_gratuity" Type="bit" />
-          <Property Name="Result_seller_has_avatar" Type="bit" />
-          <Property Name="Result_seller_seller_avatar" Type="varchar(max)" />
-          <Property Name="Result_seller_seller_fullname" Type="varchar(max)" />
-          <Property Name="Result_seller_seller_id" Type="int" />
-          <Property Name="Result_status" Type="varchar" MaxLength="50" />
-          <Property Name="Result_status_url" Type="varchar(max)" />
-          <Property Name="Result_supp_id" Type="varchar(max)" />
-          <Property Name="Result_ticket_number" Type="varchar" MaxLength="50" />
-          <Property Name="Result_tip" Type="varchar" MaxLength="50" />
-          <Property Name="Result_total" Type="varchar" MaxLength="50" />
-          <Property Name="TransactionDateTime" Type="datetime" />
         </EntityType>
         <EntityType Name="SynapseCreateUserResults">
           <Key>
@@ -652,41 +626,6 @@
           <Property Name="MFAType" Type="varchar(max)" />
           <Property Name="IsPinRequired" Type="bit" />
           <Property Name="IsDeleted" Type="bit" />
-        </EntityType>
-        <EntityType Name="SynapseV3CreateTransResults">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="trans_id_oid" Type="varchar(max)" />
-          <Property Name="trans_amount" Type="varchar(max)" />
-          <Property Name="trans_currency" Type="varchar(max)" />
-          <Property Name="client_id" Type="varchar(max)" />
-          <Property Name="client_name" Type="varchar(max)" />
-          <Property Name="extra_created_on_date" Type="varchar(max)" />
-          <Property Name="extra_process_on_date" Type="varchar(max)" />
-          <Property Name="extra_supp_id" Type="varchar(max)" />
-          <Property Name="synapse_fee_fee" Type="varchar(max)" />
-          <Property Name="synapse_fee_id" Type="varchar(max)" />
-          <Property Name="nooch_fee_fee" Type="varchar(max)" />
-          <Property Name="nooch_fee_id" Type="varchar(max)" />
-          <Property Name="synapse_fee_note" Type="varchar(max)" />
-          <Property Name="nooch_fee_note" Type="varchar(max)" />
-          <Property Name="from_user_id" Type="varchar(max)" />
-          <Property Name="from_node_id" Type="varchar(max)" />
-          <Property Name="from_node_nickname" Type="varchar(max)" />
-          <Property Name="from_node_type" Type="varchar(max)" />
-          <Property Name="recent_status_date" Type="varchar(max)" />
-          <Property Name="recent_note" Type="varchar(max)" />
-          <Property Name="recent_status" Type="varchar(max)" />
-          <Property Name="recent_status_id" Type="varchar(max)" />
-          <Property Name="to_user_id" Type="varchar(max)" />
-          <Property Name="to_node_id" Type="varchar(max)" />
-          <Property Name="to_node_nickname" Type="varchar(max)" />
-          <Property Name="to_node_type" Type="varchar(max)" />
-          <Property Name="NoochTransactionDate" Type="datetime" />
-          <Property Name="NoochAdminNotes" Type="varchar(max)" />
-          <Property Name="NoochTransactionId" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="Tenants">
           <Key>
@@ -791,6 +730,7 @@
           <Property Name="InvitationSentTo" Type="varchar" MaxLength="500" />
           <Property Name="IsPhoneInvitation" Type="bit" />
           <Property Name="PhoneNumberInvited" Type="varchar" MaxLength="50" />
+          <Property Name="SynapseStatus" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="UnitsOccupiedByTenants">
           <Key>
@@ -977,13 +917,12 @@
           <EntitySet Name="SDNSearchResults" EntityType="Self.SDNSearchResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SocialMediaPosts" EntityType="Self.SocialMediaPosts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SpecificUserTransReportEntity" EntityType="Self.SpecificUserTransReportEntity" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SynapseAddTransactionResults" EntityType="Self.SynapseAddTransactionResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SynapseBankLoginResults" EntityType="Self.SynapseBankLoginResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SynapseBanksOfMembers" EntityType="Self.SynapseBanksOfMembers" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="SynapseCreateOrderResults" EntityType="Self.SynapseCreateOrderResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SynapseCreateUserResults" EntityType="Self.SynapseCreateUserResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SynapseIdVerificationQuestions" EntityType="Self.SynapseIdVerificationQuestions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SynapseSupportedBanks" EntityType="Self.SynapseSupportedBanks" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="SynapseV3CreateTransResults" EntityType="Self.SynapseV3CreateTransResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tenants" EntityType="Self.Tenants" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TenantsIdDocuments" EntityType="Self.TenantsIdDocuments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TransactionCustomReportEntity" EntityType="Self.TransactionCustomReportEntity" Schema="dbo" store:Type="Tables" />
@@ -1081,10 +1020,8 @@
           <EntitySet Name="SpecificUserTransReportEntities" EntityType="NOOCHModel.SpecificUserTransReportEntity" />
           <EntitySet Name="SynapseBankLoginResults" EntityType="NOOCHModel.SynapseBankLoginResult" />
           <EntitySet Name="SynapseBanksOfMembers" EntityType="NOOCHModel.SynapseBanksOfMember" />
-          <EntitySet Name="SynapseCreateOrderResults" EntityType="NOOCHModel.SynapseCreateOrderResult" />
           <EntitySet Name="SynapseIdVerificationQuestions" EntityType="NOOCHModel.SynapseIdVerificationQuestion" />
           <EntitySet Name="SynapseSupportedBanks" EntityType="NOOCHModel.SynapseSupportedBank" />
-          <EntitySet Name="SynapseV3CreateTransResults" EntityType="NOOCHModel.SynapseV3CreateTransResults" />
           <EntitySet Name="Tenants" EntityType="NOOCHModel.Tenant" />
           <EntitySet Name="TenantsIdDocuments" EntityType="NOOCHModel.TenantsIdDocument" />
           <EntitySet Name="TransactionCustomReportEntities" EntityType="NOOCHModel.TransactionCustomReportEntity" />
@@ -1133,6 +1070,7 @@
             <End Role="RentTransaction" EntitySet="RentTransactions" />
           </AssociationSet>
           <EntitySet Name="SynapseCreateUserResults" EntityType="NOOCHModel.SynapseCreateUserResult" />
+          <EntitySet Name="SynapseAddTransactionResults" EntityType="NOOCHModel.SynapseAddTransactionResult" />
           </EntityContainer>
         <ComplexType Name="GetTopReferringMembers_Result">
           <Property Type="Guid" Name="InviteCode" Nullable="true" />
@@ -1724,44 +1662,6 @@
           <Property Name="type_synapse" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="is_active" Type="Boolean" />
         </EntityType>
-        <EntityType Name="SynapseCreateOrderResult">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TransAmount" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="TransSellerId" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="TransOAuthConsumberKey" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="TransBankId" Type="Int32" />
-          <Property Name="Result_blanace" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Result_balance_verified" Type="Boolean" />
-          <Property Name="Result_success" Type="Boolean" />
-          <Property Name="Result_order_account_type" Type="Int32" />
-          <Property Name="Result_order_amount" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Result_order_bank_id" Type="Int32" />
-          <Property Name="Result_order_bank_nickname" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Result_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Result_date_settled" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Result_discount" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Result_facilitator_fee" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Result_fee" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Result_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Result_is_buyer" Type="Boolean" />
-          <Property Name="Result_note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Result_resource_uri" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Result_seller_accept_gratuity" Type="Boolean" />
-          <Property Name="Result_seller_has_avatar" Type="Boolean" />
-          <Property Name="Result_seller_seller_avatar" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Result_seller_seller_fullname" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Result_seller_seller_id" Type="Int32" />
-          <Property Name="Result_status" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Result_status_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Result_supp_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Result_ticket_number" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Result_tip" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Result_total" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="TransactionDateTime" Type="DateTime" Precision="3" />
-        </EntityType>
         <EntityType Name="SynapseIdVerificationQuestion">
           <Key>
             <PropertyRef Name="Id" />
@@ -1807,41 +1707,6 @@
           <Property Name="MFAType" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="IsPinRequired" Type="Boolean" />
           <Property Name="IsDeleted" Type="Boolean" />
-        </EntityType>
-        <EntityType Name="SynapseV3CreateTransResults">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="trans_id_oid" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="trans_amount" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="trans_currency" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="client_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="client_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="extra_created_on_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="extra_process_on_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="extra_supp_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="synapse_fee_fee" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="synapse_fee_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="nooch_fee_fee" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="nooch_fee_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="synapse_fee_note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="nooch_fee_note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="from_user_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="from_node_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="from_node_nickname" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="from_node_type" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="recent_status_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="recent_note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="recent_status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="recent_status_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="to_user_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="to_node_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="to_node_nickname" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="to_node_type" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="NoochTransactionDate" Type="DateTime" Precision="3" />
-          <Property Name="NoochAdminNotes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="NoochTransactionId" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Tenant">
           <Key>
@@ -1950,6 +1815,7 @@
           <NavigationProperty Name="GeoLocation" Relationship="NOOCHModel.FK_Transactions_GeoLocations" FromRole="Transaction" ToRole="GeoLocation" />
           <NavigationProperty Name="Member" Relationship="NOOCHModel.FK_Transactions_Members2" FromRole="Transaction" ToRole="Member" />
           <NavigationProperty Name="Member1" Relationship="NOOCHModel.FK_Transactions_Members3" FromRole="Transaction" ToRole="Member" />
+          <Property Name="SynapseStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="UnitsOccupiedByTenant">
           <Key>
@@ -2121,6 +1987,18 @@
           <Property Name="Phone_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="photos" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="expires_at" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="SynapseAddTransactionResult">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="TransactionId" Type="Guid" />
+          <Property Name="OidFromSynapse" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Status_DateTimeStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Status_Id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Status_Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Status_Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2732,45 +2610,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SynapseCreateOrderResults">
-            <EntityTypeMapping TypeName="NOOCHModel.SynapseCreateOrderResult">
-              <MappingFragment StoreEntitySet="SynapseCreateOrderResults">
-                <ScalarProperty Name="TransactionDateTime" ColumnName="TransactionDateTime" />
-                <ScalarProperty Name="Result_total" ColumnName="Result_total" />
-                <ScalarProperty Name="Result_tip" ColumnName="Result_tip" />
-                <ScalarProperty Name="Result_ticket_number" ColumnName="Result_ticket_number" />
-                <ScalarProperty Name="Result_supp_id" ColumnName="Result_supp_id" />
-                <ScalarProperty Name="Result_status_url" ColumnName="Result_status_url" />
-                <ScalarProperty Name="Result_status" ColumnName="Result_status" />
-                <ScalarProperty Name="Result_seller_seller_id" ColumnName="Result_seller_seller_id" />
-                <ScalarProperty Name="Result_seller_seller_fullname" ColumnName="Result_seller_seller_fullname" />
-                <ScalarProperty Name="Result_seller_seller_avatar" ColumnName="Result_seller_seller_avatar" />
-                <ScalarProperty Name="Result_seller_has_avatar" ColumnName="Result_seller_has_avatar" />
-                <ScalarProperty Name="Result_seller_accept_gratuity" ColumnName="Result_seller_accept_gratuity" />
-                <ScalarProperty Name="Result_resource_uri" ColumnName="Result_resource_uri" />
-                <ScalarProperty Name="Result_note" ColumnName="Result_note" />
-                <ScalarProperty Name="Result_is_buyer" ColumnName="Result_is_buyer" />
-                <ScalarProperty Name="Result_id" ColumnName="Result_id" />
-                <ScalarProperty Name="Result_fee" ColumnName="Result_fee" />
-                <ScalarProperty Name="Result_facilitator_fee" ColumnName="Result_facilitator_fee" />
-                <ScalarProperty Name="Result_discount" ColumnName="Result_discount" />
-                <ScalarProperty Name="Result_date_settled" ColumnName="Result_date_settled" />
-                <ScalarProperty Name="Result_date" ColumnName="Result_date" />
-                <ScalarProperty Name="Result_order_bank_nickname" ColumnName="Result_order_bank_nickname" />
-                <ScalarProperty Name="Result_order_bank_id" ColumnName="Result_order_bank_id" />
-                <ScalarProperty Name="Result_order_amount" ColumnName="Result_order_amount" />
-                <ScalarProperty Name="Result_order_account_type" ColumnName="Result_order_account_type" />
-                <ScalarProperty Name="Result_success" ColumnName="Result_success" />
-                <ScalarProperty Name="Result_balance_verified" ColumnName="Result_balance_verified" />
-                <ScalarProperty Name="Result_blanace" ColumnName="Result_blanace" />
-                <ScalarProperty Name="TransBankId" ColumnName="TransBankId" />
-                <ScalarProperty Name="TransOAuthConsumberKey" ColumnName="TransOAuthConsumberKey" />
-                <ScalarProperty Name="TransSellerId" ColumnName="TransSellerId" />
-                <ScalarProperty Name="TransAmount" ColumnName="TransAmount" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="SynapseIdVerificationQuestions">
             <EntityTypeMapping TypeName="NOOCHModel.SynapseIdVerificationQuestion">
               <MappingFragment StoreEntitySet="SynapseIdVerificationQuestions">
@@ -2815,42 +2654,6 @@
                 <ScalarProperty Name="IsPinRequired" ColumnName="IsPinRequired" />
                 <ScalarProperty Name="MFAType" ColumnName="MFAType" />
                 <ScalarProperty Name="BankName" ColumnName="BankName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SynapseV3CreateTransResults">
-            <EntityTypeMapping TypeName="NOOCHModel.SynapseV3CreateTransResults">
-              <MappingFragment StoreEntitySet="SynapseV3CreateTransResults">
-                <ScalarProperty Name="NoochTransactionId" ColumnName="NoochTransactionId" />
-                <ScalarProperty Name="NoochAdminNotes" ColumnName="NoochAdminNotes" />
-                <ScalarProperty Name="NoochTransactionDate" ColumnName="NoochTransactionDate" />
-                <ScalarProperty Name="to_node_type" ColumnName="to_node_type" />
-                <ScalarProperty Name="to_node_nickname" ColumnName="to_node_nickname" />
-                <ScalarProperty Name="to_node_id" ColumnName="to_node_id" />
-                <ScalarProperty Name="to_user_id" ColumnName="to_user_id" />
-                <ScalarProperty Name="recent_status_id" ColumnName="recent_status_id" />
-                <ScalarProperty Name="recent_status" ColumnName="recent_status" />
-                <ScalarProperty Name="recent_note" ColumnName="recent_note" />
-                <ScalarProperty Name="recent_status_date" ColumnName="recent_status_date" />
-                <ScalarProperty Name="from_node_type" ColumnName="from_node_type" />
-                <ScalarProperty Name="from_node_nickname" ColumnName="from_node_nickname" />
-                <ScalarProperty Name="from_node_id" ColumnName="from_node_id" />
-                <ScalarProperty Name="from_user_id" ColumnName="from_user_id" />
-                <ScalarProperty Name="nooch_fee_note" ColumnName="nooch_fee_note" />
-                <ScalarProperty Name="synapse_fee_note" ColumnName="synapse_fee_note" />
-                <ScalarProperty Name="nooch_fee_id" ColumnName="nooch_fee_id" />
-                <ScalarProperty Name="nooch_fee_fee" ColumnName="nooch_fee_fee" />
-                <ScalarProperty Name="synapse_fee_id" ColumnName="synapse_fee_id" />
-                <ScalarProperty Name="synapse_fee_fee" ColumnName="synapse_fee_fee" />
-                <ScalarProperty Name="extra_supp_id" ColumnName="extra_supp_id" />
-                <ScalarProperty Name="extra_process_on_date" ColumnName="extra_process_on_date" />
-                <ScalarProperty Name="extra_created_on_date" ColumnName="extra_created_on_date" />
-                <ScalarProperty Name="client_name" ColumnName="client_name" />
-                <ScalarProperty Name="client_id" ColumnName="client_id" />
-                <ScalarProperty Name="trans_currency" ColumnName="trans_currency" />
-                <ScalarProperty Name="trans_amount" ColumnName="trans_amount" />
-                <ScalarProperty Name="trans_id_oid" ColumnName="trans_id_oid" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2934,6 +2737,7 @@
           <EntitySetMapping Name="Transactions">
             <EntityTypeMapping TypeName="NOOCHModel.Transaction">
               <MappingFragment StoreEntitySet="Transactions">
+                <ScalarProperty Name="SynapseStatus" ColumnName="SynapseStatus" />
                 <ScalarProperty Name="PhoneNumberInvited" ColumnName="PhoneNumberInvited" />
                 <ScalarProperty Name="IsPhoneInvitation" ColumnName="IsPhoneInvitation" />
                 <ScalarProperty Name="InvitationSentTo" ColumnName="InvitationSentTo" />
@@ -3014,6 +2818,19 @@
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="MemberId" ColumnName="MemberId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SynapseAddTransactionResults">
+            <EntityTypeMapping TypeName="NOOCHModel.SynapseAddTransactionResult">
+              <MappingFragment StoreEntitySet="SynapseAddTransactionResults">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Status_Note" ColumnName="Status_Note" />
+                <ScalarProperty Name="Status_Text" ColumnName="Status_Text" />
+                <ScalarProperty Name="Status_Id" ColumnName="Status_Id" />
+                <ScalarProperty Name="Status_DateTimeStamp" ColumnName="Status_DateTimeStamp" />
+                <ScalarProperty Name="OidFromSynapse" ColumnName="OidFromSynapse" />
+                <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

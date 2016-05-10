@@ -203,6 +203,7 @@
     <Compile Include="Classes\ResponseClasses\SaveVerificationIdDocument.cs" />
     <Compile Include="Classes\ResponseClasses\SearchAdminResultClass.cs" />
     <Compile Include="Classes\ResponseClasses\synapseV3GenericResponse.cs" />
+    <Compile Include="Classes\ResponseClasses\SynapseV3ShowTransInput.cs" />
     <Compile Include="Classes\Utility\CommonHelper.cs" />
     <Compile Include="Classes\Utility\Logger.cs" />
     <Compile Include="Classes\Utility\Utility.cs" />
@@ -324,13 +325,13 @@
     <Compile Include="Models\SpecificUserTransReportEntity.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SynapseAddTransactionResult.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\SynapseBankLoginResult.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SynapseBanksOfMember.cs">
-      <DependentUpon>NoochDbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SynapseCreateOrderResult.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SynapseCreateUserResult.cs">
@@ -340,9 +341,6 @@
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SynapseSupportedBank.cs">
-      <DependentUpon>NoochDbModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\SynapseV3CreateTransResults.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Tenant.cs">
