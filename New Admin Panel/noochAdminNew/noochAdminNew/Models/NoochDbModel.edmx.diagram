@@ -34,8 +34,7 @@
         <EntityTypeShape EntityType="NOOCHModel.SpecificUserTransReportEntity" Width="1.5" PointX="18.75" PointY="3.75" />
         <EntityTypeShape EntityType="NOOCHModel.SynapseBankLoginResult" Width="1.5" PointX="3" PointY="26.125" />
         <EntityTypeShape EntityType="NOOCHModel.SynapseBanksOfMember" Width="1.5" PointX="5.75" PointY="18.75" />
-        <EntityTypeShape EntityType="NOOCHModel.SynapseCreateOrderResult" Width="1.5" PointX="18.75" PointY="7.75" />
-        <EntityTypeShape EntityType="NOOCHModel.SynapseCreateUserResult" Width="1.5" PointX="10.75" PointY="18.75" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseCreateOrderResult" Width="1.5" PointX="21.375" PointY="12.75" />
         <EntityTypeShape EntityType="NOOCHModel.SynapseIdVerificationQuestion" Width="1.5" PointX="12.75" PointY="18.75" />
         <EntityTypeShape EntityType="NOOCHModel.SynapseSupportedBank" Width="1.5" PointX="14.75" PointY="18.75" />
         <EntityTypeShape EntityType="NOOCHModel.SynapseV3CreateTransResults" Width="1.5" PointX="18.75" PointY="16.75" />
@@ -56,6 +55,7 @@
         <AssociationConnector Association="NOOCHModel.FK_Transactions_Members3" />
         <AssociationConnector Association="NOOCHModel.FK_RentTransactions_Tenants" />
         <AssociationConnector Association="NOOCHModel.FK_RentTransactions_UnitsOccupiedByTenants" />
+        <EntityTypeShape EntityType="NOOCHModel.SynapseCreateUserResult" Width="1.5" PointX="8.375" PointY="21.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

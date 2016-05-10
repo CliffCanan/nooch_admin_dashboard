@@ -1523,10 +1523,9 @@ namespace noochAdminNew.Controllers
             return Json(res);
         }
 
-
         [HttpPost]
-        [ActionName("UploadDoc")]
-        public ActionResult UploadDoc(HttpPostedFileBase file, string NoochId)
+        [ActionName("Details")]
+        public ActionResult Details(HttpPostedFileBase file, string NoochId)
         {
             SaveVerificationIdDocument DocumentDetails = new SaveVerificationIdDocument();
 
@@ -1535,22 +1534,34 @@ namespace noochAdminNew.Controllers
                 var member = noochConnection.Members.Where(m => m.Nooch_ID == NoochId).FirstOrDefault();
                 DocumentDetails.MemberId = member.MemberId.ToString();
                 var MemberId = Utility.ConvertToGuid(DocumentDetails.MemberId.ToString());
-                var accesToken = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == MemberId).FirstOrDefault();
-                DocumentDetails.AccessToken = accesToken.access_token;
-                string pic = MemberId.ToString() + ".png";
-                string path = System.IO.Path.Combine(
-                                 Server.MapPath("~/UploadedPhotos/Photos"), pic);
-                // file is uploaded
+                var SynapseCreateUserResult = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == MemberId).FirstOrDefault();
+                synapseV3GenericResponse mdaResult = null;
 
-                file.SaveAs(path);
-                DocumentDetails.imgPath = path;
-                var mdaResult = submitDocumentToSynapseV3(DocumentDetails);
-                ViewData["IsSuccess"] = mdaResult.isSuccess;
+                if (SynapseCreateUserResult != null)
+                {
+                    DocumentDetails.AccessToken = SynapseCreateUserResult.access_token;
+                    string pic = MemberId.ToString() + ".png";
+                    string path = System.IO.Path.Combine(
+                                     Server.MapPath("~/UploadedPhotos/Photos"), pic);
+                    // file is uploaded
+                    file.SaveAs(path);
+                    DocumentDetails.imgPath = path;
+                    mdaResult = new synapseV3GenericResponse();
+                    mdaResult = submitDocumentToSynapseV3(DocumentDetails);
+                    Session["status"] = "Success";
+                    return RedirectToAction("Detail", "Member", new { NoochId = NoochId });
 
-                return RedirectToAction("Detail", "Member", new { NoochId });
+                }
+                else
+                {
+                    mdaResult = new synapseV3GenericResponse();
+                    Session["status"] = "Failed";
+                    return RedirectToAction("Detail", "Member", new { NoochId = NoochId });
+                }
+
             }
-        }
 
+        }
 
         public synapseV3GenericResponse submitDocumentToSynapseV3(SaveVerificationIdDocument DocumentDetails)
         {
@@ -1595,20 +1606,14 @@ namespace noochAdminNew.Controllers
             var id = Utility.ConvertToGuid(MemberId);
 
             synapseV3GenericResponse res = new synapseV3GenericResponse();
-
+            //SynapseDetailsClass res = new SynapseDetailsClass();
 
             #region Get User's Synapse OAuth Consumer Key
 
             string usersSynapseOauthKey = "";
-
-
             using (var noochConnection = new NOOCHEntities())
             {
-
                 var usersSynapseDetails = noochConnection.SynapseCreateUserResults.FirstOrDefault(m => m.MemberId == id && m.IsDeleted == false);
-
-
-
 
                 if (usersSynapseDetails == null)
                 {
@@ -1620,8 +1625,41 @@ namespace noochAdminNew.Controllers
                 }
                 else
                 {
+                    #region Check If OAuth Key Still Valid
+                    // if testing
+                    synapseV3checkUsersOauthKey checkTokenResult = CommonHelper.refreshSynapseV3OautKey(usersSynapseDetails.access_token);
 
-                    usersSynapseOauthKey = CommonHelper.GetDecryptedData(usersSynapseDetails.access_token);
+                    // if live
+                    //synapseV3checkUsersOauthKey checkTokenResult = refreshSynapseV3OautKey(createSynapseUserObj.access_token,false);
+                    //                                                                   
+
+                    if (checkTokenResult != null)
+                    {
+                        if (checkTokenResult.success == true)
+                        {
+                            usersSynapseOauthKey = CommonHelper.GetDecryptedData(checkTokenResult.oauth_consumer_key);
+                        }
+                        else
+                        {
+                            Logger.Error("Common Helper -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
+                                                   "CheckTokenResult.msg: [" + checkTokenResult.msg + "], MemberID: [" + MemberId + "]");
+
+                            res.msg = checkTokenResult.msg;
+
+                        }
+                    }
+                    else
+                    {
+                        Logger.Error("Common Helper -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
+                                                   "CheckTokenResult was NULL, MemberID: [" + MemberId + "]");
+
+                        res.msg = "Unable to check user's Oauth Token";
+
+                    }
+
+                    #endregion Check If OAuth Key Still Valid
+
+
                 }
             }
             #endregion Get User's Synapse OAuth Consumer Key
@@ -1750,7 +1788,6 @@ namespace noochAdminNew.Controllers
 
             return res;
         }
-
 
         public List<Tenants> GetTenants(String NoochId)
         {
