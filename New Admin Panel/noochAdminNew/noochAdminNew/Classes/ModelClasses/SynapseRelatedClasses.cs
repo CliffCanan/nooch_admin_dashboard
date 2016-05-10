@@ -330,5 +330,60 @@ namespace noochAdminNew.Classes.ModelClasses
     {
         public object attachment { get; set; } // this should be a Base64 encoded image
     }
-    
+
+
+    public class SynapseV3RefreshOauthKeyAndSign_Input
+    {
+        public createUser_client client { get; set; }
+        public createUser_login2 login { get; set; }
+
+        public SynapseV3RefreshOAuthToken_User_Input user { get; set; }
+
+
+    }
+
+    public class SynapseV3RefreshOAuthToken_User_Input
+    {
+        public synapseSearchUserResponse_Id1 _id { get; set; }
+        public string fingerprint { get; set; }
+
+        public string ip { get; set; }
+    }
+
+    public class createUser_client
+    {
+        public string client_id { get; set; }
+        public string client_secret { get; set; }
+    }
+    public class createUser_login2
+    {
+        public string email { get; set; }
+        public string refresh_token { get; set; }
+
+    }
+
+    public class synapseCreateUserV3Result_int
+    {
+        public createUserV3Result_oauth oauth { get; set; }
+        public synapseV3Result_user user { get; set; }
+        public bool success { get; set; }
+        public string oauth_consumer_key { get; set; }
+        public string user_id { get; set; }
+        public string error_code { get; set; }
+        public string http_code { get; set; }
+        public string errorMsg { get; set; }
+
+        public string memberIdGenerated { get; set; } // Used when creating a new Member from a landing page
+        public string ssn_verify_status { get; set; }
+        public string reason { get; set; }
+    }
+
+    public class createUserV3Result_oauth
+    {
+        public string expires_at { get; set; }
+        public string expires_in { get; set; }
+        public string oauth_key { get; set; }
+        public string refresh_token { get; set; }
+    }
+
 }

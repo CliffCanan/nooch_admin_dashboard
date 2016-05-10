@@ -58,11 +58,23 @@
         if ($(this).hasClass('toggle-button-selected')) {
             Member.GenerateNewPassword();
         }
+    });
 
+
+
+    $(document).ready(function () {
+        if ($('#DocStatus').val() == "Success") {
+            swal("Awesome !", "File Uploaded Successfully!", "success");
+            $('#DocStatus').val('');
+        }
+        else if ($('#DocStatus').val() == "Failed") {
+            sweetAlert("Oops...", "Something went wrong!", "error");
+        }
     });
 </script>
 
 <div class="row wrapper border-bottom white-bg page-heading">
+    <input type="hidden" id="DocStatus" value=@mdc.DocStatus />
     <div class="col-lg-10">
         <h2><strong>@mdc.FirstName @mdc.LastName</strong> | <small>@mdc.Nooch_ID</small></h2>
         <ol class="breadcrumb">
@@ -355,6 +367,7 @@
                 <li><a data-toggle="tab" href="#tab-3"><i class="fa fa-fw fa-wrench m-r-sm"></i> Admin Actions</a></li>
                 <li><a data-toggle="tab" href="#tab-4"><i class="fa fa-fw fa-exchange m-r-sm"></i> Recent Transactions</a></li>
                 <li><a data-toggle="tab" href="#tab-5"><i class="fa fa-fw fa-exclamation-circle m-r-sm"></i> Disputes</a></li>
+                <li><a data-toggle="tab" href="#tab-6"><i class="fa fa-fw fa-check m-r-sm"></i>Identity Verification</a></li>
             </ul>
 
             <div class="tab-content ">
@@ -1456,6 +1469,52 @@
                     </div>
                 </div>
 
+                <div id="tab-6" class="tab-pane fade">
+                    <div class="panel-body">
+                        <div class="row">
+
+                            <div class="col-lg-12">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5>Identity Verification</h5>
+                                    </div>
+
+                                    <div class="ibox-content">
+                                        @using (Html.BeginForm("Details", "Member",
+                                           FormMethod.Post,
+                                            new { enctype = "multipart/form-data" }))
+                                        {
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                            <b>Verify Identity</b>
+                                                        </span>
+                                                        <div class="col-xs-5 col-sm-8 col-lg-7">
+                                                            <div class="input-group">
+
+                                                                <input type="file" name="file" id="file" required />
+                                                                <br />
+                                                                <input type="Submit" class="btn btn-sm btn-primary" value="Upload Image" id="btnUpload" />
+
+                                                                <input type="hidden" name="NoochId" value="@mdc.Nooch_ID" />
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                
             </div>
 
         </div>

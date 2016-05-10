@@ -62,6 +62,7 @@ namespace noochAdminNew.Classes.ModelClasses
 
         public List<Tenants> tenants { get; set; }
         public Tenants tenant { get; set; }
+        public string DocStatus { get; set; }
     }
 
     public class MemberDetailsTrans
