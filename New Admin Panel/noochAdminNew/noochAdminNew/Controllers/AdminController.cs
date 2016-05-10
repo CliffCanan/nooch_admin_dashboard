@@ -2663,7 +2663,8 @@ namespace noochAdminNew.Controllers
 
                         string[] nda = new string[2];
                         nda[0] = i.ToString();
-                        nda[1] = past7days.DayOfWeek.ToString();
+                        nda[1] = past7days.DayOfWeek.ToString().Substring(0, 3) + " " + past7days.Date.ToString("MMMM dd");
+                         
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
                         DurationArray da = new DurationArray();
@@ -2679,7 +2680,8 @@ namespace noochAdminNew.Controllers
                 if (recordType == "weekly")
                 {
                     DateTime todayDate = DateTime.Now;
-                    DateTime past7days = DateTime.Now.AddDays(-70);
+                    int DayNumbr=Convert.ToInt32( todayDate.DayOfWeek)-1;
+                    DateTime past7days = DateTime.Now.AddDays(-70 - DayNumbr);
                     int j = 0;
                     while (past7days <= todayDate)
                     {
@@ -2715,16 +2717,8 @@ namespace noochAdminNew.Controllers
                             nre[1] = SumOfAmount.ToString();
                         }
 
-                        if (-(j - 10) == 0)
-                            nda[1] = "This Week ";
-                        else if (-(j - 10) == 1)
-                            nda[1] = "Last Week ";
-                        else if (-(j - 10) == 2)
-                            nda[1] = "2nd Last Week ";
-                        else if (-(j - 10) == 3)
-                            nda[1] = "3rd Last Week ";
-                        else
-                            nda[1] = -(j - 10) + " th Last Week ";
+                   
+                        nda[1] = past7days.Date.ToShortDateString() + " - " + past7days.AddDays(6).Date.ToShortDateString();
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
                         DurationArray da = new DurationArray();
@@ -2763,7 +2757,8 @@ namespace noochAdminNew.Controllers
                         }
                         string[] nda = new string[2];
                         nda[0] = i.ToString();
-                        nda[1] = past7days.ToString("MMM");
+                   
+                        nda[1] = past7days.ToString("MMM yy");
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
                         DurationArray da = new DurationArray();
@@ -2988,7 +2983,8 @@ namespace noochAdminNew.Controllers
                 if (dateType == "weekly")
                 {
                     DateTime todayDate = DateTime.Now;
-                    DateTime past7days = DateTime.Now.AddDays(-70);
+                    int DayNumbr = Convert.ToInt32(todayDate.DayOfWeek) - 1;
+                    DateTime past7days = DateTime.Now.AddDays(-70 - DayNumbr);
 
                     int j = 0;
 
@@ -3125,12 +3121,7 @@ namespace noochAdminNew.Controllers
 
 
 
-                        if (-(j - 10) == 0)
-                            nda[1] = "This Week";
-                        else if (-(j - 10) == 1)
-                            nda[1] = "Last Week";
-                        else
-                            nda[1] = -(j - 10) + " Weeks Ago";
+                        nda[1] = past7days.Date.ToShortDateString() + " - " + past7days.AddDays(6).Date.ToShortDateString();
 
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
@@ -3255,7 +3246,8 @@ namespace noochAdminNew.Controllers
 
                         string[] nda = new string[2];
                         nda[0] = i.ToString();
-                        nda[1] = past7days.DayOfWeek.ToString();
+                        nda[1] = past7days.DayOfWeek.ToString().Substring(0,3)+" " +past7days.Date.ToString("MMMM dd");
+                         
 
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
@@ -3382,7 +3374,7 @@ namespace noochAdminNew.Controllers
 
                         string[] nda = new string[2];
                         nda[0] = i.ToString();
-                        nda[1] = past8months.ToString("MMM 'yy");
+                        nda[1] = past8months.ToString("MMM yy");
 
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;

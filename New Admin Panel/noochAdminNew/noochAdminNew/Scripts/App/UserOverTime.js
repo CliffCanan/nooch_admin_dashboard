@@ -3,9 +3,11 @@ var dateType = 'daily';
 
 $(document).ready(function ()
 {
+
+
     window.onload = function ()
     {
-        /*new JsDatePick({
+        new JsDatePick({
             useMode: 2,
             target: "startDate",
             dateFormat: "%d-%M-%Y"
@@ -14,7 +16,7 @@ $(document).ready(function ()
             useMode: 2,
             target: "endDate",
             dateFormat: "%d-%M-%Y"
-        });*/
+        });
     };
 
     $("#GraphMenuExpander").trigger("click");
@@ -112,24 +114,28 @@ function generateBar(data1, ticks)
 // When selecting a Date Type from the Actions Dropdown Menu
 function updateDateType(newDateType)
 {
+  
+     
     // Set global var 'dateType'
     dateType = newDateType;
 
-    Member.getUserOverTime();
+    Member.getUserOverTime(dateType);
 }
 
 // On Clicking the 'Apply' Button
 $('#userFilter').submit(function (event)
 {
+  
     event.preventDefault();
 
-    Member.getUserOverTime();
+    Member.getUserOverTime(dateType);
 });
 
 var Member = function ()
 {
-    function getUserOverTime()
+    function getUserOverTime(dateType)
     {
+        $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
         var fromDate = '';
         var toDate = '';
 
@@ -165,10 +171,11 @@ var Member = function ()
 
         if (dateType == 'dateRange') {
             if ($('#frmTarget').parsley().validate()) {
+                $('#customDateModal').modal('hide');
                 $.post(url, data, function (result)
                 {
                     console.log(result);
-
+                   
                     if (result.IsSuccess) {
                         $('#customDateModal').modal('hide');
 

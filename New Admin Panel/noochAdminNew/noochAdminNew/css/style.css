@@ -1376,7 +1376,7 @@ a.list-group-item.active:focus {
 /* FLOT CHART  */
 .flot-chart {
   display: block;
-  height: 200px;
+  height: 450px;
 }
 .widget .flot-chart.dashboard-chart {
   display: block;

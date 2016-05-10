@@ -15,6 +15,38 @@
     <link rel="icon" href="~/img/favicon.ico" />
     <script src="~/js/jquery-2.1.1.js"></script>
     <!--<script src="~/js/plugins/bootbox/js/bootbox.min.js"></script>-->
+
+    <script src="~/js/plugins/pace/pace.min.js"></script>
+
+
+    <style>
+        .pace {
+            -webkit-pointer-events: none;
+            pointer-events: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        .pace-inactive {
+            display: none;
+        }
+
+        .pace .pace-progress {
+            background: #29d;
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            right: 100%;
+            width: 100%;
+            height: 2px;
+        }
+    </style>
+    <script>
+    Pace.options = {
+    ajax: false
+    }
+    </script>
 </head>
 
 <body>
@@ -271,8 +303,7 @@
 
     <!-- Custom and plugin javascript -->
     <script src="~/js/inspinia.js"></script>
-    <script src="~/js/plugins/pace/pace.min.js"></script>
-
+   
     <!-- EayPIE -->
     <script src="~/js/plugins/easypiechart/jquery.easypiechart.js"></script>
 

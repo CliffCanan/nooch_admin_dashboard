@@ -67,7 +67,8 @@ function generateBar(data1, label, ticks)
                     style: "normal",
                     color: "#444",
                 },
-                shadowSize: 1
+                shadowSize: 1,
+                autoscaleMargin: 10,
             },
 
             xaxis: {
@@ -117,6 +118,7 @@ var Member = function ()
 {
     function GetTransactionVolumeOverTimeData(type)
     {
+        $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
         var fromDate = '';
         var toDate = '';
         if (type == 'r')
@@ -142,7 +144,9 @@ var Member = function ()
             statusString = "Pending"
 
         if (type == 'dateRange') {
-            if ($('#frmTarget').parsley().validate()) {
+            if ($('#frmTarget').parsley().validate())
+            {
+                $('#myModal').modal('hide');
                 $.post(url, data, function (result)
                 {
                     console.log(result.Duration.durationdata);
