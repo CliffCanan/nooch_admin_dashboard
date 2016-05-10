@@ -906,6 +906,11 @@ namespace noochAdminNew.Controllers
                         mdc.tenant = tenants.FirstOrDefault();
                     }
                 }
+                if (Session["status"] != null)
+                {
+                    mdc.DocStatus = Session["status"].ToString();
+                    Session["status"] = null;
+                }
             }
 
             return View(mdc);
