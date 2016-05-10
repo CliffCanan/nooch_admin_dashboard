@@ -593,6 +593,7 @@ namespace noochAdminNew.Controllers
                     mdc.ssn = !String.IsNullOrEmpty(Member.SSN) ? CommonHelper.GetDecryptedData(Member.SSN) : "";
                     mdc.idDocUrl = Member.VerificationDocumentPath;
                     mdc.adminNote = Member.AdminNotes;
+                    mdc.isSdnSafe = Member.IsSDNSafe ?? false;
                     mdc.IsVerifiedWithSynapse = Member.IsVerifiedWithSynapse;
                     mdc.UDID1 = !String.IsNullOrEmpty(Member.UDID1) ? Member.UDID1 : "NULL";
                     mdc.DeviceToken = !String.IsNullOrEmpty(Member.DeviceToken) ? Member.DeviceToken : "NULL";

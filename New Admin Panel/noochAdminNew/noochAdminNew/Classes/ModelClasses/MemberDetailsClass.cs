@@ -28,12 +28,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string DeviceToken { get; set; }
         public string AccessToken { get; set; }
         public string type { get; set; }
-
-        public bool IsKnocAvailable { get; set; }
-        public string KnoxBankIcon { get; set; }
         public string ReferCodeUsed { get; set; }
-        public string KnoxTransId { get; set; }
-
         public bool IsPhoneVerified { get; set; }
 
         public DateTime DateCreated { get; set; }
@@ -50,6 +45,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string lastlong { get; set; }
 
         public string adminNote { get; set; }
+        public bool isSdnSafe { get; set; }
 
         public List<MemberDetailsTrans> Transactions { get; set; }
 
@@ -66,7 +62,6 @@ namespace noochAdminNew.Classes.ModelClasses
 
         public List<Tenants> tenants { get; set; }
         public Tenants tenant { get; set; }
-
     }
 
     public class MemberDetailsTrans
