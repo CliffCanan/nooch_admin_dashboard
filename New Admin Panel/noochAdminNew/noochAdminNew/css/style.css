@@ -3192,8 +3192,7 @@ small.stats-label {font-size: 12.2px;}
 .ibox .form-horizontal .form-group .input-group + i {float:right;}
 #dash_TransPanel .widget {min-height: 96px;}
 
-#bankAccountStatusDiv p .btn {
-  margin-left:20px;
+#bankAccountStatusDiv div .btn {
   padding: 0 5px;
 }
 
@@ -5186,6 +5185,18 @@ table.table.dataTable tbody tr>td.actions .btn {
     box-shadow: 0 0 4px rgba(0,0,0,0.1);
 }
 
+.form-group .control-label.sub-label {padding-top: 0;}
+.form-group .control-label.sub-label > span {color: #888;}
+
+.form-group .control-label.sub-label + .form-control-static{
+    font-size: 95%;
+    padding-top: 0;
+    min-height: 27px;
+}
+.form-group .control-label.widePopover .popover {
+    font-size: 13px;
+}
+
 @media (min-width: 768px) {
   #page-wrapper {
     position: inherit;
@@ -5201,6 +5212,13 @@ table.table.dataTable tbody tr>td.actions .btn {
   .navbar-top-links .dropdown-tasks,
   .navbar-top-links .dropdown-alerts {
     margin-left: auto;
+  }
+
+  .form-group .control-label .popover {
+    min-width: 210px;
+  }
+  .form-group .control-label.widePopover .popover {
+      min-width: 290px;
   }
 }
 

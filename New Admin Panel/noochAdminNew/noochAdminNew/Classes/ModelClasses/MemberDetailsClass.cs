@@ -145,8 +145,8 @@ namespace noochAdminNew.Classes.ModelClasses
         public bool mfaVerified { get; set; }
 
         public string nameFromSynapseBank { get; set; }
-        public string emailFromSynapseBank { get; set; }
-        public string phoneFromSynapseBank { get; set; }
+        public string emailFromSynapseBank { get; set; } // No longer passed by Synapse in V3
+        public string phoneFromSynapseBank { get; set; } // No longer passed by Synapse in V3
 
         public string SynpaseBankAddedOn { get; set; }
         public string SynpaseBankVerifiedOn { get; set; }
