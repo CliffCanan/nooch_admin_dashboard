@@ -135,6 +135,7 @@ var Member = function ()
 {
     function getUserOverTime(dateType)
     {
+        console.log(dateType);
         $(document).ajaxStart($.blockUI).ajaxStop($.unblockUI);
         var fromDate = '';
         var toDate = '';
