@@ -138,7 +138,7 @@ namespace noochAdminNew.Classes.ModelClasses
     {
         // Bank-Related
         public int BankId { get; set; }
-        public int? synapseBankId { get; set; }
+        public string synapseBankId { get; set; }
 
         public string SynapseBankStatus { get; set; }
         public string SynapseBankName { get; set; }

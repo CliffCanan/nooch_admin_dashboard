@@ -815,6 +815,7 @@ namespace noochAdminNew.Controllers
                                                             ? CommonHelper.GetDecryptedData(synapseBankDetails.bank_name)
                                                             : "Not Found";
                             synapseDetail.BankId = synapseBankDetails.Id; // This is the Nooch DB "ID", which is just the row number of the account... NOT the same as the Synapse Bank ID
+                            synapseDetail.synapseBankId = synapseBankDetails.oid;
 
                             synapseDetail.SynapseBankStatus = (String.IsNullOrEmpty(synapseBankDetails.Status)
                                                               ? "Not Verified"
@@ -839,16 +840,15 @@ namespace noochAdminNew.Controllers
                                                     : "no value";
                             synapseDetail.bankClass = !String.IsNullOrEmpty(synapseBankDetails.@class)
                                                     ? synapseBankDetails.@class
-                                                    : "no value";
+                                                    : " - ";
                             synapseDetail.bankType = !String.IsNullOrEmpty(synapseBankDetails.type_bank)
                                                     ? synapseBankDetails.type_bank
-                                                    : "no value";
+                                                    : " - ";
                             synapseDetail.nodeType = !String.IsNullOrEmpty(synapseBankDetails.type_synapse)
                                                     ? synapseBankDetails.type_synapse
-                                                    : "no value";
+                                                    : " - ";
 
                             // CLIFF (5/8/16): I don't think these are needed anymore with V3 b/c Synapse no longer sends these data
-                            synapseDetail.synapseBankId = synapseBankDetails.bankid; // CLIFF (5/8/16): I don't think this is needed anymore with V3
                             synapseDetail.emailFromSynapseBank = !String.IsNullOrEmpty(synapseBankDetails.email) // CLIFF (5/8/16): I don't think this is needed anymore with V3
                                      ? synapseBankDetails.email : "";
                             synapseDetail.phoneFromSynapseBank = !String.IsNullOrEmpty(synapseBankDetails.phone_number)
