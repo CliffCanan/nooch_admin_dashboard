@@ -73,5 +73,6 @@ namespace noochAdminNew.Classes.ModelClasses
         public string TransactionType { get; set; }
         public string TransactionStatus { get; set; }
         public string DisputeStatus { get; set; }
+        public string SynapseStatus { get; set; }
     }
 }
