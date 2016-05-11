@@ -843,7 +843,7 @@
                                         <span class="pull-right hidden-xs">IsVerifiedWithSynapse: &nbsp;<strong>@mdc.IsVerifiedWithSynapse</strong></span>
                                     </div>
                                     <div class="ibox-content">
-                                        <form class="form-horizontal">
+                                        @*<form class="form-horizontal">*@
 
                                             <div class="row">
 
@@ -933,12 +933,13 @@
                                                                     {
                                                                         <p>No doc submitted</p>
 
-                                                                        using (Html.BeginForm("UploadDoc", "Member",
+                                                                        using (Html.BeginForm("Details","Member",
                                                                                 FormMethod.Post,
                                                                                 new { enctype = "multipart/form-data" }))
                                                                         {
                                                                             <div class="input-group">
                                                                                 <input type="hidden" name="NoochId" value="@mdc.Nooch_ID" />
+                                                                                <input type="hidden" id="DocStatus" value=@mdc.DocStatus />
                                                                                 <input type="file" name="file" id="file" required />
                                                                                 <br />
                                                                                 <input type="Submit" class="btn btn-sm btn-primary" value="Upload Image" id="btnUpload" />
@@ -1110,7 +1111,7 @@
 
                                             </div>
 
-                                        </form>
+                                        @*</form>*@
                                     </div>
                                 </div>
                             </div>
