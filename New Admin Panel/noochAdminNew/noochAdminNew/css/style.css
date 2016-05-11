@@ -5134,7 +5134,7 @@ table.table.dataTable tbody tr>td.actions .btn {
     top: 0;
     right: 100%;
     width: 100%;
-    height: 3px;
+    height: 6px;
 }
 
 .toggle-button {
@@ -5186,8 +5186,7 @@ table.table.dataTable tbody tr>td.actions .btn {
 }
 
 .form-group .control-label.sub-label {padding-top: 0;}
-.form-group .control-label.sub-label > span {color: #888;}
-
+.form-group .control-label.sub-label > span {color: #777;}
 .form-group .control-label.sub-label + .form-control-static{
     font-size: 95%;
     padding-top: 0;
@@ -5196,6 +5195,19 @@ table.table.dataTable tbody tr>td.actions .btn {
 .form-group .control-label.widePopover .popover {
     font-size: 13px;
 }
+
+.truncate {
+  width: 60%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list-group-item .fa-eye {cursor:pointer;color:#555;}
+
+a .popover {color: #333;}
+
+#transSummaryBox .ibox-content { padding: 6px;}
 
 @media (min-width: 768px) {
   #page-wrapper {
@@ -5217,7 +5229,7 @@ table.table.dataTable tbody tr>td.actions .btn {
   .form-group .control-label .popover {
     min-width: 210px;
   }
-  .form-group .control-label.widePopover .popover {
+  .widePopover .popover {
       min-width: 290px;
   }
 }

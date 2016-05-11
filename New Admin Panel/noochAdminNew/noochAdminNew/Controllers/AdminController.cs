@@ -2898,8 +2898,6 @@ namespace noochAdminNew.Controllers
 
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-                List<Transaction> admin = new List<Transaction>();
-
                 adminUser = (from t in obj.Transactions
                              join g in obj.GeoLocations
                              on t.LocationId equals g.LocationId

@@ -4,7 +4,7 @@ var escapeKeyPressed = false;
 
 $(document).ready(function () {
     $("#MemberMenuExpander").trigger("click");
-     
+
     function getParameterByName(name) {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -13,7 +13,7 @@ $(document).ready(function () {
     }
 
     NoochId = getParameterByName('NoochId');
-     
+
     // Format the contact number if present
     if ($("#contactNumber").val().length > 1) {
         $("#contactNumber").val(function (i, text) {
@@ -109,8 +109,7 @@ function checkIfUserLocationExists() {
 
         mapDiv.style.height = '180px';
     }
-    else
-    {
+    else {
         console.log("Lat = 'none' ");
 
         $('#userLoc').html('<span style="color:rgba(88,90,92,.8) !important;"><em class="center-block text-center m-t-md">No location available.</em></span>');
@@ -127,10 +126,18 @@ $('#ChangePassword').click(function () {
 $('#btntoggle').click(function () {
     $('#myModalchangePwd').modal('show');
 });
- 
- 
 
- 
+
+$(document).ready(function () {
+    if ($('#DocStatus').val() == "Success") {
+        swal("Awesome !", "File Uploaded Successfully!", "success");
+        $('#DocStatus').val('');
+    }
+    else if ($('#DocStatus').val() == "Failed") {
+        sweetAlert("Oops...", "Something went wrong!", "error");
+    }
+});
+
 
 
 
@@ -203,7 +210,7 @@ var Member = function () {
         data.ssn = $("#ssninput").val().trim();
         data.dob = $("#dobinput").val().trim();
         data.transferLimit = $("#transferLimitinput").val().trim();
-        
+
         console.log(data);
 
         $.post(url, data, function (result) {
@@ -278,12 +285,10 @@ var Member = function () {
         }, function (isConfirm) {
 
             setTimeout(function () {
-                if (escapeKeyPressed == true) 
-                {
+                if (escapeKeyPressed == true) {
                     escapeKeyPressed = false;
                 }
-                else
-                {
+                else {
                     var data = {};
                     data.accountId = accountId;
 
@@ -430,25 +435,25 @@ var Member = function () {
 
     // Manually set bank account's status to 'Verified'
     function sendSmsReminderForVerification() {
-       var contactNumber= $('#contactNumber').val();
-       var data = {};
-        
-       data.noochIds = NoochId;
-       var url = "../Member/ReSendVrificationSMS";
-       
-       $.post(url, data, function (result) {
-          if (result.IsSuccess) {
-               
-               toastr.success(result.Message, 'Verification message sent successfully.');
-                
-           }
-           else {
-              
-               toastr.error(result.Message, 'Error');
-                
-           }
-       });
-        
+        var contactNumber = $('#contactNumber').val();
+        var data = {};
+
+        data.noochIds = NoochId;
+        var url = "../Member/ReSendVrificationSMS";
+
+        $.post(url, data, function (result) {
+            if (result.IsSuccess) {
+
+                toastr.success(result.Message, 'Verification message sent successfully.');
+
+            }
+            else {
+
+                toastr.error(result.Message, 'Error');
+
+            }
+        });
+
     }
 
     function ChangePassword() {
@@ -493,7 +498,7 @@ var Member = function () {
             }
         });
     }
-       
+
 
     return {
         ApplyChoosenOperation: applyOperation,
@@ -507,6 +512,6 @@ var Member = function () {
         sendSmsReminder: sendSmsReminderForVerification,
         ChangePassword: ChangePassword,
         GenerateNewPassword: GenerateNewPassword
-       
+
     };
 }();
