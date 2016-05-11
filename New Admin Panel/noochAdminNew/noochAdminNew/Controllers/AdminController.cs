@@ -40,6 +40,7 @@ namespace noochAdminNew.Controllers
         [ActionName("ShowLiveTransactionsOnDashBoard")]
         public ActionResult ShowLiveTransactionsOnDashBoard(string operation)
         {
+             
             DashBoardLiveTransactionsOperationResult ddresult = new DashBoardLiveTransactionsOperationResult();
 
             //var CurrentYear = DateTime.Now.Year;
@@ -292,6 +293,7 @@ namespace noochAdminNew.Controllers
                     {
                         foreach (var t in allTrans)
                         {
+                             
                             MemberRecentLiveTransactionData singleTrans = new MemberRecentLiveTransactionData();
                             singleTrans.Amount = t.Amount.ToString();
                             singleTrans.TransID = t.TransactionId.ToString();
@@ -302,6 +304,14 @@ namespace noochAdminNew.Controllers
                             singleTrans.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
                             singleTrans.TransactionStatus = t.TransactionStatus;
                             singleTrans.DisputeStatus = t.DisputeStatus;
+
+                            //check to see if this transaction has record in SynapseAddTransactionResults table
+                            int countSynapseAddTransactionResults = obj.SynapseAddTransactionResults.Where(tr => tr.TransactionId == t.TransactionId).Count();
+                            if (countSynapseAddTransactionResults > 0)
+                                singleTrans.SynapseStatus = showTransactionStatus(t.TransactionId.ToString());
+
+                            else
+                                singleTrans.SynapseStatus = "false";
 
                             #region Request type transaction
 
@@ -2984,18 +2994,14 @@ namespace noochAdminNew.Controllers
 
             SynapseV3ShowTransInput transInput = new SynapseV3ShowTransInput();
             Guid transactionid = Utility.ConvertToGuid(transactionId);
+            Transaction tran = new Transaction();
 
             //get transaction details
             using (var noochConnection = new NOOCHEntities())
             {
-                var transaction = (from t in noochConnection.Transactions
-                                   join
-                                   trResult in noochConnection.SynapseAddTransactionResults on t.TransactionId equals trResult.TransactionId
-                                   where t.TransactionId == transactionid
-                                   select t);
-                Transaction tran = (Transaction)transaction;
-                if (transaction != null)
-                {
+                tran = noochConnection.Transactions.Where(t => t.TransactionId == transactionid).FirstOrDefault();
+                var transactionDetails = noochConnection.SynapseAddTransactionResults.Where(t => t.TransactionId == tran.TransactionId).FirstOrDefault();
+                 
                     //get Members and synapseCreateUser details
 
                     var members = noochConnection.Members.Where(m => m.MemberId == tran.SenderId).FirstOrDefault();
@@ -3038,7 +3044,7 @@ namespace noochAdminNew.Controllers
 
                     #endregion Check If OAuth Key Still Valid
 
-                    var transactionDetails = noochConnection.SynapseAddTransactionResults.Where(t => t.TransactionId == tran.TransactionId).FirstOrDefault();
+
                     var SendersBank = noochConnection.SynapseBanksOfMembers.Where(id => id.MemberId == tran.SenderId).FirstOrDefault();
                     var RecipientBank = noochConnection.SynapseBanksOfMembers.Where(id => id.MemberId == tran.RecipientId).FirstOrDefault();
                     if (synapseCreateuserResults != null && transactionDetails != null && SendersBank != null && RecipientBank != null)
@@ -3131,17 +3137,21 @@ namespace noochAdminNew.Controllers
                                 }
                                 else
                                 {
+                                    Logger.Info("MDA ->response from showTransactioFromSynapseV3 is false  for transaction - [transactionID: " + tran.TransactionId + "]");
                                     return "false";
+                                    
                                 }
                             }
                             else
                             {
+                                Logger.Info("MDA ->response from showTransactioFromSynapseV3 is null  for transaction - [transactionID: " + tran.TransactionId + "]");
                                 return "false";
                             }
 
                         }
                         catch (WebException ex)
                         {
+                            Logger.Error("MDA ->Error in Showing showTransactioFromSynapseV3   - - [MemberID: " + tran.SenderId + "]");
                             return "false";
                         }
 
@@ -3154,10 +3164,7 @@ namespace noochAdminNew.Controllers
                         Logger.Info("MDA -> showTransactioFromSynapseV3 FAILED - User's Synapse account or User's bank account not found - [MemberID: " + tran.SenderId + "]");
                         return "false";
                     }
-                }
-                else
-                    return "false";
-
+                
 
             }
         }

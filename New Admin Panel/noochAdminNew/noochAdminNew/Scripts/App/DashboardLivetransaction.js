@@ -195,7 +195,7 @@ $(document).ready(function ()
 
                         trHTML += '<td>$ ' + Number(item.Amount) + '</td>' +
                                   //'<td>' + disputestatus + '</td>' +
-                                  '<td><a href="#" OnClick="showLocationModal(' + item.Latitude + ',' + item.Longitude + ',' + "'" + GeoLocation + "'" + ')" class="btn btn-link" data-loctext="' + GeoLocation + '">' + GeoLocation + '</a></td></tr>';
+                                  '<td><a href="#" OnClick="showLocationModal(' + item.Latitude + ',' + item.Longitude + ',' + "'" + GeoLocation + "'" + ')" class="btn btn-link" data-loctext="' + GeoLocation + '">' + GeoLocation + '</a></td> <td>'+item.SynapseStatus+' </td></tr>';
 
                         $("#TBOdy").append(trHTML);
                     });
