@@ -803,6 +803,7 @@ namespace noochAdminNew.Controllers
                         synapseDetail.synapseUserId = synapseCreateUserObj.user_id.ToString();
                         synapseDetail.isBusiness = synapseCreateUserObj.is_business ?? false;
                         synapseDetail.userPermission = synapseCreateUserObj.permission;
+                        synapseDetail.photos = synapseCreateUserObj.photos;
 
                         // Now get the user's Synapse Bank details
                         var synapseBankDetails = (from Syn in obj.SynapseBanksOfMembers
@@ -1546,16 +1547,21 @@ namespace noochAdminNew.Controllers
                 {
                     DocumentDetails.AccessToken = SynapseCreateUserResult.access_token;
                     string pic = MemberId.ToString() + ".png";
-                    string path = System.IO.Path.Combine(
-                                     Server.MapPath("~/UploadedPhotos/Photos"), pic);
+                    string path = System.IO.Path.Combine(Server.MapPath("~/UploadedPhotos/Photos"), pic);
                     // file is uploaded
                     file.SaveAs(path);
                     DocumentDetails.imgPath = path;
                     mdaResult = new synapseV3GenericResponse();
                     mdaResult = submitDocumentToSynapseV3(DocumentDetails);
-                    Session["status"] = "Success";
+                    if (mdaResult.isSuccess == true)
+                    {
+                        Session["status"] = "Success";
+                    }
+                    else
+                    {
+                        Session["status"] = "Failed";
+                    }
                     return RedirectToAction("Detail", "Member", new { NoochId = NoochId });
-
                 }
                 else
                 {
@@ -1563,9 +1569,7 @@ namespace noochAdminNew.Controllers
                     Session["status"] = "Failed";
                     return RedirectToAction("Detail", "Member", new { NoochId = NoochId });
                 }
-
             }
-
         }
 
         public synapseV3GenericResponse submitDocumentToSynapseV3(SaveVerificationIdDocument DocumentDetails)
@@ -1581,7 +1585,8 @@ namespace noochAdminNew.Controllers
 
                 if ((DocumentDetails.imgPath != ""))
                 {
-                    ImageUrlMade = Utility.GetValueFromConfig("PhotoUrl") + DocumentDetails.MemberId + ".png";
+                    //ImageUrlMade = Utility.GetValueFromConfig("PhotoUrl") + DocumentDetails.MemberId + ".png";                     
+                    ImageUrlMade = DocumentDetails.imgPath; 
                 }
                 else
                 {
@@ -1763,6 +1768,7 @@ namespace noochAdminNew.Controllers
 
                             var synapseUser = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == id).FirstOrDefault();
                             synapseUser.permission = resFromSynapse.user.permission.ToString();
+                            synapseUser.photos = ImageUrl;
                             noochConnection.SaveChanges();
 
                         }
