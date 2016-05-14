@@ -88,8 +88,6 @@ namespace noochAdminNew.Classes.ModelClasses
         public string AccessToken { get; set; }
         public bool IsUnUsualTrans { get; set; }
         public string SynapseStatus { get; set; }
-
-
     }
 
     public class MemberDetailsStats

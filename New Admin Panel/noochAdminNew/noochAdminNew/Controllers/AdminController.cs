@@ -40,7 +40,7 @@ namespace noochAdminNew.Controllers
         [ActionName("ShowLiveTransactionsOnDashBoard")]
         public ActionResult ShowLiveTransactionsOnDashBoard(string operation)
         {
-             
+
             DashBoardLiveTransactionsOperationResult ddresult = new DashBoardLiveTransactionsOperationResult();
 
             //var CurrentYear = DateTime.Now.Year;
@@ -293,7 +293,7 @@ namespace noochAdminNew.Controllers
                     {
                         foreach (var t in allTrans)
                         {
-                             
+
                             MemberRecentLiveTransactionData singleTrans = new MemberRecentLiveTransactionData();
                             singleTrans.Amount = t.Amount.ToString();
                             singleTrans.TransID = t.TransactionId.ToString();
@@ -897,7 +897,7 @@ namespace noochAdminNew.Controllers
 
                                 try
                                 {
-                                    
+
 
                                     #region save to synapse create trans table returned success -- now saving in Transactions table
 
@@ -2001,8 +2001,8 @@ namespace noochAdminNew.Controllers
 
                         string[] nda = new string[2];
                         nda[0] = i.ToString();
-                        nda[1] = past7days.DayOfWeek.ToString().Substring(0, 3) + " " + past7days.Date.ToString("MMMM dd");
-                         
+                        nda[1] = past7days.DayOfWeek.ToString().Substring(0, 3) + ". " + past7days.Date.ToString("MMMM d");
+
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
                         DurationArray da = new DurationArray();
@@ -2018,7 +2018,7 @@ namespace noochAdminNew.Controllers
                 if (recordType == "weekly")
                 {
                     DateTime todayDate = DateTime.Now;
-                    int DayNumbr=Convert.ToInt32( todayDate.DayOfWeek)-1;
+                    int DayNumbr = Convert.ToInt32(todayDate.DayOfWeek) - 1;
                     DateTime past7days = DateTime.Now.AddDays(-70 - DayNumbr);
                     int j = 0;
                     while (past7days <= todayDate)
@@ -2055,8 +2055,8 @@ namespace noochAdminNew.Controllers
                             nre[1] = SumOfAmount.ToString();
                         }
 
-                   
-                        nda[1] = past7days.Date.ToShortDateString() + " - " + past7days.AddDays(6).Date.ToShortDateString();
+
+                        nda[1] = past7days.ToString("M/d/yy") + " - " + past7days.AddDays(6).ToString("M/d/yy");
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
                         DurationArray da = new DurationArray();
@@ -2095,8 +2095,8 @@ namespace noochAdminNew.Controllers
                         }
                         string[] nda = new string[2];
                         nda[0] = i.ToString();
-                   
-                        nda[1] = past7days.ToString("MMM yy");
+
+                        nda[1] = past7days.ToString("MMM 'yy");
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
                         DurationArray da = new DurationArray();
@@ -2456,10 +2456,7 @@ namespace noochAdminNew.Controllers
 
 
                         nre[1] = count.ToString();
-
-
-
-                        nda[1] = past7days.Date.ToShortDateString() + " - " + past7days.AddDays(6).Date.ToShortDateString();
+                        nda[1] = past7days.ToString("M/d/yy") + " - " + past7days.AddDays(6).ToString("M/d/yy");
 
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
@@ -2584,8 +2581,8 @@ namespace noochAdminNew.Controllers
 
                         string[] nda = new string[2];
                         nda[0] = i.ToString();
-                        nda[1] = past7days.DayOfWeek.ToString().Substring(0,3)+" " +past7days.Date.ToString("MMMM dd");
-                         
+                        nda[1] = past7days.DayOfWeek.ToString().Substring(0, 3) + ". " + past7days.Date.ToString("MMMM d");
+
 
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
@@ -2712,7 +2709,7 @@ namespace noochAdminNew.Controllers
 
                         string[] nda = new string[2];
                         nda[0] = i.ToString();
-                        nda[1] = past8months.ToString("MMM yy");
+                        nda[1] = past8months.ToString("MMM. 'yy");
 
                         internalDataArray id = new internalDataArray();
                         id.internalData = nre;
@@ -3044,7 +3041,7 @@ namespace noochAdminNew.Controllers
 
                 //var SendersBank = noochConnection.SynapseBanksOfMembers.Where(id => id.MemberId == tran.SenderId).FirstOrDefault();
                 //var RecipientBank = noochConnection.SynapseBanksOfMembers.Where(id => id.MemberId == tran.RecipientId).FirstOrDefault();
-                if (synapseCreateuserResults != null && transactionDetails != null )
+                if (synapseCreateuserResults != null && transactionDetails != null)
                 {
                     SynapseV3TransInput_login login = new SynapseV3TransInput_login() { oauth_key = usersSynapseOauthKey };
                     SynapseV3TransInput_user user = new SynapseV3TransInput_user() { fingerprint = members.UDID1.ToString() };
@@ -3053,11 +3050,11 @@ namespace noochAdminNew.Controllers
                     if (transactionDetails != null)
                         oid.oid = transactionDetails.OidFromSynapse.ToString();
 
-                  
+
 
                     SynapseV3ShowTransInput_filter filter = new SynapseV3ShowTransInput_filter();
                     filter._id = oid;
-                  
+
                     filter.page = "1";
 
 
@@ -3092,12 +3089,12 @@ namespace noochAdminNew.Controllers
 
                         if (jsonFromSynapse["success"].ToString().ToLower() == "true")
                         {
-                            if (jsonFromSynapse["trans"]!=null)
+                            if (jsonFromSynapse["trans"] != null)
                             {
                                 //updating transaction Table in db
-                       
-                                tran.SynapseStatus= jsonFromSynapse["trans"][0]["recent_status"]["status"].ToString();
-                              
+
+                                tran.SynapseStatus = jsonFromSynapse["trans"][0]["recent_status"]["status"].ToString();
+
                                 noochConnection.SaveChanges();
                                 return tran.SynapseStatus.ToString();
                             }
@@ -3136,6 +3133,6 @@ namespace noochAdminNew.Controllers
 
             }
         }
-       
+
     }
 }

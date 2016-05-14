@@ -3,8 +3,6 @@ var dateType = 'daily';
 
 $(document).ready(function ()
 {
-
-
     window.onload = function ()
     {
         new JsDatePick({
@@ -114,8 +112,6 @@ function generateBar(data1, ticks)
 // When selecting a Date Type from the Actions Dropdown Menu
 function updateDateType(newDateType)
 {
-  
-     
     // Set global var 'dateType'
     dateType = newDateType;
 
@@ -125,7 +121,6 @@ function updateDateType(newDateType)
 // On Clicking the 'Apply' Button
 $('#userFilter').submit(function (event)
 {
-  
     event.preventDefault();
 
     Member.getUserOverTime(dateType);

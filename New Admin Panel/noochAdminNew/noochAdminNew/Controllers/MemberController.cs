@@ -621,9 +621,9 @@ namespace noochAdminNew.Controllers
                                           t.SenderId == Member.MemberId)
                                    //(t.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || t.TransactionType == "+C1+zhVafHdXQXCIqjU/Zg==" || t.TransactionType == "DrRr1tU1usk7nNibjtcZkA==")
                                    //(t.TransactionStatus == "Success" || t.TransactionStatus == "Rejected" || t.TransactionStatus == "Pending" || t.TransactionStatus == "Cancelled")
-                                   select t).OrderByDescending(r => r.TransactionDate).Take(20).ToList();
+                                   select t).OrderByDescending(r => r.TransactionDate).Take(25).ToList();
 
- 
+
 
                     List<MemberDetailsTrans> mm = new List<MemberDetailsTrans>();
 
@@ -643,12 +643,9 @@ namespace noochAdminNew.Controllers
                         payment.GeoLocation = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.City + " , " + Geo_loc.State).SingleOrDefault();
                         payment.Longitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Longitude).SingleOrDefault().ToString();
                         payment.Latitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Latitude).SingleOrDefault().ToString();
-                     
-                        
-                        if(t.SynapseStatus!=null)
-                            payment.SynapseStatus = t.SynapseStatus.ToString();
-                        else
-                            payment.SynapseStatus = "False";
+
+                        payment.SynapseStatus = (!String.IsNullOrEmpty(t.SynapseStatus)) ? t.SynapseStatus.ToString() : "False";
+
                         if (payment.TransactionType == "Request")
                         {
                             if (t.RecipientId == Member.MemberId) // This member SENT the request
@@ -815,7 +812,7 @@ namespace noochAdminNew.Controllers
                         // Now get the user's Synapse Bank details
                         var synapseBankDetails = (from Syn in obj.SynapseBanksOfMembers
                                                   where Syn.IsDefault == true && Syn.MemberId == Member.MemberId
-                                                  select Syn).FirstOrDefault(); 
+                                                  select Syn).FirstOrDefault();
 
                         if (synapseBankDetails != null)
                         {
@@ -1593,7 +1590,7 @@ namespace noochAdminNew.Controllers
                 if ((DocumentDetails.imgPath != ""))
                 {
                     //ImageUrlMade = Utility.GetValueFromConfig("PhotoUrl") + DocumentDetails.MemberId + ".png";                     
-                    ImageUrlMade = DocumentDetails.imgPath; 
+                    ImageUrlMade = DocumentDetails.imgPath;
                 }
                 else
                 {
