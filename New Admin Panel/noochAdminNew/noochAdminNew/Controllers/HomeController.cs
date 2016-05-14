@@ -25,6 +25,7 @@ namespace noochAdminNew.Controllers
         [ActionName("ValidateUser")]
         public ActionResult ValidateUser(string UserName, string Password)
         {
+            Logger.Info("test message");
             LoginResult lr = new LoginResult();
             try
             {

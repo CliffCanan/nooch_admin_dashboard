@@ -13,7 +13,7 @@ var User = function () {
         $.post(url, data, function (result) {
             if (result.IsSuccess == true) {
                 //console.log(result.Message);
-                window.location.replace("../Admin/Dashboard");
+                window.location.replace($('#dashUrl').val());
             }
 			else {
                 toastr.error('Invalid username or password!', 'Error');
