@@ -37,6 +37,7 @@
         ms.RecipientName = mdtt.RecipientName;
         ms.Memo = mdtt.Memo;
         ms.IsUnUsualTrans = mdtt.IsUnUsualTrans;
+        ms.SynapseStatus = mdtt.SynapseStatus;
         Transactionsss.Add(ms);
     }
 
@@ -1281,6 +1282,7 @@
                                                             <th>Recipient</th>
                                                             <th>Memo</th>
                                                             <th>Location</th>
+                                                            <th>Synapse status</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -1343,6 +1345,7 @@
                                                                 {
                                                                     <td><span class="text-muted"> - </span></td>
                                                                 }
+                                                                 <td>@mn.SynapseStatus</td>
                                                             </tr>
                                                         }
                                                     </tbody>

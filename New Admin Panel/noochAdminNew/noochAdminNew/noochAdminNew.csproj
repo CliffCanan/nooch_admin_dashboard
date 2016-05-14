@@ -190,6 +190,7 @@
     <Compile Include="Classes\ModelClasses\MemberDetailsClass.cs" />
     <Compile Include="Classes\ModelClasses\MembersListDataClass.cs" />
     <Compile Include="Classes\ModelClasses\OfacList.cs" />
+    <Compile Include="Classes\ModelClasses\ResponseFromShowTrans.cs" />
     <Compile Include="Classes\ModelClasses\SynapseRelatedClasses.cs" />
     <Compile Include="Classes\ModelClasses\synapseV3checkUsersOauthKey.cs" />
     <Compile Include="Classes\ModelClasses\TransactionsPageData.cs" />

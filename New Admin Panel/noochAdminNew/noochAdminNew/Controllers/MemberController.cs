@@ -623,6 +623,8 @@ namespace noochAdminNew.Controllers
                                    //(t.TransactionStatus == "Success" || t.TransactionStatus == "Rejected" || t.TransactionStatus == "Pending" || t.TransactionStatus == "Cancelled")
                                    select t).OrderByDescending(r => r.TransactionDate).Take(20).ToList();
 
+ 
+
                     List<MemberDetailsTrans> mm = new List<MemberDetailsTrans>();
 
                     foreach (Transaction t in transtp)
@@ -641,7 +643,12 @@ namespace noochAdminNew.Controllers
                         payment.GeoLocation = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.City + " , " + Geo_loc.State).SingleOrDefault();
                         payment.Longitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Longitude).SingleOrDefault().ToString();
                         payment.Latitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Latitude).SingleOrDefault().ToString();
-
+                     
+                        
+                        if(t.SynapseStatus!=null)
+                            payment.SynapseStatus = t.SynapseStatus.ToString();
+                        else
+                            payment.SynapseStatus = "False";
                         if (payment.TransactionType == "Request")
                         {
                             if (t.RecipientId == Member.MemberId) // This member SENT the request
@@ -1842,5 +1849,7 @@ namespace noochAdminNew.Controllers
                 return tenants;
             }
         }
+
+
     }
 }

@@ -177,7 +177,7 @@ namespace noochAdminNew.Classes.Utility
                 var memberIP =  (from c in noochConnection.MembersIPAddresses where c.MemberId==MemberIdPassed select c).OrderByDescending(m => m.ModifiedOn)
                                                   .FirstOrDefault();
 
-                RecentIpOfUser = memberIP != null ? memberIP.ToString() : "54.201.43.89";
+                RecentIpOfUser = memberIP != null ? memberIP.Ip.ToString() : "54.201.43.89";
             }
             return RecentIpOfUser;
         }

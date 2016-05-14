@@ -87,6 +87,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string DeviceToken { get; set; }
         public string AccessToken { get; set; }
         public bool IsUnUsualTrans { get; set; }
+        public string SynapseStatus { get; set; }
 
 
     }
