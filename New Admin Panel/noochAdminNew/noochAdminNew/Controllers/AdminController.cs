@@ -306,9 +306,10 @@ namespace noochAdminNew.Controllers
                             singleTrans.DisputeStatus = t.DisputeStatus;
 
                             //check to see if this transaction has record in SynapseAddTransactionResults table
-                            int countSynapseAddTransactionResults = obj.SynapseAddTransactionResults.Where(tr => tr.TransactionId == t.TransactionId).Count();
-                            if (countSynapseAddTransactionResults > 0)
-                                singleTrans.SynapseStatus = showTransactionStatus(t.TransactionId.ToString());
+                            var SynapseAddTransactionResults = obj.SynapseAddTransactionResults.Where(tr => tr.TransactionId == t.TransactionId).FirstOrDefault();
+
+                            if (SynapseAddTransactionResults!=null)
+                                singleTrans.SynapseStatus = showTransactionStatus(t.TransactionId.ToString(), SynapseAddTransactionResults.OidFromSynapse);
 
                             else
                                 singleTrans.SynapseStatus = "";
@@ -2985,7 +2986,7 @@ namespace noochAdminNew.Controllers
             return Json(res);
         }
 
-        public string showTransactionStatus(string transactionId)
+        public string showTransactionStatus(string transactionId,string oidFromSynapse)
         {
             Logger.Info("MDA -> ShowTransactionfromSynapseV3 Initialized - [TransactionId: " + transactionId + "]");
 
@@ -2997,11 +2998,9 @@ namespace noochAdminNew.Controllers
             using (var noochConnection = new NOOCHEntities())
             {
                 tran = noochConnection.Transactions.Where(t => t.TransactionId == transactionid).FirstOrDefault();
-                var transactionDetails = noochConnection.SynapseAddTransactionResults.Where(t => t.TransactionId == tran.TransactionId).FirstOrDefault();
-
+                
                 //get Members and synapseCreateUser details
 
-                var members = noochConnection.Members.Where(m => m.MemberId == tran.SenderId).FirstOrDefault();
                 var synapseCreateuserResults = noochConnection.SynapseCreateUserResults.Where(syn => syn.MemberId == tran.SenderId).FirstOrDefault();
                 var usersSynapseOauthKey = "";
 
@@ -3044,14 +3043,14 @@ namespace noochAdminNew.Controllers
 
                 //var SendersBank = noochConnection.SynapseBanksOfMembers.Where(id => id.MemberId == tran.SenderId).FirstOrDefault();
                 //var RecipientBank = noochConnection.SynapseBanksOfMembers.Where(id => id.MemberId == tran.RecipientId).FirstOrDefault();
-                if (synapseCreateuserResults != null && transactionDetails != null )
+                if (synapseCreateuserResults != null  )
                 {
                     SynapseV3TransInput_login login = new SynapseV3TransInput_login() { oauth_key = usersSynapseOauthKey };
-                    SynapseV3TransInput_user user = new SynapseV3TransInput_user() { fingerprint = members.UDID1.ToString() };
+                    SynapseV3TransInput_user user = new SynapseV3TransInput_user() { fingerprint = tran.Member.UDID1.ToString() };
 
                     SynapseV3ShowTransInput_filter_Trans_id oid = new SynapseV3ShowTransInput_filter_Trans_id();
-                    if (transactionDetails != null)
-                        oid.oid = transactionDetails.OidFromSynapse.ToString();
+                     
+                        oid.oid = oidFromSynapse;
 
                   
 
@@ -3092,7 +3091,7 @@ namespace noochAdminNew.Controllers
 
                         if (jsonFromSynapse["success"].ToString().ToLower() == "true")
                         {
-                            if (jsonFromSynapse["trans"]!=null)
+                            if (jsonFromSynapse["trans"].Count()>0)
                             {
                                 //updating transaction Table in db
                        
