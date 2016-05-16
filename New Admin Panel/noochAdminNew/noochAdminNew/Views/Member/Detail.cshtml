@@ -63,8 +63,16 @@
 </script>
 
 <div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-lg-10">
-        <h2><strong>@mdc.FirstName @mdc.LastName</strong> | <small>@mdc.Nooch_ID</small></h2>
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-xs-9 col-sm-8 p-r-0">
+                <h2><strong>@mdc.FirstName @mdc.LastName</strong> | <small>@mdc.memberId</small></h2>
+            </div>
+            <div class="col-xs-3 col-sm-4 p-l-0 text-right">
+                <div class="m-t-25">@mdc.Nooch_ID</div>
+            </div>
+        </div>
+
         <ol class="breadcrumb">
             <li>
                 <a href="../Admin/Dashboard">Dashboard</a>
@@ -245,7 +253,7 @@
 
                         <!-- Member Ip Address-->
                         <div class="col-xs-12 col-md-4">
-                            <div class="ibox float-e-margins">
+                            <div class="ibox float-e-margins m-b-0">
                                 <div class="ibox-title">
                                     <ul class="nav nav-tabs small">
                                         <li class="active"><a data-toggle="tab" href="#tab-a"><i class="fa fa-fw fa-crosshairs m-r-xs"></i> IP Addresses</a></li>
@@ -253,7 +261,7 @@
                                     </ul>
                                 </div>
 
-                                <div class="ibox-content">
+                                <div class="ibox-content p-b-0">
                                     <div class="tab-content ">
 
                                         <div id="tab-a" class="tab-pane fade active in">
@@ -844,11 +852,10 @@
                                         <span class="pull-right hidden-xs">IsVerifiedWithSynapse: &nbsp;<strong>@mdc.IsVerifiedWithSynapse</strong></span>
                                     </div>
                                     <div class="ibox-content">
-                                        @*<form class="form-horizontal">*@
 
                                             <div class="row">
 
-                                                <div class="col-md-6 col-lg-5">
+                                                <div class="col-md-6 col-lg-5 p-r-0">
 
                                                     <div class="form-group m-b-10 text-center">
                                                         <span class="f-16">
@@ -980,7 +987,7 @@
                                                 </div>
 
 
-                                                <div class="col-md-6 col-lg-5 col-lg-push-1">
+                                                <div class="col-md-6 col-lg-5 col-lg-push-1 p-r-0">
 
                                                     <div class="form-group m-b-10 text-center">
                                                         <span class="f-16">
@@ -997,31 +1004,30 @@
                                                             </li>
 
                                                             <li class="list-group-item" data-toggle="tooltip" title="Date that this bank was linked to Nooch.">
-                                                                <b>Bank Status</b>
-                                                                <div id="bankAccountStatusDiv" class="pull-right">
+                                                                <div class="row">
+                                                                    <b class="col-xs-5">Bank Status</b>
+                                                                    <div id="bankAccountStatusDiv" class="col-xs-7 text-right">
 
-                                                                    @if (synpsDetail.SynapseBankStatus == "Verified")
-                                                                    {
-                                                                        <div class="m-b-5">
-                                                                            <strong class="text-success" style="display: inline-block">Verified</strong>
-                                                                            <button type="button" class="btn btn-link" onclick="Member.UnVerifyBankAccount(); ">
-                                                                                <i class="fa fa-close text-danger"></i>
-                                                                                Un-Verify
-                                                                            </button>
-                                                                        </div>
-                                                                        <p><small>Verified On:&nbsp; @synpsDetail.SynpaseBankVerifiedOn</small></p>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <div>
-                                                                            <strong class="text-danger" style="display: inline-block"> @synpsDetail.SynapseBankStatus </strong>
-                                                                            <button type="button" class="btn btn-link m-l-15" onclick="Member.VerifyBankAccount(); ">
-                                                                                <i class="fa fa-check"></i>
-                                                                                Verify
-                                                                            </button>
-                                                                        </div>
-                                                                    }
-                                                                    <input type="hidden" id="bnkIdHidden" value="@synpsDetail.BankId" />
+                                                                        @if (synpsDetail.SynapseBankStatus == "Verified")
+                                                                        {
+                                                                            <div>
+                                                                                <strong class="text-success" style="display: inline-block">Verified</strong>
+                                                                                <button type="button" class="btn btn-link" onclick="Member.UnVerifyBankAccount(); ">Un-Verify</button>
+                                                                            </div>
+                                                                            <small>Verified On:&nbsp; @synpsDetail.SynpaseBankVerifiedOn</small>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <div>
+                                                                                <strong class="text-danger" style="display: inline-block"> @synpsDetail.SynapseBankStatus </strong>
+                                                                                <button type="button" class="btn btn-link m-l-15" onclick="Member.VerifyBankAccount(); ">
+                                                                                    <i class="fa fa-check"></i>
+                                                                                    Verify
+                                                                                </button>
+                                                                            </div>
+                                                                        }
+                                                                        <input type="hidden" id="bnkIdHidden" value="@synpsDetail.BankId" />
+                                                                    </div>
                                                                 </div>
                                                             </li>
 
@@ -1105,14 +1111,13 @@
                                                         </div>
 
                                                         <div class="m-t-15 text-center">
-                                                            <a href="https://www.noochme.com" class="btn btn-primary" target="_blank"><i class="fa fa-plus m-r-10"></i>Add Bank</a>
+                                                            <a href="https://www.noochme.com/noochweb/Nooch/AddBank?MemberId=@mdc.memberId" class="btn btn-primary" target="_blank"><i class="fa fa-plus m-r-10"></i>Add Bank</a>
                                                         </div>
                                                     }
                                                 </div>
 
                                             </div>
 
-                                        @*</form>*@
                                     </div>
                                 </div>
                             </div>
