@@ -587,7 +587,7 @@ namespace noochAdminNew.Controllers
                     mdc.Status = Member.Status;
                     mdc.PinNumber = !String.IsNullOrEmpty(Member.PinNumber) ? CommonHelper.GetDecryptedData(Member.PinNumber) : "";
                     mdc.IsPhoneVerified = Member.IsVerifiedPhone ?? false;
-                    mdc.Nooch_ID = NoochId;
+                    mdc.Nooch_ID = Member.Nooch_ID;
                     mdc.type = Member.Type;
                     mdc.dob = Convert.ToDateTime(Member.DateOfBirth).ToString("M/d/yyyy");
                     mdc.ssn = !String.IsNullOrEmpty(Member.SSN) ? CommonHelper.GetDecryptedData(Member.SSN) : "";

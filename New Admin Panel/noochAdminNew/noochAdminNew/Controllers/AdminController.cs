@@ -40,7 +40,6 @@ namespace noochAdminNew.Controllers
         [ActionName("ShowLiveTransactionsOnDashBoard")]
         public ActionResult ShowLiveTransactionsOnDashBoard(string operation)
         {
-
             DashBoardLiveTransactionsOperationResult ddresult = new DashBoardLiveTransactionsOperationResult();
 
             //var CurrentYear = DateTime.Now.Year;
@@ -280,8 +279,11 @@ namespace noochAdminNew.Controllers
             //    return Json(ddresult);
             //} 
             #endregion
+
             #region Bill Gate's Code.....
             //:D  Keeping rakesh soni's code just in case if new code breaks anything on live... will revert back to original code.
+            // CLIFF (5/15/16)... not sure what the above note means or which code is supposed to be correct.  Please make sure to remove old notes to keep code clean.
+            //                    And please delete old code if it is not going to be used, don't just leave huge blocks of commented out code.
             try
             {
                 using (NOOCHEntities obj = new NOOCHEntities())
@@ -293,7 +295,6 @@ namespace noochAdminNew.Controllers
                     {
                         foreach (var t in allTrans)
                         {
-
                             MemberRecentLiveTransactionData singleTrans = new MemberRecentLiveTransactionData();
                             singleTrans.Amount = t.Amount.ToString();
                             singleTrans.TransID = t.TransactionId.ToString();
@@ -441,6 +442,7 @@ namespace noochAdminNew.Controllers
             }
             #endregion
         }
+
 
         public ActionResult Dashboard()
         {
@@ -668,7 +670,6 @@ namespace noochAdminNew.Controllers
                 return View(dd);
             }
         }
-
 
 
         public ActionResult CreditFundToMember()
@@ -1817,7 +1818,6 @@ namespace noochAdminNew.Controllers
                             CityStateProvincePostalCode = (item.CityStateProvincePostalCode == "-0- ") ? null : item.CityStateProvincePostalCode.Trim(new char[] { '"', ' ' }),
                             Country = (item.Country == "-0- ") ? null : item.Country.Trim(new char[] { '"', ' ' }),
                             Add_remarks = (item.Add_remarks == "-0- ") ? null : item.Add_remarks.Trim(new char[] { '"', ' ' })
-
                         };
 
                         noochConnection.ADDs.Add(s);
@@ -2229,6 +2229,7 @@ namespace noochAdminNew.Controllers
                 return Json(res);
             }
         }
+
 
         [HttpPost]
         [ActionName("GetUsersOverTimeOverTimeData")]
@@ -2963,6 +2964,7 @@ namespace noochAdminNew.Controllers
             return View(adminUser);
         }
 
+
         public ActionResult CancelTransaction(string transactionId)
         {
             MemberOperationsResult res = new MemberOperationsResult();
@@ -2970,17 +2972,24 @@ namespace noochAdminNew.Controllers
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 Guid g = new Guid(transactionId);
-                var member = (from t in obj.Transactions where t.TransactionId == g select t).SingleOrDefault();
+
+                var member = (from t in obj.Transactions
+                              where t.TransactionId == g
+                              select t).SingleOrDefault();
+
                 if (member != null)
                 {
                     member.TransactionStatus = "Cancelled";
                     int v = obj.SaveChanges();
+
                     res.Message = "Transaction Cancelled";
                     res.IsSuccess = true;
                 }
             }
+
             return Json(res);
         }
+
 
         public string showTransactionStatus(string transactionId)
         {
@@ -3050,13 +3059,9 @@ namespace noochAdminNew.Controllers
                     if (transactionDetails != null)
                         oid.oid = transactionDetails.OidFromSynapse.ToString();
 
-
-
                     SynapseV3ShowTransInput_filter filter = new SynapseV3ShowTransInput_filter();
                     filter._id = oid;
-
                     filter.page = "1";
-
 
                     transInput.login = login;
                     transInput.user = user;
@@ -3104,7 +3109,6 @@ namespace noochAdminNew.Controllers
                                 noochConnection.SaveChanges();
                                 Logger.Info("MDA ->response from showTransactioFromSynapseV3 is false  for transaction - [transactionID: " + tran.TransactionId + "]");
                                 return "";
-
                             }
                         }
                         else
@@ -3119,9 +3123,6 @@ namespace noochAdminNew.Controllers
                         Logger.Error("MDA ->Error in Showing showTransactioFromSynapseV3   - - [MemberID: " + tran.SenderId + "]");
                         return "Error";
                     }
-
-
-
                 }
                 else
                 {
@@ -3129,10 +3130,7 @@ namespace noochAdminNew.Controllers
                     Logger.Info("MDA -> showTransactioFromSynapseV3 FAILED - User's Synapse account or User's bank account not found - [MemberID: " + tran.SenderId + "]");
                     return "false";
                 }
-
-
             }
         }
-
     }
 }
