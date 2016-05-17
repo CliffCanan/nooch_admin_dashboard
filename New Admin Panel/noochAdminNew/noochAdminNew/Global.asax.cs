@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Web;
 using System.Web.Caching;
 using System.Web.Http;
@@ -22,9 +23,7 @@ namespace noochAdminNew
     // visit http://go.microsoft.com/?LinkId=9394801
     public class MvcApplication : System.Web.HttpApplication
     {
-        private const string DummyCacheItemKey = "transactionSynapseStatus";
-        private const string DummyPageUrl =
-    "http://localhost:51347/Home/AddJobCache";
+     
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -33,39 +32,45 @@ namespace noochAdminNew
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             log4net.Config.XmlConfigurator.Configure();
+
+            ThreadPool.QueueUserWorkItem(new WaitCallback(runAllDailyChecks));
         }
 
-        public void Application_BeginRequest(object sender, EventArgs e)
-        
+
+        private void runAllDailyChecks(object a)
         {
-            if (HttpContext.Current.Cache["jobKey"] == null)
+            try
             {
-                HttpContext.Current.Cache.Add("jobkey", "jobValue", null, DateTime.MaxValue, TimeSpan.FromHours(24),
-                    CacheItemPriority.Default, JobCacheRemoved);
+                while (true)
+                {
+                    //Sleep for 1 second
+                    Thread.Sleep(1000);
+                    //Run this at 02:00PM (~10:00am EST) each day
+                    //if (DateTime.Now.Hour == 15 && DateTime.Now.Minute == 0 && DateTime.Now.Second == 0 &&
+                    //    (((Convert.ToInt16(DateTime.Now.DayOfWeek) + 6) % 7) < 6))  // Only run Mon - Sat
+                    //{
+                    if (DateTime.Now.Hour == 15 && DateTime.Now.Minute == 0 && DateTime.Now.Second == 0 )
+                     
+                    {
+                        Logger.Info("****   DAILY AUTOMATED TASKS -> Check Transactions Status With Synapse  ****");
+                        updateTransactionStatusService();
+                    }
+                }
             }
-
-        }
-
-
-        public  void JobCacheRemoved(string key,
-            object value, CacheItemRemovedReason reason)
-        {
-            WebClient client = new WebClient();
-            client.DownloadData(DummyPageUrl);
-
-
-            // Do the service works
-            updateTransactionStatusService();
-
+            catch (Exception ex)
+            {
+                Logger.Error("****  DAILY SCAN ->  FAILED - [Exception: " + ex + "]  ****");
+            }
+            finally
+            {
+            }
         }
 
         public void updateTransactionStatusService()
         {
-            Logger.Info("  Global.asax -Crone Job -> Updating Transaction's Synapse status  from daily job Scheduler");
+            Logger.Info("  Global.asax -> Updating Transaction's Synapse status  from daily job Scheduler");
             SynapseV3ShowTransInput transInput = new SynapseV3ShowTransInput();
-            List<Transaction> allTransactions = new List<Transaction>();
-
-
+            
             //get transaction details
             using (var noochConnection = new NOOCHEntities())
             {

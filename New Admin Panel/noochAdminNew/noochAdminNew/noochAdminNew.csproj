@@ -994,7 +994,6 @@
     <Content Include="js\plugins\toastr\toastr.min.js" />
     <Content Include="js\plugins\validate\jquery.validate.min.js" />
     <Content Include="js\plugins\video\responsible-video.js" />
-    <Content Include="Logs\Logs.txt" />
     <Content Include="Scripts\App\CreateAdmin.js" />
     <Content Include="Scripts\App\DashboardLivetransaction.js" />
     <Content Include="Scripts\App\demo.js" />
@@ -1113,6 +1112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Logs\" />
     <Folder Include="UploadedPhotos\Photos\" />
   </ItemGroup>
   <ItemGroup>
