@@ -541,7 +541,7 @@ namespace noochAdminNew.Controllers
         public ActionResult Detail(string NoochId)
         {
             CheckSession();
-
+            
             MemberDetailsClass mdc = new MemberDetailsClass();
 
             using (NOOCHEntities obj = new NOOCHEntities())

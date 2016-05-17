@@ -66,7 +66,9 @@ namespace noochAdminNew.Controllers
             }
         }
 
-
+        public ActionResult AddJobCache() {
+            return null;
+        }
         public ActionResult Logout()
         {
             Session["UserId"] = null;

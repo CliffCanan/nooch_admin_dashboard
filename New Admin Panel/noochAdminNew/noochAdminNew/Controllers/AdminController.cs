@@ -35,6 +35,8 @@ namespace noochAdminNew.Controllers
             }
         }
 
+        
+
 
         [HttpPost]
         [ActionName("ShowLiveTransactionsOnDashBoard")]
@@ -286,6 +288,7 @@ namespace noochAdminNew.Controllers
             //                    And please delete old code if it is not going to be used, don't just leave huge blocks of commented out code.
             try
             {
+                
                 using (NOOCHEntities obj = new NOOCHEntities())
                 {
                     List<GetLiveTransactionsForDashboard_Result1> allTrans = obj.GetLiveTransactionsForDashboard(Convert.ToInt16(operation)).ToList();
@@ -295,6 +298,7 @@ namespace noochAdminNew.Controllers
                     {
                         foreach (var t in allTrans)
                         {
+                             
                             MemberRecentLiveTransactionData singleTrans = new MemberRecentLiveTransactionData();
                             singleTrans.Amount = t.Amount.ToString();
                             singleTrans.TransID = t.TransactionId.ToString();
@@ -305,15 +309,15 @@ namespace noochAdminNew.Controllers
                             singleTrans.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
                             singleTrans.TransactionStatus = t.TransactionStatus;
                             singleTrans.DisputeStatus = t.DisputeStatus;
-
+                            
                             //check to see if this transaction has record in SynapseAddTransactionResults table
-                            var SynapseAddTransactionResults = obj.SynapseAddTransactionResults.Where(tr => tr.TransactionId == t.TransactionId).FirstOrDefault();
+                            //var SynapseAddTransactionResults = obj.SynapseAddTransactionResults.Where(tr => tr.TransactionId == t.TransactionId).FirstOrDefault();
 
-                            if (SynapseAddTransactionResults!=null)
-                                singleTrans.SynapseStatus = showTransactionStatus(t.TransactionId.ToString(), SynapseAddTransactionResults.OidFromSynapse);
+                            //if (SynapseAddTransactionResults!=null)
+                            //    singleTrans.SynapseStatus = showTransactionStatus(t.TransactionId.ToString(), SynapseAddTransactionResults.OidFromSynapse);
 
-                            else
-                                singleTrans.SynapseStatus = "";
+                            //else
+                            //    singleTrans.SynapseStatus = t.SynapseStatus;
 
                             #region Request type transaction
 
@@ -447,6 +451,7 @@ namespace noochAdminNew.Controllers
 
         public ActionResult Dashboard()
         {
+            
             //var CurrentYear = DateTime.Now.Year;
             //var CurrentMonth = DateTime.Now.Month;
             //var CurrentDate = DateTime.Now.Day;
@@ -2992,149 +2997,6 @@ namespace noochAdminNew.Controllers
         }
 
 
-        public string showTransactionStatus(string transactionId,string oidFromSynapse)
-
-        {
-            Logger.Info("MDA -> ShowTransactionfromSynapseV3 Initialized - [TransactionId: " + transactionId + "]");
-
-            SynapseV3ShowTransInput transInput = new SynapseV3ShowTransInput();
-            Guid transactionid = Utility.ConvertToGuid(transactionId);
-            Transaction tran = new Transaction();
-
-            //get transaction details
-            using (var noochConnection = new NOOCHEntities())
-            {
-                tran = noochConnection.Transactions.Where(t => t.TransactionId == transactionid).FirstOrDefault();
-                
-                //get Members and synapseCreateUser details
-
-                var synapseCreateuserResults = noochConnection.SynapseCreateUserResults.Where(syn => syn.MemberId == tran.SenderId).FirstOrDefault();
-                var usersSynapseOauthKey = "";
-
-                #region Check If OAuth Key Still Valid
-                // if testing
-                synapseV3checkUsersOauthKey checkTokenResult = CommonHelper.refreshSynapseV3OautKey(synapseCreateuserResults.access_token);
-
-                // if live
-                //synapseV3checkUsersOauthKey checkTokenResult = refreshSynapseV3OautKey(createSynapseUserObj.access_token,false);
-                //                                                                   
-
-                if (checkTokenResult != null)
-                {
-                    if (checkTokenResult.success == true)
-                    {
-                        usersSynapseOauthKey = CommonHelper.GetDecryptedData(checkTokenResult.oauth_consumer_key);
-                    }
-                    else
-                    {
-                        Logger.Error("Common Helper -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
-                                               "CheckTokenResult.msg: [" + checkTokenResult.msg + "], MemberID: [" + tran.SenderId + "]");
-
-                        //res.msg = checkTokenResult.msg;
-                        return "false";
-
-                    }
-                }
-                else
-                {
-                    Logger.Error("Common Helper -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
-                                               "CheckTokenResult was NULL, MemberID: [" + tran.SenderId + "]");
-
-                    //res.msg = "Unable to check user's Oauth Token";
-                    return "false";
-
-                }
-
-                #endregion Check If OAuth Key Still Valid
-
-
-                //var SendersBank = noochConnection.SynapseBanksOfMembers.Where(id => id.MemberId == tran.SenderId).FirstOrDefault();
-                //var RecipientBank = noochConnection.SynapseBanksOfMembers.Where(id => id.MemberId == tran.RecipientId).FirstOrDefault();
-
-                if (synapseCreateuserResults != null  )
-
-                {
-                    SynapseV3TransInput_login login = new SynapseV3TransInput_login() { oauth_key = usersSynapseOauthKey };
-                    SynapseV3TransInput_user user = new SynapseV3TransInput_user() { fingerprint = tran.Member.UDID1.ToString() };
-
-                    SynapseV3ShowTransInput_filter_Trans_id oid = new SynapseV3ShowTransInput_filter_Trans_id();
-                     
-                        oid.oid = oidFromSynapse;
-
-                    SynapseV3ShowTransInput_filter filter = new SynapseV3ShowTransInput_filter();
-                    filter._id = oid;
-                    filter.page = "1";
-
-                    transInput.login = login;
-                    transInput.user = user;
-
-                    transInput.filter = filter;
-
-                    string baseAddress = "";
-
-                    baseAddress = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) ? "https://sandbox.synapsepay.com/api/v3/trans/show" : "https://synapsepay.com/api/v3/trans/show";
-                    try
-                    {
-                        var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
-                        http.Accept = "application/json";
-                        http.ContentType = "application/json";
-                        http.Method = "POST";
-
-                        string parsedContent = JsonConvert.SerializeObject(transInput);
-                        ASCIIEncoding encoding = new ASCIIEncoding();
-                        Byte[] bytes = encoding.GetBytes(parsedContent);
-
-                        Stream newStream = http.GetRequestStream();
-                        newStream.Write(bytes, 0, bytes.Length);
-                        newStream.Close();
-
-                        var response = http.GetResponse();
-                        var stream = response.GetResponseStream();
-                        var sr = new StreamReader(stream);
-                        var content = sr.ReadToEnd();
-                        JObject jsonFromSynapse = JObject.Parse(content);
-
-                        if (jsonFromSynapse["success"].ToString().ToLower() == "true")
-                        {
-
-                            if (jsonFromSynapse["trans"].Count()>0)
-
-                            {
-                                //updating transaction Table in db
-
-                                tran.SynapseStatus = jsonFromSynapse["trans"][0]["recent_status"]["status"].ToString();
-
-                                noochConnection.SaveChanges();
-                                return tran.SynapseStatus.ToString();
-                            }
-                            else
-                            {
-                                tran.SynapseStatus = "";
-                                noochConnection.SaveChanges();
-                                Logger.Info("MDA ->response from showTransactioFromSynapseV3 is false  for transaction - [transactionID: " + tran.TransactionId + "]");
-                                return "";
-                            }
-                        }
-                        else
-                        {
-                            Logger.Info("MDA ->response from showTransactioFromSynapseV3 is null  for transaction - [transactionID: " + tran.TransactionId + "]");
-                            return "";
-                        }
-
-                    }
-                    catch (WebException ex)
-                    {
-                        Logger.Error("MDA ->Error in Showing showTransactioFromSynapseV3   - - [MemberID: " + tran.SenderId + "]");
-                        return "Error";
-                    }
-                }
-                else
-                {
-                    //res. = "User's Synapse account or User's bank account not found";
-                    Logger.Info("MDA -> showTransactioFromSynapseV3 FAILED - User's Synapse account or User's bank account not found - [MemberID: " + tran.SenderId + "]");
-                    return "false";
-                }
-            }
-        }
+     
     }
 }

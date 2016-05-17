@@ -21,6 +21,7 @@ namespace noochAdminNew.Models
         public string GeoLocationState { get; set; }
         public string GeoLocationCity { get; set; }
         public string TransactionStatus { get; set; }
+        
         public Nullable<double> Latitude { get; set; }
         public Nullable<double> Longitude { get; set; }
         public string TransactionType { get; set; }
