@@ -618,7 +618,9 @@ namespace noochAdminNew.Controllers
                     var transtp = (from t in obj.Transactions
                                    where (t.Member.MemberId == Member.MemberId ||
                                           t.RecipientId == Member.MemberId ||
-                                          t.SenderId == Member.MemberId)
+                                          t.SenderId == Member.MemberId ||
+                                          t.InvitationSentTo==Member.UserName)
+                                          
                                    //(t.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || t.TransactionType == "+C1+zhVafHdXQXCIqjU/Zg==" || t.TransactionType == "DrRr1tU1usk7nNibjtcZkA==")
                                    //(t.TransactionStatus == "Success" || t.TransactionStatus == "Rejected" || t.TransactionStatus == "Pending" || t.TransactionStatus == "Cancelled")
                                    select t).OrderByDescending(r => r.TransactionDate).Take(25).ToList();
