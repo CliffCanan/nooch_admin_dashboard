@@ -18,14 +18,7 @@ $(document).ready(function ()
     $("#TransactionMaster").trigger("click");
     $('#DashboardMenu').addClass('active');
 
-    $('#AllTrans').dataTable({
-        responsive: true,
-        "order": [3, "desc"],
-        "columnDefs": [
-               { "orderable": false, "targets": [0] }
-        ]
-
-    });
+ 
 
     // Pie Chart
     var doughnutData = [
@@ -75,8 +68,16 @@ $(document).ready(function ()
 
 
     var val = $("input:radio[name=options]").val();
+     
     DashboardDetailsOperation(val);
+    $('#AllTrans').dataTable({
+        responsive: true,
+        "order": [3, "desc"],
+        "columnDefs": [
+               { "orderable": false, "targets": [0] }
+        ]
 
+    });
     //Date Format changes
     function getISODateTime(d, includeTime)
     {

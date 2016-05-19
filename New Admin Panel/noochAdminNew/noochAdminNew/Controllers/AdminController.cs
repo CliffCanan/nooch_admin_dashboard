@@ -3068,6 +3068,8 @@ namespace noochAdminNew.Controllers
                     // transfer type trans to non nooch user...by phone
                     else if (transaction.TransactionType == "5dt4HUwCue532sNmw3LKDQ==")
                     {
+                        transaction.TransactionType = CommonHelper.GetDecryptedData(transaction.TransactionType);
+                  
                         transaction.RecipienName = CommonHelper.GetMemberNameFromMemberId(transaction.RecipientId.ToString());
                         transaction.SenderName = CommonHelper.GetMemberNameFromMemberId(transaction.SenderId.ToString());
                         transaction.RecipientId = transaction.RecipientId;
@@ -3078,15 +3080,17 @@ namespace noochAdminNew.Controllers
                     else
                     {
                         transaction.TransactionType = CommonHelper.GetDecryptedData(transaction.TransactionType);
-                        transaction.RecipienName = CommonHelper.GetMemberNameFromMemberId(transaction.RecipientId.ToString());
+                  
+                         transaction.RecipienName = CommonHelper.GetMemberNameFromMemberId(transaction.RecipientId.ToString());
                         transaction.SenderName = CommonHelper.GetMemberNameFromMemberId(transaction.SenderId.ToString());
                         transaction.RecipientId = transaction.RecipientId ;
                         transaction.SenderId = transaction.SenderId ;
                     }
 
+
                     #endregion
 
-
+                      
                     transaction.TransactionDate1 = Convert.ToDateTime(transaction.TransactionDate).ToString("MMM d, yyyy");
                     transaction.TransactionTime = Convert.ToDateTime(transaction.TransactionDate).ToString("h:mm tt");
                     transaction.Amount = Math.Round(transaction.Amount, 2);
