@@ -2905,7 +2905,7 @@ namespace noochAdminNew.Controllers
             TransactionsPageData res = new TransactionsPageData();
 
             List<TransactionClass> adminUser = new List<TransactionClass>();
-            Guid trid = Utility.ConvertToGuid("e85c22fc-b884-460a-b05f-771ceaac972b");
+             
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 adminUser = (from t in obj.Transactions

@@ -403,7 +403,7 @@ namespace noochAdminNew.Controllers
         /// <returns></returns>
         [HttpGet, OutputCache(NoStore = true, Duration = 1)]
         public ActionResult ListAll()
-        {
+         {
             List<MembersListDataClass> AllMemberFormtted = GetAllMembers("Personal");
 
             return View(AllMemberFormtted);
