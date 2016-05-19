@@ -1114,6 +1114,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Logs\" />
     <Folder Include="UploadedPhotos\Photos\" />
+    <Folder Include="UploadedPhotos\SynapseDocuments\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

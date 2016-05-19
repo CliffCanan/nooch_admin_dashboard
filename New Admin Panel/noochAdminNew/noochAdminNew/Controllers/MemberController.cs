@@ -1553,7 +1553,7 @@ namespace noochAdminNew.Controllers
                 {
                     DocumentDetails.AccessToken = SynapseCreateUserResult.access_token;
                     string pic = MemberId.ToString() + ".png";
-                    string path = System.IO.Path.Combine(Server.MapPath("~/UploadedPhotos/Photos"), pic);
+                    string path = System.IO.Path.Combine(Server.MapPath("~/UploadedPhotos/SynapseDocuments"), pic);
                     // file is uploaded
                     file.SaveAs(path);
                     DocumentDetails.imgPath = path;
@@ -1591,12 +1591,12 @@ namespace noochAdminNew.Controllers
 
                 if ((DocumentDetails.imgPath != ""))
                 {
-                    ImageUrlMade = Utility.GetValueFromConfig("PhotoUrl") + DocumentDetails.MemberId + ".png";                     
+                    ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + DocumentDetails.MemberId + ".png";                     
                     //ImageUrlMade = DocumentDetails.imgPath;
                 }
                 else
                 {
-                    ImageUrlMade = Utility.GetValueFromConfig("PhotoUrl") + "gv_no_photo.png";
+                    ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + "gv_no_photo.png";
                 }
 
                 var mdaResult = submitDocumentToSynapseV3(DocumentDetails.MemberId, ImageUrlMade);
