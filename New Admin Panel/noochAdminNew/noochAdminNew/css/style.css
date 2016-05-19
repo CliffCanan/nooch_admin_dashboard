@@ -1553,7 +1553,7 @@ table#referralTable1 thead th:after {
   font-size: 12px;
   text-transform: uppercase;
 }
-/* PEACE */
+/* PACE */
 .pace .pace-progress {
   background: #3288b4;
   position: fixed;
@@ -1565,6 +1565,9 @@ table#referralTable1 thead th:after {
   -moz-transition: width 1s;
   -o-transition: width 1s;
   transition: width 1s;
+}
+body#login .pace .pace-progress {
+    left: 0;
 }
 .body-small .pace .pace-progress {
   left: 0px;

@@ -25,44 +25,44 @@ namespace noochAdminNew.Controllers
         [ActionName("ValidateUser")]
         public ActionResult ValidateUser(string UserName, string Password)
         {
-            Logger.Info("test message");
-            LoginResult lr = new LoginResult();
+            Logger.Info("Home Cntrlr -> ValidateUser - Username: [" + UserName + "]");
+
+            LoginResult res = new LoginResult();
+            res.IsSuccess = false;
+
             try
             {
-                //  var userNameEnc = CommonHelper.GetEncryptedData(UserName);
-
                 var passEnc = CommonHelper.GetEncryptedData(Password);
 
                 using (NOOCHEntities obj = new NOOCHEntities())
                 {
                     var query = (from c in obj.AdminUsers
-                                 where c.Password == passEnc && c.UserName == UserName &&
-                              c.Status == "Active"
+                                 where c.Password == passEnc && c.UserName == UserName && c.Status == "Active"
                                  select c).SingleOrDefault();
 
                     if (query != null)
                     {
-                        lr.IsSuccess = true;
-                        lr.Message = "Success";
+                        res.IsSuccess = true;
+                        res.Message = "Success";
                         Session["UserId"] = query.UserId;
                         Session["RoleId"] = query.AdminLevel;
                     }
                     else
                     {
-                        lr.IsSuccess = false;
-                        lr.Message = "Invalid username or password";
+                        res.IsSuccess = false;
+                        res.Message = "Invalid username or password";
                     }
-                    return Json(lr);
+                    return Json(res);
                 }
             }
             catch (Exception ex)
             {
                 Logger.Info("test message");
                 Logger.Error(ex);
-                lr.IsSuccess = false;
+                res.IsSuccess = false;
                 //lr.Message = "Invalid username or password";
-                lr.Message = ex.ToString();
-                return Json(lr);
+                res.Message = ex.ToString();
+                return Json(res);
             }
         }
 
