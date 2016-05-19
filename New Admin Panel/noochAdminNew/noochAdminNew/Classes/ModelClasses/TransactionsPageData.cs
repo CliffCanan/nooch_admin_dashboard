@@ -40,5 +40,8 @@ namespace noochAdminNew.Classes.ModelClasses
         public string InvitationSentTo { get; set; }
         public string FirstName { get; set; }
         public string Memo { get; set; }
+        public bool?  isPhoneInvitation { get; set; }
+        public string PhoneNumberInvited { get; set; }
+        
     }
 }
