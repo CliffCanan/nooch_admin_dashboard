@@ -5,6 +5,8 @@ var escapeKeyPressed = false;
 $(document).ready(function () {
     $("#MemberMenuExpander").trigger("click");
 
+	$('[data-toggle="tooltip"]').tooltip()
+
     function getParameterByName(name) {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
         var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -78,9 +80,9 @@ $(document).ready(function () {
         }
     });
 
-    setTimeout(function () {
+    //setTimeout(function () {
         //checkIfUserLocationExists();
-    }, 500);
+    //}, 500);
 
 });
 
@@ -512,6 +514,5 @@ var Member = function () {
         sendSmsReminder: sendSmsReminderForVerification,
         ChangePassword: ChangePassword,
         GenerateNewPassword: GenerateNewPassword
-
     };
 }();
