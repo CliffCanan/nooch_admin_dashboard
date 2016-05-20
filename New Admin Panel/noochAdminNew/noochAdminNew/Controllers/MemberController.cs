@@ -1772,7 +1772,7 @@ namespace noochAdminNew.Controllers
                         using (var noochConnection = new NOOCHEntities())
                         {
 
-                            var synapseUser = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == id).FirstOrDefault();
+                            var synapseUser = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == id && m.IsDeleted==false).FirstOrDefault();
                             synapseUser.permission = resFromSynapse.user.permission.ToString();
                             synapseUser.photos = ImageUrl;
                             noochConnection.SaveChanges();
