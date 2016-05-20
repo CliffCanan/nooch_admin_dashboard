@@ -2901,17 +2901,18 @@ namespace noochAdminNew.Controllers
         public ActionResult Transaction()
         {
             CheckSession();
-
+             
             TransactionsPageData res = new TransactionsPageData();
 
             List<TransactionClass> adminUser = new List<TransactionClass>();
             
             using (NOOCHEntities obj = new NOOCHEntities())
             {
+
                 adminUser = (from t in obj.Transactions
                              join g in obj.GeoLocations
                              on t.LocationId equals g.LocationId
-                             
+
                              select new TransactionClass
                              {
                                  TransactionId = t.TransactionId,
@@ -2927,11 +2928,11 @@ namespace noochAdminNew.Controllers
                                  state = g.State,
                                  city = g.City,
                                  Memo = t.Memo,
-                                 isPhoneInvitation= t.IsPhoneInvitation ,
-                                 PhoneNumberInvited=t.PhoneNumberInvited,
-                                 InvitationSentTo=t.InvitationSentTo
+                                 isPhoneInvitation = t.IsPhoneInvitation,
+                                 PhoneNumberInvited = t.PhoneNumberInvited,
+                                 InvitationSentTo = t.InvitationSentTo
 
-                                 
+
                              }).ToList();
 
                 foreach (var transaction in adminUser.ToList())
@@ -2963,6 +2964,7 @@ namespace noochAdminNew.Controllers
                         //transaction.RecipientId = receiver.MemberId;
 
                         // request type trans to   nooch user
+                        transaction.TransactionType = CommonHelper.GetDecryptedData(transaction.TransactionType);
                         if (transaction.RecipientId != transaction.SenderId)
                         {
                             Member sender = CommonHelper.GetMemberUsingGivenMemberId(transaction.SenderId.ToString());
