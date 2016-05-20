@@ -571,7 +571,7 @@ namespace noochAdminNew.Controllers
                     mdc.FBID = !String.IsNullOrEmpty(Member.FacebookAccountLogin) ? CommonHelper.GetDecryptedData(Member.FacebookAccountLogin) : "";
                     mdc.FirstName = !String.IsNullOrEmpty(Member.FirstName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.FirstName)) : "";
                     mdc.LastName = !String.IsNullOrEmpty(Member.LastName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.LastName)) : "";
-                    mdc.UserName = !String.IsNullOrEmpty(Member.UserName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.UserName)) : "";
+                    mdc.UserName = !String.IsNullOrEmpty(Member.UserName) ? CommonHelper.GetDecryptedData(Member.UserName) : "";
                     mdc.SecondaryEmail = !String.IsNullOrEmpty(Member.SecondaryEmail) && Member.SecondaryEmail.Length > 40
                                          ? CommonHelper.GetDecryptedData(Member.SecondaryEmail)
                                          : Member.SecondaryEmail;
@@ -646,7 +646,7 @@ namespace noochAdminNew.Controllers
                         payment.Longitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Longitude).SingleOrDefault().ToString();
                         payment.Latitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Latitude).SingleOrDefault().ToString();
 
-                        payment.SynapseStatus = (!String.IsNullOrEmpty(t.SynapseStatus)) ? t.SynapseStatus.ToString() : "False";
+                        payment.SynapseStatus = (!String.IsNullOrEmpty(t.SynapseStatus)) ? t.SynapseStatus.ToString() : "-";
 
                         if (payment.TransactionType == "Request")
                         {
@@ -1041,7 +1041,7 @@ namespace noochAdminNew.Controllers
                                 member.TransferLimit = transferLimit.Trim();
                             }
 
-                            if (!String.IsNullOrEmpty(dob))
+                            if (!String.IsNullOrEmpty(dob) && dob != "1/1/0001")
                             {
                                 DateTime dateofbirth;
                                 if (!DateTime.TryParse(dob, out dateofbirth))
@@ -1071,7 +1071,7 @@ namespace noochAdminNew.Controllers
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error("Admin MemberController -> EditMemberDetails FAILED - [Exception: " + ex + "]");
+                    Logger.Error("Admin MemberController -> EditMemberDetails FAILED - [Exception: " + ex.Message + "]");
                 }
             }
             return Json(re);
@@ -1553,7 +1553,7 @@ namespace noochAdminNew.Controllers
                 {
                     DocumentDetails.AccessToken = SynapseCreateUserResult.access_token;
                     string pic = MemberId.ToString() + ".png";
-                    string path = System.IO.Path.Combine(Server.MapPath("~/UploadedPhotos/Photos"), pic);
+                    string path = System.IO.Path.Combine(Server.MapPath("~/UploadedPhotos/SynapseDocuments"), pic);
                     // file is uploaded
                     file.SaveAs(path);
                     DocumentDetails.imgPath = path;
@@ -1591,12 +1591,12 @@ namespace noochAdminNew.Controllers
 
                 if ((DocumentDetails.imgPath != ""))
                 {
-                    ImageUrlMade = Utility.GetValueFromConfig("PhotoUrl") + DocumentDetails.MemberId + ".png";                     
+                    ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + DocumentDetails.MemberId + ".png";                     
                     //ImageUrlMade = DocumentDetails.imgPath;
                 }
                 else
                 {
-                    ImageUrlMade = Utility.GetValueFromConfig("PhotoUrl") + "gv_no_photo.png";
+                    ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + "gv_no_photo.png";
                 }
 
                 var mdaResult = submitDocumentToSynapseV3(DocumentDetails.MemberId, ImageUrlMade);

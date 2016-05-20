@@ -1003,7 +1003,7 @@
                                                                 <span class="pull-right">@synpsDetail.SynpaseBankAddedOn</span>
                                                             </li>
 
-                                                            <li class="list-group-item" data-toggle="tooltip" title="Date that this bank was linked to Nooch.">
+                                                            <li class="list-group-item">
                                                                 <div class="row">
                                                                     <b class="col-xs-5">Bank Status</b>
                                                                     <div id="bankAccountStatusDiv" class="col-xs-7 text-right">
@@ -1014,7 +1014,7 @@
                                                                                 <strong class="text-success" style="display: inline-block">Verified</strong>
                                                                                 <button type="button" class="btn btn-link" onclick="Member.UnVerifyBankAccount(); ">Un-Verify</button>
                                                                             </div>
-                                                                            <small>Verified On:&nbsp; @synpsDetail.SynpaseBankVerifiedOn</small>
+                                                                            <small data-toggle="tooltip" title="Date that this bank was linked to Nooch.">Verified On:&nbsp; @synpsDetail.SynpaseBankVerifiedOn</small>
                                                                         }
                                                                         else
                                                                         {
@@ -1600,7 +1600,6 @@
 </div>
 
 <script src="~/js/plugins/sweetalert.min.js"></script>
-<script src="~/Scripts/App/MemberDetail.js"></script>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBejM5FqN8AVj_JbZvCYCjoGwrmB7R-rT0&callback=checkIfUserLocationExists">
 </script>
@@ -1614,3 +1613,5 @@
         }
     };
 </script>
+<script src="~/Scripts/App/MemberDetail.js"></script>
+<script src="~/js/plugins/jquery.blockUI.min.js" "></script>

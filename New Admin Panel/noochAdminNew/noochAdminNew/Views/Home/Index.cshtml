@@ -13,7 +13,7 @@
     <link href="~/css/style.css" rel="stylesheet" />
 </head>
 
-<body class="gray-bg">
+<body class="gray-bg" id="login">
 
     <div class="middle-box text-center loginscreen  animated fadeInDown">
         <div>
@@ -51,17 +51,34 @@
             }
         };</script>
     <script src="~/js/plugins/pace/pace.min.js"></script>
-
+    <script src="~/js/plugins/jquery.blockUI.min.js" "></script>
     <script type="text/javascript">
-
-        $("#logInform").submit(function (e) {
+        $("#logInform").submit(function (e)
+        {
             e.preventDefault();
+            $('.middle-box').block({
+                message: '<span><i class="fa fa-refresh fa-spin fa-loading"></i></span><br/><span class="loadingMsg">Connecting...</span>',
+                css: {
+                    border: 'none',
+                    padding: '26px 8px 20px',
+                    backgroundColor: '#000',
+                    '-webkit-border-radius': '15px',
+                    '-moz-border-radius': '15px',
+                    'border-radius': '15px',
+                    opacity: '.8',
+                    width: '70%',
+                    left: '15%',
+                    top: '35px',
+                    color: '#fff'
+                }
+            });
+
             User.GoIn();
         });
     </script>
 
-<input type="hidden" value="@Url.Action("ValidateUser", "Home")" id="urlToHit"/>
+    <input type="hidden" value="@Url.Action("ValidateUser", "Home")" id="urlToHit" />
     <input type="hidden" value="@Url.Action("Dashboard", "Admin")" id="dashUrl" />
- 
+
 </body>
 </html>
