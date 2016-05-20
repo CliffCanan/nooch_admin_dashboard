@@ -731,6 +731,7 @@
           <Property Name="IsPhoneInvitation" Type="bit" />
           <Property Name="PhoneNumberInvited" Type="varchar" MaxLength="50" />
           <Property Name="SynapseStatus" Type="varchar" MaxLength="50" />
+          <Property Name="DateAccepted" Type="datetime" />
         </EntityType>
         <EntityType Name="UnitsOccupiedByTenants">
           <Key>
@@ -1816,6 +1817,7 @@
           <NavigationProperty Name="Member" Relationship="NOOCHModel.FK_Transactions_Members2" FromRole="Transaction" ToRole="Member" />
           <NavigationProperty Name="Member1" Relationship="NOOCHModel.FK_Transactions_Members3" FromRole="Transaction" ToRole="Member" />
           <Property Name="SynapseStatus" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DateAccepted" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="UnitsOccupiedByTenant">
           <Key>
@@ -2737,6 +2739,7 @@
           <EntitySetMapping Name="Transactions">
             <EntityTypeMapping TypeName="NOOCHModel.Transaction">
               <MappingFragment StoreEntitySet="Transactions">
+                <ScalarProperty Name="DateAccepted" ColumnName="DateAccepted" />
                 <ScalarProperty Name="SynapseStatus" ColumnName="SynapseStatus" />
                 <ScalarProperty Name="PhoneNumberInvited" ColumnName="PhoneNumberInvited" />
                 <ScalarProperty Name="IsPhoneInvitation" ColumnName="IsPhoneInvitation" />

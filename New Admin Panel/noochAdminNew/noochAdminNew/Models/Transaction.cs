@@ -42,6 +42,7 @@ namespace noochAdminNew.Models
         public Nullable<bool> IsPhoneInvitation { get; set; }
         public string PhoneNumberInvited { get; set; }
         public string SynapseStatus { get; set; }
+        public Nullable<System.DateTime> DateAccepted { get; set; }
     
         public virtual GeoLocation GeoLocation { get; set; }
         public virtual Member Member { get; set; }
