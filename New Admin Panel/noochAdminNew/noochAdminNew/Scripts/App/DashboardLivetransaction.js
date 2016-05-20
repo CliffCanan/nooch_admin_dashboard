@@ -70,14 +70,8 @@ $(document).ready(function ()
     var val = $("input:radio[name=options]").val();
      
     DashboardDetailsOperation(val);
-    $('#AllTrans').dataTable({
-        responsive: true,
-        "order": [3, "desc"],
-        "columnDefs": [
-               { "orderable": false, "targets": [0] }
-        ]
-
-    });
+    
+   
     //Date Format changes
     function getISODateTime(d, includeTime)
     {
@@ -153,7 +147,7 @@ $(document).ready(function ()
 
                     var trHTML = '';
                     $("#TBOdy tr").remove();
-
+                    
                     $.each(result.RecentLiveTransaction, function (i, item)
                     {
                         //DisputeStatus
@@ -199,6 +193,16 @@ $(document).ready(function ()
                                   '<td><a href="#" OnClick="showLocationModal(' + item.Latitude + ',' + item.Longitude + ',' + "'" + GeoLocation + "'" + ')" class="btn btn-link" data-loctext="' + GeoLocation + '">' + GeoLocation + '</a></td> </tr>';
 
                         $("#TBOdy").append(trHTML);
+                    });
+                    console.log($('#AllTrans').val());
+                    $('#AllTrans').dataTable().fnDestroy();
+                    $('#AllTrans').dataTable({
+                        responsive: true,
+                        "order": [3, "desc"],
+                        "columnDefs": [
+                               { "orderable": false, "targets": [0] }
+                        ]
+
                     });
                 }
                 else {

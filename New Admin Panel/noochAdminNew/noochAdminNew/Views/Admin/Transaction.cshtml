@@ -126,10 +126,26 @@
 
                                     <td>@ad.TransactionDate1</td>
 
-                                    <td><a href='@Url.Action("Detail", "Member", new { NoochId=@ad.SenderNoochId} )'>@ad.SenderName</a></td>
+                                    <td>
+                                        @if (@ad.SenderNoochId != null) { 
+                                    <a href='@Url.Action("Detail", "Member", new { NoochId=@ad.SenderNoochId} )'>@ad.SenderName</a>
+                                        }
+                                        else
+                                        {
+                                            @ad.SenderName
+                                        }
+                                    </td>
 
-                                    <td><a href='@Url.Action("Detail", "Member", new { NoochId=@ad.RecepientNoochId} )'>@ad.RecipienName</a></td>
-
+                                    <td>
+                                        @if (@ad.RecepientNoochId != null)
+                                        {
+                                            <a href='@Url.Action("Detail", "Member", new { NoochId=@ad.RecepientNoochId} )'>@ad.RecipienName</a>
+                                        }
+                                        else
+                                        {
+                                            @ad.RecipienName
+                                        }
+                                    </td>
                                     <td><b>$@ad.Amount</b></td>
 
                                     <td>@ad.Memo</td>

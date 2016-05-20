@@ -2905,13 +2905,13 @@ namespace noochAdminNew.Controllers
             TransactionsPageData res = new TransactionsPageData();
 
             List<TransactionClass> adminUser = new List<TransactionClass>();
-             
+            
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 adminUser = (from t in obj.Transactions
                              join g in obj.GeoLocations
                              on t.LocationId equals g.LocationId
-                            
+                             
                              select new TransactionClass
                              {
                                  TransactionId = t.TransactionId,
@@ -2948,7 +2948,7 @@ namespace noochAdminNew.Controllers
                     #region Request type transaction
                     if (transaction.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw==")
                     {
-                        transaction.TransactionType = "Reward";
+                        //transaction.TransactionType = "Reward";
                         // sender user
 
 
@@ -2971,6 +2971,8 @@ namespace noochAdminNew.Controllers
                             transaction.RecipientId = transaction.RecipientId;
                             transaction.SenderId = transaction.SenderId;
                             transaction.SenderNoochId = sender.Nooch_ID.ToString();
+                            Member reciever = CommonHelper.GetMemberUsingGivenMemberId(transaction.RecipientId.ToString());
+                            transaction.RecepientNoochId = reciever.Nooch_ID.ToString();
                         }
 
                         // request type trans to non nooch user...by phone
@@ -2987,19 +2989,30 @@ namespace noochAdminNew.Controllers
                             transaction.RecipienName = CommonHelper.GetMemberNameFromMemberId(transaction.RecipientId.ToString());
                             transaction.RecipientId = transaction.RecipientId;
                             transaction.SenderId = null;
+                            Member reciever = obj.Members.Where(mmObj => mmObj.MemberId == transaction.RecipientId  ).FirstOrDefault();
+                            if(reciever!=null)
+                            transaction.RecepientNoochId = reciever.Nooch_ID.ToString();
+                            
                         }
 
                         // request type trans to non nooch user...by email
                         else if (transaction.RecipientId == transaction.SenderId && transaction.InvitationSentTo != null)
                         {
-                            Member m = obj.Members.Where(mmObj => mmObj.UserName == transaction.InvitationSentTo && mmObj.IsDeleted == false).FirstOrDefault();
+                            Member m = obj.Members.Where(mmObj => mmObj.UserName == transaction.InvitationSentTo  ).FirstOrDefault();
                             if (m != null)
+                            {
                                 transaction.SenderName = CommonHelper.GetMemberNameFromMemberId(m.MemberId.ToString());
+                                transaction.SenderNoochId = m.Nooch_ID.ToString();
+                            }
                             else
                                 transaction.SenderName = !String.IsNullOrEmpty(transaction.InvitationSentTo) ? CommonHelper.GetDecryptedData(transaction.InvitationSentTo) : "";
                             transaction.RecipienName = CommonHelper.GetMemberNameFromMemberId(transaction.RecipientId.ToString());
                             transaction.RecipientId = transaction.RecipientId;
                             transaction.SenderId = null;
+                            
+                            Member reciever = obj.Members.Where(mmObj => mmObj.MemberId ==transaction.RecipientId ).FirstOrDefault();
+                            if(reciever!=null)
+                            transaction.RecepientNoochId = reciever.Nooch_ID.ToString();
                         }
 
                     }
@@ -3037,6 +3050,9 @@ namespace noochAdminNew.Controllers
                         transaction.SenderName = CommonHelper.GetMemberNameFromMemberId(transaction.RecipientId.ToString());
                         transaction.RecipientId = null;
                         transaction.SenderId = transaction.SenderId ;
+                        Member sender = obj.Members.Where(mmObj => mmObj.MemberId ==transaction.SenderId  ).FirstOrDefault();
+                        if(sender!=null)
+                        transaction.SenderNoochId = sender.Nooch_ID.ToString();
 
                     }
 
@@ -3045,9 +3061,12 @@ namespace noochAdminNew.Controllers
                     {
                         if (!String.IsNullOrEmpty(transaction.InvitationSentTo))
                         {
-                            Member m = obj.Members.Where(mmObj => mmObj.UserName == transaction.InvitationSentTo && mmObj.IsDeleted == false).FirstOrDefault();
+                            Member m = obj.Members.Where(mmObj => mmObj.UserName == transaction.InvitationSentTo ).FirstOrDefault();
                             if (m != null)
+                            {
                                 transaction.RecipienName = CommonHelper.GetMemberNameFromMemberId(m.MemberId.ToString());
+                                transaction.RecepientNoochId = m.Nooch_ID.ToString();
+                            }
                             else
                                 transaction.RecipienName = CommonHelper.GetDecryptedData(transaction.InvitationSentTo);
                         }
@@ -3059,32 +3078,35 @@ namespace noochAdminNew.Controllers
                         transaction.SenderName = CommonHelper.GetMemberNameFromMemberId(transaction.RecipientId.ToString());
                         transaction.RecipientId =null;
                         transaction.SenderId = transaction.SenderId ;
+                        Member sender = obj.Members.Where(mmObj => mmObj.MemberId == transaction.SenderId ).FirstOrDefault();
+                        if(sender!=null)
+                        transaction.SenderNoochId = sender.Nooch_ID.ToString();
+
+            
                     }
                     #endregion
 
 
                     #region Transfer, dispute or reward type transaction
 
-                    // transfer type trans to non nooch user...by phone
-                    else if (transaction.TransactionType == "5dt4HUwCue532sNmw3LKDQ==")
+
+
+
+                    // transfer type trans to non nooch user...by phone request could be disputed,rent, reward type
+                    else
                     {
                         transaction.TransactionType = CommonHelper.GetDecryptedData(transaction.TransactionType);
-                  
+
                         transaction.RecipienName = CommonHelper.GetMemberNameFromMemberId(transaction.RecipientId.ToString());
                         transaction.SenderName = CommonHelper.GetMemberNameFromMemberId(transaction.SenderId.ToString());
                         transaction.RecipientId = transaction.RecipientId;
                         transaction.SenderId = transaction.SenderId;
-                    }
-
-                    // request could be disputed, reward type
-                    else
-                    {
-                        transaction.TransactionType = CommonHelper.GetDecryptedData(transaction.TransactionType);
-                  
-                         transaction.RecipienName = CommonHelper.GetMemberNameFromMemberId(transaction.RecipientId.ToString());
-                        transaction.SenderName = CommonHelper.GetMemberNameFromMemberId(transaction.SenderId.ToString());
-                        transaction.RecipientId = transaction.RecipientId ;
-                        transaction.SenderId = transaction.SenderId ;
+                        Member sender = obj.Members.Where(mmObj => mmObj.MemberId == transaction.SenderId ).FirstOrDefault();
+                        if(sender!=null)
+                        transaction.SenderNoochId = sender.Nooch_ID.ToString();
+                        Member receiver = obj.Members.Where(mmObj => mmObj.MemberId == transaction.RecipientId ).FirstOrDefault();
+                        if(receiver!=null)
+                        transaction.RecepientNoochId = receiver.Nooch_ID.ToString();
                     }
 
 
