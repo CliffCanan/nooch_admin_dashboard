@@ -710,7 +710,7 @@ namespace noochAdminNew.Classes.Utility
                     if (synCreateUserObject != null)
                     {
                         var noochMemberObject = GetMemberDetails(synCreateUserObject.MemberId.ToString());
-                        var synapseCreateUserResult = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == synCreateUserObject.MemberId).FirstOrDefault();
+                        var synapseCreateUserResult = noochConnection.SynapseCreateUserResults.FirstOrDefault(m => m.MemberId == synCreateUserObject.MemberId && m.IsDeleted==false);
 
                         //refreshToken = GetDecryptedData(refreshToken);
                         #region Found Refresh Token
