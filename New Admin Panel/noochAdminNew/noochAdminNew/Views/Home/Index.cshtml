@@ -51,12 +51,12 @@
             }
         };</script>
     <script src="~/js/plugins/pace/pace.min.js"></script>
-    <script src="~/js/plugins/jquery.blockUI.min.js" "></script>
+    <script src="~/js/plugins/jquery.blockUI.min.js"></script>
     <script type="text/javascript">
         $("#logInform").submit(function (e)
         {
             e.preventDefault();
-            $('.middle-box').block({
+            $.blockUI({
                 message: '<span><i class="fa fa-refresh fa-spin fa-loading"></i></span><br/><span class="loadingMsg">Connecting...</span>',
                 css: {
                     border: 'none',
@@ -66,9 +66,7 @@
                     '-moz-border-radius': '15px',
                     'border-radius': '15px',
                     opacity: '.8',
-                    width: '70%',
-                    left: '15%',
-                    top: '35px',
+                    top: '45px',
                     color: '#fff'
                 }
             });

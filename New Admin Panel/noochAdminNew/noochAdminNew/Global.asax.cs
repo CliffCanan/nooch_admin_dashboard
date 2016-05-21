@@ -23,7 +23,7 @@ namespace noochAdminNew
     // visit http://go.microsoft.com/?LinkId=9394801
     public class MvcApplication : System.Web.HttpApplication
     {
-     
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -49,8 +49,7 @@ namespace noochAdminNew
                     //if (DateTime.Now.Hour == 15 && DateTime.Now.Minute == 0 && DateTime.Now.Second == 0 &&
                     //    (((Convert.ToInt16(DateTime.Now.DayOfWeek) + 6) % 7) < 6))  // Only run Mon - Sat
                     //{
-                    if (DateTime.Now.Hour == 15 && DateTime.Now.Minute == 0 && DateTime.Now.Second == 0 )
-                     
+                    if (DateTime.Now.Hour == 15 && DateTime.Now.Minute == 0 && DateTime.Now.Second == 0)
                     {
                         Logger.Info("****   DAILY AUTOMATED TASKS -> Check Transactions Status With Synapse  ****");
                         updateTransactionStatusService();
@@ -68,9 +67,9 @@ namespace noochAdminNew
 
         public void updateTransactionStatusService()
         {
-            Logger.Info("  Global.asax -> Updating Transaction's Synapse status  from daily job Scheduler");
+            Logger.Info("Global.asax -> Updating Transaction's Synapse status  from daily job Scheduler");
             SynapseV3ShowTransInput transInput = new SynapseV3ShowTransInput();
-            
+
             //get transaction details
             using (var noochConnection = new NOOCHEntities())
             {
@@ -79,13 +78,12 @@ namespace noochAdminNew
                                      on tr.TransactionId equals sa.TransactionId
                                     join syn in noochConnection.SynapseCreateUserResults
                                     on tr.SenderId equals syn.MemberId
-                                    where tr.TransactionStatus=="Success"
+                                    where tr.TransactionStatus == "Success"
                                     select new
                                     {
                                         tr,
                                         sa,
                                         syn
-
                                     }).ToList();
 
 
@@ -179,27 +177,24 @@ namespace noochAdminNew
                                 tran.SynapseStatus = jsonFromSynapse["trans"][0]["recent_status"]["status"].ToString();
 
                                 noochConnection.SaveChanges();
-
                             }
                             else
                             {
                                 tran.SynapseStatus = "";
                                 noochConnection.SaveChanges();
-                                Logger.Info(" Global.asax ->response from showTransactioFromSynapseV3 is false  for transaction - [transactionID: " + tran.TransactionId + "]");
-
+                                Logger.Info("Global.asax -> response from showTransactioFromSynapseV3 is false for transaction - [transactionID: " + tran.TransactionId + "]");
                             }
                         }
                         else
                         {
-                            Logger.Info(" Global.asax ->response from showTransactioFromSynapseV3 is null  for transaction - [transactionID: " + tran.TransactionId + "]");
+                            Logger.Info("Global.asax -> response from showTransactioFromSynapseV3 is null for transaction - [transactionID: " + tran.TransactionId + "]");
 
                         }
 
                     }
                     catch (WebException ex)
                     {
-                        Logger.Error(" Global.asax ->Error in Showing showTransactioFromSynapseV3   - - [MemberID: " + tran.SenderId + "]");
-
+                        Logger.Error("Global.asax -> updateTransactionStatusService FAILED - [MemberID: " + tran.SenderId + "], Exception: [" + ex.Message + "]");
                     }
 
                 }

@@ -403,7 +403,7 @@ namespace noochAdminNew.Controllers
         /// <returns></returns>
         [HttpGet, OutputCache(NoStore = true, Duration = 1)]
         public ActionResult ListAll()
-         {
+        {
             List<MembersListDataClass> AllMemberFormtted = GetAllMembers("Personal");
 
             return View(AllMemberFormtted);
@@ -541,7 +541,7 @@ namespace noochAdminNew.Controllers
         public ActionResult Detail(string NoochId)
         {
             CheckSession();
-            
+
             MemberDetailsClass mdc = new MemberDetailsClass();
 
             using (NOOCHEntities obj = new NOOCHEntities())
@@ -615,29 +615,29 @@ namespace noochAdminNew.Controllers
                     var memberFullName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.FirstName)) + " " +
                                          CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.LastName));
 
-                    var transtp = (from t in obj.Transactions
-                                   where (t.Member.MemberId == Member.MemberId ||
-                                          t.RecipientId == Member.MemberId ||
-                                          t.SenderId == Member.MemberId ||
-                                          t.InvitationSentTo==Member.UserName)
-                                          
-                                   //(t.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || t.TransactionType == "+C1+zhVafHdXQXCIqjU/Zg==" || t.TransactionType == "DrRr1tU1usk7nNibjtcZkA==")
-                                   //(t.TransactionStatus == "Success" || t.TransactionStatus == "Rejected" || t.TransactionStatus == "Pending" || t.TransactionStatus == "Cancelled")
-                                   select t).OrderByDescending(r => r.TransactionDate).Take(25).ToList();
-
+                    var transList = (from t in obj.Transactions
+                                     where (t.Member.MemberId == Member.MemberId ||
+                                            t.RecipientId == Member.MemberId ||
+                                            t.SenderId == Member.MemberId ||
+                                            t.InvitationSentTo == Member.UserName)
+                                     //(t.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || t.TransactionType == "+C1+zhVafHdXQXCIqjU/Zg==" || t.TransactionType == "DrRr1tU1usk7nNibjtcZkA==")
+                                     //(t.TransactionStatus == "Success" || t.TransactionStatus == "Rejected" || t.TransactionStatus == "Pending" || t.TransactionStatus == "Cancelled")
+                                     select t).OrderByDescending(r => r.TransactionDate).Take(25).ToList();
 
 
                     List<MemberDetailsTrans> mm = new List<MemberDetailsTrans>();
 
-                    foreach (Transaction t in transtp)
+                    foreach (Transaction t in transList)
                     {
                         MemberDetailsTrans payment = new MemberDetailsTrans();
 
                         payment.AmountNew = t.Amount.ToString();
                         payment.TransID = t.TransactionTrackingId.ToString();
                         payment.TransDate = Convert.ToDateTime(t.TransactionDate).ToString("MMM d, yyyy");
+
+                        payment.TransDatePaid = t.DateAccepted != null ? "PAID ON:  " + Convert.ToDateTime(t.DateAccepted).ToString("MMM d, yyyy") : null;
                         payment.TransTime = Convert.ToDateTime(t.TransactionDate).ToString("h:mm tt");
-                        payment.TransactionStatus = t.TransactionStatus == "Success"
+                        payment.TransactionStatus = t.TransactionStatus == "Success" && t.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw=="
                                                     ? "Complete (Paid)"
                                                     : t.TransactionStatus;
                         payment.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
@@ -650,51 +650,92 @@ namespace noochAdminNew.Controllers
 
                         if (payment.TransactionType == "Request")
                         {
-                            if (t.RecipientId == Member.MemberId) // This member SENT the request
+                            #region Requests
+
+                            // Note: The 'SenderId' & 'RecipientId' would both be the SENDER if it's a request to a Non-Nooch user.
+                            //       So if the RecipientID matches this user's MemberID, then we know for sure that this user sent the request,
+                            //       b/c a non-Nooch user couldn't have sent the request to this user.
+                            if (t.RecipientId == Member.MemberId)
                             {
-                                payment.SenderName = memberFullName;
-                                payment.SenderId = Member.Nooch_ID;
+                                // This member SENT the request, so he is considered the "Recipient" for requests, since the other user will pay (send $ to) him.
+                                payment.RecipientId = Member.Nooch_ID;
+                                payment.RecipientName = memberFullName;
 
-                                if (String.IsNullOrEmpty(t.InvitationSentTo) &&
-                                    t.IsPhoneInvitation != true)
+                                // Now determine if it was sent to an existing user or a Non-Nooch user
+                                if (String.IsNullOrEmpty(t.InvitationSentTo) && t.IsPhoneInvitation != true)
                                 {
-
-                                    payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
-                                                            CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
-                                    payment.RecipientId = t.Member1.Nooch_ID;
-
+                                    // Request to an EXISTING user
+                                    payment.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
+                                                         CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
+                                    payment.SenderId = t.Member1.Nooch_ID;
                                 }
-                                else if (t.IsPhoneInvitation != true) // Request to Non-Nooch user via EMAIL
+                                else if (!String.IsNullOrEmpty(t.InvitationSentTo)) // Request to Non-Nooch user via EMAIL
                                 {
-                                    payment.RecipientName = CommonHelper.GetDecryptedData(t.InvitationSentTo);
-                                    payment.RecipientId = "";
-                                    payment.IsUnUsualTrans = true;
+                                    // Now check if the request has been paid already or not
+                                    if (t.TransactionStatus == "Success")
+                                    {
+                                        // Completed request, so get the new user's Member Details from the InvitationSentTo value
+                                        // Note: even if the new user entered a diff email to pay the request, the server saves the original Invited email as the SecondaryEmail.
+                                        Member newUserWhoPaidTheRequest = CommonHelper.GetMemberDetailsByUsername(CommonHelper.GetDecryptedData(t.InvitationSentTo));
+
+                                        payment.SenderId = newUserWhoPaidTheRequest != null ? newUserWhoPaidTheRequest.Nooch_ID : "";
+                                        payment.SenderName = newUserWhoPaidTheRequest != null
+                                                             ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.FirstName)) + " " +
+                                                               CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.LastName))
+                                                             : CommonHelper.GetDecryptedData(t.InvitationSentTo);
+                                    }
+                                    else
+                                    {
+                                        // Request is either still pending, or was rejected/cancelled... so there isn't a New Member to get, so just use the InvitationSentTo email
+                                        payment.SenderId = "";
+                                        payment.SenderName = CommonHelper.GetDecryptedData(t.InvitationSentTo);
+                                    }
                                 }
-                                else // Request to Non-Nooch user via EMAIL
+                                else if (t.IsPhoneInvitation == true) // Request to Non-Nooch user via PHONE
                                 {
-                                    payment.RecipientName = CommonHelper.GetDecryptedData(t.PhoneNumberInvited);
-                                    payment.RecipientId = "";
-                                    payment.IsUnUsualTrans = true;
+                                    // Now check if the request has been paid already or not
+                                    if (t.TransactionStatus == "Success")
+                                    {
+                                        // Completed request, so get the new user's Member Details from the PhoneNumberInvited value
+                                        Member newUserWhoPaidTheRequest = CommonHelper.GetMemberDetailsByPhone(CommonHelper.GetDecryptedData(t.InvitationSentTo));
+
+                                        payment.SenderId = newUserWhoPaidTheRequest != null ? newUserWhoPaidTheRequest.Nooch_ID : "";
+                                        payment.SenderName = newUserWhoPaidTheRequest != null
+                                                             ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.FirstName)) + " " +
+                                                               CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.LastName))
+                                                             : CommonHelper.FormatPhoneNumber(CommonHelper.GetDecryptedData(t.PhoneNumberInvited));
+                                    }
+                                    else
+                                    {
+                                        // Request is either still pending, or was rejected/cancelled... so there isn't a New Member to get, so just use the PhoneNumberInvited
+                                        payment.SenderId = "";
+                                        payment.SenderName = !String.IsNullOrEmpty(t.PhoneNumberInvited)
+                                                             ? CommonHelper.FormatPhoneNumber(CommonHelper.GetDecryptedData(t.PhoneNumberInvited))
+                                                             : "No Phone # Found";
+                                    }
                                 }
                             }
-                            else // This member RECEIVED the request
+                            else
                             {
-                                //payment.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.FirstName)) + " " +
-                                //                        CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.LastName));
-                                //payment.SenderId = t.Member.Nooch_ID;
+                                // This member RECEIVED the request, so he is considered the "sender" for requests, since he must pay (send $ to) the other user.
+
                                 //payment.RecipientName = memberFullName;
                                 //payment.RecipientId = Member.Nooch_ID;
 
                                 payment.SenderName = memberFullName;
                                 payment.SenderId = Member.Nooch_ID;
                                 payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
-                                                      CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
+                                                        CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
                                 payment.RecipientId = t.Member1.Nooch_ID;
-
                             }
+
+                            #endregion Requests
+
                         }
                         else
                         {
+                            #region Transfers
+
                             if (t.SenderId == Member.MemberId) // This member SENT the transfer
                             {
                                 payment.SenderName = memberFullName;
@@ -711,6 +752,8 @@ namespace noochAdminNew.Controllers
                                 payment.RecipientName = memberFullName;
                                 payment.RecipientId = Member.Nooch_ID;
                             }
+
+                            #endregion Transfers
                         }
 
                         mm.Add(payment);
@@ -1591,7 +1634,7 @@ namespace noochAdminNew.Controllers
 
                 if ((DocumentDetails.imgPath != ""))
                 {
-                    ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + DocumentDetails.MemberId + ".png";                     
+                    ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + DocumentDetails.MemberId + ".png";
                     //ImageUrlMade = DocumentDetails.imgPath;
                 }
                 else
@@ -1722,9 +1765,9 @@ namespace noochAdminNew.Controllers
 
             submitDocToSynapse_user sdtu = new submitDocToSynapse_user();
             submitDocToSynapse_user_doc doc = new submitDocToSynapse_user_doc();
-            doc.attachment = "data:text/csv;base64," + CommonHelper.ConvertImageURLToBase64(ImageUrl).Replace("\\","");
+            doc.attachment = "data:text/csv;base64," + CommonHelper.ConvertImageURLToBase64(ImageUrl).Replace("\\", "");
             //doc.attachment = "data:text/csv;base64,SUQsTmFtZSxUb3RhbCAoaW4gJCksRmVlIChpbiAkKSxOb3RlLFRyYW5zYWN0aW9uIFR5cGUsRGF0ZSxTdGF0dXMNCjUxMTksW0RlbW9dIEJlbHogRW50ZXJwcmlzZXMsLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0MzMxNjMwNTEsU2V0dGxlZA0KNTExOCxbRGVtb10gQmVseiBFbnRlcnByaXNlcywtMS4wMCwwLjAwLCxCYW5rIEFjY291bnQsMTQzMzE2MjkxOSxTZXR0bGVkDQo1MTE3LFtEZW1vXSBCZWx6IEVudGVycHJpc2VzLC0xLjAwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDMzMTYyODI4LFNldHRsZWQNCjUxMTYsW0RlbW9dIEJlbHogRW50ZXJwcmlzZXMsLTEuMDAsMC4wMCwsQmFuayBBY2NvdW50LDE0MzMxNjI2MzQsU2V0dGxlZA0KNTExNSxbRGVtb10gQmVseiBFbnRlcnByaXNlcywtMS4wMCwwLjAwLCxCYW5rIEFjY291bnQsMTQzMzE2MjQ5OCxTZXR0bGVkDQo0ODk1LFtEZW1vXSBMRURJQyBBY2NvdW50LC03LjAwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDMyMjUwNTYyLFNldHRsZWQNCjQ4MTIsS2FyZW4gUGF1bCwtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQzMTk5NDAzNixTZXR0bGVkDQo0NzgwLFNhbmthZXQgUGF0aGFrLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDMxODQ5NDgxLFNldHRsZWQNCjQzMTUsU2Fua2FldCBQYXRoYWssLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0Mjk3NzU5MzcsU2V0dGxlZA0KNDMxNCxTYW5rYWV0IFBhdGhhaywtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQyOTc3NTQzNCxTZXR0bGVkDQo0MzEzLFNhbmthZXQgUGF0aGFrLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDI5Nzc1MzY0LFNldHRsZWQNCjQzMTIsU2Fua2FldCBQYXRoYWssLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0Mjk3NzUyNTAsU2V0dGxlZA0KNDMxMSxTYW5rYWV0IFBhdGhhaywtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQyOTc3NTAxMyxTZXR0bGVkDQo0MjM1LFtEZW1vXSBCZWx6IEVudGVycHJpc2VzLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDI5MzMxODA2LFNldHRsZWQNCjQxMzYsU2Fua2FldCBQYXRoYWssLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0Mjg4OTA4NjMsU2V0dGxlZA0KNDAzMCxTYW5rYWV0IFBhdGhhaywtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQyODIxNTM5NixTZXR0bGVkDQo0MDE0LFtEZW1vXSBCZWx6IEVudGVycHJpc2VzLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDI4MTI1MzgwLENhbmNsZWQNCjM4MzIsU2Fua2FldCBQYXRoYWssLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0MjcxMDc0NzAsU2V0dGxlZA0KMzgyNixTYW5rYWV0IFBhdGhhaywtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQyNzAzNTM5MixTZXR0bGVkDQozODI1LFNhbmthZXQgUGF0aGFrLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDI3MDMyOTM3LFNldHRsZWQNCg==";
-            
+
 
             sdtu.fingerprint = usersFingerprint;
 
@@ -1772,7 +1815,7 @@ namespace noochAdminNew.Controllers
                         using (var noochConnection = new NOOCHEntities())
                         {
 
-                            var synapseUser = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == id && m.IsDeleted==false).FirstOrDefault();
+                            var synapseUser = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == id && m.IsDeleted == false).FirstOrDefault();
                             synapseUser.permission = resFromSynapse.user.permission.ToString();
                             synapseUser.photos = ImageUrl;
                             noochConnection.SaveChanges();

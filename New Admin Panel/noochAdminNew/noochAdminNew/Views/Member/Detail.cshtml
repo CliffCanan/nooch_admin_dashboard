@@ -36,8 +36,8 @@
         ms.RecipientId = mdtt.RecipientId;
         ms.RecipientName = mdtt.RecipientName;
         ms.Memo = mdtt.Memo;
-        ms.IsUnUsualTrans = mdtt.IsUnUsualTrans;
         ms.SynapseStatus = mdtt.SynapseStatus;
+        ms.TransDatePaid = mdtt.TransDatePaid;
         Transactionsss.Add(ms);
     }
 
@@ -1267,110 +1267,124 @@
                 </div>
 
                 <div id="tab-4" class="tab-pane fade">
-                    <div class="panel-body">
-                        <div class="row">
+                    <div id="recentTransPanel" class="panel-body">
 
-                            <div class="col-lg-12">
-                                <div class="ibox float-e-margins">
-                                    <div class="ibox-title">
-                                        <h5>Recent Transactions</h5>
-                                    </div>
-                                    <div class="ibox-content">
-                                        @{
-                                            if (Transactionsss.Count > 0)
-                                            {
-                                                <table class="table table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Trans ID</th>
-                                                            <th>Type</th>
-                                                            <th>Status</th>
-                                                            <th>Date / Time</th>
-                                                            <th>Sender</th>
-                                                            <th>Amount</th>
-                                                            <th>Recipient</th>
-                                                            <th>Memo</th>
-                                                            <th>Location</th>
-                                                            <th>Synapse status</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @foreach (MemberDetailsTrans mn in Transactionsss)
-                                                        {
-                                                            <tr>
-                                                                <td>@mn.TransID</td>
-                                                                <td>@mn.TransactionType</td>
-                                                                <td>
-                                                                    @{
-                                                            if (@mn.TransactionStatus == "Rejected" || @mn.TransactionStatus == "Cancelled")
-                                                            {
-                                                                <b class="text-danger">@mn.TransactionStatus</b>
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-title">
+                                <h5>Recent Transactions</h5>
+                            </div>
+                            <div class="ibox-content">
+                                @{
+                                    if (Transactionsss.Count > 0)
+                                    {
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Trans ID</th>
+                                                    <th>Type</th>
+                                                    <th>Status</th>
+                                                    <th>Date / Time</th>
+                                                    <th>Sender</th>
+                                                    <th>Amount</th>
+                                                    <th>Recipient</th>
+                                                    <th>Memo</th>
+                                                    <th>Location</th>
+                                                    <th>Synapse status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (MemberDetailsTrans mn in Transactionsss)
+                                                {
+                                                    <tr>
+                                                        <td>@mn.TransID</td>
+                                                        <td>@mn.TransactionType</td>
+                                                        <td>
+                                                            @{
+                                                    if (@mn.TransactionStatus == "Rejected" || @mn.TransactionStatus == "Cancelled")
+                                                    {
+                                                        <b class="text-danger">@mn.TransactionStatus</b>
+                                                    }
+                                                    else if (@mn.TransactionStatus == "Success")
+                                                    {
+                                                        <b class="text-success">Success</b>
+                                                    }
+                                                    else if (@mn.TransactionStatus == "Pending")
+                                                    {
+                                                        <b class="text-primary">Pending</b>
+                                                    }
+                                                    else
+                                                    {
+                                                        @mn.TransactionStatus
+                                                    }
                                                             }
-                                                            else if (@mn.TransactionStatus == "Success")
+                                                        </td>
+                                                        <td>
+                                                            @if (mn.TransDatePaid != null)
                                                             {
-                                                                <b class="text-success">Success</b>
-                                                            }
-                                                            else if (@mn.TransactionStatus == "Pending")
-                                                            {
-                                                                <b class="text-primary">Pending</b>
+                                                                <span data-toggle="tooltip" title="@mn.TransDatePaid">
+                                                                    @mn.TransDate<br /><small>@mn.TransTime</small>
+                                                                </span>
                                                             }
                                                             else
                                                             {
-                                                                @mn.TransactionStatus
+                                                                @mn.TransDate<br /><small>@mn.TransTime</small>
                                                             }
-                                                                    }
-                                                                </td>
-                                                                <td>@mn.TransDate<br /><small>@mn.TransTime</small></td>
-                                                                <td>
+                                                        </td>
+                                                        <td>
+                                                            @if (!String.IsNullOrEmpty(mn.SenderId) && mn.SenderId.Length > 2)
+                                                            {
+                                                                <a href="@Url.Action("Detail", "Member", new { NoochId = @mn.SenderId })">@mn.SenderName</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                @mn.SenderName
+                                                            }
 
-                                                                    <a href="@Url.Action("Detail", "Member", new { NoochId = @mn.SenderId })">@mn.SenderName</a>
-
-                                                                </td>
-                                                                <td>
-                                                                    @if (mn.AmountNew != "0")
-                                                                    {
-                                                                        double d = (Convert.ToDouble(mn.AmountNew));
-                                                                        string transAmountFormatted = string.Format("{0:0.00}", d);
-                                                                        <h4>$ @transAmountFormatted</h4>
-                                                                    }
-                                                                </td>
-                                                                <td>
-                                                                    @if (mn.IsUnUsualTrans == false)
-                                                                    {
-                                                                        <a href="@Url.Action("Detail", "Member", new { NoochId = @mn.RecipientId })">@mn.RecipientName</a>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <a href="#">@mn.RecipientName</a>
-                                                                    }
-
-                                                                </td>
-                                                                <td>@mn.Memo</td>
-                                                                @if (!String.IsNullOrEmpty(@mn.GeoLocation))
-                                                                {
-                                                                    <td><button class="btn btn-link locLink" data-lat="@mn.Latitude" data-long="@mn.Longitude" data-loctext="@mn.GeoLocation.Trim().TrimEnd(',').Trim()">@mn.GeoLocation.Trim().TrimEnd(',').Trim()</button></td>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <td><span class="text-muted"> - </span></td>
-                                                                }
-                                                                <td>@mn.SynapseStatus</td>
-                                                            </tr>
+                                                        </td>
+                                                        <td>
+                                                            @if (mn.AmountNew != "0")
+                                                            {
+                                                                double d = (Convert.ToDouble(mn.AmountNew));
+                                                                string transAmountFormatted = string.Format("{0:0.00}", d);
+                                                                <h4>$ @transAmountFormatted</h4>
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            @if (!String.IsNullOrEmpty(mn.RecipientId) && mn.RecipientId.Length > 2)
+                                                            {
+                                                                <a href="@Url.Action("Detail", "Member", new { NoochId = @mn.RecipientId })">@mn.RecipientName</a>
+                                                            }
+                                                            else
+                                                            {
+                                                                @mn.RecipientName
+                                                            }
+                                                        </td>
+                                                        <td>@mn.Memo</td>
+                                                        @if (!String.IsNullOrEmpty(@mn.GeoLocation))
+                                                        {
+                                                            <td><button class="btn btn-link locLink" data-lat="@mn.Latitude" data-long="@mn.Longitude" data-loctext="@mn.GeoLocation.Trim().TrimEnd(',').Trim()">@mn.GeoLocation.Trim().TrimEnd(',').Trim()</button></td>
                                                         }
-                                                    </tbody>
-                                                </table>
-                                            }
-                                            else
-                                            {
-                                                <p class="text-danger text-center"><em>@mdc.FirstName @mdc.LastName</em> has not made any payments yet.</p>
-                                            }
-                                        }
+                                                        else
+                                                        {
+                                                            <td><span class="text-muted"> - </span></td>
+                                                        }
+                                                        <td>@mn.SynapseStatus</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-danger text-center"><em>@mdc.FirstName @mdc.LastName</em> has not made any payments yet.</p>
+                                    }
+                                }
 
-                                    </div>
-                                </div>
                             </div>
-
                         </div>
+
+
+
                     </div>
                 </div>
 
@@ -1618,4 +1632,4 @@
     };
 </script>
 <script src="~/Scripts/App/MemberDetail.js"></script>
-<script src="~/js/plugins/jquery.blockUI.min.js" "></script>
+<script src="~/js/plugins/jquery.blockUI.min.js"></script>

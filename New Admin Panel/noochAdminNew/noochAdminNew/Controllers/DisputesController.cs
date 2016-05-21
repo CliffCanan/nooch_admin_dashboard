@@ -19,7 +19,6 @@ namespace noochAdminNew.Controllers
 
         [HttpPost]
         [ActionName("ApplyDisputeOperation")]
-
         public string ApplyDisputeOperation(string operation, string DisputeId, string AdminNotes)
         {
 
@@ -31,7 +30,7 @@ namespace noochAdminNew.Controllers
             MemberDisputeStatusChangeClass ll = new MemberDisputeStatusChangeClass();
             var fromAddress = Utility.GetValueFromConfig("adminMail");
             var deviceId = string.Empty;
-            bool isAllowPushNotifications = false;
+
             string resultMessage = string.Empty;
 
             Guid GUID_MemberId = Utility.ConvertToGuid((Session["UserId"].ToString()));

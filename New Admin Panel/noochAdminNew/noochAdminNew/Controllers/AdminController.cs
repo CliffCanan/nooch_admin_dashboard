@@ -1795,6 +1795,7 @@ namespace noochAdminNew.Controllers
                     catch (Exception ex)
                     {
                         b = false;
+                        Logger.Error("Admin Cntrlr -> AddNewDataInSDN FAILED - Exception: [" + ex.Message + "]");
                     }
                 }
 

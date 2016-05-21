@@ -69,6 +69,7 @@ namespace noochAdminNew.Classes.ModelClasses
     {
         public string TransID { get; set; }
         public string TransDate { get; set; }
+        public string TransDatePaid { get; set; }
         public string TransTime { get; set; }
         public string Amount { get; set; }
         public string AmountNew { get; set; }
@@ -86,7 +87,6 @@ namespace noochAdminNew.Classes.ModelClasses
         public string UDID { get; set; }
         public string DeviceToken { get; set; }
         public string AccessToken { get; set; }
-        public bool IsUnUsualTrans { get; set; }
         public string SynapseStatus { get; set; }
     }
 

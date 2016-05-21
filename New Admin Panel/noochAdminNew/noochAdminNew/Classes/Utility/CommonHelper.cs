@@ -17,6 +17,7 @@ namespace noochAdminNew.Classes.Utility
     public static class CommonHelper
     {
         private const string Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        
         public static string GetEncryptedData(string sourceData)
         {
             try
@@ -155,7 +156,7 @@ namespace noochAdminNew.Classes.Utility
                                   .Select(s => s[random.Next(s.Length)])
                                   .ToArray());
 
-                    var transactionEntity = (from c in noochConnection.Transactions where c.TransactionTrackingId==randomId select c).FirstOrDefault();
+                    var transactionEntity = (from c in noochConnection.Transactions where c.TransactionTrackingId == randomId select c).FirstOrDefault();
                     if (transactionEntity == null)
                     {
                         return randomId;
@@ -164,6 +165,7 @@ namespace noochAdminNew.Classes.Utility
                     j += i + 1;
                 }
             }
+
             return null;
         }
 
@@ -173,12 +175,14 @@ namespace noochAdminNew.Classes.Utility
             string RecentIpOfUser = "";
             using (var noochConnection = new NOOCHEntities())
             {
-                
-                var memberIP =  (from c in noochConnection.MembersIPAddresses where c.MemberId==MemberIdPassed select c).OrderByDescending(m => m.ModifiedOn)
-                                                  .FirstOrDefault();
+
+                var memberIP = (from c in noochConnection.MembersIPAddresses
+                                where c.MemberId == MemberIdPassed
+                                select c).OrderByDescending(m => m.ModifiedOn).FirstOrDefault();
 
                 RecentIpOfUser = memberIP != null ? memberIP.Ip.ToString() : "54.201.43.89";
             }
+
             return RecentIpOfUser;
         }
 
@@ -361,11 +365,11 @@ namespace noochAdminNew.Classes.Utility
         }
 
         public static SynapseV3AddTrans_ReusableClass AddTransSynapseV3Reusable(string sender_oauth, string sender_fingerPrint,
-       string sender_bank_node_id, string amount, string fee, string receiver_oauth, string receiver_fingerprint,
-       string receiver_bank_node_id, string suppID_or_transID, string senderUserName, string receiverUserName, string iPForTransaction, string senderLastName, string recepientLastName)
+        string sender_bank_node_id, string amount, string fee, string receiver_oauth, string receiver_fingerprint,
+        string receiver_bank_node_id, string suppID_or_transID, string senderUserName, string receiverUserName, string iPForTransaction, string senderLastName, string recepientLastName)
         {
-            Logger.Info("Common Helper-> SynapseV3AddTrans_ReusableClass Initiated - [Sender Username: " + senderUserName + "], " +
-                                   "[Recipient Username: " + receiverUserName + "], [Amount: " + amount + "]");
+            Logger.Info("Admin Common Helper-> AddTransSynapseV3Reusable Initiated - [Sender Username: " + senderUserName + "], " +
+                        "[Recipient Username: " + receiverUserName + "], [Amount: " + amount + "]");
 
             SynapseV3AddTrans_ReusableClass res = new SynapseV3AddTrans_ReusableClass();
             res.success = false;
@@ -385,7 +389,7 @@ namespace noochAdminNew.Classes.Utility
 
                 if (senderPermissions == null || !senderPermissions.success)
                 {
-                    Logger.Error("Landlords API -> Common Helper -> SynapseV3AddTrans_ReusableClass - SENDER's Synapse Permissions were NULL or not successful :-(");
+                    Logger.Error("Admin Common Helper -> AddTransSynapseV3Reusable - SENDER's Synapse Permissions were NULL or not successful :-(");
 
                     res.ErrorMessage = "Problem with senders synapse user permission.";
                     return res;
@@ -407,21 +411,7 @@ namespace noochAdminNew.Classes.Utility
                                 {
                                     SenderSynapsePermissionOK = true;
                                 }
-                                // iterate through all users
-                                //else
-                                //{
-                                //    res.success = false;
-                                //    res.ErrorMessage = "Sender doesn't have permission to send money from account.";
-                                //    return res;
-                                //}
                             }
-                            // iterate through all users
-                            //else
-                            //{
-                            //    res.success = false;
-                            //    res.ErrorMessage = "Sender doesn't have permission to send money from account.";
-                            //    return res;
-                            //}
                         }
                     }
                 }
@@ -434,7 +424,7 @@ namespace noochAdminNew.Classes.Utility
 
                 if (recepientPermissions == null || !recepientPermissions.success)
                 {
-                    Logger.Error("Landlords API -> Common Helper -> SynapseV3AddTrans_ReusableClass - RECIPIENT's Synapse Permissions were NULL or not successful :-(");
+                    Logger.Error("Admin Common Helper -> AddTransSynapseV3Reusable - RECIPIENT's Synapse Permissions were NULL or not successful :-(");
 
                     res.ErrorMessage = "Problem with recepient bank account permission.";
                     return res;
@@ -456,21 +446,7 @@ namespace noochAdminNew.Classes.Utility
                                 {
                                     RecipientSynapsePermissionOK = true;
                                 }
-                                // iterate through all users
-                                //else
-                                //{
-                                //    res.success = false;
-                                //    res.ErrorMessage = "Sender doesn't have permission to send money from account.";
-                                //    return res;
-                                //}
                             }
-                            // iterate through all users
-                            //else
-                            //{
-                            //    res.success = false;
-                            //    res.ErrorMessage = "Sender doesn't have permission to send money from account.";
-                            //    return res;
-                            //}
                         }
                     }
                 }
@@ -563,7 +539,6 @@ namespace noochAdminNew.Classes.Utility
 
                     string UrlToHitV3 = Utility.GetValueFromConfig("Synapse_Api_Order_Add_V3");
 
-
                     try
                     {
                         // Calling Add Trans API
@@ -607,7 +582,7 @@ namespace noochAdminNew.Classes.Utility
                         var resp = new StreamReader(ex.Response.GetResponseStream()).ReadToEnd();
                         JObject jsonFromSynapse = JObject.Parse(resp);
 
-                        Logger.Error("Landlords API -> Common Helper -> AddTransSynapseV3Reusable FAILED. [Exception: " + jsonFromSynapse.ToString() + "]");
+                        Logger.Error("Admin Common Helper -> AddTransSynapseV3Reusable FAILED. [Exception: " + jsonFromSynapse.ToString() + "]");
 
                         JToken token = jsonFromSynapse["error"]["en"];
 
@@ -626,13 +601,13 @@ namespace noochAdminNew.Classes.Utility
                 }
                 catch (Exception ex)
                 {
-                    Logger.Error("Landlords API -> Common Helper -> AddTransSynapseV3Reusable FAILED - Inner Exception: [Exception: " + ex + "]");
+                    Logger.Error("Admin Common Helper -> AddTransSynapseV3Reusable FAILED - Inner Exception: [Exception: " + ex + "]");
                     res.ErrorMessage = "Server Error - TDA Inner Exception";
                 }
             }
             catch (Exception ex)
             {
-                Logger.Error("Landlords API -> Common Helper -> AddTransSynapseV3Reusable FAILED - Outer Exception: [Exception: " + ex + "]");
+                Logger.Error("Admin Common Helper -> AddTransSynapseV3Reusable FAILED - Outer Exception: [Exception: " + ex + "]");
                 res.ErrorMessage = "TDA Outer Exception";
             }
 
@@ -691,7 +666,7 @@ namespace noochAdminNew.Classes.Utility
 
         public static synapseV3checkUsersOauthKey refreshSynapseV3OautKey(string oauthKey)
         {
-            Logger.Info("Common Helper -> synapseV3checkUsersOauthKey Initiated - User's Original OAuth Key (enc): [" + oauthKey + "]");
+            Logger.Info("Admin Common Helper -> refreshSynapseV3OautKey Initiated - User's Original OAuth Key (enc): [" + oauthKey + "]");
 
             synapseV3checkUsersOauthKey res = new synapseV3checkUsersOauthKey();
             res.success = false;
@@ -710,11 +685,11 @@ namespace noochAdminNew.Classes.Utility
                     if (synCreateUserObject != null)
                     {
                         var noochMemberObject = GetMemberDetails(synCreateUserObject.MemberId.ToString());
-                        var synapseCreateUserResult = noochConnection.SynapseCreateUserResults.FirstOrDefault(m => m.MemberId == synCreateUserObject.MemberId && m.IsDeleted==false);
+                        var synapseCreateUserResult = noochConnection.SynapseCreateUserResults.FirstOrDefault(m => m.MemberId == synCreateUserObject.MemberId && m.IsDeleted == false);
 
                         //refreshToken = GetDecryptedData(refreshToken);
                         #region Found Refresh Token
-                        Logger.Info("Common Helper -> synapseV3checkUsersOauthKey - Found Member By Original OAuth Key (enc): [" + oauthKey + "]");
+                        Logger.Info("Admin Common Helper -> refreshSynapseV3OautKey - Found Member By Original OAuth Key (enc): [" + oauthKey + "]");
 
                         SynapseV3RefreshOauthKeyAndSign_Input input = new SynapseV3RefreshOauthKeyAndSign_Input();
 
@@ -751,10 +726,8 @@ namespace noochAdminNew.Classes.Utility
 
                         if (Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")))
                         {
-                            Logger.Info(
-                                "Common Helper -> synapseV3checkUsersOauthKey - TEST USER DETECTED - useSynapseSandbox is: [" +
-                                Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) + "] - About to ping Synapse Sandbox /user/refresh...");
-                            //UrlToHit = "";
+                            Logger.Info("Admin Common Helper -> refreshSynapseV3OautKey - TEST USER DETECTED - useSynapseSandbox is: [" +
+                                        Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) + "] - About to ping Synapse Sandbox /user/refresh...");
                         }
 
                         var http = (HttpWebRequest)WebRequest.Create(new Uri(UrlToHit));
@@ -777,7 +750,7 @@ namespace noochAdminNew.Classes.Utility
                             var sr = new StreamReader(stream);
                             var content = sr.ReadToEnd();
 
-                            //Logger.LogDebugMessage("Common Helper -> refreshSynapseV2OautKey Checkpoint #1 - About to parse Synapse Response");
+                            //Logger.LogDebugMessage("Common Helper -> refreshSynapseV3OautKey Checkpoint #1 - About to parse Synapse Response");
 
                             synapseCreateUserV3Result_int refreshResultFromSyn = new synapseCreateUserV3Result_int();
 
@@ -788,30 +761,23 @@ namespace noochAdminNew.Classes.Utility
                             Logger.Info("Common Helper -> synapseV3checkUsersOauthKey - Just Parsed Synapse Response: [" +
                                         refreshResponse + "]");
 
-                            if (refreshResultFromSyn.success.ToString() == "true" ||
-                                (refreshResponse["success"] != null)) //&& Convert.ToBoolean(refreshResponse["success"])
+                            if (refreshResultFromSyn.success.ToString() == "true" || refreshResponse["success"] != null)
                             {
                                 // checking if token is same as saved in db
                                 if (synCreateUserObject.access_token ==
                                     GetEncryptedData(refreshResultFromSyn.oauth.oauth_key))
                                 {
                                     // same as earlier..no change
-                                    synCreateUserObject.access_token =
-                                    GetEncryptedData(refreshResultFromSyn.oauth.oauth_key);
-                                    synCreateUserObject.refresh_token =
-                                        GetEncryptedData(refreshResultFromSyn.oauth.refresh_token);
+                                    synCreateUserObject.access_token = GetEncryptedData(refreshResultFromSyn.oauth.oauth_key);
+                                    synCreateUserObject.refresh_token = GetEncryptedData(refreshResultFromSyn.oauth.refresh_token);
                                     synCreateUserObject.expires_in = refreshResultFromSyn.oauth.expires_in;
                                     synCreateUserObject.expires_at = refreshResultFromSyn.oauth.expires_at;
-
-
                                 }
                                 else
                                 {
                                     // changed.. time to update
-                                    synCreateUserObject.access_token =
-                                      GetEncryptedData(refreshResultFromSyn.oauth.oauth_key);
-                                    synCreateUserObject.refresh_token =
-                                        GetEncryptedData(refreshResultFromSyn.oauth.refresh_token);
+                                    synCreateUserObject.access_token = GetEncryptedData(refreshResultFromSyn.oauth.oauth_key);
+                                    synCreateUserObject.refresh_token = GetEncryptedData(refreshResultFromSyn.oauth.refresh_token);
                                     synCreateUserObject.expires_in = refreshResultFromSyn.oauth.expires_in;
                                     synCreateUserObject.expires_at = refreshResultFromSyn.oauth.expires_at;
                                 }
@@ -821,7 +787,7 @@ namespace noochAdminNew.Classes.Utility
                                 if (a > 0)
                                 {
                                     Logger.Info(
-                                        "Common Helper -> refreshSynapseV3OautKey - SUCCESS From Synapse and Successfully added to Nooch DB - " +
+                                        "Admin Common Helper -> refreshSynapseV3OautKey - SUCCESS From Synapse and Successfully added to Nooch DB - " +
                                         "Original Oauth Key (encr): [" + oauthKey + "], " +
                                         "Value for new, refreshed OAuth Key (encr): [" +
                                         synCreateUserObject.access_token + "]");
@@ -835,9 +801,7 @@ namespace noochAdminNew.Classes.Utility
                                 else
                                 {
                                     Logger.Error(
-
-                                        "Common Helper -> refreshSynapseV3OautKey FAILED - Error saving new key in Nooch DB - " +
-
+                                        "Admin Common Helper -> refreshSynapseV3OautKey FAILED - Error saving new key in Nooch DB - " +
                                         "Original Oauth Key: [" + oauthKey + "], " +
                                         "Value for new, refreshed OAuth Key: [" + synCreateUserObject.access_token + "]");
 
@@ -847,16 +811,14 @@ namespace noochAdminNew.Classes.Utility
                             else
                             {
                                 Logger.Error(
-
-                                    "Common Helper -> refreshSynapseV3OautKey FAILED - Error from Synapse service, no 'success' key found - " +
-
+                                    "Admin Common Helper -> refreshSynapseV3OautKey FAILED - Error from Synapse service, no 'success' key found - " +
                                     "Original Oauth Key: [" + oauthKey + "]");
                                 res.msg = "Service error.";
                             }
                         }
                         catch (WebException we)
                         {
-                            #region Synapse V3 Sig in/ refresh  Exception
+                            #region Synapse V3 Signin/refresh Exception
 
                             var httpStatusCode = ((HttpWebResponse)we.Response).StatusCode;
                             string http_code = httpStatusCode.ToString();
@@ -864,23 +826,22 @@ namespace noochAdminNew.Classes.Utility
                             var response = new StreamReader(we.Response.GetResponseStream()).ReadToEnd();
                             JObject errorJsonFromSynapse = JObject.Parse(response);
 
-                            string reason = errorJsonFromSynapse["reason"].ToString();
+                            string errorMsg = errorJsonFromSynapse["error"]["en"].ToString();
 
-                            Logger.Error("Common Helper -> synapseV3checkUsersOauthKey WEBEXCEPTION - HTTP Code: [" + http_code +
-                                         "], Error Msg: [" + reason + "], Original Oauth Key (enc): [" + oauthKey + "]");
-
-                            if (!String.IsNullOrEmpty(reason))
+                            if (!String.IsNullOrEmpty(errorMsg))
                             {
-                                res.msg = "Webexception on refresh attempt: [" + reason + "]";
+                                Logger.Error("Admin Common Helper -> refreshSynapseV3OautKey WEBEXCEPTION - HTTP Code: [" + http_code +
+                                    "], Error Msg: [" + errorMsg + "], Original Oauth Key (enc): [" + oauthKey + "]");
+                                res.msg = "Webexception on refresh attempt: [" + errorMsg + "]";
                             }
                             else
                             {
                                 Logger.Error(
-                                    "Common Helper -> synapseV3checkUsersOauthKey FAILED: Synapse Error, but *reason* was null for [Original Oauth Key (enc): " +
+                                    "Admin Common Helper -> refreshSynapseV3OautKey FAILED: Synapse Error, but *reason* was null for [Original Oauth Key (enc): " +
                                     oauthKey + "], [Exception: " + we.InnerException + "]");
                             }
 
-                            #endregion Synapse V3 Sig in/ refresh  Exception
+                            #endregion Synapse V3 Signin/ refresh Exception
                         }
 
                         #endregion
@@ -888,7 +849,7 @@ namespace noochAdminNew.Classes.Utility
                     else
                     {
                         // no record found for given oAuth token in synapse createuser results table
-                        Logger.Error("Common Helper -> refreshSynapseV3OautKey FAILED -  no record found for given oAuth key found - " +
+                        Logger.Error("Admin Common Helper -> refreshSynapseV3OautKey FAILED -  no record found for given oAuth key found - " +
                                      "Original Oauth Key: (enc) [" + oauthKey + "]");
                         res.msg = "Service error.";
                     }
@@ -897,8 +858,8 @@ namespace noochAdminNew.Classes.Utility
             }
             catch (Exception ex)
             {
-                Logger.Error("Common Helper -> synapseV3checkUsersOauthKey FAILED: Outer Catch Error - Original OAuth Key (enc): [" + oauthKey +
-                                       "], [Exception: " + ex + "]");
+                Logger.Error("Admin Common Helper -> refreshSynapseV3OautKey FAILED: Outer Catch Error - Original OAuth Key (enc): [" + oauthKey +
+                              "], [Exception: " + ex + "]");
 
                 res.msg = "Nooch Server Error: Outer Exception.";
             }
@@ -926,9 +887,59 @@ namespace noochAdminNew.Classes.Utility
             }
             catch (Exception ex)
             {
-                Logger.Error("Common Helper -> GetMemberDetails FAILED - Member ID: [" + memberId + "], [Exception: " + ex + "]");
+                Logger.Error("Admin Common Helper -> GetMemberDetails FAILED - Member ID: [" + memberId + "], [Exception: " + ex.Message + "]");
             }
+
             return new Member();
+        }
+
+        public static Member GetMemberDetailsByUsername(string email) // Should NOT already be encrypted
+        {
+            try
+            {
+                email = GetEncryptedData(email);
+                var emailLowerCase = GetEncryptedData(email.ToLower());
+
+                using (NOOCHEntities noochConnection = new NOOCHEntities())
+                {
+                    var noochMember = noochConnection.Members.FirstOrDefault(m => (m.UserName == email || m.UserNameLowerCase == email || m.SecondaryEmail == email) && m.IsDeleted == false);
+
+                    if (noochMember != null)
+                    {
+                        return noochMember;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Admin Common Helper -> GetMemberDetailsByUsername FAILED - Email: [" + email + "], [Exception: " + ex.Message + "]");
+            }
+
+            return null;
+        }
+
+        public static Member GetMemberDetailsByPhone(string phone)
+        {
+            try
+            {
+                phone = RemovePhoneNumberFormatting(phone); // Should already be formatted correctly, but just making sure.
+
+                using (NOOCHEntities noochConnection = new NOOCHEntities())
+                {
+                    var noochMember = noochConnection.Members.FirstOrDefault(m => (m.ContactNumber == phone) && m.IsDeleted == false);
+
+                    if (noochMember != null)
+                    {
+                        return noochMember;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Admin Common Helper -> GetMemberDetailsByPhone FAILED - Phone: [" + phone + "], [Exception: " + ex.Message + "]");
+            }
+
+            return null;
         }
     }
 }

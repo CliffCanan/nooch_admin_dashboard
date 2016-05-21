@@ -2298,7 +2298,6 @@ label.error {
   -webkit-box-shadow: 0 0 3px #999;
   box-shadow: 0 0 3px #999;
   opacity: .9;
-  -ms-filter: alpha(opacity=90);
   filter: alpha(opacity=90);
 }
 #toast-container > :hover {
@@ -2306,7 +2305,6 @@ label.error {
   -webkit-box-shadow: 0 0 4px -1px #999;
   box-shadow: 0 0 4px -1px #999;
   opacity: 1;
-  -ms-filter: alpha(opacity=100);
   filter: alpha(opacity=100);
   cursor: pointer;
 }
@@ -4280,26 +4278,7 @@ dd.project-people {
   font-size: 10px;
   text-transform: uppercase;
 }
-/* Chat view */
-.message-input {
-  height: 90px !important;
-}
-.chat-avatar {
-  white: 36px;
-  height: 36px;
-  float: left;
-  margin-right: 10px;
-}
-.chat-user-name {
-  padding: 10px;
-}
-.chat-user {
-  padding: 8px 10px;
-  border-bottom: 1px solid #e7eaec;
-}
-.chat-user a {
-  color: inherit;
-}
+
 /*------------------------*/
 .chat-view .ibox-content {
   /*height: 500px;*/
@@ -5137,7 +5116,7 @@ table.table.dataTable tbody tr>td.actions .btn {
     top: 0;
     right: 100%;
     width: 100%;
-    height: 6px;
+    height: 3px;
 }
 
 .toggle-button {
