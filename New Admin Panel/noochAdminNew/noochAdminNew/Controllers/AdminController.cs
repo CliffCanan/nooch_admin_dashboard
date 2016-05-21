@@ -2934,7 +2934,7 @@ namespace noochAdminNew.Controllers
                                  InvitationSentTo = t.InvitationSentTo
 
 
-                             }).OrderByDescending(t=>t.TransactionDate).Take(200).ToList();
+                             }).OrderByDescending(t=>t.TransactionDate).Take(100).ToList();
 
 
                 Member sender = null;

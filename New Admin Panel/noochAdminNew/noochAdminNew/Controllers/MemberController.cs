@@ -444,21 +444,21 @@ namespace noochAdminNew.Controllers
                 if (type == "Personal")
                 {
                     All_Members_In_Records = (from t in obj.Members
-                                              where t.Type == "Personal" ||
+                                              where ((t.Type == "Personal" ||
                                                     t.Type == "Business" ||
-                                                    t.Type == "Personal - Browser"
+                                                    t.Type == "Personal - Browser") && t.IsDeleted==false)
                                               select t).ToList();
                 }
                 else if (type == "Landlord")
                 {
                     All_Members_In_Records = (from t in obj.Members
-                                              where t.Type == "Landlord"
+                                              where t.Type == "Landlord" && t.IsDeleted == false
                                               select t).ToList();
                 }
                 else if (type == "Tenant")
                 {
                     All_Members_In_Records = (from t in obj.Members
-                                              where t.Type == "Tenant"
+                                              where t.Type == "Tenant" && t.IsDeleted == false
                                               select t).ToList();
                 }
 
