@@ -452,13 +452,13 @@ namespace noochAdminNew.Controllers
                 else if (type == "Landlord")
                 {
                     All_Members_In_Records = (from t in obj.Members
-                                              where t.Type == "Landlord" && t.IsDeleted == false
+                                              where t.Type == "Landlord"
                                               select t).ToList();
                 }
                 else if (type == "Tenant")
                 {
                     All_Members_In_Records = (from t in obj.Members
-                                              where t.Type == "Tenant" && t.IsDeleted == false
+                                              where t.Type == "Tenant"
                                               select t).ToList();
                 }
 
@@ -730,7 +730,6 @@ namespace noochAdminNew.Controllers
                             }
 
                             #endregion Requests
-
                         }
                         else
                         {

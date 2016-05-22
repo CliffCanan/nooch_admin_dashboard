@@ -14,10 +14,8 @@ month[11] = "December";
 
 $(document).ready(function ()
 {
-
     $("#TransactionMaster").trigger("click");
     $('#DashboardMenu').addClass('active');
-
  
 
     // Pie Chart
@@ -83,7 +81,6 @@ $(document).ready(function ()
             d = new Date();
         };
 
-
         var amPm = "AM";
         if (d.getHours() > 12) {
             amPm = "PM";
@@ -97,10 +94,9 @@ $(document).ready(function ()
                  Math.abs(s(d.getHours(), 2) - 12) + ':' +
                  s(d.getMinutes(), 2) + amPm;
         }
-        else {
-            return month[d.getMonth()] + ' ' +
-           s(d.getDate(), 2) + ', ' +
-           d.getFullYear() + '';
+        else
+        {
+            return month[d.getMonth()] + ' ' + s(d.getDate(), 2) + ', ' + d.getFullYear() + '';
         }
     }
 
@@ -205,7 +201,6 @@ $(document).ready(function ()
                         "columnDefs": [
                                { "orderable": false, "targets": [0] }
                         ]
-
                     });
                 }
                 else {

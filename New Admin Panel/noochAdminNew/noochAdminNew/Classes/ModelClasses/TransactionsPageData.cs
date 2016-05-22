@@ -20,7 +20,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string SenderName { get; set; }
         public string SenderNoochId { get; set; }
         public string RecepientNoochId { get; set; }
-        public string RecipienName { get; set; }
+        public string RecipientName { get; set; }
         public decimal Amount { get; set; }
         public DateTime? TransactionDate { get; set; }
         public string TransactionDate1 { get; set; }
@@ -29,7 +29,6 @@ namespace noochAdminNew.Classes.ModelClasses
         public string TransactionType { get; set; }
         public double? TransLati { get; set; }
         public double? TransLongi { get; set; }
-        public double? TransAlti { get; set; }
 
         public string TransactionTrackingId { get; set; }
         public string AdminNotes { get; set; }
@@ -40,8 +39,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string InvitationSentTo { get; set; }
         public string FirstName { get; set; }
         public string Memo { get; set; }
-        public bool?  isPhoneInvitation { get; set; }
+        public bool? isPhoneInvitation { get; set; }
         public string PhoneNumberInvited { get; set; }
-        
     }
 }
