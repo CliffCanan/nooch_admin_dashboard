@@ -1587,21 +1587,23 @@ namespace noochAdminNew.Controllers
             using (var noochConnection = new NOOCHEntities())
             {
                 var member = noochConnection.Members.Where(m => m.Nooch_ID == NoochId).FirstOrDefault();
+
                 DocumentDetails.MemberId = member.MemberId.ToString();
+
                 var MemberId = Utility.ConvertToGuid(DocumentDetails.MemberId.ToString());
                 var SynapseCreateUserResult = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == MemberId).FirstOrDefault();
-                synapseV3GenericResponse mdaResult = null;
 
                 if (SynapseCreateUserResult != null)
                 {
                     DocumentDetails.AccessToken = SynapseCreateUserResult.access_token;
                     string pic = MemberId.ToString() + ".png";
                     string path = System.IO.Path.Combine(Server.MapPath("~/UploadedPhotos/SynapseDocuments"), pic);
+
                     // file is uploaded
                     file.SaveAs(path);
                     DocumentDetails.imgPath = path;
-                    mdaResult = new synapseV3GenericResponse();
-                    mdaResult = submitDocumentToSynapseV3(DocumentDetails);
+
+                    synapseV3GenericResponse mdaResult = submitDocumentToSynapseV3(DocumentDetails);
                     if (mdaResult.isSuccess == true)
                     {
                         Session["status"] = "Success";
@@ -1614,7 +1616,6 @@ namespace noochAdminNew.Controllers
                 }
                 else
                 {
-                    mdaResult = new synapseV3GenericResponse();
                     Session["status"] = "Failed";
                     return RedirectToAction("Detail", "Member", new { NoochId = NoochId });
                 }
@@ -1624,15 +1625,16 @@ namespace noochAdminNew.Controllers
         public synapseV3GenericResponse submitDocumentToSynapseV3(SaveVerificationIdDocument DocumentDetails)
         {
             synapseV3GenericResponse res = new synapseV3GenericResponse();
+            res.isSuccess = false;
 
             try
             {
-                Logger.Info("MemberController -> submitDocumentToSynapseV3 [MemberId: " + DocumentDetails.MemberId + "]");
+                Logger.Info("Member Cntrlr  -> submitDocumentToSynapseV3 - [MemberId: " + DocumentDetails.MemberId + "]");
 
                 // Make URL from byte array...b/c submitDocumentToSynapseV3() expects URL of image.
                 string ImageUrlMade = "";
 
-                if ((DocumentDetails.imgPath != ""))
+                if (DocumentDetails.imgPath != "")
                 {
                     ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + DocumentDetails.MemberId + ".png";
                     //ImageUrlMade = DocumentDetails.imgPath;
@@ -1642,17 +1644,16 @@ namespace noochAdminNew.Controllers
                     ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + "gv_no_photo.png";
                 }
 
-                var mdaResult = submitDocumentToSynapseV3(DocumentDetails.MemberId, ImageUrlMade);
+                var submitDocResult = submitDocumentToSynapseV3(DocumentDetails.MemberId, ImageUrlMade);
 
-                res.isSuccess = mdaResult.isSuccess;
-                res.msg = mdaResult.msg;
+                res.isSuccess = submitDocResult.isSuccess;
+                res.msg = submitDocResult.msg;
 
                 return res;
             }
             catch (Exception ex)
             {
-                Logger.Error("Service Layer - submitDocumentToSynapseV3 FAILED - [userName: " + DocumentDetails.MemberId + "]. Exception: [" + ex + "]");
-
+                Logger.Error("Member Cntrlr  - submitDocumentToSynapseV3 FAILED - [userName: " + DocumentDetails.MemberId + "]. Exception: [" + ex + "]");
                 throw new Exception("Server Error.");
             }
         }
@@ -1660,7 +1661,7 @@ namespace noochAdminNew.Controllers
 
         public synapseV3GenericResponse submitDocumentToSynapseV3(string MemberId, string ImageUrl)
         {
-            Logger.Info("MDA -> submitDocumentToSynapseV3 Initialized - [MemberId: " + MemberId + "]");
+            Logger.Info("Member Cntrlr -> submitDocumentToSynapseV3 Initialized - [MemberId: " + MemberId + "]");
 
             var id = Utility.ConvertToGuid(MemberId);
 
@@ -1676,21 +1677,15 @@ namespace noochAdminNew.Controllers
 
                 if (usersSynapseDetails == null)
                 {
-                    Logger.Info("MDA -> submitDocumentToSynapseV3 ABORTED: Member's Synapse User Details not found. [MemberId: " + MemberId + "]");
-
+                    Logger.Info("Member Cntrlr-> submitDocumentToSynapseV3 ABORTED: Member's Synapse User Details not found. [MemberId: " + MemberId + "]");
                     res.msg = "Could not find this member's account info";
-
                     return res;
                 }
                 else
                 {
                     #region Check If OAuth Key Still Valid
-                    // if testing
-                    synapseV3checkUsersOauthKey checkTokenResult = CommonHelper.refreshSynapseV3OautKey(usersSynapseDetails.access_token);
 
-                    // if live
-                    //synapseV3checkUsersOauthKey checkTokenResult = refreshSynapseV3OautKey(createSynapseUserObj.access_token,false);
-                    //                                                                   
+                    synapseV3checkUsersOauthKey checkTokenResult = CommonHelper.refreshSynapseV3OautKey(usersSynapseDetails.access_token);
 
                     if (checkTokenResult != null)
                     {
@@ -1700,29 +1695,23 @@ namespace noochAdminNew.Controllers
                         }
                         else
                         {
-                            Logger.Error("Common Helper -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
-                                                   "CheckTokenResult.msg: [" + checkTokenResult.msg + "], MemberID: [" + MemberId + "]");
-
+                            Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 FAILED on Checking User's Synapse OAuth Token - " +
+                                         "CheckTokenResult.msg: [" + checkTokenResult.msg + "], MemberID: [" + MemberId + "]");
                             res.msg = checkTokenResult.msg;
-
                         }
                     }
                     else
                     {
-                        Logger.Error("Common Helper -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
-                                                   "CheckTokenResult was NULL, MemberID: [" + MemberId + "]");
-
+                        Logger.Error("Member Cntrlr -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
+                                     "CheckTokenResult was NULL, MemberID: [" + MemberId + "]");
                         res.msg = "Unable to check user's Oauth Token";
-
                     }
 
                     #endregion Check If OAuth Key Still Valid
-
-
                 }
             }
-            #endregion Get User's Synapse OAuth Consumer Key
 
+            #endregion Get User's Synapse OAuth Consumer Key
 
             #region Get User's Fingerprint
 
@@ -1734,7 +1723,7 @@ namespace noochAdminNew.Controllers
 
                 if (member == null)
                 {
-                    Logger.Info("MDA -> submitDocumentToSynapseV3 ABORTED: Member not found. [MemberId: " + MemberId + "]");
+                    Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 ABORTED: Member not found. [MemberId: " + MemberId + "]");
                     res.msg = "Member not found";
                     return res;
                 }
@@ -1742,7 +1731,7 @@ namespace noochAdminNew.Controllers
                 {
                     if (String.IsNullOrEmpty(member.UDID1))
                     {
-                        Logger.Info("MDA -> submitDocumentToSynapseV3 ABORTED: Member's Fingerprint not found. [MemberId: " + MemberId + "]");
+                        Logger.Info("Member Cntrlr -> submitDocumentToSynapseV3 ABORTED: Member's Fingerprint not found. [MemberId: " + MemberId + "]");
                         res.msg = "Could not find this member's fingerprint";
                         return res;
                     }
@@ -1756,41 +1745,31 @@ namespace noochAdminNew.Controllers
 
             #region Call Synapse /user/doc/attachments/add API
 
-            submitDocToSynapseV3Class answers = new submitDocToSynapseV3Class();
-
-            SynapseV3Input_login s_log = new SynapseV3Input_login();
-            s_log.oauth_key = usersSynapseOauthKey;
-            answers.login = s_log;
-            //answers.login.oauth_key = usersSynapseOauthKey;
-
-            submitDocToSynapse_user sdtu = new submitDocToSynapse_user();
-            submitDocToSynapse_user_doc doc = new submitDocToSynapse_user_doc();
-            doc.attachment = "data:text/csv;base64," + CommonHelper.ConvertImageURLToBase64(ImageUrl).Replace("\\", "");
-            //doc.attachment = "data:text/csv;base64,SUQsTmFtZSxUb3RhbCAoaW4gJCksRmVlIChpbiAkKSxOb3RlLFRyYW5zYWN0aW9uIFR5cGUsRGF0ZSxTdGF0dXMNCjUxMTksW0RlbW9dIEJlbHogRW50ZXJwcmlzZXMsLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0MzMxNjMwNTEsU2V0dGxlZA0KNTExOCxbRGVtb10gQmVseiBFbnRlcnByaXNlcywtMS4wMCwwLjAwLCxCYW5rIEFjY291bnQsMTQzMzE2MjkxOSxTZXR0bGVkDQo1MTE3LFtEZW1vXSBCZWx6IEVudGVycHJpc2VzLC0xLjAwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDMzMTYyODI4LFNldHRsZWQNCjUxMTYsW0RlbW9dIEJlbHogRW50ZXJwcmlzZXMsLTEuMDAsMC4wMCwsQmFuayBBY2NvdW50LDE0MzMxNjI2MzQsU2V0dGxlZA0KNTExNSxbRGVtb10gQmVseiBFbnRlcnByaXNlcywtMS4wMCwwLjAwLCxCYW5rIEFjY291bnQsMTQzMzE2MjQ5OCxTZXR0bGVkDQo0ODk1LFtEZW1vXSBMRURJQyBBY2NvdW50LC03LjAwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDMyMjUwNTYyLFNldHRsZWQNCjQ4MTIsS2FyZW4gUGF1bCwtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQzMTk5NDAzNixTZXR0bGVkDQo0NzgwLFNhbmthZXQgUGF0aGFrLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDMxODQ5NDgxLFNldHRsZWQNCjQzMTUsU2Fua2FldCBQYXRoYWssLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0Mjk3NzU5MzcsU2V0dGxlZA0KNDMxNCxTYW5rYWV0IFBhdGhhaywtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQyOTc3NTQzNCxTZXR0bGVkDQo0MzEzLFNhbmthZXQgUGF0aGFrLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDI5Nzc1MzY0LFNldHRsZWQNCjQzMTIsU2Fua2FldCBQYXRoYWssLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0Mjk3NzUyNTAsU2V0dGxlZA0KNDMxMSxTYW5rYWV0IFBhdGhhaywtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQyOTc3NTAxMyxTZXR0bGVkDQo0MjM1LFtEZW1vXSBCZWx6IEVudGVycHJpc2VzLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDI5MzMxODA2LFNldHRsZWQNCjQxMzYsU2Fua2FldCBQYXRoYWssLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0Mjg4OTA4NjMsU2V0dGxlZA0KNDAzMCxTYW5rYWV0IFBhdGhhaywtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQyODIxNTM5NixTZXR0bGVkDQo0MDE0LFtEZW1vXSBCZWx6IEVudGVycHJpc2VzLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDI4MTI1MzgwLENhbmNsZWQNCjM4MzIsU2Fua2FldCBQYXRoYWssLTAuMTAsMC4wMCwsQmFuayBBY2NvdW50LDE0MjcxMDc0NzAsU2V0dGxlZA0KMzgyNixTYW5rYWV0IFBhdGhhaywtMC4xMCwwLjAwLCxCYW5rIEFjY291bnQsMTQyNzAzNTM5MixTZXR0bGVkDQozODI1LFNhbmthZXQgUGF0aGFrLC0wLjEwLDAuMDAsLEJhbmsgQWNjb3VudCwxNDI3MDMyOTM3LFNldHRsZWQNCg==";
-
-
-            sdtu.fingerprint = usersFingerprint;
-
-            sdtu.doc = doc;
-
-            answers.user = sdtu;
-
-            //answers.user.doc.attachment = "data:text/csv;base64," + ConvertImageURLToBase64(ImageUrl).Replace("\\", ""); // NEED TO GET THE ACTUAL DOC... EITHER PASS THE BYTES TO THIS METHOD, OR GET FROM DB
-            //answers.user.fingerprint = usersFingerprint;
-
-            string baseAddress = "";
-
-            baseAddress = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) ? "https://sandbox.synapsepay.com/api/v3/user/doc/attachments/add" : "https://synapsepay.com/api/v3/user/doc/attachments/add";
-
-
             try
             {
+                submitDocToSynapseV3Class submitDocObj = new submitDocToSynapseV3Class();
+
+                SynapseV3Input_login login = new SynapseV3Input_login();
+                login.oauth_key = usersSynapseOauthKey;
+                submitDocObj.login = login;
+
+                submitDocToSynapse_user user = new submitDocToSynapse_user();
+                submitDocToSynapse_user_doc doc = new submitDocToSynapse_user_doc();
+                doc.attachment = "data:text/csv;base64," + CommonHelper.ConvertImageURLToBase64(ImageUrl).Replace("\\", "");
+
+                user.fingerprint = usersFingerprint;
+                user.doc = doc;
+
+                submitDocObj.user = user;
+
+                string baseAddress = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) ? "https://sandbox.synapsepay.com/api/v3/user/doc/attachments/add" : "https://synapsepay.com/api/v3/user/doc/attachments/add";
+
                 var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
                 http.Accept = "application/json";
                 http.ContentType = "application/json";
                 http.Method = "POST";
 
-                string parsedContent = JsonConvert.SerializeObject(answers);
+                string parsedContent = JsonConvert.SerializeObject(submitDocObj);
                 ASCIIEncoding encoding = new ASCIIEncoding();
                 Byte[] bytes = encoding.GetBytes(parsedContent);
 
@@ -1809,39 +1788,51 @@ namespace noochAdminNew.Controllers
 
                 if (resFromSynapse != null)
                 {
-                    if (resFromSynapse.success.ToString().ToLower() == "true")
+                    if (resFromSynapse.success == true || resFromSynapse.success.ToString().ToLower() == "true")
                     {
-                        //updating member table in database
+                        var permission = resFromSynapse.user.permission != null ? resFromSynapse.user.permission : "NOT FOUND";
+                        var physDoc = "NOT FOUND";
+                        var virtualDoc = "NOT FOUND";
+
+                        if (resFromSynapse.user.doc_status != null)
+                        {
+                            physDoc = resFromSynapse.user.doc_status.physical_doc;
+                            virtualDoc = resFromSynapse.user.doc_status.virtual_doc;
+                        }
+
+                        Logger.Info("Member Cntrlr -> submitDocumentToSynapseV3 SUCCESSFUL - Permission: [" + permission +
+                                    "], Virtual_Doc: [" + virtualDoc + "], Physical_Doc: [" + physDoc + "], [MemberID: " + MemberId + "]");
+                        res.isSuccess = true;
+                        res.msg = "";
+
+                        // Update User's "Permission" in SynapseCreateUserResults Table
                         using (var noochConnection = new NOOCHEntities())
                         {
-
                             var synapseUser = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == id && m.IsDeleted == false).FirstOrDefault();
                             synapseUser.permission = resFromSynapse.user.permission.ToString();
                             synapseUser.photos = ImageUrl;
+
+                            // Cliff (5/21/16): ALSO NEED TO SAVE "virtual_doc" and "physical_doc" VALUES IN NOOCH DB, BUT FIELDS DON'T EXIST YET
+
                             noochConnection.SaveChanges();
-
                         }
-
-                        Logger.Info("MDA -> submitDocumentToSynapseV3 SUCCESSFUL - [MemberID: " + MemberId + "]");
-                        res.isSuccess = true;
-                        res.msg = "";
                     }
                     else
                     {
                         res.msg = "Got a response, but success was not true";
-                        Logger.Info("MDA -> submitDocumentToSynapseV3 FAILED - Got Synapse response, but success was NOT 'true' - [MemberID: " + MemberId + "]");
+                        Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 FAILED - Got Synapse response, but success was NOT 'true' - [MemberID: " + MemberId + "]");
                     }
                 }
                 else
                 {
                     res.msg = "Verification response was null";
-                    Logger.Info("MDA -> submitDocumentToSynapseV3 FAILED - Synapse response was NULL - [MemberID: " + MemberId + "]");
+                    Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 FAILED - Synapse response was NULL - [MemberID: " + MemberId + "]");
                 }
             }
             catch (WebException ex)
             {
-                res.msg = "MDA Exception #9575";
-                Logger.Info("MDA -> submitDocumentToSynapseV3 FAILED - Catch [Exception: " + ex + "]");
+                res.msg = "Member Cntrlr Exception #9575";
+                Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 FAILED - Catch [Exception: " + ex.Message + "]");
             }
 
             #endregion Call Synapse /user/doc/attachments/add API

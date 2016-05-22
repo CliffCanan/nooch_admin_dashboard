@@ -25,7 +25,7 @@ namespace noochAdminNew.Controllers
         [ActionName("ValidateUser")]
         public ActionResult ValidateUser(string UserName, string Password)
         {
-            Logger.Info("Home Cntrlr -> ValidateUser - Username: [" + UserName + "]");
+            Logger.Info("Home Cntrlr -> ValidateUser Fired - Username: [" + UserName + "]");
 
             LoginResult res = new LoginResult();
             res.IsSuccess = false;
@@ -37,7 +37,7 @@ namespace noochAdminNew.Controllers
                 using (NOOCHEntities obj = new NOOCHEntities())
                 {
                     var query = (from c in obj.AdminUsers
-                                 where c.Password == passEnc && c.UserName == UserName && c.Status == "Active"
+                                 where c.UserName == UserName && c.Status == "Active" && c.Password == passEnc
                                  select c).SingleOrDefault();
 
                     if (query != null)
@@ -49,7 +49,6 @@ namespace noochAdminNew.Controllers
                     }
                     else
                     {
-                        res.IsSuccess = false;
                         res.Message = "Invalid username or password";
                     }
                     return Json(res);
@@ -57,16 +56,13 @@ namespace noochAdminNew.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Info("test message");
-                Logger.Error(ex);
-                res.IsSuccess = false;
-                //lr.Message = "Invalid username or password";
-                res.Message = ex.ToString();
+                Logger.Error("Home Cntrlr -> ValidateUser FAILED - Exception: [" + ex.Message + "]");
+                res.Message = ex.Message;
                 return Json(res);
             }
         }
 
-       
+
         public ActionResult Logout()
         {
             Session["UserId"] = null;

@@ -17,7 +17,7 @@ namespace noochAdminNew.Classes.Utility
     public static class CommonHelper
     {
         private const string Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        
+
         public static string GetEncryptedData(string sourceData)
         {
             try
@@ -63,7 +63,7 @@ namespace noochAdminNew.Classes.Utility
                 }
                 else
                 {
-                    Logger.Info("GetDecryptedData FAILED -> SourceData was too short - [SourceData: " + sourceData + "]");
+                    Logger.Error("GetDecryptedData FAILED -> SourceData was too short - [SourceData: " + sourceData + "]");
                 }
             }
             return string.Empty;
