@@ -135,6 +135,7 @@ $(document).ready(function ()
     // Show the  Live Transaction On Dashboard  
     function DashboardDetailsOperation(operation)
     {
+         
         if (operation == '0' || operation == '1' || operation == '2') {
             var url = "../Admin/ShowLiveTransactionsOnDashBoard";
             var data = {};
@@ -143,13 +144,14 @@ $(document).ready(function ()
             $.post(url, data, function (result)
             {
                 if (result.IsSuccess == true) {
-                    console.log(result);
-
+                    
+                    $('#AllTrans').dataTable().fnDestroy();
                     var trHTML = '';
                     $("#TBOdy tr").remove();
-                    
+                   
                     $.each(result.RecentLiveTransaction, function (i, item)
                     {
+                        console.log(item);
                         //DisputeStatus
                         /*var disputestatus;
                         if (item.DisputeStatus == null || item.DisputeStatus == "") {
@@ -193,9 +195,10 @@ $(document).ready(function ()
                                   '<td><a href="#" OnClick="showLocationModal(' + item.Latitude + ',' + item.Longitude + ',' + "'" + GeoLocation + "'" + ')" class="btn btn-link" data-loctext="' + GeoLocation + '">' + GeoLocation + '</a></td> </tr>';
 
                         $("#TBOdy").append(trHTML);
+                        
                     });
-                    console.log($('#AllTrans').val());
-                    $('#AllTrans').dataTable().fnDestroy();
+                    
+                    
                     $('#AllTrans').dataTable({
                         responsive: true,
                         "order": [3, "desc"],
