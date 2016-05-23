@@ -125,6 +125,7 @@ $('#DeleteUser').click(function () {
 $('#ChangePassword').click(function () {
     $('#myModalchangePwd').modal('show');
 });
+
 $('#btntoggle').click(function () {
     $('#myModalchangePwd').modal('show');
 });
@@ -435,6 +436,7 @@ var Member = function () {
         });
     }
 
+
     // Manually set bank account's status to 'Verified'
     function sendSmsReminderForVerification() {
         var contactNumber = $('#contactNumber').val();
@@ -445,14 +447,10 @@ var Member = function () {
 
         $.post(url, data, function (result) {
             if (result.IsSuccess) {
-
                 toastr.success(result.Message, 'Verification message sent successfully.');
-
             }
             else {
-
                 toastr.error(result.Message, 'Error');
-
             }
         });
 
@@ -461,6 +459,7 @@ var Member = function () {
     function ChangePassword() {
         if ($("#pwd").val() == '')      //Button will be disabled till pwd is not updated and all the field will be clear for next time. 
             return false;
+
         $("#btnChangePassword").text('Updating...');
         $('#btnChangePassword').attr('disabled', 'disabled');
 
@@ -468,6 +467,7 @@ var Member = function () {
         data.newPassword = $("#pwd").val();
         data.noochIds = NoochId;
         var url = "../Member/UpdatePassword";
+
         $.post(url, data, function (result) {
             if (result.IsSuccess) {
                 toastr.success(result.Message, 'Updated successfully.');
@@ -494,9 +494,7 @@ var Member = function () {
                 $("#pwd").val(result.Message);
             }
             else {
-
                 toastr.error(result.Message, 'Error');
-
             }
         });
     }
