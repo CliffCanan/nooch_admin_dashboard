@@ -645,12 +645,11 @@ namespace noochAdminNew.Controllers
 
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-
                 var membersWithABank = (from m in obj.Members
-                                         join s in obj.SynapseBanksOfMembers
-                                         on m.MemberId equals s.MemberId
-                                         where m.IsDeleted == false && s.IsDefault == true
-                                         select m).ToList();
+                                        join s in obj.SynapseBanksOfMembers
+                                        on m.MemberId equals s.MemberId
+                                        where m.IsDeleted == false && s.IsDefault == true
+                                        select m).ToList();
 
                 foreach (var member in membersWithABank)
                 {
