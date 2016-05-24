@@ -11,30 +11,21 @@ namespace noochAdminNew.Classes.ModelClasses
         public int TotalVerifiedPhoneUsers { get; set; }
         public int TotalVerifiedEmailUsers { get; set; }
         public int TotalActiveBankAccountUsers { get; set; }
-
         public string TransData { get; set; }
-
         public string TotalAmountOfDollars { get; set; }
-
         public int TotalNoOfPaymentsCompleted { get; set; }
-
         public int totalRequestTypeTrans { get; set; }
-
         public int TransactionsPendi { get; set; }
-
         public int TotalRegisteredUsers { get; set; }
         public int TotalSuspendedUsers { get; set; }
         public int TotalVerifiedPhoneAndEmailUsers { get; set; }
-
         public int TotalActiveAndVerifiedBankAccountUsers { get; set; }
-
         public int TotalNoOfActiveUser_Today { get; set; }
         public int TotalNoOfActiveUser_Week { get; set; }
         public int TotalNoOfActiveUser_Month { get; set; }
         public int TotalNoOfVerifiedPhoneUsers_Week { get; set; }
         public int TotalNoOfVerifiedPhoneUsers_Today { get; set; }
         public int TotalNoOfVerifiedPhoneUsers_Month { get; set; }
-
         public int TotalNoOfVerifiedEmailUsers_Today { get; set; }
         public int TotalNoOfVerifiedEmailUsers_Week { get; set; }
         public int TotalNoOfVerifiedEmailUsers_Month { get; set; }
@@ -51,11 +42,9 @@ namespace noochAdminNew.Classes.ModelClasses
     public class DashBoardLiveTransactionsOperationResult
     {
         public List<MemberRecentLiveTransactionData> RecentLiveTransaction { get; set; }
-
         public bool IsSuccess { get; set; }
         public string Message { get; set; }
     }
-
 
     public class MemberRecentLiveTransactionData
     {
@@ -64,7 +53,6 @@ namespace noochAdminNew.Classes.ModelClasses
         public string Amount { get; set; }
         public string RecepientId { get; set; }
         public string SenderId { get; set; }
-
         public string SenderUserName { get; set; }
         public string RecepientUserName { get; set; }
         public string GeoStateCityLocation { get; set; }

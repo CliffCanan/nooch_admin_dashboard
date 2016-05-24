@@ -446,7 +446,7 @@ namespace noochAdminNew.Controllers
                     All_Members_In_Records = (from t in obj.Members
                                               where ((t.Type == "Personal" ||
                                                     t.Type == "Business" ||
-                                                    t.Type == "Personal - Browser") && t.IsDeleted==false)
+                                                    t.Type == "Personal - Browser") && t.IsDeleted == false)
                                               select t).ToList();
                 }
                 else if (type == "Landlord")
@@ -806,6 +806,8 @@ namespace noochAdminNew.Controllers
 
                     #region Stats-Related Operations
 
+                    // Cliff (5/24/16): These need updating... they aren't counting initial payments when the user is created from a request/invite.
+
                     MemberDetailsStats ms = new MemberDetailsStats();
 
                     ms.TotalTransfer = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_P2P_transfers").SingleOrDefault();
@@ -1015,12 +1017,12 @@ namespace noochAdminNew.Controllers
                         "], City: [" + city + "], State: [" + state + "], ZIP: [" + zip + "], secondaryEmail: [" + secondaryemail + "], NoochID: [" + noochid +
                         "], SSN [" + ssn + "], DOB: [" + dob + "]");
 
-            MemberEditResultClass re = new MemberEditResultClass();
+            MemberEditResultClass res = new MemberEditResultClass();
+            res.IsSuccess = false;
 
             if (String.IsNullOrEmpty(noochid))
             {
-                re.IsSuccess = false;
-                re.Message = "Invalid nooch id passed";
+                res.Message = "Invalid nooch id passed";
             }
             else
             {
@@ -1035,8 +1037,7 @@ namespace noochAdminNew.Controllers
 
                         if (member == null)
                         {
-                            re.IsSuccess = false;
-                            re.Message = "Member not found";
+                            res.Message = "Member not found";
                         }
                         else
                         {
@@ -1097,17 +1098,17 @@ namespace noochAdminNew.Controllers
 
                             obj.SaveChanges();
 
-                            re.Address = streetaddress;
-                            re.secondaryemail = secondaryemail;
-                            re.recoveryemail = recoveryemail;
-                            re.contactnum = CommonHelper.FormatPhoneNumber(contactno);
-                            re.City = city;
-                            re.state = state.ToUpper();
-                            re.zip = zip;
-                            re.ssn = ssn;
-                            re.dob = dob;
-                            re.IsSuccess = true;
-                            re.Message = "Member record updated successfully";
+                            res.Address = streetaddress;
+                            res.secondaryemail = secondaryemail;
+                            res.recoveryemail = recoveryemail;
+                            res.contactnum = CommonHelper.FormatPhoneNumber(contactno);
+                            res.City = city;
+                            res.state = state.ToUpper();
+                            res.zip = zip;
+                            res.ssn = ssn;
+                            res.dob = dob;
+                            res.IsSuccess = true;
+                            res.Message = "Member record updated successfully";
                         }
                     }
                 }
@@ -1116,7 +1117,8 @@ namespace noochAdminNew.Controllers
                     Logger.Error("Admin MemberController -> EditMemberDetails FAILED - [Exception: " + ex.Message + "]");
                 }
             }
-            return Json(re);
+
+            return Json(res);
         }
 
 
@@ -1521,51 +1523,65 @@ namespace noochAdminNew.Controllers
         {
 
             MemberOperationsResult res = new MemberOperationsResult();
-            using (NOOCHEntities obj = new NOOCHEntities())
+            res.IsSuccess = false;
+
+            try
             {
-                var temp = CommonHelper.GetRandomTransactionTrackingId();
-
-                var member = (from t in obj.Members
-                              where t.Nooch_ID == noochIds && t.IsDeleted == false
-                              select t).SingleOrDefault();
-
-                if (member != null)
+                using (NOOCHEntities obj = new NOOCHEntities())
                 {
-                    member.Password = CommonHelper.GetEncryptedData(newPassword);
-                    var o = obj.SaveChanges();
-                    if (o == 1)
+
+                    var temp = CommonHelper.GetRandomTransactionTrackingId();
+
+                    var member = (from t in obj.Members
+                                  where t.Nooch_ID == noochIds && t.IsDeleted == false
+                                  select t).SingleOrDefault();
+
+                    if (member != null)
                     {
-                        res.Message = "Password updated";
-                        res.IsSuccess = true;
-                        string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
-                        string MessageBody = "Hi " + fname + ", This is Nooch - Your password has been updated to" + member.Password;
-                        // String msg = Utility.SendSMS("member.ContactNumber", "", member.MemberId.ToString());
-                        var fromAddress = Utility.GetValueFromConfig("adminMail");
-                        var tokens = new Dictionary<string, string>
+                        member.Password = CommonHelper.GetEncryptedData(newPassword);
+                        var o = obj.SaveChanges();
+
+                        if (o == 1)
+                        {
+                            res.Message = "Password updated";
+                            res.IsSuccess = true;
+
+                            string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
+                            string MessageBody = "Hi " + fname + ", This is Nooch - Your password has been updated to" + member.Password;
+
+                            var fromAddress = Utility.GetValueFromConfig("adminMail");
+
+                            var tokens = new Dictionary<string, string>
                         {
                             {Constants.PLACEHOLDER_FIRST_NAME, fname},
-                           // {Constants.PLACEHOLDER_LAST_NAME, member.LastName},
                             {Constants.PLACEHOLDER_PASSWORD, CommonHelper.GetDecryptedData( member.Password)}
                         };
 
-                        string toAddress = CommonHelper.GetDecryptedData(member.UserName);
-                        bool emailSent = Utility.SendEmail("passwordChangedByAdmin",
-                                                fromAddress, toAddress, "Your Nooch password has been changed", null,
-                                                tokens, null, null, null);
-                        //if (msg != "Failure")
-                        //{
-                        //    res.Message += "& SMS has been sent";
-                        //}
-                        if (emailSent)
-                            res.Message += " & Email has been Sent.";
+                            string toAddress = CommonHelper.GetDecryptedData(member.UserName);
+                            bool emailSent = Utility.SendEmail("passwordChangedByAdmin",
+                                                    fromAddress, toAddress, "Your Nooch password has been changed", null,
+                                                    tokens, null, null, null);
+
+                            if (emailSent)
+                                res.Message += " & Email has been Sent.";
+                        }
+                        else
+                            res.IsSuccess = false;
                     }
                     else
-                        res.IsSuccess = false;
+                    {
+                        res.Message = "User not found";
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Member Cntrlr -> UpdatePassword FAILED - NoochID: [" + noochIds + "], Exception: [" + ex.Message + "]");
             }
 
             return Json(res);
         }
+
 
         [HttpPost]
         [ActionName("GenerateNewPassword")]
@@ -1576,6 +1592,7 @@ namespace noochAdminNew.Controllers
             res.IsSuccess = true;
             return Json(res);
         }
+
 
         [HttpPost]
         [ActionName("Details")]
@@ -1620,6 +1637,7 @@ namespace noochAdminNew.Controllers
                 }
             }
         }
+
 
         public synapseV3GenericResponse submitDocumentToSynapseV3(SaveVerificationIdDocument DocumentDetails)
         {
@@ -1839,6 +1857,7 @@ namespace noochAdminNew.Controllers
             return res;
         }
 
+
         public List<Tenants> GetTenants(String NoochId)
         {
             using (NOOCHEntities obj = new NOOCHEntities())
@@ -1887,7 +1906,6 @@ namespace noochAdminNew.Controllers
                 return tenants;
             }
         }
-
 
     }
 }
