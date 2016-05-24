@@ -643,6 +643,49 @@ namespace noochAdminNew.Controllers
         }
 
 
+        public void RelinkBankNotification()
+        {
+            Logger.Info("Admin-> sending notification to all users to re link their bank node");
+            using (NOOCHEntities obj = new NOOCHEntities())
+            {
+
+                var membersHavingBank = (from m in obj.Members
+                                        join s in obj.SynapseBanksOfMembers
+                                        on m.MemberId equals s.MemberId
+                                        where m.IsDeleted == false && s.is_active == true
+                                        && s.IsDefault == true
+                                        select m).ToList();
+                 
+                
+                foreach (var member in membersHavingBank)
+                {
+                    var fromAddress = Utility.GetValueFromConfig("adminMail");
+                    var toAddress = CommonHelper.GetDecryptedData(member.UserName.ToString());
+                
+                    var tokens = new Dictionary<string, string>
+	                                    {
+	                                        {Constants.PLACEHOLDER_FIRST_NAME, CommonHelper.GetDecryptedData( member.FirstName.ToString())},
+	                                         
+	                                        {Constants.MEMO, member.MemberId.ToString()}
+	                                    };
+                    try
+                    {
+                        Utility.SendEmail("relinkBankAccount",
+                                                       fromAddress, toAddress, "Re link Bank Account", null,
+                                                                                 tokens, null, null, null);
+                    }
+                    catch (Exception exc)
+                    {
+                        Logger.Error("Admin-> Error in sending re link bank notification mail to member " + member.MemberId.ToString()+"Error:"+exc.ToString());
+                    }
+                }
+
+            }
+            
+
+
+        }
+
         public ActionResult CreditFundToMember()
         {
             if (Session["UserId"] == null && Session["RoleId"] == null)
