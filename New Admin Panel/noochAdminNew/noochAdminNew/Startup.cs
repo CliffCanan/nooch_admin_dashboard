@@ -19,12 +19,12 @@ namespace noochAdminNew
             // setting up hangfire
             GlobalConfiguration.Configuration.UseSqlServerStorage("data source=54.201.43.89;initial catalog=NOOCH;user id=sa;password=Singh@123;");
 
-            app.UseHangfireDashboard();
+            //app.UseHangfireDashboard();
             app.UseHangfireServer();
 
 
             //RecurringJob.AddOrUpdate(() => Logger.Info("Auto Task Running"), "0 12 * */2");
-            RecurringJob.AddOrUpdate(() => Logger.Info("Auto Task Running"), Cron.Minutely);
+            //RecurringJob.AddOrUpdate(() => Logger.Info("Auto Task Running"), Cron.Minutely);
         }
     }
 }
