@@ -37,8 +37,6 @@ namespace noochAdminNew.Controllers
         }
 
 
-
-
         [HttpPost]
         [ActionName("ShowLiveTransactionsOnDashBoard")]
         public ActionResult ShowLiveTransactionsOnDashBoard(string operation)
@@ -289,7 +287,6 @@ namespace noochAdminNew.Controllers
             //                    And please delete old code if it is not going to be used, don't just leave huge blocks of commented out code.
             try
             {
-
                 using (NOOCHEntities obj = new NOOCHEntities())
                 {
                     List<GetLiveTransactionsForDashboard_Result1> allTrans = obj.GetLiveTransactionsForDashboard(Convert.ToInt16(operation)).ToList();
@@ -299,7 +296,6 @@ namespace noochAdminNew.Controllers
                     {
                         foreach (var t in allTrans)
                         {
-
                             MemberRecentLiveTransactionData singleTrans = new MemberRecentLiveTransactionData();
                             singleTrans.Amount = t.Amount.ToString();
                             singleTrans.TransID = t.TransactionId.ToString();
@@ -446,7 +442,7 @@ namespace noochAdminNew.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Error("AdminController -> ShowLiveTransactionsOnDashBoard - [Outer Exception: " + ex + "]");
+                Logger.Error("Admin Cntrlr -> ShowLiveTransactionsOnDashBoard - [Outer Exception: " + ex + "]");
 
                 ddresult.IsSuccess = false;
                 ddresult.Message = "Exception reached - Invalid Operation";
@@ -584,16 +580,16 @@ namespace noochAdminNew.Controllers
                     dd.TotalActiveBankAccountUsers = c.Count;
 
                     dd.TotalAmountOfDollars = (from r in obj.Transactions
-                                               where r.TransactionStatus == "success"
+                                               where r.TransactionStatus == "Success"
                                                select r).ToList()
                                                     .Sum(t => t.Amount).ToString();
 
                     dd.TotalNoOfPaymentsCompleted = (from r in obj.Transactions
-                                                     where r.TransactionStatus == "success"
+                                                     where r.TransactionStatus == "Success"
                                                      select r).ToList().Count;
 
                     dd.totalRequestTypeTrans = (from r in obj.Transactions
-                                                where r.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw==" && r.TransactionStatus == "success"
+                                                where r.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw==" && r.TransactionStatus == "Success"
                                                 select r).ToList().Count;
 
                     dd.TransactionsPendi = (from r in obj.Transactions
@@ -652,54 +648,59 @@ namespace noochAdminNew.Controllers
 
         public void RelinkBankNotification()
         {
-            Logger.Info("Admin-> sending notification to all users to re link their bank node");
+            Logger.Info("Admin Cntrlr -> sending notification to all users to re link their bank node");
+
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-
-                var membersHavingBank = (from m in obj.Members
+                var membersWithABank = (from m in obj.Members
                                         join s in obj.SynapseBanksOfMembers
                                         on m.MemberId equals s.MemberId
-                                        where m.IsDeleted == false && s.is_active == true
-                                        && s.IsDefault == true
+                                        where m.IsDeleted == false && s.IsDefault == true
                                         select m).ToList();
-                 
-                
-                foreach (var member in membersHavingBank)
+
+                foreach (var member in membersWithABank)
                 {
-
                     // just uncomment below mentioned lines to send re link email to all users
+                    //                    var toAddress = CommonHelper.GetDecryptedData(member.UserName);
 
-
-                    //var fromAddress = Utility.GetValueFromConfig("adminMail");
-                    //var toAddress = CommonHelper.GetDecryptedData(member.UserName.ToString());
-                
-                    //var tokens = new Dictionary<string, string>
-                    //                    {
-                    //                        {Constants.PLACEHOLDER_FIRST_NAME, CommonHelper.GetDecryptedData( member.FirstName.ToString())},
-	                                         
-                    //                        {Constants.MEMO, member.MemberId.ToString()}
-                    //                    };
                     //try
                     //{
-                    //    Utility.SendEmail("relinkBankAccount",
-                    //                                   fromAddress, toAddress, "Re link Bank Account", null,
-                    //                                                             tokens, null, null, null);
+                    //    var fromAddress = Utility.GetValueFromConfig("adminMail");
+                    //    var memberId = member.MemberId.ToString();
+                    //    var isRentSceneClient = member.InviteCodeId.ToString().ToLower() == "b43a36a6-1da5-47ce-a56c-6210f9ddbd22" ? "yes" : "false";
+                    //    var companyName = isRentSceneClient == "yes" ? "Rent Scene" : "Nooch";
+
+                    //    var link = "https://www.noochme.com/Nooch/createAccount?memId=" + memberId + "&type=1&update=true&rs=" + isRentSceneClient;
+
+                    //    var tokens = new Dictionary<string, string>
+                    //                    {
+                    //                        {Constants.PLACEHOLDER_FIRST_NAME, CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName.ToString()))},
+                    //                        {Constants.MEMO, link}
+                    //                    };
+
+                    //    Utility.SendEmail("relinkBankAccount", fromAddress, toAddress,
+                    //                      "Important Update for " + companyName + " Payments - **Action Required**",
+                    //                      null, tokens, null, null, null);
                     //}
-                    //catch (Exception exc)
+                    //catch (Exception ex)
                     //{
-                    //    Logger.Error("Admin-> Error in sending re link bank notification mail to member " + member.MemberId.ToString()+"Error:"+exc.ToString());
+                    //    Logger.Error("Admin Cntrlr -> RelinkBankNotification FAILED - Error sending email to: [" + toAddress +
+                    //                 "], MemberID: [" + member.MemberId.ToString() + "], Exception: [" + ex.Message + "]");
                     //}
-                        Logger.Error("Admin-> background process using Hangfire MemberId ->" + member.MemberId);
+
+
+                    Logger.Error("Admin-> background process using Hangfire MemberId ->" + member.MemberId);
 
                 }
 
                 Logger.Info("Admin-> Done with sending notification to all users to re link their bank node");
 
+
+
+
             }
-            
-
-
         }
+
 
         public ActionResult CreditFundToMember()
         {
@@ -1259,7 +1260,6 @@ namespace noochAdminNew.Controllers
 
             return Json(res);
         }
-
 
 
         public string GetRandomTransactionTrackingId()

@@ -446,7 +446,7 @@ namespace noochAdminNew.Controllers
                     All_Members_In_Records = (from t in obj.Members
                                               where ((t.Type == "Personal" ||
                                                     t.Type == "Business" ||
-                                                    t.Type == "Personal - Browser") && t.IsDeleted==false)
+                                                    t.Type == "Personal - Browser") && t.IsDeleted == false)
                                               select t).ToList();
                 }
                 else if (type == "Landlord")
@@ -806,6 +806,8 @@ namespace noochAdminNew.Controllers
 
                     #region Stats-Related Operations
 
+                    // Cliff (5/24/16): These need updating... they aren't counting initial payments when the user is created from a request/invite.
+
                     MemberDetailsStats ms = new MemberDetailsStats();
 
                     ms.TotalTransfer = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_P2P_transfers").SingleOrDefault();
@@ -1015,12 +1017,12 @@ namespace noochAdminNew.Controllers
                         "], City: [" + city + "], State: [" + state + "], ZIP: [" + zip + "], secondaryEmail: [" + secondaryemail + "], NoochID: [" + noochid +
                         "], SSN [" + ssn + "], DOB: [" + dob + "]");
 
-            MemberEditResultClass re = new MemberEditResultClass();
+            MemberEditResultClass res = new MemberEditResultClass();
+            res.IsSuccess = false;
 
             if (String.IsNullOrEmpty(noochid))
             {
-                re.IsSuccess = false;
-                re.Message = "Invalid nooch id passed";
+                res.Message = "Invalid nooch id passed";
             }
             else
             {
@@ -1035,8 +1037,7 @@ namespace noochAdminNew.Controllers
 
                         if (member == null)
                         {
-                            re.IsSuccess = false;
-                            re.Message = "Member not found";
+                            res.Message = "Member not found";
                         }
                         else
                         {
@@ -1097,17 +1098,17 @@ namespace noochAdminNew.Controllers
 
                             obj.SaveChanges();
 
-                            re.Address = streetaddress;
-                            re.secondaryemail = secondaryemail;
-                            re.recoveryemail = recoveryemail;
-                            re.contactnum = CommonHelper.FormatPhoneNumber(contactno);
-                            re.City = city;
-                            re.state = state.ToUpper();
-                            re.zip = zip;
-                            re.ssn = ssn;
-                            re.dob = dob;
-                            re.IsSuccess = true;
-                            re.Message = "Member record updated successfully";
+                            res.Address = streetaddress;
+                            res.secondaryemail = secondaryemail;
+                            res.recoveryemail = recoveryemail;
+                            res.contactnum = CommonHelper.FormatPhoneNumber(contactno);
+                            res.City = city;
+                            res.state = state.ToUpper();
+                            res.zip = zip;
+                            res.ssn = ssn;
+                            res.dob = dob;
+                            res.IsSuccess = true;
+                            res.Message = "Member record updated successfully";
                         }
                     }
                 }
@@ -1116,7 +1117,8 @@ namespace noochAdminNew.Controllers
                     Logger.Error("Admin MemberController -> EditMemberDetails FAILED - [Exception: " + ex.Message + "]");
                 }
             }
-            return Json(re);
+
+            return Json(res);
         }
 
 
@@ -1521,51 +1523,65 @@ namespace noochAdminNew.Controllers
         {
 
             MemberOperationsResult res = new MemberOperationsResult();
-            using (NOOCHEntities obj = new NOOCHEntities())
+            res.IsSuccess = false;
+
+            try
             {
-                var temp = CommonHelper.GetRandomTransactionTrackingId();
-
-                var member = (from t in obj.Members
-                              where t.Nooch_ID == noochIds && t.IsDeleted == false
-                              select t).SingleOrDefault();
-
-                if (member != null)
+                using (NOOCHEntities obj = new NOOCHEntities())
                 {
-                    member.Password = CommonHelper.GetEncryptedData(newPassword);
-                    var o = obj.SaveChanges();
-                    if (o == 1)
+
+                    var temp = CommonHelper.GetRandomTransactionTrackingId();
+
+                    var member = (from t in obj.Members
+                                  where t.Nooch_ID == noochIds && t.IsDeleted == false
+                                  select t).SingleOrDefault();
+
+                    if (member != null)
                     {
-                        res.Message = "Password updated";
-                        res.IsSuccess = true;
-                        string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
-                        string MessageBody = "Hi " + fname + ", This is Nooch - Your password has been updated to" + member.Password;
-                        // String msg = Utility.SendSMS("member.ContactNumber", "", member.MemberId.ToString());
-                        var fromAddress = Utility.GetValueFromConfig("adminMail");
-                        var tokens = new Dictionary<string, string>
+                        member.Password = CommonHelper.GetEncryptedData(newPassword);
+                        var o = obj.SaveChanges();
+
+                        if (o == 1)
+                        {
+                            res.Message = "Password updated";
+                            res.IsSuccess = true;
+
+                            string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
+                            string MessageBody = "Hi " + fname + ", This is Nooch - Your password has been updated to" + member.Password;
+
+                            var fromAddress = Utility.GetValueFromConfig("adminMail");
+
+                            var tokens = new Dictionary<string, string>
                         {
                             {Constants.PLACEHOLDER_FIRST_NAME, fname},
-                           // {Constants.PLACEHOLDER_LAST_NAME, member.LastName},
                             {Constants.PLACEHOLDER_PASSWORD, CommonHelper.GetDecryptedData( member.Password)}
                         };
 
-                        string toAddress = CommonHelper.GetDecryptedData(member.UserName);
-                        bool emailSent = Utility.SendEmail("passwordChangedByAdmin",
-                                                fromAddress, toAddress, "Your Nooch password has been changed", null,
-                                                tokens, null, null, null);
-                        //if (msg != "Failure")
-                        //{
-                        //    res.Message += "& SMS has been sent";
-                        //}
-                        if (emailSent)
-                            res.Message += " & Email has been Sent.";
+                            string toAddress = CommonHelper.GetDecryptedData(member.UserName);
+                            bool emailSent = Utility.SendEmail("passwordChangedByAdmin",
+                                                    fromAddress, toAddress, "Your Nooch password has been changed", null,
+                                                    tokens, null, null, null);
+
+                            if (emailSent)
+                                res.Message += " & Email has been Sent.";
+                        }
+                        else
+                            res.IsSuccess = false;
                     }
                     else
-                        res.IsSuccess = false;
+                    {
+                        res.Message = "User not found";
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Member Cntrlr -> UpdatePassword FAILED - NoochID: [" + noochIds + "], Exception: [" + ex.Message + "]");
             }
 
             return Json(res);
         }
+
 
         [HttpPost]
         [ActionName("GenerateNewPassword")]
@@ -1576,6 +1592,7 @@ namespace noochAdminNew.Controllers
             res.IsSuccess = true;
             return Json(res);
         }
+
 
         [HttpPost]
         [ActionName("Details")]
@@ -1602,8 +1619,8 @@ namespace noochAdminNew.Controllers
                     file.SaveAs(path);
                     DocumentDetails.imgPath = path;
 
-                    synapseV3GenericResponse mdaResult = submitDocumentToSynapseV3(DocumentDetails);
-                    if (mdaResult.isSuccess == true)
+                    synapseV3GenericResponse submitDocToSynapseRes = submitDocumentToSynapseV3(DocumentDetails);
+                    if (submitDocToSynapseRes.isSuccess == true)
                     {
                         Session["status"] = "Success";
                     }
@@ -1621,6 +1638,7 @@ namespace noochAdminNew.Controllers
             }
         }
 
+
         public synapseV3GenericResponse submitDocumentToSynapseV3(SaveVerificationIdDocument DocumentDetails)
         {
             synapseV3GenericResponse res = new synapseV3GenericResponse();
@@ -1636,7 +1654,6 @@ namespace noochAdminNew.Controllers
                 if (DocumentDetails.imgPath != "")
                 {
                     ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + DocumentDetails.MemberId + ".png";
-                    //ImageUrlMade = DocumentDetails.imgPath;
                 }
                 else
                 {
@@ -1662,182 +1679,205 @@ namespace noochAdminNew.Controllers
         {
             Logger.Info("Member Cntrlr -> submitDocumentToSynapseV3 Initialized - [MemberId: " + MemberId + "]");
 
-            var id = Utility.ConvertToGuid(MemberId);
-
             synapseV3GenericResponse res = new synapseV3GenericResponse();
-            //SynapseDetailsClass res = new SynapseDetailsClass();
+            res.isSuccess = false;
 
-            #region Get User's Synapse OAuth Consumer Key
-
-            string usersSynapseOauthKey = "";
-            using (var noochConnection = new NOOCHEntities())
+            try
             {
-                var usersSynapseDetails = noochConnection.SynapseCreateUserResults.FirstOrDefault(m => m.MemberId == id && m.IsDeleted == false);
+                Guid id = Utility.ConvertToGuid(MemberId);
 
-                if (usersSynapseDetails == null)
+                #region Get User's Synapse OAuth Consumer Key
+
+                string usersSynapseOauthKey = "";
+                using (var noochConnection = new NOOCHEntities())
                 {
-                    Logger.Info("Member Cntrlr-> submitDocumentToSynapseV3 ABORTED: Member's Synapse User Details not found. [MemberId: " + MemberId + "]");
-                    res.msg = "Could not find this member's account info";
-                    return res;
-                }
-                else
-                {
-                    #region Check If OAuth Key Still Valid
+                    var usersSynapseDetails = noochConnection.SynapseCreateUserResults.FirstOrDefault(m => m.MemberId == id && m.IsDeleted == false);
 
-                    synapseV3checkUsersOauthKey checkTokenResult = CommonHelper.refreshSynapseV3OautKey(usersSynapseDetails.access_token);
-
-                    if (checkTokenResult != null)
+                    if (usersSynapseDetails == null)
                     {
-                        if (checkTokenResult.success == true)
-                        {
-                            usersSynapseOauthKey = CommonHelper.GetDecryptedData(checkTokenResult.oauth_consumer_key);
-                        }
-                        else
-                        {
-                            Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 FAILED on Checking User's Synapse OAuth Token - " +
-                                         "CheckTokenResult.msg: [" + checkTokenResult.msg + "], MemberID: [" + MemberId + "]");
-                            res.msg = checkTokenResult.msg;
-                        }
-                    }
-                    else
-                    {
-                        Logger.Error("Member Cntrlr -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
-                                     "CheckTokenResult was NULL, MemberID: [" + MemberId + "]");
-                        res.msg = "Unable to check user's Oauth Token";
-                    }
-
-                    #endregion Check If OAuth Key Still Valid
-                }
-            }
-
-            #endregion Get User's Synapse OAuth Consumer Key
-
-            #region Get User's Fingerprint
-
-            string usersFingerprint = "";
-
-            using (var noochConnection = new NOOCHEntities())
-            {
-                var member = noochConnection.Members.FirstOrDefault(m => m.MemberId == id);
-
-                if (member == null)
-                {
-                    Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 ABORTED: Member not found. [MemberId: " + MemberId + "]");
-                    res.msg = "Member not found";
-                    return res;
-                }
-                else
-                {
-                    if (String.IsNullOrEmpty(member.UDID1))
-                    {
-                        Logger.Info("Member Cntrlr -> submitDocumentToSynapseV3 ABORTED: Member's Fingerprint not found. [MemberId: " + MemberId + "]");
-                        res.msg = "Could not find this member's fingerprint";
+                        Logger.Error("Member Cntrlr-> submitDocumentToSynapseV3 ABORTED: Member's Synapse User Details not found. [MemberId: " + MemberId + "]");
+                        res.msg = "Could not find this member's account info";
                         return res;
                     }
                     else
                     {
-                        usersFingerprint = member.UDID1;
-                    }
-                }
-            }
-            #endregion Get User's Fingerprint
+                        #region Check If OAuth Key Still Valid
 
-            #region Call Synapse /user/doc/attachments/add API
+                        synapseV3checkUsersOauthKey checkTokenResult = CommonHelper.refreshSynapseV3OautKey(usersSynapseDetails.access_token);
 
-            try
-            {
-                submitDocToSynapseV3Class submitDocObj = new submitDocToSynapseV3Class();
-
-                SynapseV3Input_login login = new SynapseV3Input_login();
-                login.oauth_key = usersSynapseOauthKey;
-                submitDocObj.login = login;
-
-                submitDocToSynapse_user user = new submitDocToSynapse_user();
-                submitDocToSynapse_user_doc doc = new submitDocToSynapse_user_doc();
-                doc.attachment = "data:text/csv;base64," + CommonHelper.ConvertImageURLToBase64(ImageUrl).Replace("\\", "");
-
-                user.fingerprint = usersFingerprint;
-                user.doc = doc;
-
-                submitDocObj.user = user;
-
-                string baseAddress = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) ? "https://sandbox.synapsepay.com/api/v3/user/doc/attachments/add" : "https://synapsepay.com/api/v3/user/doc/attachments/add";
-
-                var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
-                http.Accept = "application/json";
-                http.ContentType = "application/json";
-                http.Method = "POST";
-
-                string parsedContent = JsonConvert.SerializeObject(submitDocObj);
-                ASCIIEncoding encoding = new ASCIIEncoding();
-                Byte[] bytes = encoding.GetBytes(parsedContent);
-
-                Stream newStream = http.GetRequestStream();
-                newStream.Write(bytes, 0, bytes.Length);
-                newStream.Close();
-
-                var response = http.GetResponse();
-                var stream = response.GetResponseStream();
-                var sr = new StreamReader(stream);
-                var content = sr.ReadToEnd();
-
-                kycInfoResponseFromSynapse resFromSynapse = new kycInfoResponseFromSynapse();
-
-                resFromSynapse = JsonConvert.DeserializeObject<kycInfoResponseFromSynapse>(content);
-
-                if (resFromSynapse != null)
-                {
-                    if (resFromSynapse.success == true || resFromSynapse.success.ToString().ToLower() == "true")
-                    {
-                        var permission = resFromSynapse.user.permission != null ? resFromSynapse.user.permission : "NOT FOUND";
-                        var physDoc = "NOT FOUND";
-                        var virtualDoc = "NOT FOUND";
-
-                        if (resFromSynapse.user.doc_status != null)
+                        if (checkTokenResult != null)
                         {
-                            physDoc = resFromSynapse.user.doc_status.physical_doc;
-                            virtualDoc = resFromSynapse.user.doc_status.virtual_doc;
+                            if (checkTokenResult.success == true)
+                            {
+                                usersSynapseOauthKey = CommonHelper.GetDecryptedData(checkTokenResult.oauth_consumer_key);
+                            }
+                            else
+                            {
+                                Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 FAILED on Checking User's Synapse OAuth Token - " +
+                                             "CheckTokenResult.msg: [" + checkTokenResult.msg + "], MemberID: [" + MemberId + "]");
+                                res.msg = checkTokenResult.msg;
+                            }
+                        }
+                        else
+                        {
+                            Logger.Error("Member Cntrlr -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
+                                         "CheckTokenResult was NULL, MemberID: [" + MemberId + "]");
+                            res.msg = "Unable to check user's Oauth Token";
                         }
 
-                        Logger.Info("Member Cntrlr -> submitDocumentToSynapseV3 SUCCESSFUL - Permission: [" + permission +
-                                    "], Virtual_Doc: [" + virtualDoc + "], Physical_Doc: [" + physDoc + "], [MemberID: " + MemberId + "]");
-                        res.isSuccess = true;
-                        res.msg = "";
+                        #endregion Check If OAuth Key Still Valid
+                    }
+                }
 
-                        // Update User's "Permission" in SynapseCreateUserResults Table
-                        using (var noochConnection = new NOOCHEntities())
+                #endregion Get User's Synapse OAuth Consumer Key
+
+
+                #region Get User's Fingerprint
+
+                string usersFingerprint = "";
+
+                using (var noochConnection = new NOOCHEntities())
+                {
+                    var member = noochConnection.Members.FirstOrDefault(m => m.MemberId == id && m.IsDeleted != true);
+
+                    if (member == null)
+                    {
+                        Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 ABORTED: Member not found. [MemberId: " + MemberId + "]");
+                        res.msg = "Member not found";
+                        return res;
+                    }
+                    else
+                    {
+                        if (String.IsNullOrEmpty(member.UDID1))
                         {
-                            var synapseUser = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == id && m.IsDeleted == false).FirstOrDefault();
-                            synapseUser.permission = resFromSynapse.user.permission.ToString();
-                            synapseUser.photos = ImageUrl;
+                            Logger.Info("Member Cntrlr -> submitDocumentToSynapseV3 ABORTED: Member's Fingerprint not found. [MemberId: " + MemberId + "]");
+                            res.msg = "Could not find this member's fingerprint";
+                            return res;
+                        }
+                        else
+                        {
+                            usersFingerprint = member.UDID1;
+                        }
+                    }
+                }
 
-                            // Cliff (5/21/16): ALSO NEED TO SAVE "virtual_doc" and "physical_doc" VALUES IN NOOCH DB, BUT FIELDS DON'T EXIST YET
+                #endregion Get User's Fingerprint
 
-                            noochConnection.SaveChanges();
+
+                #region Call Synapse /user/doc/attachments/add API
+
+                try
+                {
+                    submitDocToSynapseV3Class submitDocObj = new submitDocToSynapseV3Class();
+
+                    SynapseV3Input_login login = new SynapseV3Input_login();
+                    login.oauth_key = usersSynapseOauthKey;
+                    submitDocObj.login = login;
+
+                    submitDocToSynapse_user user = new submitDocToSynapse_user();
+                    submitDocToSynapse_user_doc doc = new submitDocToSynapse_user_doc();
+                    doc.attachment = "data:text/csv;base64," + CommonHelper.ConvertImageURLToBase64(ImageUrl).Replace("\\", "");
+
+                    user.fingerprint = usersFingerprint;
+                    user.doc = doc;
+
+                    submitDocObj.user = user;
+
+                    string baseAddress = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) ? "https://sandbox.synapsepay.com/api/v3/user/doc/attachments/add" : "https://synapsepay.com/api/v3/user/doc/attachments/add";
+
+                    var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
+                    http.Accept = "application/json";
+                    http.ContentType = "application/json";
+                    http.Method = "POST";
+
+                    string parsedContent = JsonConvert.SerializeObject(submitDocObj);
+                    ASCIIEncoding encoding = new ASCIIEncoding();
+                    Byte[] bytes = encoding.GetBytes(parsedContent);
+
+                    Stream newStream = http.GetRequestStream();
+                    newStream.Write(bytes, 0, bytes.Length);
+                    newStream.Close();
+
+                    var response = http.GetResponse();
+                    var stream = response.GetResponseStream();
+                    var sr = new StreamReader(stream);
+                    var content = sr.ReadToEnd();
+
+                    kycInfoResponseFromSynapse resFromSynapse = new kycInfoResponseFromSynapse();
+
+                    resFromSynapse = JsonConvert.DeserializeObject<kycInfoResponseFromSynapse>(content);
+
+                    if (resFromSynapse != null)
+                    {
+                        if (resFromSynapse.success == true || resFromSynapse.success.ToString().ToLower() == "true")
+                        {
+                            var permission = resFromSynapse.user.permission != null ? resFromSynapse.user.permission : "NOT FOUND";
+                            var physDoc = "NOT FOUND";
+                            var virtualDoc = "NOT FOUND";
+
+                            if (resFromSynapse.user.doc_status != null)
+                            {
+                                physDoc = resFromSynapse.user.doc_status.physical_doc;
+                                virtualDoc = resFromSynapse.user.doc_status.virtual_doc;
+                            }
+
+                            // Update User's "Permission" in SynapseCreateUserResults Table
+                            using (var noochConnection = new NOOCHEntities())
+                            {
+                                var synapseUser = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == id && m.IsDeleted == false).FirstOrDefault();
+                                synapseUser.permission = resFromSynapse.user.permission.ToString();
+                                synapseUser.photos = ImageUrl;
+
+                                // Cliff (5/21/16): ALSO NEED TO SAVE "virtual_doc" and "physical_doc" VALUES IN NOOCH DB, BUT FIELDS DON'T EXIST YET
+
+                                int save = noochConnection.SaveChanges();
+
+                                if (save > 0)
+                                {
+                                    Logger.Info("Member Cntrlr -> submitDocumentToSynapseV3 - SUCCESSFULLY updated user's Synapse Permission in SynapseCreateUserResult Table" +
+                                                "New Permission: [" + permission + "], ID Doc URL: [" + ImageUrl + "]");
+                                    res.msg = "ID doc saved and submitted successfully.";
+                                    res.isSuccess = true;
+                                }
+                                else
+                                {
+                                    Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 - FAILED to save new Permission and ImageURL in SynapseCreateUserResult Table" +
+                                                "New Permission: [" + permission + "], ID Doc URL: [" + ImageUrl + "]");
+                                    res.msg = "Error saving ID doc";
+                                }
+                            }
+                        }
+                        else
+                        {
+                            res.msg = "Got a response, but success was not true";
+                            Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 FAILED - Got Synapse response, but success was NOT 'true' - [MemberID: " + MemberId + "]");
                         }
                     }
                     else
                     {
-                        res.msg = "Got a response, but success was not true";
-                        Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 FAILED - Got Synapse response, but success was NOT 'true' - [MemberID: " + MemberId + "]");
+                        res.msg = "Verification response was null";
+                        Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 FAILED - Synapse response was NULL - [MemberID: " + MemberId + "]");
                     }
                 }
-                else
+                catch (WebException ex)
                 {
-                    res.msg = "Verification response was null";
-                    Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 FAILED - Synapse response was NULL - [MemberID: " + MemberId + "]");
-                }
-            }
-            catch (WebException ex)
-            {
-                res.msg = "Member Cntrlr Exception #9575";
-                Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 FAILED - Catch [Exception: " + ex.Message + "]");
-            }
+                    // TO DO: ADD ERROR HANDLING FOR SYNAPSE RESPONSE...
 
-            #endregion Call Synapse /user/doc/attachments/add API
+                    res.msg = "Member Cntrlr Exception #1864";
+                    Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 FAILED - Catch [Exception: " + ex.Message + "]");
+                }
+
+                #endregion Call Synapse /user/doc/attachments/add API
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 FAILED - Outer Exception - " +
+                             "MemberID: [" + MemberId + "], Exception: [" + ex.Message + "]");
+            }
 
             return res;
         }
+
 
         public List<Tenants> GetTenants(String NoochId)
         {
@@ -1887,7 +1927,6 @@ namespace noochAdminNew.Controllers
                 return tenants;
             }
         }
-
 
     }
 }
