@@ -13,9 +13,10 @@ using System.Text;
 using System.Threading;
 using System.Web;
 using System.Web.Caching;
-using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Hangfire;
+using GlobalConfiguration = System.Web.Http.GlobalConfiguration;
 
 namespace noochAdminNew
 {
@@ -23,7 +24,7 @@ namespace noochAdminNew
     // visit http://go.microsoft.com/?LinkId=9394801
     public class MvcApplication : System.Web.HttpApplication
     {
-
+       
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -33,9 +34,11 @@ namespace noochAdminNew
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             log4net.Config.XmlConfigurator.Configure();
 
+
             ThreadPool.QueueUserWorkItem(new WaitCallback(runAllDailyChecks));
         }
 
+     
 
         private void runAllDailyChecks(object a)
         {

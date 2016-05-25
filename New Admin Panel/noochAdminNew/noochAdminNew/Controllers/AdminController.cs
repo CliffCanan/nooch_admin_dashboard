@@ -18,6 +18,7 @@ using FileHelpers;
 using System.Data.Entity;
 using System.Text;
 using System.Web.Helpers;
+using Hangfire;
 using noochAdminNew.Classes.PushNotification;
 using Newtonsoft.Json.Linq;
 
@@ -642,6 +643,12 @@ namespace noochAdminNew.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult SendReLinkEmail()
+        {
+            BackgroundJob.Enqueue(() => RelinkBankNotification());
+            return Json("{Done}");
+        }
 
         public void RelinkBankNotification()
         {
@@ -659,26 +666,34 @@ namespace noochAdminNew.Controllers
                 
                 foreach (var member in membersHavingBank)
                 {
-                    var fromAddress = Utility.GetValueFromConfig("adminMail");
-                    var toAddress = CommonHelper.GetDecryptedData(member.UserName.ToString());
+
+                    // just uncomment below mentioned lines to send re link email to all users
+
+
+                    //var fromAddress = Utility.GetValueFromConfig("adminMail");
+                    //var toAddress = CommonHelper.GetDecryptedData(member.UserName.ToString());
                 
-                    var tokens = new Dictionary<string, string>
-	                                    {
-	                                        {Constants.PLACEHOLDER_FIRST_NAME, CommonHelper.GetDecryptedData( member.FirstName.ToString())},
+                    //var tokens = new Dictionary<string, string>
+                    //                    {
+                    //                        {Constants.PLACEHOLDER_FIRST_NAME, CommonHelper.GetDecryptedData( member.FirstName.ToString())},
 	                                         
-	                                        {Constants.MEMO, member.MemberId.ToString()}
-	                                    };
-                    try
-                    {
-                        Utility.SendEmail("relinkBankAccount",
-                                                       fromAddress, toAddress, "Re link Bank Account", null,
-                                                                                 tokens, null, null, null);
-                    }
-                    catch (Exception exc)
-                    {
-                        Logger.Error("Admin-> Error in sending re link bank notification mail to member " + member.MemberId.ToString()+"Error:"+exc.ToString());
-                    }
+                    //                        {Constants.MEMO, member.MemberId.ToString()}
+                    //                    };
+                    //try
+                    //{
+                    //    Utility.SendEmail("relinkBankAccount",
+                    //                                   fromAddress, toAddress, "Re link Bank Account", null,
+                    //                                                             tokens, null, null, null);
+                    //}
+                    //catch (Exception exc)
+                    //{
+                    //    Logger.Error("Admin-> Error in sending re link bank notification mail to member " + member.MemberId.ToString()+"Error:"+exc.ToString());
+                    //}
+                        Logger.Error("Admin-> background process using Hangfire MemberId ->" + member.MemberId);
+
                 }
+
+                Logger.Info("Admin-> Done with sending notification to all users to re link their bank node");
 
             }
             

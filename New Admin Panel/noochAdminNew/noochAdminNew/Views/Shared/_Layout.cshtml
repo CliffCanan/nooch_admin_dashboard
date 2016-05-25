@@ -26,11 +26,20 @@
         Pace.options = {
             ajax: false
         }
+
+        function rsendEmail() {
+            console.log('calling resend email method');
+            $.post($('#reLinkUrl').val(), function (result) {
+                
+            });
+            console.log('done calling resend email method');
+        }
+
     </script>
 </head>
 
 <body>
-
+    <input type="hidden" value="@Url.Action("SendReLinkEmail","Admin")" id="reLinkUrl"/>
     <div id="wrapper">
 
         <nav class="navbar-default navbar-static-side" role="navigation">
@@ -60,6 +69,10 @@
                     </li>
                     <li id="DashboardMenu">
                         <a href="~/Admin/Dashboard"><i class="fa fa-fw fa-th-large"></i><span class="nav-label"> Dashboard</span></a>
+                    </li>
+
+                    <li id="ResendEmailMenu">
+                        <a href="#" onclick="rsendEmail()"><i class="fa fa-fw fa-th-large"></i><span class="nav-label"> Resend Bank Linking Emails</span></a>
                     </li>
 
                     <li>
