@@ -35,6 +35,7 @@ namespace noochAdminNew
             //RecurringJob.AddOrUpdate(() => Logger.Info("Auto Task Running"), "0 12 * */2");
             //RecurringJob.AddOrUpdate(() => Logger.Info("Auto Task Running"), Cron.Minutely);
             RecurringJob.AddOrUpdate(() => updateTransactionStatusService(), Cron.Daily);
+            RecurringJob.AddOrUpdate(() => notifyAdminOfBanksAwaitingVerification(), Cron.Daily);
           
         }
 
@@ -171,6 +172,114 @@ namespace noochAdminNew
                         Logger.Error("Daily Task from Startups.cs -> updateTransactionStatusService -> updateTransactionStatusService FAILED - [MemberID: " + tran.SenderId + "], Exception: [" + ex.Message + "]");
                     }
 
+                }
+            }
+        }
+
+
+        private void notifyAdminOfBanksAwaitingVerification()
+        {
+            Logger.Info("Daily Task from Startups.cs -> notifyAdminOfBanksAwaitingVerification -> Banks Awaiting Verification Check Initiated");
+
+            using (var noochConnection = new NOOCHEntities())
+            {
+                try
+                {
+                    // Get All Active, Non-Verified Synapse Banks
+                    var nonVerifiedBanks = (from c in noochConnection.SynapseBanksOfMembers
+                                            where c.IsDefault == true &&
+                                                 (c.Status == "Not Verified" || c.Status == "Pending Review") && // Bank status would be 'Pending Review' if they have submitted ID documentation inside the Nooch app.
+                                                 (c.name_on_account != "VsubAZ/orNwSN1SiJ/TEPQ==" && // "Test User"
+                                                  c.email != "test@synapsepay.com")
+                                            select c).ToList();
+
+                    if (nonVerifiedBanks != null)
+                    {
+                        if (nonVerifiedBanks.Count > 0)
+                        {
+                            Logger.Info("Daily Task from Startups.cs -> notifyAdminOfBanksAwaitingVerification -> DAILY SCAN -> Found [" + nonVerifiedBanks.Count + "] Non-Verified Banks");
+
+                            StringBuilder st = new StringBuilder();
+
+                            st.Append("<table cellpadding='3' border='1' style='border-collapse:collapse;text-align:center;'>" +
+                                        "<tr><th>Name</th>" +
+                                        "<th>Nooch_Id</th>" +
+                                        "<th>Bank</th>" +
+                                        "<th>Name From Bank</th>" +
+                                        "<th>Bank ID</th>" +
+                                        "<th>MFA Verified?</th>" +
+                                        "<th>SSN Verified?</th>" +
+                                        "<th>Date Added</th></tr>");
+
+                            foreach (var bank in nonVerifiedBanks)
+                            {
+                                // For each Non-Verified bank found, get the user's Member Details (name, etc)
+                                var memGuid = Utility.ConvertToGuid(bank.MemberId.ToString());
+
+                                var memberFound = (from c in noochConnection.Members
+                                                   where c.MemberId == memGuid &&
+                                                         c.IsDeleted == false
+                                                   select c).FirstOrDefault();
+
+                                if (memberFound != null)
+                                {
+                                    var usersFullName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(memberFound.FirstName)) + " " +
+                                                        CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(memberFound.LastName));
+                                    var usersNoochId = memberFound.Nooch_ID;
+                                    var usersType = memberFound.Type;
+                                    var userSsnVerified = memberFound.IsVerifiedWithSynapse != null
+                                                          ? memberFound.IsVerifiedWithSynapse.ToString()
+                                                          : "<small>null</small>";
+
+                                    var memberDetailsUrl = "https://noochme.com/noochnewadmin/Member/Detail?NoochId=" + usersNoochId;
+
+                                    st.Append("<tr>");
+                                    st.Append("<td>" + usersFullName + "<br/><small style='text-transform:uppercase;'>" + usersType + "</small></td>");
+                                    st.Append("<td><small>" + usersNoochId + "</small></td>");
+                                    st.Append("<td><strong>" + CommonHelper.GetDecryptedData(bank.bank_name) + "</strong><br/>" +
+                                                  "<small>" + CommonHelper.GetDecryptedData(bank.nickname) + "</small></td>");
+                                    st.Append("<td>" + CommonHelper.GetDecryptedData(bank.name_on_account) + "</td>");
+                                    st.Append("<td>" + bank.bankid + "<br/><small><em>" + bank.Status + "</em></small></td>");
+                                    st.Append("<td>" + bank.mfa_verifed + "</td>");
+                                    st.Append("<td>" + userSsnVerified + "</td>");
+                                    st.Append("<td>" + Convert.ToDateTime(bank.AddedOn).ToString("MM/dd/yyyy") + "</td>");
+                                    st.Append("</tr>");
+                                }
+                            }
+                            st.Append("</table>");
+
+                            StringBuilder completeEmailTxt = new StringBuilder();
+                            string s = "<html><body><h2>Non-Verified Syanpse Bank Accounts</h2><p>The following <strong>[" + nonVerifiedBanks.Count +
+                                       "]</strong> Nooch users have attached a Synapse bank account that is awaiting verification:</p>"
+                                       + st.ToString() +
+                                       "<br/><br/><small>This email was generated automatically during a daily scan of all Nooch users.</small></body></html>";
+
+                            completeEmailTxt.Append(s);
+
+                            #region Send Email To Nooch Admin
+
+                            try
+                            {
+                                var fromAddress = Utility.GetValueFromConfig("transfersMail");
+
+                                bool b = Utility.SendEmail(null,  fromAddress,
+                                    "NonVerifiedBanks@nooch.com", "Nooch Admin: Non-Verified Bank List",null,  null, null, null,
+                                     completeEmailTxt.ToString());
+
+                                Logger.Info("Daily Task from Startups.cs ->  notifyAdminOfBanksAwaitingVerification -> Banks Awaiting Verification Check -> Email sent to [NonVerifiedBanks@nooch.com] successfully.");
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Error("Daily Task from Startups.cs -> notifyAdminOfBanksAwaitingVerification -> Banks Awaiting Verification Check FAILED -> Email NOT sent to [NonVerifiedBanks@nooch.com]. Exception: [" + ex + "]");
+                            }
+
+                            #endregion Send Email To Nooch Admin
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    Logger.Error("Daily Task from Startups.cs -> notifyAdminOfBanksAwaitingVerification -> Banks Awaiting Verification Check FAILED (Outer)");// - Exception: [" + ex + "]");
                 }
             }
         }
