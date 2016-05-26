@@ -41,7 +41,7 @@ namespace noochAdminNew
 
         public void updateTransactionStatusService()
         {
-            Logger.Info("Global.asax -> Updating Transaction's Synapse status  from daily job Scheduler");
+            Logger.Info("Daily Task from Startups.cs -> updateTransactionStatusService -> ---------------------- Job Initiated at ["+DateTime.Now+"]----------------------");
             SynapseV3ShowTransInput transInput = new SynapseV3ShowTransInput();
 
             //get transaction details
@@ -63,7 +63,7 @@ namespace noochAdminNew
 
                 foreach (var objT in transactions)
                 {
-                    Logger.Info(" Global.asax -> Updating transaction's Synapse status using  showTransactions serivice  for Transaction id - [TransactionId: " + objT.tr.TransactionId + "] in a daily scheduled job");
+                    Logger.Info("Daily Task from Startups.cs -> updateTransactionStatusService -> Updating transaction's Synapse status using  showTransactions serivice  for Transaction id - [TransactionId: " + objT.tr.TransactionId + "] in a daily scheduled job");
 
                     Transaction tran = objT.tr;
                     var usersSynapseOauthKey = "";
@@ -83,19 +83,19 @@ namespace noochAdminNew
                         }
                         else
                         {
-                            Logger.Error(" Global.asax -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
+                            Logger.Error("Daily Task from Startups.cs -> updateTransactionStatusService -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
                                                    "CheckTokenResult.msg: [" + checkTokenResult.msg + "], MemberID: [" + tran.SenderId + "]");
 
 
-                            return;
+                            continue;
                         }
                     }
                     else
                     {
-                        Logger.Error(" Global.asax -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
+                        Logger.Error("Daily Task from Startups.cs -> updateTransactionStatusService -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
                                                    "CheckTokenResult was NULL, MemberID: [" + tran.SenderId + "]");
 
-                        return;
+                        continue;
                     }
 
                     #endregion Check If OAuth Key Still Valid
@@ -156,19 +156,19 @@ namespace noochAdminNew
                             {
                                 tran.SynapseStatus = "";
                                 noochConnection.SaveChanges();
-                                Logger.Info("Global.asax -> response from showTransactioFromSynapseV3 is false for transaction - [transactionID: " + tran.TransactionId + "]");
+                                Logger.Info("Daily Task from Startups.cs -> updateTransactionStatusService -> response from showTransactioFromSynapseV3 is false for transaction - [transactionID: " + tran.TransactionId + "]");
                             }
                         }
                         else
                         {
-                            Logger.Info("Global.asax -> response from showTransactioFromSynapseV3 is null for transaction - [transactionID: " + tran.TransactionId + "]");
+                            Logger.Info("Daily Task from Startups.cs -> updateTransactionStatusService -> response from showTransactioFromSynapseV3 is null for transaction - [transactionID: " + tran.TransactionId + "]");
 
                         }
 
                     }
                     catch (WebException ex)
                     {
-                        Logger.Error("Global.asax -> updateTransactionStatusService FAILED - [MemberID: " + tran.SenderId + "], Exception: [" + ex.Message + "]");
+                        Logger.Error("Daily Task from Startups.cs -> updateTransactionStatusService -> updateTransactionStatusService FAILED - [MemberID: " + tran.SenderId + "], Exception: [" + ex.Message + "]");
                     }
 
                 }
