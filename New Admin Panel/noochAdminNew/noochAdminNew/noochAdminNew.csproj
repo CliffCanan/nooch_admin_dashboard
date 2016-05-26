@@ -217,6 +217,7 @@
     <Compile Include="Classes\ResponseClasses\CreateAdminResultClass.cs" />
     <Compile Include="Classes\ResponseClasses\CreateNewReferralCodeResultClass.cs" />
     <Compile Include="Classes\ResponseClasses\DisputeDetailsResultClass.cs" />
+    <Compile Include="Classes\ResponseClasses\googleURLShortnerResponseClass.cs" />
     <Compile Include="Classes\ResponseClasses\LoginResult.cs" />
     <Compile Include="Classes\ResponseClasses\MemberOperationsResult.cs" />
     <Compile Include="Classes\ResponseClasses\ReferralsResultClass.cs" />

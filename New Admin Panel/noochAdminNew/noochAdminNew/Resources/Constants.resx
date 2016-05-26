@@ -153,11 +153,20 @@
   <data name="PLACEHOLDER_PASSWORD" xml:space="preserve">
     <value>$Password$</value>
   </data>
+  <data name="PLACEHOLDER_PAY_LINK" xml:space="preserve">
+    <value>$PayLink$</value>
+  </data>
   <data name="PLACEHOLDER_PINNUMBER" xml:space="preserve">
     <value>$PinNumber$</value>
   </data>
   <data name="PLACEHOLDER_RECIPIENT_FIRST_NAME" xml:space="preserve">
     <value>$RecipientFirstName$</value>
+  </data>
+  <data name="PLACEHOLDER_REJECT_LINK" xml:space="preserve">
+    <value>$RejectLink$</value>
+  </data>
+  <data name="PLACEHOLDER_SENDER_FULL_NAME" xml:space="preserve">
+    <value>$SenderFullName$</value>
   </data>
   <data name="PLACEHOLDER_TRANSACTION_DATE" xml:space="preserve">
     <value>$TransactionDate$</value>
@@ -165,8 +174,14 @@
   <data name="PLACEHOLDER_TRANSACTION_ID" xml:space="preserve">
     <value>$TransactionId$</value>
   </data>
+  <data name="PLACEHOLDER_TRANSFER_ACCEPT_LINK" xml:space="preserve">
+    <value>$NewUserTransferAcceptLink$</value>
+  </data>
   <data name="PLACEHOLDER_TRANSFER_AMOUNT" xml:space="preserve">
     <value>$Transfer_Amount$</value>
+  </data>
+  <data name="PLACEHOLDER_TRANSFER_REJECT_LINK" xml:space="preserve">
+    <value>$NewUserTransferRejectLink$</value>
   </data>
   <data name="STATUS_ACTIVE" xml:space="preserve">
     <value>Active</value>

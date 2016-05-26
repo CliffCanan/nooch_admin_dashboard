@@ -890,6 +890,9 @@
         <Function Name="GetTopReferringMembers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="vFilterType" Type="int" Mode="In" />
         </Function>
+        <Function Name="pGetSDNListing" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="searchtext" Type="varchar" Mode="In" />
+        </Function>
         <EntityContainer Name="NOOCHModelStoreContainer">
           <EntitySet Name="ADD" EntityType="Self.ADD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AdminUsers" EntityType="Self.AdminUsers" Schema="dbo" store:Type="Tables" />
@@ -1072,6 +1075,9 @@
           </AssociationSet>
           <EntitySet Name="SynapseCreateUserResults" EntityType="NOOCHModel.SynapseCreateUserResult" />
           <EntitySet Name="SynapseAddTransactionResults" EntityType="NOOCHModel.SynapseAddTransactionResult" />
+          <FunctionImport Name="GetSDNListing" EntitySet="SDNSearchResults" ReturnType="Collection(NOOCHModel.SDNSearchResult)">
+            <Parameter Name="searchtext" Mode="In" Type="String" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="GetTopReferringMembers_Result">
           <Property Type="Guid" Name="InviteCode" Nullable="true" />
@@ -2837,6 +2843,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetSDNListing" FunctionName="NOOCHModel.Store.pGetSDNListing" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

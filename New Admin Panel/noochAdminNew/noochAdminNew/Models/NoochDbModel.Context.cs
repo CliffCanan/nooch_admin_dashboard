@@ -117,5 +117,23 @@ namespace noochAdminNew.Models
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetMembersInEachSynapseBank_Result>("GetMembersInEachSynapseBank");
         }
+    
+        public virtual ObjectResult<SDNSearchResult> GetSDNListing(string searchtext)
+        {
+            var searchtextParameter = searchtext != null ?
+                new ObjectParameter("searchtext", searchtext) :
+                new ObjectParameter("searchtext", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SDNSearchResult>("GetSDNListing", searchtextParameter);
+        }
+    
+        public virtual ObjectResult<SDNSearchResult> GetSDNListing(string searchtext, MergeOption mergeOption)
+        {
+            var searchtextParameter = searchtext != null ?
+                new ObjectParameter("searchtext", searchtext) :
+                new ObjectParameter("searchtext", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SDNSearchResult>("GetSDNListing", mergeOption, searchtextParameter);
+        }
     }
 }

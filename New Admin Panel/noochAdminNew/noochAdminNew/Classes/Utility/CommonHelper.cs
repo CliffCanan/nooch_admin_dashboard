@@ -6,9 +6,13 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
+using System.Web.Util;
 using noochAdminNew.Classes.Crypto;
 using noochAdminNew.Classes.ModelClasses;
+using noochAdminNew.Classes.PushNotification;
+using noochAdminNew.Classes.ResponseClasses;
 using noochAdminNew.Models;
+using noochAdminNew.Resources;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -941,5 +945,626 @@ namespace noochAdminNew.Classes.Utility
 
             return null;
         }
+
+
+
+
+        public static List<Member> GetAllMembers()
+        {
+            // Logger.LogDebugMessage("MDA -> GetAllMembers");
+
+            using (var noochConnection = new NOOCHEntities())
+            {
+                try
+                {
+
+
+
+                    return noochConnection.Members.Where(m => m.IsDeleted == false).ToList(); ;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("CommonHelper -> GetAllMembers FAILED - [Exception: " + ex + "]");
+                    return null;
+                }
+            }
+        }
+
+
+
+        public static List<Transaction> GetMemberTransactions(string MemberId, string TransactionType)
+        {
+            //Logger.LogDebugMessage("GetMemberTransactions - GetMemberTransactions[].");
+            var id = Utility.ConvertToGuid(MemberId);
+            var tranType = CommonHelper.GetEncryptedData(TransactionType);
+
+            using (var noochConnection = new NOOCHEntities())
+            {
+                try
+                {
+                    if (TransactionType == "Request")
+                    {
+
+
+                        List<Transaction> list = noochConnection.Transactions.Where(t => t.TransactionType == "Request" && t.Member1.MemberId == id && t.TransactionStatus != "Cancelled")
+                                .Distinct()
+                                .OrderBy(o => o.TransactionDate)
+                                .ToList();
+                        return list;
+                    }
+                    else if (TransactionType == "Invite")
+                    {
+                        List<Transaction> list = noochConnection.Transactions.Where(t => t.TransactionType == "Invite" && t.Member1.MemberId == id && t.TransactionStatus != "Cancelled")
+                                .Distinct()
+                                .OrderBy(o => o.TransactionDate)
+                                .ToList();
+                        return list;
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("CommonHelper -> GetMemberTransactions FAILED - [Exception: " + ex + "]");
+                    return null;
+                }
+            }
+            return null;
+        }
+
+
+
+        public static string SendTransactionReminderEmail(string ReminderType, string TransactionId, string MemberId)
+        {
+            Logger.Info("Common Helper -> SendTransactionReminderEmail Initiated. MemberID: [" + MemberId + "], " +
+                                   "TransactionId: [" + TransactionId + "], " +
+                                   "ReminderType: [" + ReminderType + "]");
+
+            try
+            {
+
+                var TransId = Utility.ConvertToGuid(TransactionId);
+                var MemId = Utility.ConvertToGuid(MemberId);
+                using (NOOCHEntities noochConnection = new NOOCHEntities())
+                {
+                    if (ReminderType == "RequestMoneyReminderToNewUser" ||
+                  ReminderType == "RequestMoneyReminderToExistingUser")
+                    {
+                        #region Requests - Both Types
+
+
+                        var trans =
+                            noochConnection.Transactions.FirstOrDefault(
+                                t =>
+                                    t.Member1.MemberId == MemId && t.TransactionId == TransId &&
+                                    t.TransactionStatus == "Pending" && t.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw==");
+                            
+
+                        if (trans != null)
+                        {
+                            #region Setup Common Variables
+
+                            string fromAddress = Utility.GetValueFromConfig("transfersMail");
+
+                            string senderFirstName = UppercaseFirst(GetDecryptedData(trans.Member.FirstName));
+                            string senderLastName = UppercaseFirst(GetDecryptedData(trans.Member.LastName));
+
+                            string payLink = String.Concat(Utility.GetValueFromConfig("ApplicationURL"),
+                                                           "Nooch/PayRequest?TransactionId=" + trans.TransactionId);
+
+                            string s22 = trans.Amount.ToString("n2");
+                            string[] s32 = s22.Split('.');
+
+                            string memo = "";
+                            if (trans.Memo != null && trans.Memo != "")
+                            {
+                                if (trans.Memo.Length > 3)
+                                {
+                                    string firstThreeChars = trans.Memo.Substring(0, 3).ToLower();
+                                    bool startWithFor = firstThreeChars.Equals("for");
+
+                                    if (startWithFor)
+                                    {
+                                        memo = trans.Memo;
+                                    }
+                                    else
+                                    {
+                                        memo = "For " + trans.Memo;
+                                    }
+                                }
+                                else
+                                {
+                                    memo = "For " + trans.Memo;
+                                }
+                            }
+
+
+                            bool isForRentScene = false;
+
+                            if (trans.Member.MemberId.ToString().ToLower() == "852987e8-d5fe-47e7-a00b-58a80dd15b49") // Rent Scene's account
+                            {
+                                isForRentScene = true;
+                                senderFirstName = "Rent Scene";
+                                senderLastName = "";
+
+                                payLink = payLink + "&rs=1";
+                            }
+
+                            #endregion Setup Common Variables
+
+
+                            #region RequestMoneyReminderToNewUser
+
+                            // Now check if this transaction was sent via Email or Phone Number (SMS)
+                            if (trans.InvitationSentTo != null) // 'InvitationSentTo' field only used if it's an Email Transaction
+                            {
+                                #region If invited by email
+
+                                string rejectLink = String.Concat(Utility.GetValueFromConfig("ApplicationURL"),
+                                                                  "Nooch/RejectMoney?TransactionId=" + trans.TransactionId +
+                                                                  "&UserType=U6De3haw2r4mSgweNpdgXQ==" +
+                                                                  "&LinkSource=75U7bZRpVVxLNbQuoMQEGQ==" +
+                                                                  "&TransType=T3EMY1WWZ9IscHIj3dbcNw==");
+
+                                var tokens2 = new Dictionary<string, string>
+                                {
+								    {Constants.PLACEHOLDER_FIRST_NAME, senderFirstName + " " + senderLastName},
+									{Constants.PLACEHOLDER_NEWUSER, ""},
+									{Constants.PLACEHOLDER_TRANSFER_AMOUNT, s32[0]},
+									{Constants.PLACEHLODER_CENTS, s32[1]},
+									{Constants.PLACEHOLDER_REJECT_LINK, rejectLink},
+									{Constants.PLACEHOLDER_TRANSACTION_DATE, Convert.ToDateTime(trans.TransactionDate).ToString("MMM dd yyyy")},
+									{Constants.MEMO, memo},
+									{Constants.PLACEHOLDER_PAY_LINK, payLink}
+								};
+
+                                var templateToUse = isForRentScene ? "requestReminderToNewUser_RentScene"
+                                                                   : "requestReminderToNewUser";
+
+                                var toAddress = CommonHelper.GetDecryptedData(trans.InvitationSentTo);
+
+                                // Sending Request reminder email to Non-Nooch user
+                                try
+                                {
+                                    Utility.SendEmail(templateToUse,  fromAddress, toAddress, 
+                                                                senderFirstName + " " + senderLastName + " requested " + "$" + s22.ToString() + " - Reminder",
+                                                                null, tokens2, null, null, null);
+
+                                    Logger.Info("Common Helper -> SendTransactionReminderEmail - [" + templateToUse + "] sent to [" + toAddress + "] successfully.");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Error("Common Helper -> SendTransactionReminderEmail - [" + templateToUse + "] NOT sent to [" + toAddress + "], Exception: [" + ex + "]");
+                                }
+
+                                return "Reminder mail sent successfully.";
+
+                                #endregion If invited by email
+                            }
+                            else if (trans.IsPhoneInvitation == true && trans.PhoneNumberInvited != null)
+                            {
+                                #region If Invited by SMS
+
+                                string RejectShortLink = "";
+                                string AcceptShortLink = "";
+
+                                string rejectLink = String.Concat(Utility.GetValueFromConfig("ApplicationURL"),
+                                                                  "Nooch/RejectMoney?TransactionId=" + trans.TransactionId +
+                                                                  "&UserType=U6De3haw2r4mSgweNpdgXQ==" +
+                                                                  "&LinkSource=Um3I3RNHEGWqKM9MLsQ1lg==" +
+                                                                  "&TransType=T3EMY1WWZ9IscHIj3dbcNw==");
+
+
+                                #region Shortening URLs for SMS
+
+                                string googleUrlAPIKey = Utility.GetValueFromConfig("GoogleURLAPI");
+
+                                // Shorten the 'Pay' link
+                                var cli = new WebClient();
+                                cli.Headers[HttpRequestHeader.ContentType] = "application/json";
+                                string response = cli.UploadString("https://www.googleapis.com/urlshortener/v1/url?key=" + googleUrlAPIKey, "{longUrl:\"" + rejectLink + "\"}");
+                                googleURLShortnerResponseClass shortRejectLinkFromGoogleResult = JsonConvert.DeserializeObject<googleURLShortnerResponseClass>(response);
+
+                                if (shortRejectLinkFromGoogleResult != null)
+                                {
+                                    RejectShortLink = shortRejectLinkFromGoogleResult.id;
+                                }
+                                else
+                                {
+                                    // Google short URL API broke...
+                                    Logger.Error("Common Helper -> SendTransactionReminderEmail -> requestReceivedToNewUser Google short Reject URL NOT generated. Long Reject URL: [" + rejectLink + "].");
+                                }
+
+                                // Now shorten the 'Pay' link
+                                cli.Dispose();
+                                try
+                                {
+                                    var cli2 = new WebClient();
+                                    cli2.Headers[HttpRequestHeader.ContentType] = "application/json";
+                                    string response2 = cli2.UploadString("https://www.googleapis.com/urlshortener/v1/url?key=" + googleUrlAPIKey, "{longUrl:\"" + payLink + "\"}");
+                                    googleURLShortnerResponseClass googlerejectshortlinkresult2 = JsonConvert.DeserializeObject<googleURLShortnerResponseClass>(response2);
+
+                                    if (googlerejectshortlinkresult2 != null)
+                                    {
+                                        AcceptShortLink = googlerejectshortlinkresult2.id;
+                                    }
+                                    else
+                                    {
+                                        // Google short URL API broke...
+                                        Logger.Error("Common Helper -> SendTransactionReminderEmail -> requestReceivedToNewUser Google short Pay URL NOT generated. Long Pay URL: [" + payLink + "].");
+                                    }
+                                    cli2.Dispose();
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Error("Common Helper -> SendTransactionReminderEmail -> requestReceivedToNewUser Google short PAY URL NOT generated. Long Pay URL: [" + payLink + "].");
+                                    return ex.ToString();
+                                }
+
+                                #endregion Shortening URLs for SMS
+
+
+                                #region Sending SMS
+
+                                try
+                                {
+                                    string SMSContent = "Just a reminder, " + senderFirstName + " " + senderLastName + " requested $" +
+                                                          s32[0].ToString() + "." + s32[1].ToString() +
+                                                          " from you using Nooch, a free app. Tap here to pay: " + AcceptShortLink +
+                                                          ". Tap here to reject: " + RejectShortLink;
+
+                                    Utility.SendSMS(GetDecryptedData(trans.PhoneNumberInvited), SMSContent, "");
+
+                                    Logger.Info("Common Helper -> SendTransactionReminderEmail -> Request Reminder SMS sent to [" + CommonHelper.GetDecryptedData(trans.PhoneNumberInvited) + "].");
+
+                                    return "Reminder sms sent successfully.";
+                                }
+                                catch (Exception)
+                                {
+                                    Logger.Error("Common Helper -> SendTransactionReminderEmail -> Request Reminder SMS NOT sent to [" + CommonHelper.GetDecryptedData(trans.PhoneNumberInvited) + "]. Problem occured in sending SMS.");
+                                    return "Unable to send sms reminder.";
+                                }
+
+                                #endregion Sending SMS
+
+                                #endregion If Invited by SMS
+                            }
+
+                            #endregion RequestMoneyReminderToNewUser
+
+
+                            #region RequestMoneyReminderToExistingUser
+
+                            else if (trans.Member.MemberId != null)
+                            {
+                                string rejectLink = String.Concat(Utility.GetValueFromConfig("ApplicationURL"), "Nooch/RejectMoney?TransactionId=" + TransId + "&UserType=mx5bTcAYyiOf9I5Py9TiLw==&LinkSource=75U7bZRpVVxLNbQuoMQEGQ==&TransType=T3EMY1WWZ9IscHIj3dbcNw==");
+                                string paylink = "nooch://";
+
+                                senderFirstName = UppercaseFirst(GetDecryptedData(trans.Member1.FirstName));
+                                senderLastName = UppercaseFirst(GetDecryptedData(trans.Member1.LastName));
+
+                                #region Reminder EMAIL
+
+                                string toAddress = CommonHelper.GetDecryptedData(trans.Member.UserName);
+
+                                var tokens2 = new Dictionary<string, string>
+                                {
+								    {Constants.PLACEHOLDER_FIRST_NAME, senderFirstName},
+									{Constants.PLACEHOLDER_NEWUSER, UppercaseFirst(GetDecryptedData(trans.Member.FirstName))},
+									{Constants.PLACEHOLDER_TRANSFER_AMOUNT,s32[0].ToString()},
+									{Constants.PLACEHLODER_CENTS,s32[1].ToString()},
+									{Constants.PLACEHOLDER_REJECT_LINK,rejectLink},
+									{Constants.PLACEHOLDER_TRANSACTION_DATE,Convert.ToDateTime(trans.TransactionDate).ToString("MMM dd yyyy")},
+									{Constants.MEMO, memo},
+									{Constants.PLACEHOLDER_PAY_LINK,paylink}
+								};
+
+                                var templateToUse = isForRentScene ? "requestReminderToExistingUser_RentScene"
+                                                                   : "requestReminderToExistingUser";
+
+                                try
+                                {
+                                    Utility.SendEmail(templateToUse,  fromAddress,
+                                        toAddress,  senderFirstName + " " + senderLastName + " requested " + "$" + s22.ToString() + " with Nooch - Reminder",
+                                        null, tokens2, null, null, null);
+
+                                    Logger.Info("Common Helper -> SendTransactionReminderEmail - [" + templateToUse + "] sent to [" + toAddress + "] successfully.");
+                                }
+                                catch (Exception)
+                                {
+                                    Logger.Error("TDA -> SendTransactionReminderEmail - [" + templateToUse + "] NOT sent to [" + toAddress + "]. Problem occured in sending mail.");
+                                }
+
+                                #endregion Reminder EMAIL
+
+                                #region Reminder PUSH NOTIFICATION
+
+                                if (!String.IsNullOrEmpty(trans.Member.DeviceToken) &&
+                                    trans.Member.DeviceToken != "(null)")
+                                {
+                                    try
+                                    {
+                                        string firstName = (!String.IsNullOrEmpty(trans.Member.FirstName)) ? " " + UppercaseFirst(GetDecryptedData(trans.Member.FirstName)) : "";
+
+                                        string msg = "Hey" + firstName + "! Just a reminder that " + senderFirstName + " " + senderLastName +
+                                                     " sent you a Nooch request for $" + trans.Amount.ToString("n2") + ". Might want to pay up!";
+
+                                        ApplePushNotification.SendNotificationMessage(msg, 1, null, trans.Member.DeviceToken,
+                                                                                      Utility.GetValueFromConfig("AppKey"),
+                                                                                      Utility.GetValueFromConfig("MasterSecret"));
+
+                                        Logger.Info("Common Helper -> SendTransactionReminderEmail - (B/t 2 Existing Nooch Users) - Push notification sent successfully - [Username: " +
+                                                               toAddress + "], [Device Token: " + trans.Member.DeviceToken + "]");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Logger.Error("Common Helper -> SendTransactionReminderEmail - (B/t 2 Existing Nooch Users) - Push notification NOT sent - [Username: " +
+                                                                toAddress + "], [Device Token: " + trans.Member.DeviceToken + "], [Exception: " + ex.Message + "]");
+                                    }
+                                }
+
+                                #endregion  Reminder PUSH NOTIFICATION
+
+                                return "Reminder mail sent successfully.";
+                            }
+
+                            #endregion RequestMoneyReminderToExistingUser
+
+                            else
+                            {
+                                return "No recipient MemberId found for this transaction.";
+                            }
+                        }
+                        else
+                        {
+                            Logger.Error("Common Helper -> SendTransactionReminderEmail FAILED - Could not find the Transaction. MemberID: [" + MemberId + "]. TransactionId: [" + TransactionId + "]");
+                            return "No transaction found";
+                        }
+
+                        #endregion Requests - Both Types
+                    }
+
+                    else if (ReminderType == "InvitationReminderToNewUser")
+                    {
+                        #region InvitationReminderToNewUser
+
+                        
+                        var trans =
+                            noochConnection.Transactions.FirstOrDefault(
+                                t =>
+                                    t.Member1.MemberId == MemId && t.TransactionId == TransId &&
+                                    t.TransactionStatus == "Pending" &&
+                                    (t.TransactionType == "DrRr1tU1usk7nNibjtcZkA==" ||
+                                     t.TransactionType == "5dt4HUwCue532sNmw3LKDQ=="));
+                            
+                            
+
+                        if (trans != null)
+                        {
+                            #region Setup Variables
+
+                            string senderFirstName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(trans.Member.FirstName));
+                            string senderLastName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(trans.Member.LastName));
+
+                            string linkSource = !String.IsNullOrEmpty(trans.PhoneNumberInvited) ? "Um3I3RNHEGWqKM9MLsQ1lg=="  // "Phone"
+                                                                                                : "75U7bZRpVVxLNbQuoMQEGQ=="; // "Email"
+
+                            string rejectLink = String.Concat(Utility.GetValueFromConfig("ApplicationURL"),
+                                                              "trans/rejectMoney.aspx?TransactionId=" + trans.TransactionId +
+                                                              "&UserType=U6De3haw2r4mSgweNpdgXQ==" +
+                                                              "&LinkSource=" + linkSource +
+                                                              "&TransType=DrRr1tU1usk7nNibjtcZkA==");
+
+                            string acceptLink = String.Concat(Utility.GetValueFromConfig("ApplicationURL"),
+                                                              "trans/depositMoney.aspx?TransactionId=" + trans.TransactionId.ToString());
+
+                            string s22 = trans.Amount.ToString("n2");
+                            string[] s32 = s22.Split('.');
+
+                            string memo = "";
+                            if (trans.Memo != null && trans.Memo != "")
+                            {
+                                if (trans.Memo.Length > 3)
+                                {
+                                    string firstThreeChars = trans.Memo.Substring(0, 3).ToLower();
+                                    bool startWithFor = firstThreeChars.Equals("for");
+
+                                    if (startWithFor)
+                                    {
+                                        memo = trans.Memo.ToString();
+                                    }
+                                    else
+                                    {
+                                        memo = "For " + trans.Memo.ToString();
+                                    }
+                                }
+                                else
+                                {
+                                    memo = "For " + trans.Memo.ToString();
+                                }
+                            }
+
+                            #endregion Setup Variables
+
+                            if (trans.InvitationSentTo != null)
+                            {
+                                #region Invitation Was Sent By Email
+
+                                var recipientEmail = CommonHelper.GetDecryptedData(trans.InvitationSentTo);
+
+                                var tokens2 = new Dictionary<string, string>
+												 {
+													{Constants.PLACEHOLDER_FIRST_NAME, senderFirstName},
+													{Constants.PLACEHOLDER_SENDER_FULL_NAME, senderFirstName + " " + senderLastName},
+													{Constants.PLACEHOLDER_TRANSFER_AMOUNT, s32[0].ToString()},
+													{Constants.PLACEHLODER_CENTS, s32[1].ToString()},
+													{Constants.PLACEHOLDER_TRANSFER_REJECT_LINK, rejectLink},
+													{Constants.PLACEHOLDER_TRANSACTION_DATE, Convert.ToDateTime(trans.TransactionDate).ToString("MMM dd yyyy")},
+													{Constants.MEMO, memo},
+													{Constants.PLACEHOLDER_TRANSFER_ACCEPT_LINK, acceptLink}
+												 };
+                                try
+                                {
+                                    string fromAddress = Utility.GetValueFromConfig("transfersMail");
+
+                                    Utility.SendEmail("transferReminderToRecipient",  fromAddress,
+                                                                recipientEmail, 
+                                                                senderFirstName + " " + senderLastName + " sent you " + "$" + s22.ToString() + " - Reminder",
+                                                                null, tokens2, null, null, null);
+
+                                    Logger.Info("Common Helper -> SendTransactionReminderEmail -> Reminder email (Invite, New user) sent to [" + recipientEmail + "] successfully.");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.Error("Common Helper -> SendTransactionReminderEmail -> Reminder email (Invite, New user) NOT sent to [" + recipientEmail +
+                                                           "], Exception: [" + ex + "]");
+                                }
+
+                                return "Reminder mail sent successfully.";
+
+                                #endregion Invitation Was Sent By Email
+                            }
+                            else if (trans.IsPhoneInvitation == true &&
+                                      String.IsNullOrEmpty(trans.InvitationSentTo) &&
+                                     !String.IsNullOrEmpty(trans.PhoneNumberInvited))
+                            {
+                                #region Invitation Was Sent By SMS
+
+                                #region Shortening URLs for SMS
+
+                                string RejectShortLink = "";
+                                string AcceptShortLink = "";
+
+                                string googleUrlAPIKey = Utility.GetValueFromConfig("GoogleURLAPI");
+
+                                var cli = new WebClient();
+                                cli.Headers[HttpRequestHeader.ContentType] = "application/json";
+                                string response = cli.UploadString("https://www.googleapis.com/urlshortener/v1/url?key=" + googleUrlAPIKey, "{longUrl:\"" + rejectLink + "\"}");
+
+                                googleURLShortnerResponseClass googleRejectShortLinkResult = JsonConvert.DeserializeObject<googleURLShortnerResponseClass>(response);
+
+                                if (googleRejectShortLinkResult != null)
+                                {
+                                    RejectShortLink = googleRejectShortLinkResult.id;
+                                }
+                                else
+                                {
+                                    // Google short URL link broke...
+                                }
+
+                                // Now shorten 'Accept' link
+                                cli.Dispose();
+
+                                try
+                                {
+                                    var cli2 = new WebClient();
+                                    cli2.Headers[HttpRequestHeader.ContentType] = "application/json";
+                                    string response2 = cli2.UploadString("https://www.googleapis.com/urlshortener/v1/url?key=" + googleUrlAPIKey, "{longUrl:\"" + acceptLink + "\"}");
+                                    googleURLShortnerResponseClass googlerejectshortlinkresult2 = JsonConvert.DeserializeObject<googleURLShortnerResponseClass>(response2);
+
+                                    if (googlerejectshortlinkresult2 != null)
+                                    {
+                                        AcceptShortLink = googlerejectshortlinkresult2.id;
+                                    }
+                                    else
+                                    {
+                                        // google short url link broke...
+                                    }
+                                    cli2.Dispose();
+                                }
+                                catch (Exception ex)
+                                {
+                                    return ex.ToString();
+                                }
+
+                                #endregion Shortening URLs for SMS
+
+
+                                #region Sending SMS
+                                try
+                                {
+                                    string SMSContent = "Just a reminder, " + senderFirstName + " " + senderLastName + " wants to send you $" +
+                                                          s32[0].ToString() + "." + s32[1].ToString() +
+                                                          " using Nooch, a free app. Tap here accept: " + AcceptShortLink +
+                                                          ". Or here to reject: " + RejectShortLink;
+
+                                    var tophone = CommonHelper.GetDecryptedData(trans.PhoneNumberInvited);
+                                    Utility.SendSMS(tophone, SMSContent, "");
+
+                                    Logger.Info("Common Helper -> SendTransactionReminderEmail -> Reminder SMS (Invite, New user) sent to [" + CommonHelper.GetDecryptedData(trans.PhoneNumberInvited) + "] successfully.");
+
+                                    return "Reminder sms sent successfully.";
+                                }
+                                catch (Exception)
+                                {
+                                    Logger.Error("Common Helper -> SendTransactionReminderEmail -> Reminder SMS (Invite, New user) NOT sent to [" + CommonHelper.GetDecryptedData(trans.PhoneNumberInvited) + "] Problem occured in sending sms.");
+                                    return "Unable to send sms reminder.";
+                                }
+                                #endregion Sending SMS
+
+                                #endregion Invitation Was Sent By SMS
+                            }
+                            else
+                            {
+                                return "no email mentioned for invited user";
+                            }
+                        }
+                        else
+                        {
+                            return "No transaction found";
+                        }
+
+                        #endregion InvitationReminderToNewUser
+                    }
+
+                    else
+                    {
+                        return "invalid transaction id or memberid";
+                    }
+                }
+
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Common Helper -> SendTransactionReminderEmail FAILED - Outer Exception - [" + ex + "]");
+                return "Error";
+            }
+        }
+
+
+        // CANCEL transaction after 15 days check
+        public static string CancelTransactionAfter15DaysWait(string TransactionId)
+        {
+            Guid TransId = Utility.ConvertToGuid(TransactionId);
+
+
+            using (NOOCHEntities noochConnection = new NOOCHEntities())
+            {
+                
+                var transResult = noochConnection.Transactions.FirstOrDefault(t => t.TransactionId == TransId);
+                
+
+                if (transResult != null)
+                {
+                    transResult.TransactionStatus = "Cancelled";
+                    noochConnection.SaveChanges();
+                    
+                    return "1";
+                }
+                else
+                {
+                    return "0";
+                }    
+            }
+            
+            
+        }
+
     }
 }
