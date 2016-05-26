@@ -29,33 +29,32 @@ namespace noochAdminNew
         {
             // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=316888
 
-
             // setting up hangfire
             Hangfire.GlobalConfiguration.Configuration.UseSqlServerStorage("data source=54.201.43.89;initial catalog=NOOCH;user id=sa;password=Singh@123;");
 
             //app.UseHangfireDashboard();
             app.UseHangfireServer();
-             
+
             //RecurringJob.AddOrUpdate(() => Logger.Info("Auto Task Running"), "0 12 * */2");
             //RecurringJob.AddOrUpdate(() => Logger.Info("Auto Task Running"), Cron.Minutely);
+
             RecurringJob.AddOrUpdate(() => updateTransactionStatusService(), Cron.Daily);
             RecurringJob.AddOrUpdate(() => notifyAdminOfBanksAwaitingVerification(), Cron.Daily);
             RecurringJob.AddOrUpdate(() => NoochChecks(), Cron.Daily);
-          
         }
 
 
         public void updateTransactionStatusService()
         {
-            Logger.Info("Daily Task from Startups.cs -> updateTransactionStatusService -> ---------------------- Job Initiated at ["+DateTime.Now+"]----------------------");
+            Logger.Info("Daily Task from Startups.cs -> updateTransactionStatusService -> ---------------- Job Initiated at [" + DateTime.Now + "] ----------------");
             SynapseV3ShowTransInput transInput = new SynapseV3ShowTransInput();
 
-            //get transaction details
+            // Get Transaction Details
             using (var noochConnection = new NOOCHEntities())
             {
                 var transactions = (from tr in noochConnection.Transactions
                                     join sa in noochConnection.SynapseAddTransactionResults
-                                     on tr.TransactionId equals sa.TransactionId
+                                    on tr.TransactionId equals sa.TransactionId
                                     join syn in noochConnection.SynapseCreateUserResults
                                     on tr.SenderId equals syn.MemberId
                                     where tr.TransactionStatus == "Success"
@@ -66,20 +65,16 @@ namespace noochAdminNew
                                         syn
                                     }).ToList();
 
-
                 foreach (var objT in transactions)
                 {
                     Logger.Info("Daily Task from Startups.cs -> updateTransactionStatusService -> Updating transaction's Synapse status using  showTransactions serivice  for Transaction id - [TransactionId: " + objT.tr.TransactionId + "] in a daily scheduled job");
 
                     Transaction tran = objT.tr;
                     var usersSynapseOauthKey = "";
-                    #region Check If OAuth Key Still Valid
-                    // if testing
-                    synapseV3checkUsersOauthKey checkTokenResult = CommonHelper.refreshSynapseV3OautKey(objT.syn.access_token);
 
-                    // if live
-                    //synapseV3checkUsersOauthKey checkTokenResult = refreshSynapseV3OautKey(createSynapseUserObj.access_token,false);
-                    //                                                                   
+                    #region Check If OAuth Key Still Valid
+
+                    synapseV3checkUsersOauthKey checkTokenResult = CommonHelper.refreshSynapseV3OautKey(objT.syn.access_token);
 
                     if (checkTokenResult != null)
                     {
@@ -90,17 +85,14 @@ namespace noochAdminNew
                         else
                         {
                             Logger.Error("Daily Task from Startups.cs -> updateTransactionStatusService -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
-                                                   "CheckTokenResult.msg: [" + checkTokenResult.msg + "], MemberID: [" + tran.SenderId + "]");
-
-
+                                         "CheckTokenResult.msg: [" + checkTokenResult.msg + "], MemberID: [" + tran.SenderId + "]");
                             continue;
                         }
                     }
                     else
                     {
                         Logger.Error("Daily Task from Startups.cs -> updateTransactionStatusService -> GetSynapseBankAndUserDetailsforGivenMemberId FAILED on Checking User's Synapse OAuth Token - " +
-                                                   "CheckTokenResult was NULL, MemberID: [" + tran.SenderId + "]");
-
+                                     "CheckTokenResult was NULL, MemberID: [" + tran.SenderId + "]");
                         continue;
                     }
 
@@ -111,7 +103,6 @@ namespace noochAdminNew
                     SynapseV3TransInput_user user = new SynapseV3TransInput_user() { fingerprint = tran.Member.UDID1.ToString() };
 
                     SynapseV3ShowTransInput_filter_Trans_id oid = new SynapseV3ShowTransInput_filter_Trans_id();
-
                     oid.oid = objT.sa.OidFromSynapse;
 
                     SynapseV3ShowTransInput_filter filter = new SynapseV3ShowTransInput_filter();
@@ -120,12 +111,10 @@ namespace noochAdminNew
 
                     transInput.login = login;
                     transInput.user = user;
-
                     transInput.filter = filter;
 
-                    string baseAddress = "";
-
-                    baseAddress = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) ? "https://sandbox.synapsepay.com/api/v3/trans/show" : "https://synapsepay.com/api/v3/trans/show";
+                    string baseAddress = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) ? "https://sandbox.synapsepay.com/api/v3/trans/show" : "https://synapsepay.com/api/v3/trans/show";
+                    
                     try
                     {
                         var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
@@ -149,10 +138,9 @@ namespace noochAdminNew
 
                         if (jsonFromSynapse["success"].ToString().ToLower() == "true")
                         {
-
                             if (jsonFromSynapse["trans"].Count() > 0)
                             {
-                                //updating transaction Table in db
+                                // Update transaction table in db
 
                                 tran.SynapseStatus = jsonFromSynapse["trans"][0]["recent_status"]["status"].ToString();
 
@@ -168,15 +156,12 @@ namespace noochAdminNew
                         else
                         {
                             Logger.Info("Daily Task from Startups.cs -> updateTransactionStatusService -> response from showTransactioFromSynapseV3 is null for transaction - [transactionID: " + tran.TransactionId + "]");
-
                         }
-
                     }
                     catch (WebException ex)
                     {
                         Logger.Error("Daily Task from Startups.cs -> updateTransactionStatusService -> updateTransactionStatusService FAILED - [MemberID: " + tran.SenderId + "], Exception: [" + ex.Message + "]");
                     }
-
                 }
             }
         }
@@ -242,7 +227,7 @@ namespace noochAdminNew
                                     st.Append("<td>" + usersFullName + "<br/><small style='text-transform:uppercase;'>" + usersType + "</small></td>");
                                     st.Append("<td><small>" + usersNoochId + "</small></td>");
                                     st.Append("<td><strong>" + CommonHelper.GetDecryptedData(bank.bank_name) + "</strong><br/>" +
-                                                  "<small>" + CommonHelper.GetDecryptedData(bank.nickname) + "</small></td>");
+                                              "<small>" + CommonHelper.GetDecryptedData(bank.nickname) + "</small></td>");
                                     st.Append("<td>" + CommonHelper.GetDecryptedData(bank.name_on_account) + "</td>");
                                     st.Append("<td>" + bank.bankid + "<br/><small><em>" + bank.Status + "</em></small></td>");
                                     st.Append("<td>" + bank.mfa_verifed + "</td>");
@@ -254,7 +239,7 @@ namespace noochAdminNew
                             st.Append("</table>");
 
                             StringBuilder completeEmailTxt = new StringBuilder();
-                            string s = "<html><body><h2>Non-Verified Syanpse Bank Accounts</h2><p>The following <strong>[" + nonVerifiedBanks.Count +
+                            string s = "<html><body><h2>Non-Verified Syanpse V3 Bank Accounts</h2><p>The following <strong>[" + nonVerifiedBanks.Count +
                                        "]</strong> Nooch users have attached a Synapse bank account that is awaiting verification:</p>"
                                        + st.ToString() +
                                        "<br/><br/><small>This email was generated automatically during a daily scan of all Nooch users.</small></body></html>";
@@ -267,9 +252,9 @@ namespace noochAdminNew
                             {
                                 var fromAddress = Utility.GetValueFromConfig("transfersMail");
 
-                                bool b = Utility.SendEmail(null,  fromAddress,
-                                    "NonVerifiedBanks@nooch.com", "Nooch Admin: Non-Verified Bank List",null,  null, null, null,
-                                     completeEmailTxt.ToString());
+                                bool b = Utility.SendEmail(null, fromAddress, "NonVerifiedBanks@nooch.com",
+                                        "Nooch Admin: Non-Verified V3 Banks List", null, null, null, null,
+                                         completeEmailTxt.ToString());
 
                                 Logger.Info("Daily Task from Startups.cs ->  notifyAdminOfBanksAwaitingVerification -> Banks Awaiting Verification Check -> Email sent to [NonVerifiedBanks@nooch.com] successfully.");
                             }
@@ -295,7 +280,7 @@ namespace noochAdminNew
         {
             Logger.Info("*****  DAILY SCAN -> NoochChecks Initiated  *****");
 
-          
+
             List<Member> membersList = CommonHelper.GetAllMembers();
 
             string adminUserName = CommonHelper.GetEncryptedData(Utility.GetValueFromConfig("transfersMail"));
@@ -312,22 +297,23 @@ namespace noochAdminNew
                         #region Incomplete Profile Check
 
                         if ((mem.Status == "Registered" || mem.Status == "Active") &&    // If user isn't suspended, blocked
-                                       (string.IsNullOrEmpty(mem.Address) || mem.IsVerifiedPhone == false) &&  // If they haven't entered an address yet or verified a phone number
-                                       mem.IsDeleted == false)
+                            (string.IsNullOrEmpty(mem.Address) || mem.IsVerifiedPhone == false) &&  // If they haven't entered an address yet or verified a phone number
+                            mem.IsDeleted == false)
                         {
-                            string pushMsgText = "Quick reminder: you signed up for Nooch but have not completed your profile. Open Nooch to complete your profile and start sending money for FREE!";
-
                             var days = (DateTime.Now - mem.DateCreated.Value).TotalDays;
 
                             // SEND PUSH NOTIFICATION REMINDER
-                            if ((days >= 3.0 && days < 4.0) || (days >= 10.0 && days < 11.0))
+                            // Cliff (5/25/16): Commenting out this block b/c Push Notifications are broken until we submit an app update to Apple
+                            /*string pushMsgText = "Quick reminder: you signed up for Nooch but have not completed your profile. Open Nooch to complete your profile and start sending money for FREE!";
+                            
+                             * if ((days >= 3.0 && days < 4.0) || (days >= 10.0 && days < 11.0))
                             {
                                 if (!String.IsNullOrEmpty(mem.DeviceToken))
                                 {
                                     ApplePushNotification.SendNotificationMessage(pushMsgText, 1, null, mem.DeviceToken, Utility.GetValueFromConfig("AppKey"), Utility.GetValueFromConfig("MasterSecret"));
                                     Logger.Info("Reminder Incomplete Profile Status - Push notification sent to [" + mem.DeviceToken + "].");
                                 }
-                            }
+                            }*/
 
                             // SEND EMAIL REMINDER
                             if ((days >= 7.0 && days < 8.0) || (days >= 20.0 && days < 21.0) || (days >= 49.0 && days < 50.0))
@@ -341,9 +327,9 @@ namespace noochAdminNew
 
                                 try
                                 {
-                                    Utility.SendEmail("profileIncomplete",  fromAddress, toAddress,
-                                                                 "Complete your Nooch account - stop depending on cash",
-                                                                null, tokens2, null, null, null);
+                                    Utility.SendEmail("profileIncomplete", fromAddress, toAddress,
+                                                      "Complete your Nooch account - stop depending on cash",
+                                                      null, tokens2, null, null, null);
                                 }
                                 catch (Exception ex)
                                 {
@@ -382,7 +368,7 @@ namespace noochAdminNew
 
                                         if ((days > 3.0 && days < 4.0) || (days > 8.0 && days < 9.0) || (days > 16.0 && days < 17.0))
                                         {
-                                            
+
                                             // Check if it's a Request to Existing or Non-Nooch User
 
                                             if (!String.IsNullOrEmpty(trans.InvitationSentTo) ||
@@ -404,7 +390,7 @@ namespace noochAdminNew
                                             {
                                                 // Should be a regular request between 2 existing users - Send Reminder Email and Push to Recipient (who will pay/reject the request)
 
-                                                Logger.Info("Global -> 7 Day Old Pending Request To EXISTING User Found - Sending to TDA to send reminder email - [TransID: " + trans.TransactionId+ "]");
+                                                Logger.Info("Global -> 7 Day Old Pending Request To EXISTING User Found - Sending to TDA to send reminder email - [TransID: " + trans.TransactionId + "]");
                                                 CommonHelper.SendTransactionReminderEmail("RequestMoneyReminderToExistingUser", trans.TransactionId.ToString(), mem.MemberId.ToString());
                                             }
                                         }
@@ -416,7 +402,7 @@ namespace noochAdminNew
                                         // Cancelling request if not reponded in 21 days
                                         if (days > 21.0 && trans.InvitationSentTo != null)
                                         {
-                                            
+
                                             string res = CommonHelper.CancelTransactionAfter15DaysWait(trans.TransactionId.ToString());
 
                                             if (res == "1")
@@ -461,7 +447,7 @@ namespace noochAdminNew
 
                                                 try
                                                 {
-                                                    Utility.SendEmail("transferUnclaimedSender",  fromAddress, toAddress, 
+                                                    Utility.SendEmail("transferUnclaimedSender", fromAddress, toAddress,
                                                         "Your Nooch request to " + InvitationSentTo + " has been cancelled",
                                                         null, tokens, null, null, null);
 
@@ -766,7 +752,6 @@ namespace noochAdminNew
                                     }
                                 }*/
                             #endregion Automatic Withdrawals (NOT USED FOR NOW)
-
                         }
 
                         membersList = null;
@@ -777,14 +762,17 @@ namespace noochAdminNew
                     }
                 }
 
-                try
+                // **********   CHECK For SDN   **********
+                if (mem.IsSDNSafe != true)
                 {
-                    // **********   CHECK For SDN   **********
-                    bool b = IsListedInSDN(CommonHelper.GetDecryptedData(mem.LastName), mem.MemberId);
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error("*****  DAILY SCAN -> NoochChecks -> SDN Check FAILED - [Exception: " + ex + "]  *****");
+                    try
+                    {
+                        bool b = IsListedInSDN(CommonHelper.GetDecryptedData(mem.LastName), mem.MemberId);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("*****  DAILY SCAN -> NoochChecks -> SDN Check FAILED - [Exception: " + ex + "]  *****");
+                    }
                 }
             }
 
@@ -820,12 +808,8 @@ namespace noochAdminNew
 
             using (NOOCHEntities noochConnection = new NOOCHEntities())
             {
-                
-                var memberFound =
-                    noochConnection.Members.FirstOrDefault(
-                        m => m.MemberId == userId && m.IsDeleted == false && m.IsSDNSafe != true);
-                    
-                
+                var memberFound = noochConnection.Members.FirstOrDefault(
+                                  m => m.MemberId == userId && m.IsDeleted == false && m.IsSDNSafe != true);
 
                 if (memberFound != null)
                 {
@@ -834,12 +818,13 @@ namespace noochAdminNew
                     StringBuilder st = new StringBuilder();
 
                     //Check if the person exists in the SDN List or not
-                    List<SDNSearchResult> terrorlist = noochConnection.GetSDNListing(CommonHelper.GetDecryptedData(memberFound.LastName)).ToList(); // terrorlist WTF?
+                    List<SDNSearchResult> watchlist = noochConnection.GetSDNListing(CommonHelper.GetDecryptedData(memberFound.LastName)).ToList(); // terrorlist WTF?
 
-                    // hit matched send notification email to Nooch admin and update member table
-                    if (terrorlist != null)
+                    if (watchlist != null)
                     {
-                        if (terrorlist.Count > 0)
+                        // hit matched send notification email to Nooch admin and update member table
+
+                        if (watchlist.Count > 0)
                         {
                             memberFound.SDNCheckDateTime = DateTime.Now;
                             memberFound.AnyPriliminaryHit = true;
@@ -849,7 +834,7 @@ namespace noochAdminNew
                             st.Append("<th>SDN Name</th>");
                             st.Append("<th>% Matched</th></tr>");
 
-                            foreach (var terrorist in terrorlist)
+                            foreach (var terrorist in watchlist)
                             {
                                 st.Append("<tr>");
                                 st.Append("<td>" + terrorist.ent_num + "</td>");
@@ -887,9 +872,9 @@ namespace noochAdminNew
 
                                 var fromAddress = Utility.GetValueFromConfig("transfersMail");
 
-                                bool b = Utility.SendEmail(null,  fromAddress,
-                                    Utility.GetValueFromConfig("SDNMailReciever"),  "SDN Match Found", null, null, null,
-                                    null, str.ToString());
+                                bool b = Utility.SendEmail(null, fromAddress,
+                                         Utility.GetValueFromConfig("SDNMailReciever"), "SDN Match Found - V3", null, null, null,
+                                         null, str.ToString());
 
                                 Logger.Info("SDN Screening -> SDN Screening Results email sent to [SDN@nooch.com]");
                             }
@@ -907,9 +892,8 @@ namespace noochAdminNew
                             memberFound.ent_num = null;
                         }
 
-                        // updatine record in members table
+                        // Update record in members table
                         noochConnection.SaveChanges();
-                        
                     }
                 }
             }
