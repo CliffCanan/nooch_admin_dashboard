@@ -677,14 +677,12 @@ namespace noochAdminNew.Classes.Utility
 
             try
             {
-                //string oauthKeyEnc = CommonHelper.GetEncryptedData(oauthKey);
                 // Checking user details for given MemberID
                 using (NOOCHEntities noochConnection = new NOOCHEntities())
                 {
-
                     SynapseCreateUserResult synCreateUserObject = noochConnection.SynapseCreateUserResults.FirstOrDefault(m => m.access_token == oauthKey && m.IsDeleted == false);
 
-                    // check for this is not needed.
+                    // check for this is not needed. [CLIFF (5/26/16)]: Which check isn't needed?
                     // Will be calling login/refresh access token service to confirm if saved oAtuh token matches with token coming in response, if not then will update the token.
                     if (synCreateUserObject != null)
                     {
@@ -1062,7 +1060,7 @@ namespace noochAdminNew.Classes.Utility
                                 t =>
                                     t.Member1.MemberId == MemId && t.TransactionId == TransId &&
                                     t.TransactionStatus == "Pending" && t.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw==");
-                            
+
 
                         if (trans != null)
                         {
@@ -1150,7 +1148,7 @@ namespace noochAdminNew.Classes.Utility
                                 // Sending Request reminder email to Non-Nooch user
                                 try
                                 {
-                                    Utility.SendEmail(templateToUse,  fromAddress, toAddress, 
+                                    Utility.SendEmail(templateToUse, fromAddress, toAddress,
                                                                 senderFirstName + " " + senderLastName + " requested " + "$" + s22.ToString() + " - Reminder",
                                                                 null, tokens2, null, null, null);
 
@@ -1288,8 +1286,8 @@ namespace noochAdminNew.Classes.Utility
 
                                 try
                                 {
-                                    Utility.SendEmail(templateToUse,  fromAddress,
-                                        toAddress,  senderFirstName + " " + senderLastName + " requested " + "$" + s22.ToString() + " with Nooch - Reminder",
+                                    Utility.SendEmail(templateToUse, fromAddress,
+                                        toAddress, senderFirstName + " " + senderLastName + " requested " + "$" + s22.ToString() + " with Nooch - Reminder",
                                         null, tokens2, null, null, null);
 
                                     Logger.Info("Common Helper -> SendTransactionReminderEmail - [" + templateToUse + "] sent to [" + toAddress + "] successfully.");
@@ -1352,7 +1350,7 @@ namespace noochAdminNew.Classes.Utility
                     {
                         #region InvitationReminderToNewUser
 
-                        
+
                         var trans =
                             noochConnection.Transactions.FirstOrDefault(
                                 t =>
@@ -1360,8 +1358,8 @@ namespace noochAdminNew.Classes.Utility
                                     t.TransactionStatus == "Pending" &&
                                     (t.TransactionType == "DrRr1tU1usk7nNibjtcZkA==" ||
                                      t.TransactionType == "5dt4HUwCue532sNmw3LKDQ=="));
-                            
-                            
+
+
 
                         if (trans != null)
                         {
@@ -1431,8 +1429,8 @@ namespace noochAdminNew.Classes.Utility
                                 {
                                     string fromAddress = Utility.GetValueFromConfig("transfersMail");
 
-                                    Utility.SendEmail("transferReminderToRecipient",  fromAddress,
-                                                                recipientEmail, 
+                                    Utility.SendEmail("transferReminderToRecipient", fromAddress,
+                                                                recipientEmail,
                                                                 senderFirstName + " " + senderLastName + " sent you " + "$" + s22.ToString() + " - Reminder",
                                                                 null, tokens2, null, null, null);
 
@@ -1565,27 +1563,22 @@ namespace noochAdminNew.Classes.Utility
         {
             Guid TransId = Utility.ConvertToGuid(TransactionId);
 
-
             using (NOOCHEntities noochConnection = new NOOCHEntities())
             {
-                
                 var transResult = noochConnection.Transactions.FirstOrDefault(t => t.TransactionId == TransId);
-                
 
                 if (transResult != null)
                 {
                     transResult.TransactionStatus = "Cancelled";
                     noochConnection.SaveChanges();
-                    
+
                     return "1";
                 }
                 else
                 {
                     return "0";
-                }    
+                }
             }
-            
-            
         }
 
     }
