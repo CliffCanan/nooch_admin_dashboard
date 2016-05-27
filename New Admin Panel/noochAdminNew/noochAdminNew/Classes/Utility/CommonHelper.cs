@@ -754,6 +754,8 @@ namespace noochAdminNew.Classes.Utility
                             var sr = new StreamReader(stream);
                             var content = sr.ReadToEnd();
 
+                            
+
                             //Logger.LogDebugMessage("Common Helper -> refreshSynapseV3OautKey Checkpoint #1 - About to parse Synapse Response");
 
                             synapseCreateUserV3Result_int refreshResultFromSyn = new synapseCreateUserV3Result_int();
@@ -784,6 +786,26 @@ namespace noochAdminNew.Classes.Utility
                                     synCreateUserObject.refresh_token = GetEncryptedData(refreshResultFromSyn.oauth.refresh_token);
                                     synCreateUserObject.expires_in = refreshResultFromSyn.oauth.expires_in;
                                     synCreateUserObject.expires_at = refreshResultFromSyn.oauth.expires_at;
+                                }
+
+
+                                //storing user.doc_status.physical_doc , user.doc_status.virtual_doc and user.extra.extra_security
+                                synCreateUserObject.physical_doc = refreshResultFromSyn.user.doc_status.physical_doc;
+                                synCreateUserObject.virtual_doc = refreshResultFromSyn.user.doc_status.virtual_doc;
+
+                                JToken http_code = refreshResponse["http_code"];
+                                if (http_code != null)
+                                {
+                                    if (http_code.ToString() == "200")
+                                    {
+                                        JToken extra_Security_Obj = refreshResponse["user"]["extra"]["extra_security"];
+
+                                        if (extra_Security_Obj != null)
+                                        {
+                                            synCreateUserObject.extra_security = extra_Security_Obj.ToString();
+                                        }
+
+                                    }
                                 }
 
                                 int a = noochConnection.SaveChanges();

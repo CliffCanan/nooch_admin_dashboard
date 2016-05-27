@@ -16,6 +16,7 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Web;
 using System.Drawing;
+using Newtonsoft.Json.Linq;
 
 
 namespace noochAdminNew.Controllers
@@ -1802,6 +1803,7 @@ namespace noochAdminNew.Controllers
                     var stream = response.GetResponseStream();
                     var sr = new StreamReader(stream);
                     var content = sr.ReadToEnd();
+                    JObject refreshResponse = JObject.Parse(content);
 
                     kycInfoResponseFromSynapse resFromSynapse = new kycInfoResponseFromSynapse();
 
@@ -1829,6 +1831,25 @@ namespace noochAdminNew.Controllers
                                 synapseUser.photos = ImageUrl;
 
                                 // Cliff (5/21/16): ALSO NEED TO SAVE "virtual_doc" and "physical_doc" VALUES IN NOOCH DB, BUT FIELDS DON'T EXIST YET
+                                //storing user.doc_status.physical_doc , user.doc_status.virtual_doc and user.extra.extra_security
+                                synapseUser.physical_doc = resFromSynapse.user.doc_status.physical_doc;
+                                synapseUser.virtual_doc = resFromSynapse.user.doc_status.virtual_doc;
+
+                                JToken http_code = refreshResponse["http_code"];
+                                if (http_code != null)
+                                {
+                                    if (http_code.ToString() == "200")
+                                    {
+                                        JToken extra_Security_Obj = refreshResponse["user"]["extra"]["extra_security"];
+
+                                        if (extra_Security_Obj != null)
+                                        {
+                                            synapseUser.extra_security = extra_Security_Obj.ToString();
+                                        }
+
+                                    }
+                                }
+
 
                                 int save = noochConnection.SaveChanges();
 

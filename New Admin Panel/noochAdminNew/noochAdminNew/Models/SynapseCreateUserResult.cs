@@ -37,5 +37,8 @@ namespace noochAdminNew.Models
         public string Phone_number { get; set; }
         public string photos { get; set; }
         public string expires_at { get; set; }
+        public string physical_doc { get; set; }
+        public string virtual_doc { get; set; }
+        public string extra_security { get; set; }
     }
 }
