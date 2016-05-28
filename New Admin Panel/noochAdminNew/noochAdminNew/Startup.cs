@@ -167,7 +167,7 @@ namespace noochAdminNew
         }
 
 
-        private void notifyAdminOfBanksAwaitingVerification()
+        public void notifyAdminOfBanksAwaitingVerification()
         {
             Logger.Info("Daily Task from Startups.cs -> notifyAdminOfBanksAwaitingVerification -> Banks Awaiting Verification Check Initiated");
 
@@ -276,7 +276,7 @@ namespace noochAdminNew
 
 
 
-        private bool NoochChecks()
+        public bool NoochChecks()
         {
             Logger.Info("*****  DAILY SCAN -> NoochChecks Initiated  *****");
 
@@ -799,7 +799,7 @@ namespace noochAdminNew
         /// </summary>
         /// <param name="lastName"></param>
         /// <param name="userId"></param>
-        private bool IsListedInSDN(string lastName, Guid userId)
+        public bool IsListedInSDN(string lastName, Guid userId)
         {
             //Logger.LogInfoMessage("DAILY SCAN - IsListedInSDNList - Checking User Last Name: [" + lastName + "]");
 
