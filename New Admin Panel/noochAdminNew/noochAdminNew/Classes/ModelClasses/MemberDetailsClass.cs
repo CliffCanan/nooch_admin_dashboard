@@ -30,6 +30,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string type { get; set; }
         public string ReferCodeUsed { get; set; }
         public bool IsPhoneVerified { get; set; }
+        public string cipTag { get; set; }
 
         public DateTime DateCreated { get; set; }
         public string DateCreatedFormatted { get; set; }

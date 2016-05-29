@@ -752,7 +752,7 @@ namespace noochAdminNew.Classes.Utility
                             var sr = new StreamReader(stream);
                             var content = sr.ReadToEnd();
 
-                            
+
 
                             //Logger.LogDebugMessage("Common Helper -> refreshSynapseV3OautKey Checkpoint #1 - About to parse Synapse Response");
 
@@ -917,6 +917,7 @@ namespace noochAdminNew.Classes.Utility
             return new Member();
         }
 
+
         public static Member GetMemberDetailsByUsername(string email) // Should NOT already be encrypted
         {
             try
@@ -941,6 +942,7 @@ namespace noochAdminNew.Classes.Utility
 
             return null;
         }
+
 
         public static Member GetMemberDetailsByPhone(string phone)
         {
@@ -967,8 +969,6 @@ namespace noochAdminNew.Classes.Utility
         }
 
 
-
-
         public static List<Member> GetAllMembers()
         {
             // Logger.LogDebugMessage("MDA -> GetAllMembers");
@@ -977,9 +977,6 @@ namespace noochAdminNew.Classes.Utility
             {
                 try
                 {
-
-
-
                     return noochConnection.Members.Where(m => m.IsDeleted == false).ToList(); ;
                 }
                 catch (Exception ex)
@@ -989,7 +986,6 @@ namespace noochAdminNew.Classes.Utility
                 }
             }
         }
-
 
 
         public static List<Transaction> GetMemberTransactions(string MemberId, string TransactionType)
@@ -1028,19 +1024,18 @@ namespace noochAdminNew.Classes.Utility
                 catch (Exception ex)
                 {
                     Logger.Error("CommonHelper -> GetMemberTransactions FAILED - [Exception: " + ex + "]");
-                    return null;
                 }
             }
+
             return null;
         }
-
 
 
         public static string SendTransactionReminderEmail(string ReminderType, string TransactionId, string MemberId)
         {
             Logger.Info("Common Helper -> SendTransactionReminderEmail Initiated. MemberID: [" + MemberId + "], " +
-                                   "TransactionId: [" + TransactionId + "], " +
-                                   "ReminderType: [" + ReminderType + "]");
+                        "TransactionId: [" + TransactionId + "], " +
+                        "ReminderType: [" + ReminderType + "]");
 
             try
             {
@@ -1050,7 +1045,7 @@ namespace noochAdminNew.Classes.Utility
                 using (NOOCHEntities noochConnection = new NOOCHEntities())
                 {
                     if (ReminderType == "RequestMoneyReminderToNewUser" ||
-                  ReminderType == "RequestMoneyReminderToExistingUser")
+                        ReminderType == "RequestMoneyReminderToExistingUser")
                     {
                         #region Requests - Both Types
 
@@ -1345,7 +1340,6 @@ namespace noochAdminNew.Classes.Utility
 
                         #endregion Requests - Both Types
                     }
-
                     else if (ReminderType == "InvitationReminderToNewUser")
                     {
                         #region InvitationReminderToNewUser
@@ -1538,17 +1532,11 @@ namespace noochAdminNew.Classes.Utility
 
                         #endregion InvitationReminderToNewUser
                     }
-
                     else
                     {
                         return "invalid transaction id or memberid";
                     }
                 }
-
-
-
-
-
             }
             catch (Exception ex)
             {
