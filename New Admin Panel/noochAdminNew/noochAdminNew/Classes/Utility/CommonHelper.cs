@@ -1569,5 +1569,67 @@ namespace noochAdminNew.Classes.Utility
             }
         }
 
+        public static GoogleGeolocationOutput GetStateNameByZipcode(string zipCode)
+        {
+            GoogleGeolocationOutput res = new GoogleGeolocationOutput();
+            try
+            {
+
+                string googleUrlLink = "https://maps.googleapis.com/maps/api/geocode/json?address=" + zipCode + "&key=" +
+                                       Utility.GetValueFromConfig("GoogleGeolocationKey");
+                var http = (HttpWebRequest)WebRequest.Create(new Uri(googleUrlLink));
+                http.Method = "GET";
+                var response = http.GetResponse();
+                var stream = response.GetResponseStream();
+                var sr = new StreamReader(stream);
+                var content = sr.ReadToEnd();
+                JObject jsonFromSynapse = JObject.Parse(content);
+                if (jsonFromSynapse["status"].ToString() == "OK")
+                {
+
+
+
+                    JToken addCompsArray = jsonFromSynapse["results"][0]["address_components"];
+                    foreach (JToken jitem in addCompsArray)
+                    {
+
+
+
+
+                        if (jitem["types"][0].ToString() == "administrative_area_level_1")
+                        {
+                            res.IsSuccess = true;
+                            res.ErrorMessage = "OK";
+                            res.StateName = jitem["long_name"].ToString();
+
+                            res.GoogleStatus = jsonFromSynapse["status"].ToString();
+
+                        }
+
+                    }
+                    if (res.IsSuccess)
+                    {
+                        res.CompleteAddress = jsonFromSynapse["results"][0]["formatted_address"].ToString();
+                    }
+
+                }
+                else
+                {
+                    res.IsSuccess = false;
+                    res.ErrorMessage = "Invalid pin or no record found.";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("CommonHelper -> GetStateNameByZipcode FAILED (Outer Exception) - zipCode: [" + zipCode + "], Exception: [" + ex + "]");
+                res.IsSuccess = false;
+                res.ErrorMessage = "Server Error.";
+
+            }
+            return res;
+        }
+
+
     }
 }
