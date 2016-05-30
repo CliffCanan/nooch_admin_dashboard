@@ -192,6 +192,11 @@ var Member = function () {
 
     }
 
+    function editCip() {
+        $('#mdc_cipTag').css('display', 'block');
+        $('#spnCip_Tag').css('display', 'none');
+        
+    }
 
     function editdetails() {
         if (NoochId == '') {
@@ -213,7 +218,10 @@ var Member = function () {
         data.ssn = $("#ssninput").val().trim();
         data.dob = $("#dobinput").val().trim();
         data.transferLimit = $("#transferLimitinput").val().trim();
-
+        if ($('#mdc_cipTag').css('display') != 'none')
+            data.cip_tag = $('#mdc_cipTag').val();
+        else
+            data.cip_tag = "";
         console.log(data);
 
         $.post(url, data, function (result) {
@@ -511,6 +519,7 @@ var Member = function () {
         getSynapseInfo: getSynapseInfo,
         sendSmsReminder: sendSmsReminderForVerification,
         ChangePassword: ChangePassword,
-        GenerateNewPassword: GenerateNewPassword
+        GenerateNewPassword: GenerateNewPassword,
+        editCip: editCip
     };
 }();

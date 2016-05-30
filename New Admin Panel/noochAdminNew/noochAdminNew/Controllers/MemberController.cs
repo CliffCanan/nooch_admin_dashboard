@@ -1013,7 +1013,7 @@ namespace noochAdminNew.Controllers
         /// <param name="zip"></param>
         [HttpPost]
         [ActionName("EditMemberDetails")]
-        public ActionResult EditMemberDetails(string contactno, string streetaddress, string city, string secondaryemail, string recoveryemail, string noochid, string state, string zip, string ssn, string dob, string transferLimit)
+        public ActionResult EditMemberDetails(string contactno, string streetaddress, string city, string secondaryemail, string recoveryemail, string noochid, string state, string zip, string ssn, string dob, string transferLimit, string cip_tag)
         {
             Logger.Info("Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [" + contactno + "], Street Address: [" + streetaddress +
                         "], City: [" + city + "], State: [" + state + "], ZIP: [" + zip + "], secondaryEmail: [" + secondaryemail + "], NoochID: [" + noochid +
@@ -1096,8 +1096,12 @@ namespace noochAdminNew.Controllers
 
                                 member.DateOfBirth = dateofbirth;
                             }
+                            if (!String.IsNullOrEmpty(cip_tag))
+                            {
+                                member.cipTag = cip_tag;
+                            }
                             member.DateModified = DateTime.Now;
-
+                           
                             obj.SaveChanges();
 
                             res.Address = streetaddress;

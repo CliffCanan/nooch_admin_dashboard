@@ -1,6 +1,7 @@
 @using noochAdminNew.Classes.ModelClasses
 @using noochAdminNew.Classes.Utility
 @using noochAdminNew.Models
+ 
 @{
     ViewBag.Title = "Member Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -880,8 +881,22 @@
                                                         <b>CIP Tag</b>
                                                     </span>
                                                     <div class="pull-right m-r-15">
-                                                        <span class="form-control-static" style="word-wrap:break-word;">@mdc.cipTag</span>
+                                                        <span class="form-control-static" id="spnCip_Tag" style="word-wrap:break-word;">@mdc.cipTag</span>
+                                                        
+                                                        @{
+                                                            var listItems = new List<SelectListItem>
+        {
+          
+              new SelectListItem { Text = "Renter", Value = "Renter" },
+              new SelectListItem { Text = "Landlord", Value = "Landlord" },
+              new SelectListItem { Text = "Vendor", Value = "Vendor" }
+        };
+                                                        }
+ 
+                                                        @Html.DropDownListFor(m => @mdc.cipTag, listItems, new { style="display:none"})
+                                                        <button type="button" class="btn btn-link" onclick="Member.editCip(); ">Edit</button>
                                                     </div>
+                                                     
                                                 </div>
 
                                                 @if (mdc.IsSynapseDetailAvailable)
