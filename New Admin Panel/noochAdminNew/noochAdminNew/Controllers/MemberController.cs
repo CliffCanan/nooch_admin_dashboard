@@ -603,6 +603,7 @@ namespace noochAdminNew.Controllers
                     mdc.lastlong = (Member.LastLocationLat != null && Member.LastLocationLng != 0) ? Member.LastLocationLng.ToString() : "none";
                     mdc.TransferLimit = Member.TransferLimit ?? "0.00";
                     mdc.cipTag = !String.IsNullOrEmpty(Member.cipTag) ? Member.cipTag : "NULL";
+                    mdc.isRentScene = Member.isRentScene ?? false;
 
                     //Get the Refered Code Used
                     mdc.ReferCodeUsed = (from Membr in obj.Members

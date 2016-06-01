@@ -47,6 +47,7 @@ namespace noochAdminNew.Classes.ModelClasses
 
         public string adminNote { get; set; }
         public bool isSdnSafe { get; set; }
+        public bool isRentScene { get; set; }
 
         public List<MemberDetailsTrans> Transactions { get; set; }
 

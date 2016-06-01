@@ -124,6 +124,10 @@
                         }
                         Details | <small>@mdc.FirstName @mdc.LastName</small>
                     </h5>
+                    @if (mdc.isRentScene == true)
+                    {
+                        <img src="https://noochme.com/noochweb/Assets/Images/rentscene.png" style="max-height:30px;margin-top:-6px;"alt="Rent Scene" data-toggle="tooltip" title="@mdc.FirstName @mdc.LastName is a Rent Scene user." />
+                    }
                     <span class="pull-right">@mdc.memberId</span>
                     <div class="pull-right">
                         <a href="#" class="btn btn-link p-0 m-r-25" onclick="Member.OpenPopupForAdminNote();">
@@ -600,7 +604,7 @@
                                                         <div class="col-xs-9 col-sm-8 col-lg-5">
                                                             <div class="input-group">
                                                                 <span class="input-group-addon"><i class="fa fa-fw fa-male"></i></span>
-                                                                <input type="text" value="@mdc.ssn" class="form-control" id="ssninput" data-mask="9999">
+                                                                <input type="text" value="@mdc.ssn" class="form-control" id="ssninput" data-mask="999 - 99 - 999">
                                                             </div>
                                                         </div>
                                                     </div>

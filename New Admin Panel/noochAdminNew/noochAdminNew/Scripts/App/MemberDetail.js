@@ -215,7 +215,6 @@ var Member = function () {
         data.zip = $("#zipcodeinput").val();
         data.noochid = NoochId;
         data.ssn = $("#ssninput").val().trim();
-        data.ssn = $("#ssninput").val().trim();
         data.dob = $("#dobinput").val().trim();
         data.transferLimit = $("#transferLimitinput").val().trim();
         if ($('#mdc_cipTag').css('display') != 'none')
