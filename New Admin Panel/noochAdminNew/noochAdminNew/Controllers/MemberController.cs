@@ -603,6 +603,7 @@ namespace noochAdminNew.Controllers
                     mdc.lastlong = (Member.LastLocationLat != null && Member.LastLocationLng != 0) ? Member.LastLocationLng.ToString() : "none";
                     mdc.TransferLimit = Member.TransferLimit ?? "0.00";
                     mdc.cipTag = !String.IsNullOrEmpty(Member.cipTag) ? Member.cipTag : "NULL";
+                    mdc.isRentScene = Member.isRentScene ?? false;
 
                     //Get the Refered Code Used
                     mdc.ReferCodeUsed = (from Membr in obj.Members
@@ -856,6 +857,9 @@ namespace noochAdminNew.Controllers
                         synapseDetail.isBusiness = synapseCreateUserObj.is_business ?? false;
                         synapseDetail.userPermission = synapseCreateUserObj.permission;
                         synapseDetail.photos = synapseCreateUserObj.photos;
+                        synapseDetail.physical_doc = synapseCreateUserObj.physical_doc;
+                        synapseDetail.virtual_doc = synapseCreateUserObj.virtual_doc;
+                        synapseDetail.extra_security = synapseCreateUserObj.extra_security;
 
                         // Now get the user's Synapse Bank details
                         var synapseBankDetails = (from Syn in obj.SynapseBanksOfMembers
@@ -1013,7 +1017,7 @@ namespace noochAdminNew.Controllers
         /// <param name="zip"></param>
         [HttpPost]
         [ActionName("EditMemberDetails")]
-        public ActionResult EditMemberDetails(string contactno, string streetaddress, string city, string secondaryemail, string recoveryemail, string noochid, string state, string zip, string ssn, string dob, string transferLimit)
+        public ActionResult EditMemberDetails(string contactno, string streetaddress, string city, string secondaryemail, string recoveryemail, string noochid, string state, string zip, string ssn, string dob, string transferLimit, string cip_tag)
         {
             Logger.Info("Admin Member Controller -> EditMemberDetails Initiated - Contact Number: [" + contactno + "], Street Address: [" + streetaddress +
                         "], City: [" + city + "], State: [" + state + "], ZIP: [" + zip + "], secondaryEmail: [" + secondaryemail + "], NoochID: [" + noochid +
@@ -1096,8 +1100,12 @@ namespace noochAdminNew.Controllers
 
                                 member.DateOfBirth = dateofbirth;
                             }
+                            if (!String.IsNullOrEmpty(cip_tag))
+                            {
+                                member.cipTag = cip_tag;
+                            }
                             member.DateModified = DateTime.Now;
-
+                           
                             obj.SaveChanges();
 
                             res.Address = streetaddress;
@@ -1521,9 +1529,8 @@ namespace noochAdminNew.Controllers
 
         [HttpPost]
         [ActionName("UpdatePassword")]
-        public ActionResult UpdatePassword(string noochIds, string newPassword)
+        public ActionResult UpdatePassword(string noochId, string newPassword, bool sendEmail)
         {
-
             MemberOperationsResult res = new MemberOperationsResult();
             res.IsSuccess = false;
 
@@ -1531,44 +1538,46 @@ namespace noochAdminNew.Controllers
             {
                 using (NOOCHEntities obj = new NOOCHEntities())
                 {
-
                     var temp = CommonHelper.GetRandomTransactionTrackingId();
 
                     var member = (from t in obj.Members
-                                  where t.Nooch_ID == noochIds && t.IsDeleted == false
+                                  where t.Nooch_ID == noochId && t.IsDeleted == false
                                   select t).SingleOrDefault();
 
                     if (member != null)
                     {
                         member.Password = CommonHelper.GetEncryptedData(newPassword);
-                        var o = obj.SaveChanges();
+                        var save = obj.SaveChanges();
 
-                        if (o == 1)
+                        if (save > 0)
                         {
                             res.Message = "Password updated";
                             res.IsSuccess = true;
 
-                            string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
-                            string MessageBody = "Hi " + fname + ", This is Nooch - Your password has been updated to" + member.Password;
+                            if (sendEmail)
+                            {
+                                var fromAddress = Utility.GetValueFromConfig("adminMail");
+                                string fname = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
 
-                            var fromAddress = Utility.GetValueFromConfig("adminMail");
+                                var tokens = new Dictionary<string, string>
+                                {
+                                    {Constants.PLACEHOLDER_FIRST_NAME, fname},
+                                    {Constants.PLACEHOLDER_PASSWORD, CommonHelper.GetDecryptedData( member.Password)}
+                                };
 
-                            var tokens = new Dictionary<string, string>
-                        {
-                            {Constants.PLACEHOLDER_FIRST_NAME, fname},
-                            {Constants.PLACEHOLDER_PASSWORD, CommonHelper.GetDecryptedData( member.Password)}
-                        };
+                                string toAddress = CommonHelper.GetDecryptedData(member.UserName);
+                                bool emailSent = Utility.SendEmail("passwordChangedByAdmin", fromAddress, toAddress,
+                                                                   "Your Nooch password has been changed", null,
+                                                                    tokens, null, null, null);
 
-                            string toAddress = CommonHelper.GetDecryptedData(member.UserName);
-                            bool emailSent = Utility.SendEmail("passwordChangedByAdmin",
-                                                    fromAddress, toAddress, "Your Nooch password has been changed", null,
-                                                    tokens, null, null, null);
-
-                            if (emailSent)
-                                res.Message += " & Email has been Sent.";
+                                if (emailSent)
+                                    res.Message += " & email notification sent to the user";
+                            }
+                            else
+                            {
+                                res.Message += " - no email sent to user";
+                            }
                         }
-                        else
-                            res.IsSuccess = false;
                     }
                     else
                     {
@@ -1578,7 +1587,7 @@ namespace noochAdminNew.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Error("Member Cntrlr -> UpdatePassword FAILED - NoochID: [" + noochIds + "], Exception: [" + ex.Message + "]");
+                Logger.Error("Member Cntrlr -> UpdatePassword FAILED - NoochID: [" + noochId + "], Exception: [" + ex.Message + "]");
             }
 
             return Json(res);

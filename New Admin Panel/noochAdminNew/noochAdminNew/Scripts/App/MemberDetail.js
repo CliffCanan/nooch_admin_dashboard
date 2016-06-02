@@ -123,11 +123,7 @@ $('#DeleteUser').click(function () {
 });
 
 $('#ChangePassword').click(function () {
-    $('#myModalchangePwd').modal('show');
-});
-
-$('#btntoggle').click(function () {
-    $('#myModalchangePwd').modal('show');
+    $('#changePwd').modal('show');
 });
 
 
@@ -139,9 +135,16 @@ $(document).ready(function () {
     else if ($('#DocStatus').val() == "Failed") {
         sweetAlert("Oops...", "Something went wrong!", "error");
     }
+
+    $('#generatePwBtn').change(function () {
+        if ($('#pwd').val().length > 0) {
+            $('#pwd').val('');
+        }
+        if ($(this).is(':checked')) {
+            Member.GenerateNewPassword();
+        }
+    })
 });
-
-
 
 
 var Member = function () {
@@ -193,6 +196,13 @@ var Member = function () {
     }
 
 
+    function editCip() {
+        $('#mdc_cipTag').css('display', 'block');
+        $('#spnCip_Tag').css('display', 'none');
+        
+    }
+
+
     function editdetails() {
         if (NoochId == '') {
             toastr.error('No NoochId was selected...', 'Error');
@@ -210,10 +220,12 @@ var Member = function () {
         data.zip = $("#zipcodeinput").val();
         data.noochid = NoochId;
         data.ssn = $("#ssninput").val().trim();
-        data.ssn = $("#ssninput").val().trim();
         data.dob = $("#dobinput").val().trim();
         data.transferLimit = $("#transferLimitinput").val().trim();
-
+        if ($('#mdc_cipTag').css('display') != 'none')
+            data.cip_tag = $('#mdc_cipTag').val();
+        else
+            data.cip_tag = "";
         console.log(data);
 
         $.post(url, data, function (result) {
@@ -456,26 +468,29 @@ var Member = function () {
 
     }
 
+
     function ChangePassword() {
-        if ($("#pwd").val() == '')      //Button will be disabled till pwd is not updated and all the field will be clear for next time. 
+        if ($("#pwd").val() == '')
             return false;
 
         $("#btnChangePassword").text('Updating...');
         $('#btnChangePassword').attr('disabled', 'disabled');
+        var sendEmail = ($('#pwChangeSendEmail').is(':checked'));
 
         var data = {};
         data.newPassword = $("#pwd").val();
-        data.noochIds = NoochId;
+        data.noochId = NoochId;
+        data.sendEmail = sendEmail;
         var url = "../Member/UpdatePassword";
 
         $.post(url, data, function (result) {
             if (result.IsSuccess) {
-                toastr.success(result.Message, 'Updated successfully.');
+                toastr.success(result.Message, 'Updated Successfully.');
             }
             else {
                 toastr.error(result.Message, 'Error');
             }
-            $('#myModalchangePwd').modal('toggle');
+            $('#changePwd').modal('toggle');
             $("#btnChangePassword").text('Yes - Update');
             $('#pwd').val('');
             $('#btnChangePassword').removeAttr("disabled");
@@ -485,11 +500,12 @@ var Member = function () {
         });
     }
 
-    function GenerateNewPassword() {
 
+    function GenerateNewPassword() {
         var data = {};
         var url = "../Member/GenerateNewPassword";
-        $.post(url, data, function (result) {
+        $.post(url, data, function (result)
+        {
             if (result.IsSuccess) {
                 $("#pwd").val(result.Message);
             }
@@ -511,6 +527,7 @@ var Member = function () {
         getSynapseInfo: getSynapseInfo,
         sendSmsReminder: sendSmsReminderForVerification,
         ChangePassword: ChangePassword,
-        GenerateNewPassword: GenerateNewPassword
+        GenerateNewPassword: GenerateNewPassword,
+        editCip: editCip
     };
 }();
