@@ -695,8 +695,10 @@ namespace noochAdminNew.Classes.Utility
 
                         SynapseV3RefreshOauthKeyAndSign_Input input = new SynapseV3RefreshOauthKeyAndSign_Input();
 
-                        string SynapseClientId = Utility.GetValueFromConfig("SynapseClientId");
-                        string SynapseClientSecret = Utility.GetValueFromConfig("SynapseClientSecret");
+                        List<string> clientIds = CommonHelper.getClientSecretId(noochMemberObject.MemberId.ToString());
+
+                        string SynapseClientId = clientIds[0];
+                        string SynapseClientSecret = clientIds[1];
 
                         input.login = new createUser_login2()
                         {
@@ -890,7 +892,28 @@ namespace noochAdminNew.Classes.Utility
 
             return res;
         }
+        public static List<string> getClientSecretId(string memId)
+        {
+            List<string> clientIds = new List<string>();
+            Member member = GetMemberDetails(memId);
 
+            if (member.isRentScene == true)
+            {
+                string SynapseClientId = Utility.GetValueFromConfig("SynapseClientIdRentScene");
+                string SynapseClientSecret = Utility.GetValueFromConfig("SynapseClientSecretRentScene");
+                clientIds.Add(SynapseClientId);
+                clientIds.Add(SynapseClientSecret);
+            }
+            else
+            {
+                string SynapseClientId = Utility.GetValueFromConfig("SynapseClientId");
+                string SynapseClientSecret = Utility.GetValueFromConfig("SynapseClientSecret");
+                clientIds.Add(SynapseClientId);
+                clientIds.Add(SynapseClientSecret);
+            }
+
+            return clientIds;
+        }
 
         public static Member GetMemberDetails(string memberId)
         {
