@@ -661,16 +661,22 @@ namespace noochAdminNew.Controllers
                 foreach (var member in membersWithABank)
                 {
                     // just uncomment below mentioned lines to send re link email to all users
-                    //                    var toAddress = CommonHelper.GetDecryptedData(member.UserName);
+                    //var toAddress = CommonHelper.GetDecryptedData(member.UserName);
 
                     //try
                     //{
                     //    var fromAddress = Utility.GetValueFromConfig("adminMail");
                     //    var memberId = member.MemberId.ToString();
-                    //    var isRentSceneClient = member.InviteCodeId.ToString().ToLower() == "b43a36a6-1da5-47ce-a56c-6210f9ddbd22" ? "yes" : "false";
-                    //    var companyName = isRentSceneClient == "yes" ? "Rent Scene" : "Nooch";
+                    //    var isRentSceneClient = false;
 
-                    //    var link = "https://www.noochme.com/Nooch/createAccount?memId=" + memberId + "&type=1&update=true&rs=" + isRentSceneClient;
+                    //    if (member.isRentScene == true || member.InviteCodeId.ToString().ToLower() == "b43a36a6-1da5-47ce-a56c-6210f9ddbd22")
+                    //    {
+                    //        isRentSceneClient = true;
+                    //    }
+
+                    //    var companyName = isRentSceneClient ? "Rent Scene" : "Nooch";
+
+                    //    var link = "https://www.noochme.com/Nooch/createAccount?memId=" + memberId + "&type=1&update=true&rs=" + isRentSceneClient.ToString();
 
                     //    var tokens = new Dictionary<string, string>
                     //                    {
@@ -689,15 +695,10 @@ namespace noochAdminNew.Controllers
                     //}
 
 
-                    Logger.Error("Admin-> background process using Hangfire MemberId ->" + member.MemberId);
-
+                    Logger.Info("Admin-> background process using Hangfire MemberId -> [" + member.MemberId + "]");
                 }
 
                 Logger.Info("Admin-> Done with sending notification to all users to re link their bank node");
-
-
-
-
             }
         }
 

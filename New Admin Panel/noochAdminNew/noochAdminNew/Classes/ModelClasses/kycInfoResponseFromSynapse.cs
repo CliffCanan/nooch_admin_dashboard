@@ -98,7 +98,9 @@ namespace noochAdminNew.Classes.ModelClasses
     {
         public synapseV3Result_user_extra_dateJoined date_joined { get; set; }
         public bool is_business { get; set; }
+        public bool extra_security { get; set; }
         public string supp_id { get; set; }
+        public string cip_tag { get; set; }
     }
 
     public class synapseV3Result_user_logins

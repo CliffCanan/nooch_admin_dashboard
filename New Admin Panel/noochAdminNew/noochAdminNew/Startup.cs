@@ -46,16 +46,16 @@ namespace noochAdminNew
 
         public void updateTransactionStatusService()
         {
-            Logger.Info("Daily Task from Startups.cs -> updateTransactionStatusService -> ---------------- Job Initiated at [" + DateTime.Now + "] ----------------");
+            Logger.Info("Background Task in Startups.cs -> updateTransactionStatusService ---------------- Job Initiated at [" + DateTime.Now + "] ----------------");
             SynapseV3ShowTransInput transInput = new SynapseV3ShowTransInput();
 
             // Get Transaction Details
-            using (var noochConnection = new NOOCHEntities())
+            using (var db = new NOOCHEntities())
             {
-                var transactions = (from tr in noochConnection.Transactions
-                                    join sa in noochConnection.SynapseAddTransactionResults
+                var transactions = (from tr in db.Transactions
+                                    join sa in db.SynapseAddTransactionResults
                                     on tr.TransactionId equals sa.TransactionId
-                                    join syn in noochConnection.SynapseCreateUserResults
+                                    join syn in db.SynapseCreateUserResults
                                     on tr.SenderId equals syn.MemberId
                                     where tr.TransactionStatus == "Success"
                                     select new
@@ -65,9 +65,14 @@ namespace noochAdminNew
                                         syn
                                     }).ToList();
 
+                if (transactions != null)
+                {
+                    Logger.Info("**********  [" + transactions.Count + "] TRANSACTIONS FOUND w/ TransactionStatus of 'Success'  **********");
+                }
+
                 foreach (var objT in transactions)
                 {
-                    Logger.Info("Daily Task from Startups.cs -> updateTransactionStatusService -> Updating transaction's Synapse status using  showTransactions serivice  for Transaction id - [TransactionId: " + objT.tr.TransactionId + "] in a daily scheduled job");
+                    Logger.Info("Startups.cs -> updateTransactionStatusService -> Checking Synapse status for TransID: [" + objT.tr.TransactionId + "]");
 
                     Transaction tran = objT.tr;
                     var usersSynapseOauthKey = "";
@@ -144,12 +149,12 @@ namespace noochAdminNew
 
                                 tran.SynapseStatus = jsonFromSynapse["trans"][0]["recent_status"]["status"].ToString();
 
-                                noochConnection.SaveChanges();
+                                db.SaveChanges();
                             }
                             else
                             {
                                 tran.SynapseStatus = "";
-                                noochConnection.SaveChanges();
+                                db.SaveChanges();
                                 Logger.Info("Daily Task from Startups.cs -> updateTransactionStatusService -> response from showTransactioFromSynapseV3 is false for transaction - [transactionID: " + tran.TransactionId + "]");
                             }
                         }

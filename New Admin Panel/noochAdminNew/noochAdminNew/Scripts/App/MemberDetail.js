@@ -66,8 +66,8 @@ $(document).ready(function () {
         $('#modal-userLocation').modal();
     });
 
-    $('#idDocLnk').click(function () {
-        var src = $('.idDocImg').attr('src');
+    $('.idDocImg').click(function () {
+        var src = $(this).attr('src');
 
         $('#idImageBig').attr('src', src);
 
@@ -129,7 +129,7 @@ $('#ChangePassword').click(function () {
 
 $(document).ready(function () {
     if ($('#DocStatus').val() == "Success") {
-        swal("Awesome !", "File Uploaded Successfully!", "success");
+        swal("Awesome!", "File Uploaded Successfully!", "success");
         $('#DocStatus').val('');
     }
     else if ($('#DocStatus').val() == "Failed") {
@@ -494,9 +494,6 @@ var Member = function () {
             $("#btnChangePassword").text('Yes - Update');
             $('#pwd').val('');
             $('#btnChangePassword').removeAttr("disabled");
-            if ($('#toggle-button-selected').hasClass('toggle-button')) {
-                $('#toggle-button-selected').removeClass('toggle-button-selected');
-            }
         });
     }
 
