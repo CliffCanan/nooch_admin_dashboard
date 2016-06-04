@@ -864,7 +864,7 @@ namespace noochAdminNew.Classes.Utility
         public static List<string> getClientSecretId(string memId)
         {
             List<string> clientIds = new List<string>();
-            
+
             try
             {
                 Member member = GetMemberDetails(memId);
