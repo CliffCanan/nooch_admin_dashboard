@@ -11,6 +11,8 @@
     <link href="~/css/animate.css" rel="stylesheet" />
     <link href="~/css/charts.css" rel="stylesheet" />
     <link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/plugins/sweetalert-override.min.css" />
+
     <link href="~/css/style.css" rel="stylesheet" />
     <link rel="icon" href="~/img/favicon.ico" />
 
@@ -21,25 +23,13 @@
     <script src="~/js/plugins/toastr/toastr.min.js"></script>
     <script src="~/js/inspinia.js"></script>
     <script src="~/js/plugins/easypiechart/jquery.easypiechart.js"></script>
+    <script src="~/js/plugins/sweetalert.min.js" async></script>
 
-    <script>
-        Pace.options = {
-            ajax: false
-        }
-
-        function rsendEmail() {
-            console.log('calling resend email method');
-            $.post($('#reLinkUrl').val(), function (result) {
-                
-            });
-            console.log('done calling resend email method');
-        }
-
-    </script>
 </head>
 
 <body>
-    <input type="hidden" value="@Url.Action("SendReLinkEmail","Admin")" id="reLinkUrl"/>
+
+    <input type="hidden" value="@Url.Action("SendReLinkEmail","Admin")" id="reLinkUrl" />
     <div id="wrapper">
 
         <nav class="navbar-default navbar-static-side" role="navigation">
@@ -289,5 +279,36 @@
         </div>
     </div>
 
+    <script>
+        Pace.options = {
+            ajax: false
+        }
+
+        function rsendEmail()
+        {
+            console.log('ON DASHBOARD Calling resend email method');
+
+            swal({
+                title: "Send Email?",
+                text: "You are about to send an email to all users that have an active Synapse Bank account linked to their Nooch account. ARE YOU SURE?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3fabe1",
+                confirmButtonText: "Send Email",
+                //cancelButtonText: "",
+                allowEscapeKey: true,
+            }, function (isConfirm)
+            {
+                if (isConfirm) {
+                    $.post($('#reLinkUrl').val(), function (result)
+                    {
+                        console.log("Result: [" + result + "]");
+                        swal("Service Complete", "Process has completed: [" + result + "]", "success");
+                    });
+                }
+            });
+        }
+    </script>
 </body>
+
 </html>

@@ -1105,7 +1105,7 @@ namespace noochAdminNew.Controllers
                                 member.cipTag = cip_tag;
                             }
                             member.DateModified = DateTime.Now;
-                           
+
                             obj.SaveChanges();
 
                             res.Address = streetaddress;
