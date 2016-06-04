@@ -739,6 +739,18 @@
           <Property Name="SynapseStatus" Type="varchar" MaxLength="50" />
           <Property Name="DateAccepted" Type="datetime" />
         </EntityType>
+        <EntityType Name="TransactionsStatusAtSynapse">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nooch_Transaction_Id" Type="varchar(max)" />
+          <Property Name="Transaction_oid" Type="varchar(max)" />
+          <Property Name="status_date" Type="varchar(max)" />
+          <Property Name="status_note" Type="varchar(max)" />
+          <Property Name="status" Type="varchar(max)" />
+          <Property Name="status_id" Type="varchar(max)" />
+        </EntityType>
         <EntityType Name="UnitsOccupiedByTenants">
           <Key>
             <PropertyRef Name="Id" />
@@ -938,6 +950,7 @@
           <EntitySet Name="TransactionCustomReportEntity" EntityType="Self.TransactionCustomReportEntity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TransactionReportEntity" EntityType="Self.TransactionReportEntity" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Transactions" EntityType="Self.Transactions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TransactionsStatusAtSynapse" EntityType="Self.TransactionsStatusAtSynapse" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UnitsOccupiedByTenants" EntityType="Self.UnitsOccupiedByTenants" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_MemberNotifications_Members" Association="Self.FK_MemberNotifications_Members">
@@ -1084,6 +1097,7 @@
           <FunctionImport Name="GetSDNListing" EntitySet="SDNSearchResults" ReturnType="Collection(NOOCHModel.SDNSearchResult)">
           <Parameter Name="searchtext" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="TransactionsStatusAtSynapses" EntityType="NOOCHModel.TransactionsStatusAtSynapse" />
           </EntityContainer>
         <ComplexType Name="GetTopReferringMembers_Result">
           <Property Type="Guid" Name="InviteCode" Nullable="true" />
@@ -2020,6 +2034,18 @@
           <Property Name="Status_Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
+        <EntityType Name="TransactionsStatusAtSynapse">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nooch_Transaction_Id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Transaction_oid" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="status_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="status_note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="status_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2862,6 +2888,19 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="GetSDNListing" FunctionName="NOOCHModel.Store.pGetSDNListing" />
+          <EntitySetMapping Name="TransactionsStatusAtSynapses">
+            <EntityTypeMapping TypeName="NOOCHModel.TransactionsStatusAtSynapse">
+              <MappingFragment StoreEntitySet="TransactionsStatusAtSynapse">
+                <ScalarProperty Name="status_id" ColumnName="status_id" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="status_note" ColumnName="status_note" />
+                <ScalarProperty Name="status_date" ColumnName="status_date" />
+                <ScalarProperty Name="Transaction_oid" ColumnName="Transaction_oid" />
+                <ScalarProperty Name="Nooch_Transaction_Id" ColumnName="Nooch_Transaction_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

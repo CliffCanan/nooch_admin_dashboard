@@ -55,6 +55,7 @@
         <AssociationConnector Association="NOOCHModel.FK_RentTransactions_UnitsOccupiedByTenants" />
         <EntityTypeShape EntityType="NOOCHModel.SynapseCreateUserResult" Width="1.5" PointX="8.375" PointY="21.75" />
         <EntityTypeShape EntityType="NOOCHModel.SynapseAddTransactionResult" Width="1.5" PointX="17.375" PointY="18.75" />
+        <EntityTypeShape EntityType="NOOCHModel.TransactionsStatusAtSynapse" Width="1.5" PointX="19.375" PointY="12.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

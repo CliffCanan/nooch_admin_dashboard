@@ -68,6 +68,7 @@ namespace noochAdminNew.Models
         public DbSet<User> Users { get; set; }
         public DbSet<SynapseCreateUserResult> SynapseCreateUserResults { get; set; }
         public DbSet<SynapseAddTransactionResult> SynapseAddTransactionResults { get; set; }
+        public DbSet<TransactionsStatusAtSynapse> TransactionsStatusAtSynapses { get; set; }
     
         public virtual ObjectResult<string> GetReportsForMember(string memberId, string getWhat)
         {
