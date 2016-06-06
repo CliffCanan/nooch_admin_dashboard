@@ -13,7 +13,6 @@ namespace noochAdminNew.Classes.ResponseClasses
         public string Message { get; set; }
 
         public List<MemberOperationsInnerClass> MemberOperationsOuterClass { get; set; }
-
         public List<MembersListDataClass> Members { get; set; }
     }
 
@@ -41,5 +40,5 @@ namespace noochAdminNew.Classes.ResponseClasses
         public string ssn { get; set; }
         public string dob { get; set; }
     }
-   
+
 }
