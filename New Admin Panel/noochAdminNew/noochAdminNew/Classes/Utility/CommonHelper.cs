@@ -22,6 +22,7 @@ namespace noochAdminNew.Classes.Utility
     {
         private const string Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
+
         public static string GetEncryptedData(string sourceData)
         {
             try
@@ -36,6 +37,7 @@ namespace noochAdminNew.Classes.Utility
             }
             return string.Empty;
         }
+
 
         public static string UppercaseFirst(string s)
         {
@@ -73,6 +75,7 @@ namespace noochAdminNew.Classes.Utility
             return string.Empty;
         }
 
+
         public static MemberNotification GetMemberNotificationSettings(string memberId)
         {
             using (var noochConnection = new NOOCHEntities())
@@ -84,6 +87,7 @@ namespace noochAdminNew.Classes.Utility
                 return memberNotifications;
             }
         }
+
 
         public static Member GetMemberUsingGivenMemberId(string memberId)
         {
@@ -118,6 +122,7 @@ namespace noochAdminNew.Classes.Utility
             }
         }
 
+
         public static string FormatPhoneNumber(string sourcePhone)
         {
             if (String.IsNullOrEmpty(sourcePhone) || sourcePhone.ToString().Length != 10)
@@ -133,6 +138,7 @@ namespace noochAdminNew.Classes.Utility
             return sourcePhone;
         }
 
+
         public static string RemovePhoneNumberFormatting(string sourceNum)
         {
             if (!String.IsNullOrEmpty(sourceNum))
@@ -146,6 +152,7 @@ namespace noochAdminNew.Classes.Utility
             }
             return sourceNum;
         }
+
 
         public static string GetRandomTransactionTrackingId()
         {
@@ -251,6 +258,7 @@ namespace noochAdminNew.Classes.Utility
             return res;
         }
 
+
         public static synapseSearchUserResponse getUserPermissionsForSynapseV3(string userEmail)
         {
             synapseSearchUserResponse res = new synapseSearchUserResponse();
@@ -346,6 +354,7 @@ namespace noochAdminNew.Classes.Utility
             return res;
         }
 
+
         public static NodePermissionCheckResult IsNodeActiveInGivenSetOfNodes(synapseSearchUserResponse_Node[] allNodes, string nodeToMatch)
         {
             NodePermissionCheckResult res = new NodePermissionCheckResult();
@@ -367,6 +376,7 @@ namespace noochAdminNew.Classes.Utility
 
             return res;
         }
+
 
         public static SynapseV3AddTrans_ReusableClass AddTransSynapseV3Reusable(string sender_oauth, string sender_fingerPrint,
         string sender_bank_node_id, string amount, string fee, string receiver_oauth, string receiver_fingerprint,
@@ -618,60 +628,12 @@ namespace noochAdminNew.Classes.Utility
             return res;
         }
 
-        public static String ConvertImageURLToBase64(String url)
-        {
-            if (!String.IsNullOrEmpty(url))
-            {
-                Logger.Info("MDA -> ConvertImageURLToBase64 Initiated - Photo URL is: [" + url + "]");
-
-                StringBuilder _sb = new StringBuilder();
-
-                Byte[] _byte = GetImage(url);
-
-                _sb.Append(Convert.ToBase64String(_byte, 0, _byte.Length));
-
-                return _sb.ToString();
-            }
-
-            return "";
-        }
-
-        public static byte[] GetImage(string url)
-        {
-            Stream stream = null;
-            byte[] buf;
-
-            try
-            {
-                WebProxy myProxy = new WebProxy();
-                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-
-                HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-                stream = response.GetResponseStream();
-
-                using (BinaryReader br = new BinaryReader(stream))
-                {
-                    int len = (int)(response.ContentLength);
-                    buf = br.ReadBytes(len);
-                    br.Close();
-                }
-
-                stream.Close();
-                response.Close();
-            }
-            catch (Exception ex)
-            {
-                Logger.Error("MDA -> GetImage FAILED - Photo URL was: [" + url + "]. Exception: [" + ex + "]");
-                buf = null;
-            }
-
-            return (buf);
-        }
-
 
         /// <summary>
         /// For checking if a user's Synapse Oauth Key (access_token) is still valid, and refreshing if not.
-        /// NOTE: In the NoochServices version of this method
+        /// NOTE: In the NoochServices version of this method, it will trigger Synapse's 2FA if the user's Fingerprint
+        ///       is new or has changed.  Since this is triggerent only by an admin, we do not want to trigger Synapse's
+        ///       2FA because the user would not be expecting an SMS and would be confused or possibly upset.
         /// </summary>
         /// <param name="oauthKey"></param>
         /// <returns></returns>
@@ -700,7 +662,7 @@ namespace noochAdminNew.Classes.Utility
 
                         SynapseV3RefreshOauthKeyAndSign_Input input = new SynapseV3RefreshOauthKeyAndSign_Input();
 
-                        List<string> clientIds = CommonHelper.getClientSecretId(noochMemberObject.MemberId.ToString());
+                        List<string> clientIds = getClientSecretId(noochMemberObject.MemberId.ToString());
 
                         string SynapseClientId = clientIds[0];
                         string SynapseClientSecret = clientIds[1];
@@ -861,6 +823,8 @@ namespace noochAdminNew.Classes.Utility
 
             return res;
         }
+
+
         public static List<string> getClientSecretId(string memId)
         {
             List<string> clientIds = new List<string>();
@@ -886,11 +850,12 @@ namespace noochAdminNew.Classes.Utility
             }
             catch (Exception ex)
             {
-                Logger.Error("Common Helper -> getClientSecretId FAILED - MemberID: [" + memId + "], Exception: [" + ex + "]");
+                Logger.Error("Admin Common Helper -> getClientSecretId FAILED - MemberID: [" + memId + "], Exception: [" + ex + "]");
             }
 
             return clientIds;
         }
+
 
         public static Member GetMemberDetails(string memberId)
         {
@@ -1568,6 +1533,59 @@ namespace noochAdminNew.Classes.Utility
                 }
             }
         }
+
+
+        public static String ConvertImageURLToBase64(String url)
+        {
+            if (!String.IsNullOrEmpty(url))
+            {
+                Logger.Info("MDA -> ConvertImageURLToBase64 Initiated - Photo URL is: [" + url + "]");
+
+                StringBuilder _sb = new StringBuilder();
+
+                Byte[] _byte = GetImage(url);
+
+                _sb.Append(Convert.ToBase64String(_byte, 0, _byte.Length));
+
+                return _sb.ToString();
+            }
+
+            return "";
+        }
+
+
+        public static byte[] GetImage(string url)
+        {
+            Stream stream = null;
+            byte[] buf;
+
+            try
+            {
+                WebProxy myProxy = new WebProxy();
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+
+                HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+                stream = response.GetResponseStream();
+
+                using (BinaryReader br = new BinaryReader(stream))
+                {
+                    int len = (int)(response.ContentLength);
+                    buf = br.ReadBytes(len);
+                    br.Close();
+                }
+
+                stream.Close();
+                response.Close();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("MDA -> GetImage FAILED - Photo URL was: [" + url + "]. Exception: [" + ex + "]");
+                buf = null;
+            }
+
+            return (buf);
+        }
+
 
         public static GoogleGeolocationOutput GetStateNameByZipcode(string zipCode)
         {
