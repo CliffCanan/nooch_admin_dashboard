@@ -782,14 +782,14 @@ namespace noochAdminNew.Controllers
                                                    select Syn).FirstOrDefault();
 
                         // Get Auth Token (It's not in the banks table... it's in the SynapseCreateUserResults Table)
-                        var synapseCreateUserObj = (from Syn in obj.SynapseCreateUserResults
-                                                    join mem in obj.Members on Syn.MemberId equals mem.MemberId
-                                                    where Syn.IsDeleted == false && mem.Nooch_ID == NoochId
-                                                    select Syn).FirstOrDefault();
+                        //var synapseCreateUserObj = (from Syn in obj.SynapseCreateUserResults
+                        //                            join mem in obj.Members on Syn.MemberId equals mem.MemberId
+                        //                            where Syn.IsDeleted == false && mem.Nooch_ID == NoochId
+                        //                            select Syn).FirstOrDefault();
 
-                        string synapseAuthToken = synapseCreateUserObj.access_token;
-                        string synapseRefreshToken = synapseCreateUserObj.refresh_token;
-                        string synapseUserId = synapseCreateUserObj.user_id.ToString();
+                        string synapseAuthToken = null;// synapseCreateUserObj.access_token;
+                        string synapseRefreshToken = null;// synapseCreateUserObj.refresh_token;
+                        string synapseUserId = "TEST-3";// synapseCreateUserObj.user_id.ToString();
 
                         SynapseDetailOFMember synapseDetail = new SynapseDetailOFMember();
 

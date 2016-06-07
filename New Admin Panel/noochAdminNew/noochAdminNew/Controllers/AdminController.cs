@@ -670,29 +670,47 @@ namespace noochAdminNew.Controllers
         [HttpPost]
         public string SendReLinkEmail()
         {
-            Logger.Info("Admin Cntrlr -> sending notification to all users to re link their bank node");
+            Logger.Info("*****  Admin Cntrlr -> Sending notification to all users to create a Synapse V3.0 Account  *****");
 
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 var membersWithABank = (from m in obj.Members
                                         join s in obj.SynapseBanksOfMembers
                                         on m.MemberId equals s.MemberId
-                                        where m.IsDeleted == false && s.IsDefault == true
+                                        where m.IsDeleted == false && m.Status != "Suspended" &&
+                                              m.Status != "Temporarily_Blocked" && m.Status != "Deleted" &&
+                                        s.IsDefault == true
                                         select m).ToList();
+
+                Logger.Info("*****  Admin Cntrlr -> FOUND [" + membersWithABank.Count + "] USERS TO SEND UPGRADE EMAIL TO  *****");
+
+                int sentSuccessfullyCount = 0;
+                int skippedUsers = 0;
                 var csv = new StringBuilder();
 
                 foreach (var member in membersWithABank)
                 {
                     var userEmail = CommonHelper.GetDecryptedData(member.UserName);
-                    var firstName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
-                    var lastName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.LastName));
-                    var address = CommonHelper.GetDecryptedData(member.Address);
-                    var fullname = firstName + " " + lastName;
-                    Logger.Info("Admin Cntrlr -> RelinkBankNotification , preparing to send 'Relink Bank Notification' email to the user " + firstName + " " + lastName + " on the email " + userEmail + " and having address" + address);
 
-                    var newLine = string.Format("{0},{1},{2}", userEmail, fullname, address);
-                    csv.AppendLine(newLine);
+                    if (userEmail.IndexOf("jones00") == -1 && userEmail.IndexOf("paydunk") == -1)
+                    {
+                        var firstName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
+                        var lastName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.LastName));
+                        var nooch_id = member.Nooch_ID;
+                        var status = member.Status;
+                        var fullname = firstName + " " + lastName;
+                        Logger.Info("Admin Cntrlr -> RelinkBankNotification , Preparing to send 'Upgrade Notification' email to [" + firstName + " " + lastName + "], Email: [" + userEmail + "], Nooch_ID: [" + nooch_id + "]");
 
+                        var newLine = string.Format("{0},{1},{2},{3}", fullname, userEmail, status, nooch_id);
+                        csv.AppendLine(newLine);
+
+                        sentSuccessfullyCount++;
+                    }
+                    else
+                    {
+                        Logger.Info("Admin Cntrlr -> Skipping user: [ " + userEmail + " ]");
+                        skippedUsers++;
+                    }
                     // just uncomment below mentioned lines to send re link email to all users
                     //                    var toAddress = CommonHelper.GetDecryptedData(member.UserName);
 
@@ -733,16 +751,16 @@ namespace noochAdminNew.Controllers
                 }
 
 
-
+                Logger.Info("*****  Admin Cntrlr -> Completed Sending Upgrade Email Notification to [" + sentSuccessfullyCount + "] Users  *****");
+                Logger.Info("*****  Admin Cntrlr -> Skipped [" + skippedUsers + "] Users  *****");
 
                 Logger.Info("Admin-> Done with sending notification to all users to re link their bank node");
-
-
-
-
             }
+
             return "Done";
         }
+
+
         public ActionResult CreditFundToMember()
         {
             if (Session["UserId"] == null && Session["RoleId"] == null)
@@ -752,6 +770,7 @@ namespace noochAdminNew.Controllers
 
             return View();
         }
+
 
         // Commented out this method coz.. knoxAccountDetails table is no longer in db  -- Malkit 21 Jan 16
 
@@ -1988,7 +2007,6 @@ namespace noochAdminNew.Controllers
             }
             return Json(lr);
         }
-
 
 
         public string GetRandomTransactionTrackingId()
