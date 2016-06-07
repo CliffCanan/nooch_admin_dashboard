@@ -659,7 +659,75 @@ namespace noochAdminNew.Controllers
         }
 
 
+        //[HttpPost]
+        //public ActionResult SendReLinkEmail()
+        //{
+        //    BackgroundJob.Enqueue(() => RelinkBankNotification());
+        //    return Json("{Done}");
+        //}
 
+        [HttpPost]
+        public string SendReLinkEmail()
+        {
+            Logger.Info("Admin Cntrlr -> sending notification to all users to re link their bank node");
+
+            using (NOOCHEntities obj = new NOOCHEntities())
+            {
+                var membersWithABank = (from m in obj.Members
+                                        join s in obj.SynapseBanksOfMembers
+                                        on m.MemberId equals s.MemberId
+                                        where m.IsDeleted == false && s.IsDefault == true
+                                        select m).ToList();
+
+                foreach (var member in membersWithABank)
+                {
+                    var userEmail = CommonHelper.GetDecryptedData(member.UserName);
+                    var firstName = CommonHelper.GetDecryptedData(member.FirstName);
+                    var lastName = CommonHelper.GetDecryptedData(member.LastName);
+                     var address = CommonHelper.GetDecryptedData(member.Address);
+                    Logger.Info("Admin Cntrlr -> RelinkBankNotification , preparing to send 'Relink Bank Notification' email to the user " + firstName + " " + lastName + " on the email " + userEmail+" and having address" + address);
+
+                    // just uncomment below mentioned lines to send re link email to all users
+                    //                    var toAddress = CommonHelper.GetDecryptedData(member.UserName);
+
+                    //try
+                    //{
+                    //    var fromAddress = Utility.GetValueFromConfig("adminMail");
+                    //    var memberId = member.MemberId.ToString();
+                    //    var isRentSceneClient = member.InviteCodeId.ToString().ToLower() == "b43a36a6-1da5-47ce-a56c-6210f9ddbd22" ? "yes" : "false";
+                    //    var companyName = isRentSceneClient == "yes" ? "Rent Scene" : "Nooch";
+
+                    //    var link = "https://www.noochme.com/Nooch/createAccount?memId=" + memberId + "&type=1&update=true&rs=" + isRentSceneClient;
+
+                    //    var tokens = new Dictionary<string, string>
+                    //                    {
+                    //                        {Constants.PLACEHOLDER_FIRST_NAME, CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName.ToString()))},
+                    //                        {Constants.MEMO, link}
+                    //                    };
+
+                    //    Utility.SendEmail("relinkBankAccount", fromAddress, toAddress,
+                    //                      "Important Update for " + companyName + " Payments - **Action Required**",
+                    //                      null, tokens, null, null, null);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    Logger.Error("Admin Cntrlr -> RelinkBankNotification FAILED - Error sending email to: [" + toAddress +
+                    //                 "], MemberID: [" + member.MemberId.ToString() + "], Exception: [" + ex.Message + "]");
+                    //}
+
+
+                   // Logger.Error("Admin-> background process using Hangfire MemberId ->" + member.MemberId);
+
+                }
+
+                Logger.Info("Admin-> Done with sending notification to all users to re link their bank node");
+
+
+
+
+            }
+            return "Done";
+        }
         public ActionResult CreditFundToMember()
         {
             if (Session["UserId"] == null && Session["RoleId"] == null)

@@ -12,9 +12,21 @@
     <link href="~/css/plugins/toastr/toastr.min.css" rel="stylesheet" />
     <link rel="icon" href="~/img/favicon.ico" />
     <script src="~/js/jquery-2.1.1.js"></script>
+    <script>
+          function sendRelinkEmail()
+        {
+            
+              var url = "../Admin/SendReLinkEmail";
+            
+            $.post(url,  function (result) {
+                console.log(result);
+            });
+        }
+    </script>
 </head>
 
 <body>
+ 
 
     <div id="wrapper">
 
@@ -46,7 +58,9 @@
                     <li id="DashboardMenu">
                         <a href="~/Admin/Dashboard"><i class="fa fa-fw fa-th-large"></i><span class="nav-label"> Dashboard</span></a>
                     </li>
-
+                    <li id="SendRelinkMail">
+                        <a href="#"><i class="fa fa-fw fa-th-large"></i><span class="nav-label" onclick="sendRelinkEmail()"> Send Relink Email</span></a>
+                    </li>
                     <li>
                         <a href="#" id="MemberMenuExpander"><i class="fa fa-fw fa-users"></i><span class="nav-label"> Members</span><span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">

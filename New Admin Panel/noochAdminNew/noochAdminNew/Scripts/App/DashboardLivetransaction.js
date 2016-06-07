@@ -2,7 +2,7 @@
 $(document).ready(function () {
     var val = $("input:radio[name=options]").val();
     DashboardDetailsOperation(val);
-
+     
     //Date Format changes
     function getISODateTime(d) {
         // padding function
@@ -129,4 +129,6 @@ $(document).ready(function () {
             toastr.error('Invalid selection! Please try again.', 'Error');
         }
     }
+
+
 });

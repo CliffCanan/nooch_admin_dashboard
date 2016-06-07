@@ -518,3 +518,30 @@ ERROR 2016-01-25 12:58:06,603 58117ms Logger          Error           - Admin Da
    at System.IO.StreamReader..ctor(String path)
    at noochAdminNew.Classes.Utility.Utility.GetEmailTemplate(String physicalPath) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 159
    at noochAdminNew.Classes.Utility.Utility.SendEmail(String templateName, String fromAddress, String toAddress, String subject, String referenceLink, IEnumerable`1 replacements, String ccMailIds, String bccMailIds, String bodyText) in c:\nooch_new_admin\New Admin Panel\noochAdminNew\noochAdminNew\Classes\Utility\Utility.cs:line 175]
+INFO  2016-06-07 14:11:15,874 15287ms Logger          Info            - Admin Cntrlr -> sending notification to all users to re link their bank node
+INFO  2016-06-07 14:11:23,523 22935ms Logger          Info            - Admin Cntrlr -> RelinkBankNotification , preparing to send 'Relink Bank Notification' email to the user cliff Canan on the email cliff@nooch.com
+ERROR 2016-06-07 14:11:24,095 23507ms Logger          Error           - Admin-> background process using Hangfire MemberId ->b3a6cf7b-561f-4105-99e4-406a215ccf60
+INFO  2016-06-07 14:11:25,986 25398ms Logger          Info            - Admin-> Done with sending notification to all users to re link their bank node
+INFO  2016-06-07 14:36:20,230 137566ms Logger          Info            - Admin Cntrlr -> sending notification to all users to re link their bank node
+INFO  2016-06-07 14:36:23,820 141156ms Logger          Info            - Admin Cntrlr -> RelinkBankNotification , preparing to send 'Relink Bank Notification' email to the user cliff Canan on the email cliff@nooch.com and address3 Scarlet Oak Dr/T
+INFO  2016-06-07 14:37:07,835 15684ms Logger          Info            - Admin Cntrlr -> sending notification to all users to re link their bank node
+INFO  2016-06-07 14:37:11,465 19313ms Logger          Info            - Admin Cntrlr -> RelinkBankNotification , preparing to send 'Relink Bank Notification' email to the user cliff Canan on the email cliff@nooch.com and having address3 Scarlet Oak Dr/T
+INFO  2016-06-07 14:37:11,983 19832ms Logger          Info            - Admin-> Done with sending notification to all users to re link their bank node
+INFO  2016-06-07 14:37:21,912 29761ms Logger          Info            - Admin Cntrlr -> sending notification to all users to re link their bank node
+INFO  2016-06-07 14:37:21,928 29777ms Logger          Info            - Admin Cntrlr -> RelinkBankNotification , preparing to send 'Relink Bank Notification' email to the user cliff Canan on the email cliff@nooch.com and having address3 Scarlet Oak Dr/T
+INFO  2016-06-07 14:37:21,928 29777ms Logger          Info            - Admin-> Done with sending notification to all users to re link their bank node
+INFO  2016-06-07 14:37:47,555 55404ms Logger          Info            - Admin Cntrlr -> sending notification to all users to re link their bank node
+INFO  2016-06-07 14:37:47,614 55463ms Logger          Info            - Admin Cntrlr -> RelinkBankNotification , preparing to send 'Relink Bank Notification' email to the user cliff Canan on the email cliff@nooch.com and having address3 Scarlet Oak Dr/T
+INFO  2016-06-07 14:37:47,615 55463ms Logger          Info            - Admin-> Done with sending notification to all users to re link their bank node
+INFO  2016-06-07 14:37:55,787 63635ms Logger          Info            - Admin Cntrlr -> sending notification to all users to re link their bank node
+INFO  2016-06-07 14:37:55,907 63756ms Logger          Info            - Admin Cntrlr -> RelinkBankNotification , preparing to send 'Relink Bank Notification' email to the user cliff Canan on the email cliff@nooch.com and having address3 Scarlet Oak Dr/T
+INFO  2016-06-07 14:37:55,907 63756ms Logger          Info            - Admin-> Done with sending notification to all users to re link their bank node
+INFO  2016-06-07 14:38:31,065 98913ms Logger          Info            - Admin Cntrlr -> sending notification to all users to re link their bank node
+INFO  2016-06-07 14:38:31,140 98989ms Logger          Info            - Admin Cntrlr -> RelinkBankNotification , preparing to send 'Relink Bank Notification' email to the user cliff Canan on the email cliff@nooch.com and having address3 Scarlet Oak Dr/T
+INFO  2016-06-07 14:38:31,141 98990ms Logger          Info            - Admin-> Done with sending notification to all users to re link their bank node
+INFO  2016-06-07 14:38:41,001 108850ms Logger          Info            - Admin Cntrlr -> sending notification to all users to re link their bank node
+INFO  2016-06-07 14:38:41,083 108932ms Logger          Info            - Admin Cntrlr -> RelinkBankNotification , preparing to send 'Relink Bank Notification' email to the user cliff Canan on the email cliff@nooch.com and having address3 Scarlet Oak Dr/T
+INFO  2016-06-07 14:38:41,083 108932ms Logger          Info            - Admin-> Done with sending notification to all users to re link their bank node
+INFO  2016-06-07 14:39:52,872 26747ms Logger          Info            - Admin Cntrlr -> sending notification to all users to re link their bank node
+INFO  2016-06-07 14:39:53,068 26943ms Logger          Info            - Admin Cntrlr -> RelinkBankNotification , preparing to send 'Relink Bank Notification' email to the user cliff Canan on the email cliff@nooch.com and having address3 Scarlet Oak Dr/T
+INFO  2016-06-07 14:39:53,068 26943ms Logger          Info            - Admin-> Done with sending notification to all users to re link their bank node
