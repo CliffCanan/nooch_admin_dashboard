@@ -25,22 +25,22 @@ namespace noochAdminNew.Controllers
     {
         [HttpPost]
         [ActionName("ApplyOperation")]
-        public ActionResult ApplyOperation(string operation, string noochIds)
+        public ActionResult ApplyOperation(string operation, string noochIds, bool sendEmail = false)
         {
-            MemberOperationsResult mr = new MemberOperationsResult();
+            MemberOperationsResult res = new MemberOperationsResult();
 
             if (operation == "0")
             {
-                mr.IsSuccess = false;
-                mr.Message = "No operation selected to perform";
-                return Json(mr);
+                res.IsSuccess = false;
+                res.Message = "No operation selected to perform";
+                return Json(res);
             }
 
             if (noochIds.Length == 0)
             {
-                mr.IsSuccess = false;
-                mr.Message = "No user selected to perfrom action";
-                return Json(mr);
+                res.IsSuccess = false;
+                res.Message = "No user selected to perfrom action";
+                return Json(res);
             }
 
             try
@@ -60,7 +60,10 @@ namespace noochAdminNew.Controllers
                     {
                         using (NOOCHEntities obj = new NOOCHEntities())
                         {
-                            var member = (from t in obj.Members where t.Nooch_ID == s && t.Status != Constants.STATUS_SUSPENDED select t).SingleOrDefault();
+                            var member = (from t in obj.Members
+                                          where t.Nooch_ID == s && t.Status != Constants.STATUS_SUSPENDED
+                                          select t).SingleOrDefault();
+
                             MemberOperationsInnerClass mic = new MemberOperationsInnerClass();
 
                             #region IfMemberNotNull
@@ -75,39 +78,45 @@ namespace noochAdminNew.Controllers
                                 member.ModifiedBy = Utility.ConvertToGuid(Session["UserId"].ToString());
                                 obj.SaveChanges();
 
+                                mic.NoochId = member.Nooch_ID;
+                                mic.Message = "Member Suspended Successfully";
+                                mic.IsSuccess = true;
+
                                 // sending email to member
-                                var fromAddress = Utility.GetValueFromConfig("adminMail");
-                                string emailAddress = CommonHelper.GetDecryptedData(member.UserName);
-
-                                var tokens = new Dictionary<string, string>
+                                if (sendEmail == true)
                                 {
-                                    {Constants.PLACEHOLDER_FIRST_NAME,CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName))}
-                                };
+                                    var fromAddress = Utility.GetValueFromConfig("adminMail");
+                                    string emailAddress = CommonHelper.GetDecryptedData(member.UserName);
 
-                                try
-                                {
-                                    Utility.SendEmail("userSuspended", fromAddress, emailAddress,
-                                        "Your Nooch account has been suspended", null, tokens, null, null, null);
+                                    var tokens = new Dictionary<string, string>
+                                    {
+                                        {Constants.PLACEHOLDER_FIRST_NAME,CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName))}
+                                    };
 
-                                    Logger.Info("Admin Dash -> MemberController - SupendMember email sent to: [" + emailAddress + "]; Member [memberId:" +
-                                                member.MemberId + "]");
+                                    try
+                                    {
+                                        Utility.SendEmail("userSuspended", fromAddress, emailAddress,
+                                                          "Your Nooch account has been suspended", null, tokens, null, null, null);
 
-                                    mic.Message = "Member Suspended Successfully";
-                                    mic.NoochId = member.Nooch_ID;
-                                    mic.IsSuccess = true;
-                                    allinnerclass.Add(mic);
+                                        Logger.Info("Admin Dash -> MemberController - SupendMember email sent to: [" + emailAddress + "]; Member [memberId:" +
+                                                    member.MemberId + "]");
+                                    }
+                                    catch (Exception)
+                                    {
+                                        // to return the status without inserting records in notifications or friends tables, when mail is not sent successfully.
+                                        Logger.Error("Admin Dash -> MemberController - SupendMember email NOT send to: [" + emailAddress + "]; Member [memberId:" +
+                                                     member.MemberId + "]. Problem occured in sending mail.");
+
+                                        mic.Message = "Member Suspension Failed";
+                                        mic.IsSuccess = false;
+                                    }
                                 }
-                                catch (Exception)
+                                else
                                 {
-                                    // to return the status without inserting records in notifications or friends tables, when mail is not sent successfully.
-                                    Logger.Error("Admin Dash -> MemberController - SupendMember email NOT send to: [" + emailAddress + "]; Member [memberId:" +
-                                                member.MemberId + "]. Problem occured in sending mail.");
-
-                                    mic.Message = "Member Suspension Failed";
-                                    mic.NoochId = member.Nooch_ID;
-                                    mic.IsSuccess = false;
-                                    allinnerclass.Add(mic);
+                                    Logger.Info("Admin Dash -> MemberController - 'sendEmail' flag was FALSE, so NOT sending Suspended Email notification");
                                 }
+
+                                allinnerclass.Add(mic);
                             }
                             else
                             {
@@ -116,12 +125,12 @@ namespace noochAdminNew.Controllers
                                 allinnerclass.Add(mic);
                             }
                             #endregion
-
                         }
                     }
-                    mr.IsSuccess = true;
-                    mr.Message = "all operations performed";
-                    mr.MemberOperationsOuterClass = allinnerclass;
+
+                    res.IsSuccess = true;
+                    res.Message = "all operations performed";
+                    res.MemberOperationsOuterClass = allinnerclass;
                 }
 
                 #endregion Suspend
@@ -129,7 +138,7 @@ namespace noochAdminNew.Controllers
 
                 #region SDN Safe
 
-                if (operation == "2")
+                else if (operation == "2")
                 {
                     // Mark User as SDN Safe
 
@@ -178,20 +187,20 @@ namespace noochAdminNew.Controllers
                                 allinnerclass.Add(mic);
                             }
                             #endregion
-
                         }
                     }
-                    mr.IsSuccess = true;
-                    mr.Message = "all operations performed";
-                    mr.MemberOperationsOuterClass = allinnerclass;
+
+                    res.IsSuccess = true;
+                    res.Message = "all operations performed";
+                    res.MemberOperationsOuterClass = allinnerclass;
                 }
 
                 #endregion SDN Safe
 
 
-                #region verify phone
+                #region Verify Phone
 
-                if (operation == "3")
+                else if (operation == "3")
                 {
                     // Verify User's Phone Number
 
@@ -199,8 +208,12 @@ namespace noochAdminNew.Controllers
                     {
                         using (NOOCHEntities obj = new NOOCHEntities())
                         {
-                            var member = (from t in obj.Members where t.Nooch_ID == s && t.ContactNumber != null select t).SingleOrDefault();
+                            var member = (from t in obj.Members
+                                          where t.Nooch_ID == s && t.ContactNumber != null
+                                          select t).SingleOrDefault();
+
                             MemberOperationsInnerClass mic = new MemberOperationsInnerClass();
+
                             #region IfMemberNotNull
                             if (member != null)
                             {
@@ -240,15 +253,15 @@ namespace noochAdminNew.Controllers
                                 allinnerclass.Add(mic);
                             }
                             #endregion
-
                         }
                     }
-                    mr.IsSuccess = true;
-                    mr.Message = "all operations performed";
-                    mr.MemberOperationsOuterClass = allinnerclass;
+
+                    res.IsSuccess = true;
+                    res.Message = "all operations performed";
+                    res.MemberOperationsOuterClass = allinnerclass;
                 }
 
-                #endregion verify phone
+                #endregion Verify Phone
 
 
                 #region activate account - verify email
@@ -263,7 +276,9 @@ namespace noochAdminNew.Controllers
                         {
                             var member = (from t in obj.Members where t.Nooch_ID == s && t.Status != Constants.STATUS_ACTIVE select t).SingleOrDefault();
                             MemberOperationsInnerClass mic = new MemberOperationsInnerClass();
+
                             #region IfMemberNotNull
+
                             if (member != null)
                             {
                                 try
@@ -305,12 +320,12 @@ namespace noochAdminNew.Controllers
                                 allinnerclass.Add(mic);
                             }
                             #endregion
-
                         }
                     }
-                    mr.IsSuccess = true;
-                    mr.Message = "all operations performed";
-                    mr.MemberOperationsOuterClass = allinnerclass;
+
+                    res.IsSuccess = true;
+                    res.Message = "all operations performed";
+                    res.MemberOperationsOuterClass = allinnerclass;
                 }
 
                 #endregion activate account - verify email
@@ -328,7 +343,9 @@ namespace noochAdminNew.Controllers
                         {
                             var member = (from t in obj.Members where t.Nooch_ID == s && t.IsDeleted == false select t).SingleOrDefault();
                             MemberOperationsInnerClass mic = new MemberOperationsInnerClass();
+
                             #region IfMemberNotNull
+
                             if (member != null)
                             {
                                 try
@@ -366,28 +383,32 @@ namespace noochAdminNew.Controllers
                                 mic.NoochId = s;
                                 allinnerclass.Add(mic);
                             }
-                            #endregion
 
+                            #endregion
                         }
                     }
-                    mr.IsSuccess = true;
-                    mr.Message = "all operations performed";
-                    mr.MemberOperationsOuterClass = allinnerclass;
+
+                    res.IsSuccess = true;
+                    res.Message = "all operations performed";
+                    res.MemberOperationsOuterClass = allinnerclass;
                 }
 
-                #endregion Delete Usr
+                #endregion Delete User
 
 
-                return Json(mr);
+                return Json(res);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                mr.IsSuccess = false;
-                mr.Message = "Error";
+                res.IsSuccess = false;
+                res.Message = "Error";
 
-                return Json(mr);
+                Logger.Info("Admin Dash -> MemberController - ApplyOperation FAILED - Exception: [" + ex.Message + "]");
+
+                return Json(res);
             }
         }
+
 
         public void CheckSession()
         {

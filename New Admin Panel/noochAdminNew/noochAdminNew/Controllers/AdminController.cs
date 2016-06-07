@@ -648,57 +648,75 @@ namespace noochAdminNew.Controllers
 
         public void RelinkBankNotification()
         {
-            Logger.Info("Admin Cntrlr -> sending notification to all users to re link their bank node");
+            Logger.Info("*****  Admin Cntrlr -> Sending notification to all users to create a Synapse V3.0 Account  *****");
 
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 var membersWithABank = (from m in obj.Members
                                         join s in obj.SynapseBanksOfMembers
                                         on m.MemberId equals s.MemberId
-                                        where m.IsDeleted == false && s.IsDefault == true
+                                        where m.IsDeleted == false && m.Status != "Suspended" &&
+                                              m.Status != "Temporarily_Blocked" && m.Status != "Deleted" &&
+                                        s.IsDefault == true
                                         select m).ToList();
+
+                Logger.Info("*****  Admin Cntrlr -> FOUND [" + membersWithABank.Count + "] USERS TO SEND UPGRADE EMAIL TO  *****");
+
+                var fromAddress = Utility.GetValueFromConfig("adminMail");
+
+                int sentSuccessfullyCount = 0;
+                int skippedUsers = 0;
 
                 foreach (var member in membersWithABank)
                 {
                     // just uncomment below mentioned lines to send re link email to all users
-                    //var toAddress = CommonHelper.GetDecryptedData(member.UserName);
+                    try
+                    {
+                        var toAddress = CommonHelper.GetDecryptedData(member.UserName);
 
-                    //try
-                    //{
-                    //    var fromAddress = Utility.GetValueFromConfig("adminMail");
-                    //    var memberId = member.MemberId.ToString();
-                    //    var isRentSceneClient = false;
+                        //if (toAddress.IndexOf("jones00") == -1 && toAddress.IndexOf("paydunk") == -1)
+                        if (toAddress == "cliff@nooch.com")
+                        {
+                            var memberId = member.MemberId.ToString();
+                            var isRentSceneClient = member.InviteCodeId.ToString().ToLower() == "b43a36a6-1da5-47ce-a56c-6210f9ddbd22" || member.isRentScene == true
+                                                    ? true
+                                                    : false;
 
-                    //    if (member.isRentScene == true || member.InviteCodeId.ToString().ToLower() == "b43a36a6-1da5-47ce-a56c-6210f9ddbd22")
-                    //    {
-                    //        isRentSceneClient = true;
-                    //    }
+                            var companyName = isRentSceneClient ? "Rent Scene" : "Nooch";
 
-                    //    var companyName = isRentSceneClient ? "Rent Scene" : "Nooch";
+                            //var link = "https://www.noochme.com/Nooch/createAccount?memId=" + memberId + "&type=1&update=true&rs=" + isRentSceneClient.ToString();
+                            var link = "http://www.nooch.info/Nooch/createAccount?memId=" + memberId + "&type=1&update=true&rs=" + isRentSceneClient.ToString();
 
-                    //    var link = "https://www.noochme.com/Nooch/createAccount?memId=" + memberId + "&type=1&update=true&rs=" + isRentSceneClient.ToString();
+                            var tokens = new Dictionary<string, string>
+                            {
+                                {Constants.PLACEHOLDER_FIRST_NAME, CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName.ToString()))},
+                                {Constants.MEMO, link}
+                            };
 
-                    //    var tokens = new Dictionary<string, string>
-                    //                    {
-                    //                        {Constants.PLACEHOLDER_FIRST_NAME, CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName.ToString()))},
-                    //                        {Constants.MEMO, link}
-                    //                    };
+                            Utility.SendEmail("relinkBankAccount", fromAddress, toAddress,
+                                              "Important Update for " + companyName + " Payments - **Action Required**",
+                                              null, tokens, null, null, null);
 
-                    //    Utility.SendEmail("relinkBankAccount", fromAddress, toAddress,
-                    //                      "Important Update for " + companyName + " Payments - **Action Required**",
-                    //                      null, tokens, null, null, null);
-                    //}
-                    //catch (Exception ex)
-                    //{
-                    //    Logger.Error("Admin Cntrlr -> RelinkBankNotification FAILED - Error sending email to: [" + toAddress +
-                    //                 "], MemberID: [" + member.MemberId.ToString() + "], Exception: [" + ex.Message + "]");
-                    //}
+                            sentSuccessfullyCount++;
 
-
-                    Logger.Info("Admin-> background process using Hangfire MemberId -> [" + member.MemberId + "]");
+                            Logger.Info("Admin Cntrlr -> UPGRADE EMAIL SENT TO: [ " + toAddress + " ] SUCCESSFULLY");
+                            break;
+                        }
+                        else
+                        {
+                            Logger.Info("Admin Cntrlr -> Skipping user: [ " + toAddress + " ]");
+                            skippedUsers++;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("*****  Admin Cntrlr -> RelinkBankNotification FAILED - Error sending email to: " +
+                                     "MemberID: [" + member.MemberId.ToString() + "], Exception: [" + ex.Message + "]");
+                    }
                 }
 
-                Logger.Info("Admin-> Done with sending notification to all users to re link their bank node");
+                Logger.Info("*****  Admin Cntrlr -> Completed Sending Upgrade Email Notification to [" + sentSuccessfullyCount + "] Users  *****");
+                Logger.Info("*****  Admin Cntrlr -> Skipped [" + skippedUsers + "] Users  *****");
             }
         }
 

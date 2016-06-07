@@ -86,6 +86,7 @@ $(document).ready(function () {
 
 });
 
+
 function checkIfUserLocationExists() {
 
     var lat = $('#userLoc').attr('data-lat');
@@ -118,9 +119,46 @@ function checkIfUserLocationExists() {
     }
 }
 
+var notifySuspendedUser = false;
+
+function suspendUserPrompt() {
+    swal({
+        title: "Notify " + firstName + "?",
+        text: "Should this user to be notified about being suspended?",
+        type: "warning",
+        showCancelButton: true,
+        cancelButtonText: "No",
+        confirmButtonColor: "#3fabe1",
+        confirmButtonText: "Yes",
+        html: true,
+        customClass: "securityAlert confirmBtnFullWidth"
+    }, function (isConfirm)
+    {
+        setTimeout(function ()
+        {
+            if (escapeKeyPressed == true) {
+                escapeKeyPressed = false;
+            }
+            else {
+                if (isConfirm) {
+                    notifySuspendedUser = true;
+                }
+                else {
+                    notifySuspendedUser = false;
+                }
+
+                Member.ApplyChoosenOperation(1);
+            }
+        }, 200);
+    });
+
+}
+
+
 $('#DeleteUser').click(function () {
     $('#myModalConfirmDelete').modal('show');
 });
+
 
 $('#ChangePassword').click(function () {
     $('#changePwd').modal('show');
@@ -147,8 +185,10 @@ $(document).ready(function () {
 });
 
 
-var Member = function () {
-    function applyOperation(operation) {
+var Member = function ()
+{
+    function applyOperation(operation)
+    {
         if (NoochId == '') {
             toastr.error('No NoochId was selected...', 'Error');
             return;
@@ -158,48 +198,55 @@ var Member = function () {
         var data = {};
         data.operation = operation;
         data.noochIds = NoochId;
-        $.post(url, data, function (result) {
 
+        if (operation == 1) // Suspend User
+        {
+            data.sendEmail = notifySuspendedUser;
+        }
+
+        $.post(url, data, function (result)
+        {
             if (result.IsSuccess == true) {
                 console.log(result.Message);
                 console.log(result.MemberOperationsOuterClass);
 
                 // iterating through all innerclass objects
 
-                $.each(result.MemberOperationsOuterClass, function (key, value) {
-                    if (value.IsSuccess == true) {
+                $.each(result.MemberOperationsOuterClass, function (key, value)
+                {
+                    if (value.IsSuccess == true)
+                    {
                         toastr.success(value.Message, value.NoochId);
 
                         if (operation == 4) {
                             $("#memberStatus").html('Active');
                         }
                         else if (operation == 5) {
-                            window.location.replace("../Member/ListAll");
                             $('#myModalConfirmDelete').modal('hide');
+                            window.location.replace("../Member/ListAll");
                         }
                     }
-                    else {
+                    else
+                    {
                         $('#myModalConfirmDelete').modal('hide');
                         toastr.error(value.Message, value.NoochId);
                     }
                 });
+
                 if (operation != 5) {
                     location.reload(true);
                 }
-
             }
             else {
                 toastr.error('An error occured on the server, please try again!', 'Error');
             }
         });
-
     }
 
 
     function editCip() {
         $('#mdc_cipTag').css('display', 'block');
         $('#spnCip_Tag').css('display', 'none');
-        
     }
 
 
@@ -303,7 +350,8 @@ var Member = function () {
                 if (escapeKeyPressed == true) {
                     escapeKeyPressed = false;
                 }
-                else {
+                else
+                {
                     var data = {};
                     data.accountId = accountId;
 

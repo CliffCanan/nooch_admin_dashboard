@@ -1219,17 +1219,17 @@
                                                                     @{
                                                                         if (mdc.Status == "Registered")
                                                                         {
-                                                                            <a href="#" class="btn btn-sm btn-default" onclick="Member.ApplyChoosenOperation(4) ">Verify Email</a>
+                                                                            <a href="#" class="btn btn-sm btn-default" onclick="Member.ApplyChoosenOperation(4)">Verify Email</a>
                                                                         }
 
                                                                         if (!mdc.IsPhoneVerified && mdc.ContactNumber != null)
                                                                         {
-                                                                            <a href="#" class="btn btn-sm btn-primary" onclick="Member.ApplyChoosenOperation(3) "> Verify Phone</a>
+                                                                            <a href="#" class="btn btn-sm btn-primary" onclick="Member.ApplyChoosenOperation(3)"> Verify Phone</a>
                                                                         }
 
                                                                         if (mdc.Status == "Active")
                                                                         {
-                                                                            <a href="#" class="btn btn-sm btn-danger" onclick="Member.ApplyChoosenOperation(1) ">Suspend</a>
+                                                                            <a href="#" class="btn btn-sm btn-danger" onclick="suspendUserPrompt()">Suspend</a>
                                                                         }
 
                                                                         if (mdc.Status == "Suspended" || mdc.Status == "Temporarily_Blocked")
