@@ -16,6 +16,7 @@ using System.Data.Objects.SqlClient;
 using System.IO;
 using FileHelpers;
 using System.Data.Entity;
+using System.Text;
 using System.Web.Helpers;
 using noochAdminNew.Classes.PushNotification;
 using Newtonsoft.Json.Linq;
@@ -566,11 +567,11 @@ namespace noochAdminNew.Controllers
                     //     select t).ToList();
 
                     c = (from t in obj.Members
-                         
-                         where t.IsVerifiedWithSynapse==true &&
+
+                         where t.IsVerifiedWithSynapse == true &&
                                t.Status == "Active" &&
-                               t.IsVerifiedPhone == true 
-                             
+                               t.IsVerifiedPhone == true
+
                          select t).ToList();
 
                     dd.TotalActiveAndVerifiedBankAccountUsers = c.Count;
@@ -678,14 +679,19 @@ namespace noochAdminNew.Controllers
                                         on m.MemberId equals s.MemberId
                                         where m.IsDeleted == false && s.IsDefault == true
                                         select m).ToList();
+                var csv = new StringBuilder();
 
                 foreach (var member in membersWithABank)
                 {
                     var userEmail = CommonHelper.GetDecryptedData(member.UserName);
-                    var firstName = CommonHelper.GetDecryptedData(member.FirstName);
-                    var lastName = CommonHelper.GetDecryptedData(member.LastName);
-                     var address = CommonHelper.GetDecryptedData(member.Address);
-                    Logger.Info("Admin Cntrlr -> RelinkBankNotification , preparing to send 'Relink Bank Notification' email to the user " + firstName + " " + lastName + " on the email " + userEmail+" and having address" + address);
+                    var firstName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.FirstName));
+                    var lastName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(member.LastName));
+                    var address = CommonHelper.GetDecryptedData(member.Address);
+                    var fullname = firstName + " " + lastName;
+                    Logger.Info("Admin Cntrlr -> RelinkBankNotification , preparing to send 'Relink Bank Notification' email to the user " + firstName + " " + lastName + " on the email " + userEmail + " and having address" + address);
+
+                    var newLine = string.Format("{0},{1},{2}", userEmail, fullname, address);
+                    csv.AppendLine(newLine);
 
                     // just uncomment below mentioned lines to send re link email to all users
                     //                    var toAddress = CommonHelper.GetDecryptedData(member.UserName);
@@ -716,9 +722,18 @@ namespace noochAdminNew.Controllers
                     //}
 
 
-                   // Logger.Error("Admin-> background process using Hangfire MemberId ->" + member.MemberId);
+                    // Logger.Error("Admin-> background process using Hangfire MemberId ->" + member.MemberId);
 
                 }
+
+                using (StreamWriter writer =
+        new StreamWriter("C:\\noochweb.venturepact.com\\noochnewadmin\\emailsCSV\\emailsAndName.txt", true))
+                {
+                    writer.WriteLine(csv.ToString());
+                }
+
+
+
 
                 Logger.Info("Admin-> Done with sending notification to all users to re link their bank node");
 
@@ -738,606 +753,606 @@ namespace noochAdminNew.Controllers
             return View();
         }
 
-// Commented out this method coz.. knoxAccountDetails table is no longer in db  -- Malkit 21 Jan 16
-
-//        [HttpPost]
-//        [ActionName("CreditFundToMemberPost")]
-//        public ActionResult CreditFundToMemberPost(string transferfundto, string transferAmount, string transferNotes, string adminPin)
-//        {
-//            LoginResult lr = new LoginResult();
-//            // performing validations over input
-
-//            #region input validations
-
-//            if (String.IsNullOrEmpty(transferfundto))
-//            {
-//                lr.IsSuccess = false;
-//                lr.Message = "Please enter user name or NoochId of Member to transfer fund.";
-//            }
-//            if (String.IsNullOrEmpty(transferAmount))
-//            {
-//                lr.IsSuccess = false;
-//                lr.Message = "Please enter transfer fund amount";
-//            }
-
-//            if (String.IsNullOrEmpty(transferNotes))
-//            {
-//                lr.IsSuccess = false;
-//                lr.Message = "Please enter transfer notes.";
-//            }
-//            if (String.IsNullOrEmpty(adminPin))
-//            {
-//                lr.IsSuccess = false;
-//                lr.Message = "Please enter admin pin.";
-//            }
-
-//            #endregion
-
-//            // CLIFF (9/7/15): THIS MUST BE UPDATED TO USE SYNAPSE V3 INSTEAD OF KNOX
-
-//            // **********************  THIS REMAINS INCOMPLETE!  **********************
-
-//            // 1. check admin user knox account and other details
-//            // 2. check fund receiver knox account details
-
-//            // Check admin user details
-//            using (NOOCHEntities obj = new NOOCHEntities())
-//            {
-//                var adminUserDetails =
-//                    (from c in obj.Members
-//                     where c.UserName == "z2/de4EMabGlzMuO7OocHw==" &&
-//                           c.Status == "Active" &&
-//                           c.PinNumber == CommonHelper.GetEncryptedData(adminPin.Trim())
-//                     select c).SingleOrDefault();
-
-//                if (adminUserDetails != null)
-//                {
-//                    Guid AdminMemberId = Utility.ConvertToGuid(adminUserDetails.MemberId.ToString());
-
-//                    // Get Synapse account details of admin
-//                    var adminSynapseDetails =
-//                        (from c in obj.SynapseBanksOfMembers
-//                         where c.MemberId == AdminMemberId && c.IsDefault == true
-//                         select c).SingleOrDefault();
-
-//                    if (adminSynapseDetails != null)
-//                    {
-//                        // Now get the Recipient's info from Members table
-//                        string recepientusernameencrypted = CommonHelper.GetEncryptedData(transferfundto.ToLower());
-
-//                        var recipientMemberDetails = (from c in obj.Members
-//                                                      where c.Nooch_ID == transferfundto ||
-//                                                            c.UserName == recepientusernameencrypted &&
-//                                                            c.Status == "Active"
-//                                                      select c).SingleOrDefault();
-
-//                        if (recipientMemberDetails != null)
-//                        {
-//                            // Now check recipient's Synapse details
-//                            Guid recepeintGuid = Utility.ConvertToGuid(recipientMemberDetails.MemberId.ToString());
-
-//                            var recipientBankDetails =
-//                                (from c in obj.KnoxAccountDetails
-//                                 where c.MemberId == recepeintGuid && c.IsDeleted == false
-//                                 select c).SingleOrDefault();
-
-//                            if (recipientBankDetails != null)
-//                            {
-//                                string transactionTrackingId = GetRandomTransactionTrackingId();
-
-//                                Transaction trans = new Transaction();
-//                                trans.TransactionId = Guid.NewGuid();
-//                                trans.SenderId = AdminMemberId;
-//                                trans.RecipientId = recepeintGuid;
-//                                trans.Amount = Convert.ToDecimal(transferAmount);
-
-//                                trans.TransactionDate = DateTime.Now;
-//                                trans.DisputeStatus = null;
-//                                trans.TransactionStatus = "Success";
-//                                trans.TransactionType = CommonHelper.GetEncryptedData("Reward");
-//                                trans.DeviceId = null;
-//                                trans.TransactionTrackingId = transactionTrackingId;
-//                                trans.Memo = transferNotes.Trim();
-//                                trans.Picture = null;
-
-//                                GeoLocation geo = new GeoLocation();
-//                                geo.LocationId = Guid.NewGuid();
-//                                geo.Latitude = null;
-//                                geo.Longitude = null;
-//                                geo.Altitude = null;
-//                                geo.AddressLine1 = null;
-//                                geo.AddressLine2 = null;
-//                                geo.City = null;
-//                                geo.State = null;
-//                                geo.Country = null;
-//                                geo.ZipCode = null;
-//                                geo.DateCreated = DateTime.Now;
-
-
-//                                // making api call to knox
-//                                WebClient wc = new WebClient();
-
-//                                string KNoxApiKey = Utility.GetValueFromConfig("KnoxApiKey");
-//                                string KNoxApiPass = Utility.GetValueFromConfig("KnoxApiPass");
-
-//                                string c = "https://knoxpayments.com/json/pinpayment.php?payee_key=" +
-//                                    //RECEPEINT_USER_KEY +
-//                                    //"&payee_pass=" + RECEPEINT_USER_PASS + "&payor_key=" + ADMIN_USER_KEY +
-//                                           "&payor_pass=" +
-//                                    //ADMIN_USER_PASS + "&trans_id=" + trans.TransactionId + "&PARTNER_KEY=" +
-//                                           KNoxApiKey + "&amount=" + trans.Amount + "&recur_status=ot";
-//                                string knoxPinPaymentResults = wc.DownloadString(c);
-
-//                                ResponseClass3 m = JsonConvert.DeserializeObject<ResponseClass3>(knoxPinPaymentResults);
-//                                if (m != null)
-//                                {
-//                                    #region parsed response successfully
-//                                    /*
-//                                    string KnoxTransStatus = m.JSonDataResult.status_code;
-//                                    string KnoxTransErrorCode = m.JSonDataResult.error_code;
-//                                    string KnoxTransId = m.JSonDataResult.trans_id;
-
-//                                    if (KnoxTransStatus != null)
-//                                    {
-//                                        Logger.Info(
-//                                            "TransferFundToMemberFromNEWADMIN_PANLE -> knoxPinPaymentResult Status Code for Nooch TransID [" +
-//                                            trans.TransactionId + "] is: " + KnoxTransStatus);
-//                                    }
-//                                    if (KnoxTransErrorCode != null)
-//                                    {
-//                                        Logger.Info(
-//                                            "TransferFundToMemberFromNEWADMIN_PANLE -> knoxPinPaymentResult ERROR Code for Nooch TransID [" +
-//                                            trans.TransactionId + "] is: " + KnoxTransErrorCode);
-//                                    }
-
-//                                    if (KnoxTransStatus == "PAID" && KnoxTransErrorCode == null)
-//                                    {
-//                                        #region Knox returned Paid
-
-//                                        #region email content preparation
-
-//                                        string senderFirstName =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(adminUserDetails.FirstName));
-//                                        string senderLastName =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(adminUserDetails.LastName));
-//                                        string recipientFirstName =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(recepientdetails.FirstName));
-//                                        string recipientLastName =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(recepientdetails.LastName));
-
-//                                        string wholeAmount = trans.Amount.ToString("n2");
-//                                        string[] s3 = wholeAmount.Split('.');
-//                                        string ce = "";
-//                                        string dl = "";
-//                                        if (s3.Length <= 1)
-//                                        {
-//                                            dl = s3[0].ToString();
-//                                            ce = "00";
-//                                        }
-//                                        else
-//                                        {
-//                                            ce = s3[1].ToString();
-//                                            dl = s3[0].ToString();
-//                                        }
-
-//                                        string memo = "";
-//                                        if (trans.Memo != null && trans.Memo != "")
-//                                        {
-//                                            if (trans.Memo.Length > 3)
-//                                            {
-//                                                string firstThreeChars = trans.Memo.Substring(0, 3).ToLower();
-//                                                bool startWithFor = firstThreeChars.Equals("for");
-
-//                                                if (startWithFor)
-//                                                {
-//                                                    memo = trans.Memo.ToString();
-//                                                }
-//                                                else
-//                                                {
-//                                                    memo = "For " + trans.Memo.ToString();
-//                                                }
-//                                            }
-//                                            else
-//                                            {
-//                                                memo = "For " + trans.Memo.ToString();
-//                                            }
-//                                        }
-
-//                                        #endregion
-
-//                                        string senderPic;
-//                                        string recipientPic;
-//                                        var friendDetails =
-//                                            CommonHelper.GetMemberNotificationSettings(
-//                                                adminUserDetails.MemberId.ToString());
-
-//                                        #region email to admin on successfully sending fund
-
-//                                        if (friendDetails != null)
-//                                        {
-//                                            // for TransferSent email notification
-//                                            if (friendDetails != null && (friendDetails.EmailTransferSent ?? false))
-//                                            {
-//                                                if (recepientdetails.Photo != null && recepientdetails.Photo != "")
-//                                                {
-//                                                    string lastFourOfRecipientsPic =
-//                                                        recepientdetails.Photo.Substring(recepientdetails.Photo.Length -
-//                                                                                         15);
-//                                                    if (lastFourOfRecipientsPic != "gv_no_photo.png")
-//                                                    {
-//                                                        recipientPic = "";
-//                                                    }
-//                                                    else
-//                                                    {
-//                                                        recipientPic = recepientdetails.Photo.ToString();
-//                                                    }
-//                                                }
-
-//                                                var tokens = new Dictionary<string, string>
-//                                                {
-//                                                    {Constants.PLACEHOLDER_FIRST_NAME, senderFirstName},
-//                                                    {
-//                                                        Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
-//                                                        recipientFirstName + " " + recipientLastName
-//                                                    },
-//                                                    {Constants.PLACEHOLDER_TRANSFER_AMOUNT, dl},
-//                                                    {Constants.PLACEHLODER_CENTS, ce},
-//                                                    {Constants.MEMO, memo}
-//                                                };
-
-//                                                var fromAddress = Utility.GetValueFromConfig("transfersMail");
-//                                                var toAddress = CommonHelper.GetDecryptedData(adminUserDetails.UserName);
-
-//                                                try
-//                                                {
-//                                                    // email notification
-//                                                    //Utility.SendEmail("TransferSent", 
-//                                                    //    fromAddress, toAddress, null,
-//                                                    //    "Your $" + wholeAmount + " payment to " + recipientFirstName +
-//                                                    //    " on Nooch",
-//                                                    //    null, tokens, null, null, null);
-
-//                                                    Utility.SendEmail("TransferSent", fromAddress, toAddress,
-//                                                        "Your $ " + wholeAmount + " payment to " + recipientFirstName +
-//                                                        " on Nooch", null,
-//                                                        tokens, null, null, null);
-
-
-//                                                    Logger.Info(
-//                                                        "Add fund to members account New Admin --> TransferSent status mail sent to [" +
-//                                                        toAddress + "].");
-//                                                }
-//                                                catch (Exception)
-//                                                {
-//                                                    Logger.Error(
-//                                                        "Add fund to members account New Admin --> TransferSent mail NOT sent to [" +
-//                                                        toAddress +
-//                                                        "]. Problem occurred in sending mail.");
-//                                                }
-
-
-//                                            }
-//                                        }
-
-//                                        #endregion
-
-
-//                                        #region EmailAndPushNotificationToRecepientOnTransferReceive
-
-//                                        // for push notification
-//                                        //var friendDetails = memberDataAccess.GetMemberNotificationSettingsByUserName(CommonHelper.GetDecryptedData(receiverAccountDetail.UserName));
-//                                        var friendDetails2 =
-//                                            CommonHelper.GetMemberNotificationSettings(
-//                                                recepientdetails.MemberId.ToString());
-//                                        if (friendDetails2 != null)
-//                                        {
-//                                            string deviceId2 = friendDetails2 != null
-//                                                ? recepientdetails.DeviceToken
-//                                                : null;
-
-//                                            string mailBodyText = "You received $" + wholeAmount + " from " +
-//                                                                  senderFirstName +
-//                                                                  " " + senderLastName;
-
-//                                            if ((friendDetails2.TransferReceived == null)
-//                                                ? false
-//                                                : friendDetails2.TransferReceived.Value)
-//                                            {
-//                                                try
-//                                                {
-//                                                    // push notifications
-//                                                    if (friendDetails2 != null && !String.IsNullOrEmpty(deviceId2) &&
-//                                                        (friendDetails2.TransferReceived ?? false))
-//                                                    {
-//                                                        Utility.SendNotificationMessage(mailBodyText, 1,
-//                                                            null, deviceId2,
-//                                                            Utility.GetValueFromConfig("AppKey"),
-//                                                            Utility.GetValueFromConfig("MasterSecret"));
-
-//                                                        Logger.Info(
-//                                                            "Add fund to member from new admin panel --> Push notification sent to Sender DeviceID:[" +
-//                                                            deviceId2 + "] successfully.");
-//                                                    }
-//                                                }
-//                                                catch (Exception)
-//                                                {
-//                                                    Logger.Error(
-//                                                        "Add fund to member from new admin panel --> Error: Push notification NOT sent to Sender DeviceID: [" +
-//                                                        deviceId2 + "]");
-//                                                }
-//                                            }
-
-//                                            // for TransferReceived email notification
-//                                            if (friendDetails2 != null &&
-//                                                (friendDetails2.EmailTransferReceived ?? false))
-//                                            {
-//                                                if (adminUserDetails.Photo != null && adminUserDetails.Photo != "")
-//                                                {
-//                                                    string lastFourOfSendersPic =
-//                                                        adminUserDetails.Photo.Substring(adminUserDetails.Photo.Length -
-//                                                                                         15);
-//                                                    if (lastFourOfSendersPic != "gv_no_photo.png")
-//                                                    {
-//                                                        senderPic = "";
-//                                                    }
-//                                                    else
-//                                                    {
-//                                                        senderPic = adminUserDetails.Photo.ToString();
-//                                                    }
-//                                                }
-
-//                                                var tokensR = new Dictionary<string, string>
-//                                                {
-//                                                    {Constants.PLACEHOLDER_FIRST_NAME, recipientFirstName},
-//                                                    {
-//                                                        Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
-//                                                        senderFirstName + " " + senderLastName
-//                                                    },
-//                                                    {Constants.PLACEHOLDER_TRANSFER_AMOUNT, wholeAmount},
-//                                                    {
-//                                                        Constants.PLACEHOLDER_TRANSACTION_DATE,
-//                                                        Convert.ToDateTime(trans.TransactionDate)
-//                                                            .ToString("MMM dd")
-//                                                    },
-//                                                    {Constants.MEMO, memo}
-//                                                };
-
-//                                                // for TransferReceived email notification                            
-//                                                var fromAddress = Utility.GetValueFromConfig("transfersMail");
-//                                                var toAddress2 = CommonHelper.GetDecryptedData(recepientdetails.UserName);
-
-//                                                try
-//                                                {
-//                                                    // email notification
-//                                                    Utility.SendEmail("TransferReceived", fromAddress, toAddress2,
-//                                                        senderFirstName + " sent you $" + wholeAmount + " with Nooch",
-//                                                        null, tokensR, null, null, null);
-
-//                                                    Logger.Info(
-//                                                        "Add fund to member from new admin panel --> TransferReceived Email sent to [" +
-//                                                        toAddress2 + "] successfully.");
-//                                                }
-//                                                catch (Exception)
-//                                                {
-//                                                    Logger.Error(
-//                                                        "Add fund to member from new admin panel --> Error: TransferReceived Email NOT sent to [" +
-//                                                        toAddress2 + "]");
-//                                                }
-//                                            }
-//                                        }
-
-//                                        #endregion
-
-
-
-//                                        try
-//                                        {
-//                                            obj.GeoLocations.Add(geo);
-
-//                                            obj.SaveChanges();
-
-
-//                                            obj.Transactions.Add(trans);
-//                                            obj.SaveChanges();
-//                                            lr.IsSuccess = true;
-//                                            lr.Message = "fund succesfully added to member account.";
-//                                        }
-//                                        catch (Exception)
-//                                        {
-
-//                                            lr.IsSuccess = false;
-//                                            lr.Message = "Error occured while saving transaction in db.";
-//                                        }
-
-
-//                                        #endregion
-//                                    }
-//                                    else
-//                                    {
-//                                        #region emailSendingonTransferAttemtFailure
-
-//                                        // for push notification in case of failure
-
-//                                        var senderNotificationSettings =
-//                                            CommonHelper.GetMemberNotificationSettings(
-//                                                adminUserDetails.MemberId.ToString());
-
-//                                        if (senderNotificationSettings != null)
-//                                        {
-//                                            string senderFirstNameFailure =
-//                                                CommonHelper.UppercaseFirst(
-//                                                    CommonHelper.GetDecryptedData(adminUserDetails.FirstName));
-//                                            string senderLastNameFailure =
-//                                                CommonHelper.UppercaseFirst(
-//                                                    CommonHelper.GetDecryptedData(adminUserDetails.LastName));
-//                                            string recipientFirstNameFailure =
-//                                                CommonHelper.UppercaseFirst(
-//                                                    CommonHelper.GetDecryptedData(recepientdetails.FirstName));
-//                                            string recipientLastNameFailure =
-//                                                CommonHelper.UppercaseFirst(
-//                                                    CommonHelper.GetDecryptedData(recepientdetails.LastName));
-
-
-//                                            // for TransferAttemptFailure email notification
-//                                            if (senderNotificationSettings != null &&
-//                                                (senderNotificationSettings.EmailTransferAttemptFailure ?? false))
-//                                            {
-//                                                string s2 = trans.Amount.ToString("n2");
-//                                                string[] s3 = s2.Split('.');
-
-//                                                var tokensF = new Dictionary<string, string>
-//                                                {
-//                                                    {
-//                                                        Constants.PLACEHOLDER_FIRST_NAME,
-//                                                        senderFirstNameFailure + " " + senderLastNameFailure
-//                                                    },
-//                                                    {
-//                                                        Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
-//                                                        CommonHelper.GetDecryptedData(recepientdetails.UserName)
-//                                                    },
-//                                                    {Constants.PLACEHOLDER_TRANSFER_AMOUNT, s3[0].ToString()},
-//                                                    {Constants.PLACEHLODER_CENTS, s3[1].ToString()},
-//                                                };
-
-//                                                var fromAddress = Utility.GetValueFromConfig("transfersMail");
-//                                                var toAddress = CommonHelper.GetDecryptedData(adminUserDetails.UserName);
-
-//                                                try
-//                                                {
-//                                                    // email notification
-//                                                    Utility.SendEmail("transferFailure",
-//                                                        fromAddress, toAddress, null,
-//                                                        "Nooch transfer failure", tokensF, null, null, null);
-
-//                                                    Logger.Info(
-//                                                        "Add fund to member new admin panel --> Transfer FAILED --> Email sent to Sender: [" +
-//                                                        toAddress + "] successfully.");
-//                                                }
-//                                                catch (Exception)
-//                                                {
-//                                                    Logger.Error(
-//                                                        "Add fund to member new admin panel --> Error: TransferAttemptFailure mail not sent to [" +
-//                                                        toAddress + "]");
-//                                                }
-//                                            }
-//                                        }
-
-//                                        #endregion
-
-//                                        lr.IsSuccess = false;
-//                                        lr.Message = "Knox payment failed.";
-//                                    }
-
-
-//                                    */
-//                                    #endregion
-//                                }
-//                                else
-//                                {
-//                                    #region emailSendingonTransferAttemtFailure
-//                                    /*
-
-//                                    // for push notification in case of failure
-
-//                                    var senderNotificationSettings =
-//                                        CommonHelper.GetMemberNotificationSettings(adminUserDetails.MemberId.ToString());
-
-//                                    if (senderNotificationSettings != null)
-//                                    {
-//                                        string senderFirstNameFailure =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(adminUserDetails.FirstName));
-//                                        string senderLastNameFailure =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(adminUserDetails.LastName));
-//                                        string recipientFirstNameFailure =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(recepientdetails.FirstName));
-//                                        string recipientLastNameFailure =
-//                                            CommonHelper.UppercaseFirst(
-//                                                CommonHelper.GetDecryptedData(recepientdetails.LastName));
-
-
-//                                        // for TransferAttemptFailure email notification
-//                                        if (senderNotificationSettings != null &&
-//                                            (senderNotificationSettings.EmailTransferAttemptFailure ?? false))
-//                                        {
-//                                            string s2 = trans.Amount.ToString("n2");
-//                                            string[] s3 = s2.Split('.');
-
-//                                            var tokensF = new Dictionary<string, string>
-//                                            {
-//                                                {
-//                                                    Constants.PLACEHOLDER_FIRST_NAME,
-//                                                    senderFirstNameFailure + " " + senderLastNameFailure
-//                                                },
-//                                                {
-//                                                    Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
-//                                                    CommonHelper.GetDecryptedData(recepientdetails.UserName)
-//                                                },
-//                                                {Constants.PLACEHOLDER_TRANSFER_AMOUNT, s3[0].ToString()},
-//                                                {Constants.PLACEHLODER_CENTS, s3[1].ToString()},
-//                                            };
-
-//                                            var fromAddress = Utility.GetValueFromConfig("transfersMail");
-//                                            var toAddress = CommonHelper.GetDecryptedData(adminUserDetails.UserName);
-
-//                                            try
-//                                            {
-//                                                // email notification
-//                                                Utility.SendEmail("transferFailure",
-//                                                    fromAddress, toAddress, null,
-//                                                    "Nooch transfer failure", tokensF, null, null, null);
-
-//                                                Logger.Info(
-//                                                    "Add fund to member new admin panel --> Transfer FAILED --> Email sent to Sender: [" +
-//                                                    toAddress + "] successfully.");
-//                                            }
-//                                            catch (Exception)
-//                                            {
-//                                                Logger.Error(
-//                                                    "Add fund to member new admin panel --> Error: TransferAttemptFailure mail not sent to [" +
-//                                                    toAddress + "]");
-//                                            }
-//                                        }
-//                                    }
-//*/
-//                                    #endregion
-
-//                                    lr.IsSuccess = false;
-//                                    lr.Message = "Synapse payment failed.";
-//                                }
-//                            }
-//                            else
-//                            {
-//                                lr.IsSuccess = false;
-//                                lr.Message = "Recepeint Synapse account not available.";
-//                            }
-//                        }
-//                        else
-//                        {
-//                            lr.IsSuccess = false;
-//                            lr.Message = "Given username/nooch id not found or give username/nooch id not active.";
-//                        }
-//                    }
-//                    else
-//                    {
-//                        lr.IsSuccess = false;
-//                        lr.Message = "Admin Synapse account not available.";
-//                    }
-//                }
-//                else
-//                {
-//                    lr.IsSuccess = false;
-//                    lr.Message = "Admin account team@nooch.com not active or invalid admin PIN passed.";
-//                }
-//            }
-//            return Json(lr);
-//        }
+        // Commented out this method coz.. knoxAccountDetails table is no longer in db  -- Malkit 21 Jan 16
+
+        //        [HttpPost]
+        //        [ActionName("CreditFundToMemberPost")]
+        //        public ActionResult CreditFundToMemberPost(string transferfundto, string transferAmount, string transferNotes, string adminPin)
+        //        {
+        //            LoginResult lr = new LoginResult();
+        //            // performing validations over input
+
+        //            #region input validations
+
+        //            if (String.IsNullOrEmpty(transferfundto))
+        //            {
+        //                lr.IsSuccess = false;
+        //                lr.Message = "Please enter user name or NoochId of Member to transfer fund.";
+        //            }
+        //            if (String.IsNullOrEmpty(transferAmount))
+        //            {
+        //                lr.IsSuccess = false;
+        //                lr.Message = "Please enter transfer fund amount";
+        //            }
+
+        //            if (String.IsNullOrEmpty(transferNotes))
+        //            {
+        //                lr.IsSuccess = false;
+        //                lr.Message = "Please enter transfer notes.";
+        //            }
+        //            if (String.IsNullOrEmpty(adminPin))
+        //            {
+        //                lr.IsSuccess = false;
+        //                lr.Message = "Please enter admin pin.";
+        //            }
+
+        //            #endregion
+
+        //            // CLIFF (9/7/15): THIS MUST BE UPDATED TO USE SYNAPSE V3 INSTEAD OF KNOX
+
+        //            // **********************  THIS REMAINS INCOMPLETE!  **********************
+
+        //            // 1. check admin user knox account and other details
+        //            // 2. check fund receiver knox account details
+
+        //            // Check admin user details
+        //            using (NOOCHEntities obj = new NOOCHEntities())
+        //            {
+        //                var adminUserDetails =
+        //                    (from c in obj.Members
+        //                     where c.UserName == "z2/de4EMabGlzMuO7OocHw==" &&
+        //                           c.Status == "Active" &&
+        //                           c.PinNumber == CommonHelper.GetEncryptedData(adminPin.Trim())
+        //                     select c).SingleOrDefault();
+
+        //                if (adminUserDetails != null)
+        //                {
+        //                    Guid AdminMemberId = Utility.ConvertToGuid(adminUserDetails.MemberId.ToString());
+
+        //                    // Get Synapse account details of admin
+        //                    var adminSynapseDetails =
+        //                        (from c in obj.SynapseBanksOfMembers
+        //                         where c.MemberId == AdminMemberId && c.IsDefault == true
+        //                         select c).SingleOrDefault();
+
+        //                    if (adminSynapseDetails != null)
+        //                    {
+        //                        // Now get the Recipient's info from Members table
+        //                        string recepientusernameencrypted = CommonHelper.GetEncryptedData(transferfundto.ToLower());
+
+        //                        var recipientMemberDetails = (from c in obj.Members
+        //                                                      where c.Nooch_ID == transferfundto ||
+        //                                                            c.UserName == recepientusernameencrypted &&
+        //                                                            c.Status == "Active"
+        //                                                      select c).SingleOrDefault();
+
+        //                        if (recipientMemberDetails != null)
+        //                        {
+        //                            // Now check recipient's Synapse details
+        //                            Guid recepeintGuid = Utility.ConvertToGuid(recipientMemberDetails.MemberId.ToString());
+
+        //                            var recipientBankDetails =
+        //                                (from c in obj.KnoxAccountDetails
+        //                                 where c.MemberId == recepeintGuid && c.IsDeleted == false
+        //                                 select c).SingleOrDefault();
+
+        //                            if (recipientBankDetails != null)
+        //                            {
+        //                                string transactionTrackingId = GetRandomTransactionTrackingId();
+
+        //                                Transaction trans = new Transaction();
+        //                                trans.TransactionId = Guid.NewGuid();
+        //                                trans.SenderId = AdminMemberId;
+        //                                trans.RecipientId = recepeintGuid;
+        //                                trans.Amount = Convert.ToDecimal(transferAmount);
+
+        //                                trans.TransactionDate = DateTime.Now;
+        //                                trans.DisputeStatus = null;
+        //                                trans.TransactionStatus = "Success";
+        //                                trans.TransactionType = CommonHelper.GetEncryptedData("Reward");
+        //                                trans.DeviceId = null;
+        //                                trans.TransactionTrackingId = transactionTrackingId;
+        //                                trans.Memo = transferNotes.Trim();
+        //                                trans.Picture = null;
+
+        //                                GeoLocation geo = new GeoLocation();
+        //                                geo.LocationId = Guid.NewGuid();
+        //                                geo.Latitude = null;
+        //                                geo.Longitude = null;
+        //                                geo.Altitude = null;
+        //                                geo.AddressLine1 = null;
+        //                                geo.AddressLine2 = null;
+        //                                geo.City = null;
+        //                                geo.State = null;
+        //                                geo.Country = null;
+        //                                geo.ZipCode = null;
+        //                                geo.DateCreated = DateTime.Now;
+
+
+        //                                // making api call to knox
+        //                                WebClient wc = new WebClient();
+
+        //                                string KNoxApiKey = Utility.GetValueFromConfig("KnoxApiKey");
+        //                                string KNoxApiPass = Utility.GetValueFromConfig("KnoxApiPass");
+
+        //                                string c = "https://knoxpayments.com/json/pinpayment.php?payee_key=" +
+        //                                    //RECEPEINT_USER_KEY +
+        //                                    //"&payee_pass=" + RECEPEINT_USER_PASS + "&payor_key=" + ADMIN_USER_KEY +
+        //                                           "&payor_pass=" +
+        //                                    //ADMIN_USER_PASS + "&trans_id=" + trans.TransactionId + "&PARTNER_KEY=" +
+        //                                           KNoxApiKey + "&amount=" + trans.Amount + "&recur_status=ot";
+        //                                string knoxPinPaymentResults = wc.DownloadString(c);
+
+        //                                ResponseClass3 m = JsonConvert.DeserializeObject<ResponseClass3>(knoxPinPaymentResults);
+        //                                if (m != null)
+        //                                {
+        //                                    #region parsed response successfully
+        //                                    /*
+        //                                    string KnoxTransStatus = m.JSonDataResult.status_code;
+        //                                    string KnoxTransErrorCode = m.JSonDataResult.error_code;
+        //                                    string KnoxTransId = m.JSonDataResult.trans_id;
+
+        //                                    if (KnoxTransStatus != null)
+        //                                    {
+        //                                        Logger.Info(
+        //                                            "TransferFundToMemberFromNEWADMIN_PANLE -> knoxPinPaymentResult Status Code for Nooch TransID [" +
+        //                                            trans.TransactionId + "] is: " + KnoxTransStatus);
+        //                                    }
+        //                                    if (KnoxTransErrorCode != null)
+        //                                    {
+        //                                        Logger.Info(
+        //                                            "TransferFundToMemberFromNEWADMIN_PANLE -> knoxPinPaymentResult ERROR Code for Nooch TransID [" +
+        //                                            trans.TransactionId + "] is: " + KnoxTransErrorCode);
+        //                                    }
+
+        //                                    if (KnoxTransStatus == "PAID" && KnoxTransErrorCode == null)
+        //                                    {
+        //                                        #region Knox returned Paid
+
+        //                                        #region email content preparation
+
+        //                                        string senderFirstName =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(adminUserDetails.FirstName));
+        //                                        string senderLastName =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(adminUserDetails.LastName));
+        //                                        string recipientFirstName =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(recepientdetails.FirstName));
+        //                                        string recipientLastName =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(recepientdetails.LastName));
+
+        //                                        string wholeAmount = trans.Amount.ToString("n2");
+        //                                        string[] s3 = wholeAmount.Split('.');
+        //                                        string ce = "";
+        //                                        string dl = "";
+        //                                        if (s3.Length <= 1)
+        //                                        {
+        //                                            dl = s3[0].ToString();
+        //                                            ce = "00";
+        //                                        }
+        //                                        else
+        //                                        {
+        //                                            ce = s3[1].ToString();
+        //                                            dl = s3[0].ToString();
+        //                                        }
+
+        //                                        string memo = "";
+        //                                        if (trans.Memo != null && trans.Memo != "")
+        //                                        {
+        //                                            if (trans.Memo.Length > 3)
+        //                                            {
+        //                                                string firstThreeChars = trans.Memo.Substring(0, 3).ToLower();
+        //                                                bool startWithFor = firstThreeChars.Equals("for");
+
+        //                                                if (startWithFor)
+        //                                                {
+        //                                                    memo = trans.Memo.ToString();
+        //                                                }
+        //                                                else
+        //                                                {
+        //                                                    memo = "For " + trans.Memo.ToString();
+        //                                                }
+        //                                            }
+        //                                            else
+        //                                            {
+        //                                                memo = "For " + trans.Memo.ToString();
+        //                                            }
+        //                                        }
+
+        //                                        #endregion
+
+        //                                        string senderPic;
+        //                                        string recipientPic;
+        //                                        var friendDetails =
+        //                                            CommonHelper.GetMemberNotificationSettings(
+        //                                                adminUserDetails.MemberId.ToString());
+
+        //                                        #region email to admin on successfully sending fund
+
+        //                                        if (friendDetails != null)
+        //                                        {
+        //                                            // for TransferSent email notification
+        //                                            if (friendDetails != null && (friendDetails.EmailTransferSent ?? false))
+        //                                            {
+        //                                                if (recepientdetails.Photo != null && recepientdetails.Photo != "")
+        //                                                {
+        //                                                    string lastFourOfRecipientsPic =
+        //                                                        recepientdetails.Photo.Substring(recepientdetails.Photo.Length -
+        //                                                                                         15);
+        //                                                    if (lastFourOfRecipientsPic != "gv_no_photo.png")
+        //                                                    {
+        //                                                        recipientPic = "";
+        //                                                    }
+        //                                                    else
+        //                                                    {
+        //                                                        recipientPic = recepientdetails.Photo.ToString();
+        //                                                    }
+        //                                                }
+
+        //                                                var tokens = new Dictionary<string, string>
+        //                                                {
+        //                                                    {Constants.PLACEHOLDER_FIRST_NAME, senderFirstName},
+        //                                                    {
+        //                                                        Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
+        //                                                        recipientFirstName + " " + recipientLastName
+        //                                                    },
+        //                                                    {Constants.PLACEHOLDER_TRANSFER_AMOUNT, dl},
+        //                                                    {Constants.PLACEHLODER_CENTS, ce},
+        //                                                    {Constants.MEMO, memo}
+        //                                                };
+
+        //                                                var fromAddress = Utility.GetValueFromConfig("transfersMail");
+        //                                                var toAddress = CommonHelper.GetDecryptedData(adminUserDetails.UserName);
+
+        //                                                try
+        //                                                {
+        //                                                    // email notification
+        //                                                    //Utility.SendEmail("TransferSent", 
+        //                                                    //    fromAddress, toAddress, null,
+        //                                                    //    "Your $" + wholeAmount + " payment to " + recipientFirstName +
+        //                                                    //    " on Nooch",
+        //                                                    //    null, tokens, null, null, null);
+
+        //                                                    Utility.SendEmail("TransferSent", fromAddress, toAddress,
+        //                                                        "Your $ " + wholeAmount + " payment to " + recipientFirstName +
+        //                                                        " on Nooch", null,
+        //                                                        tokens, null, null, null);
+
+
+        //                                                    Logger.Info(
+        //                                                        "Add fund to members account New Admin --> TransferSent status mail sent to [" +
+        //                                                        toAddress + "].");
+        //                                                }
+        //                                                catch (Exception)
+        //                                                {
+        //                                                    Logger.Error(
+        //                                                        "Add fund to members account New Admin --> TransferSent mail NOT sent to [" +
+        //                                                        toAddress +
+        //                                                        "]. Problem occurred in sending mail.");
+        //                                                }
+
+
+        //                                            }
+        //                                        }
+
+        //                                        #endregion
+
+
+        //                                        #region EmailAndPushNotificationToRecepientOnTransferReceive
+
+        //                                        // for push notification
+        //                                        //var friendDetails = memberDataAccess.GetMemberNotificationSettingsByUserName(CommonHelper.GetDecryptedData(receiverAccountDetail.UserName));
+        //                                        var friendDetails2 =
+        //                                            CommonHelper.GetMemberNotificationSettings(
+        //                                                recepientdetails.MemberId.ToString());
+        //                                        if (friendDetails2 != null)
+        //                                        {
+        //                                            string deviceId2 = friendDetails2 != null
+        //                                                ? recepientdetails.DeviceToken
+        //                                                : null;
+
+        //                                            string mailBodyText = "You received $" + wholeAmount + " from " +
+        //                                                                  senderFirstName +
+        //                                                                  " " + senderLastName;
+
+        //                                            if ((friendDetails2.TransferReceived == null)
+        //                                                ? false
+        //                                                : friendDetails2.TransferReceived.Value)
+        //                                            {
+        //                                                try
+        //                                                {
+        //                                                    // push notifications
+        //                                                    if (friendDetails2 != null && !String.IsNullOrEmpty(deviceId2) &&
+        //                                                        (friendDetails2.TransferReceived ?? false))
+        //                                                    {
+        //                                                        Utility.SendNotificationMessage(mailBodyText, 1,
+        //                                                            null, deviceId2,
+        //                                                            Utility.GetValueFromConfig("AppKey"),
+        //                                                            Utility.GetValueFromConfig("MasterSecret"));
+
+        //                                                        Logger.Info(
+        //                                                            "Add fund to member from new admin panel --> Push notification sent to Sender DeviceID:[" +
+        //                                                            deviceId2 + "] successfully.");
+        //                                                    }
+        //                                                }
+        //                                                catch (Exception)
+        //                                                {
+        //                                                    Logger.Error(
+        //                                                        "Add fund to member from new admin panel --> Error: Push notification NOT sent to Sender DeviceID: [" +
+        //                                                        deviceId2 + "]");
+        //                                                }
+        //                                            }
+
+        //                                            // for TransferReceived email notification
+        //                                            if (friendDetails2 != null &&
+        //                                                (friendDetails2.EmailTransferReceived ?? false))
+        //                                            {
+        //                                                if (adminUserDetails.Photo != null && adminUserDetails.Photo != "")
+        //                                                {
+        //                                                    string lastFourOfSendersPic =
+        //                                                        adminUserDetails.Photo.Substring(adminUserDetails.Photo.Length -
+        //                                                                                         15);
+        //                                                    if (lastFourOfSendersPic != "gv_no_photo.png")
+        //                                                    {
+        //                                                        senderPic = "";
+        //                                                    }
+        //                                                    else
+        //                                                    {
+        //                                                        senderPic = adminUserDetails.Photo.ToString();
+        //                                                    }
+        //                                                }
+
+        //                                                var tokensR = new Dictionary<string, string>
+        //                                                {
+        //                                                    {Constants.PLACEHOLDER_FIRST_NAME, recipientFirstName},
+        //                                                    {
+        //                                                        Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
+        //                                                        senderFirstName + " " + senderLastName
+        //                                                    },
+        //                                                    {Constants.PLACEHOLDER_TRANSFER_AMOUNT, wholeAmount},
+        //                                                    {
+        //                                                        Constants.PLACEHOLDER_TRANSACTION_DATE,
+        //                                                        Convert.ToDateTime(trans.TransactionDate)
+        //                                                            .ToString("MMM dd")
+        //                                                    },
+        //                                                    {Constants.MEMO, memo}
+        //                                                };
+
+        //                                                // for TransferReceived email notification                            
+        //                                                var fromAddress = Utility.GetValueFromConfig("transfersMail");
+        //                                                var toAddress2 = CommonHelper.GetDecryptedData(recepientdetails.UserName);
+
+        //                                                try
+        //                                                {
+        //                                                    // email notification
+        //                                                    Utility.SendEmail("TransferReceived", fromAddress, toAddress2,
+        //                                                        senderFirstName + " sent you $" + wholeAmount + " with Nooch",
+        //                                                        null, tokensR, null, null, null);
+
+        //                                                    Logger.Info(
+        //                                                        "Add fund to member from new admin panel --> TransferReceived Email sent to [" +
+        //                                                        toAddress2 + "] successfully.");
+        //                                                }
+        //                                                catch (Exception)
+        //                                                {
+        //                                                    Logger.Error(
+        //                                                        "Add fund to member from new admin panel --> Error: TransferReceived Email NOT sent to [" +
+        //                                                        toAddress2 + "]");
+        //                                                }
+        //                                            }
+        //                                        }
+
+        //                                        #endregion
+
+
+
+        //                                        try
+        //                                        {
+        //                                            obj.GeoLocations.Add(geo);
+
+        //                                            obj.SaveChanges();
+
+
+        //                                            obj.Transactions.Add(trans);
+        //                                            obj.SaveChanges();
+        //                                            lr.IsSuccess = true;
+        //                                            lr.Message = "fund succesfully added to member account.";
+        //                                        }
+        //                                        catch (Exception)
+        //                                        {
+
+        //                                            lr.IsSuccess = false;
+        //                                            lr.Message = "Error occured while saving transaction in db.";
+        //                                        }
+
+
+        //                                        #endregion
+        //                                    }
+        //                                    else
+        //                                    {
+        //                                        #region emailSendingonTransferAttemtFailure
+
+        //                                        // for push notification in case of failure
+
+        //                                        var senderNotificationSettings =
+        //                                            CommonHelper.GetMemberNotificationSettings(
+        //                                                adminUserDetails.MemberId.ToString());
+
+        //                                        if (senderNotificationSettings != null)
+        //                                        {
+        //                                            string senderFirstNameFailure =
+        //                                                CommonHelper.UppercaseFirst(
+        //                                                    CommonHelper.GetDecryptedData(adminUserDetails.FirstName));
+        //                                            string senderLastNameFailure =
+        //                                                CommonHelper.UppercaseFirst(
+        //                                                    CommonHelper.GetDecryptedData(adminUserDetails.LastName));
+        //                                            string recipientFirstNameFailure =
+        //                                                CommonHelper.UppercaseFirst(
+        //                                                    CommonHelper.GetDecryptedData(recepientdetails.FirstName));
+        //                                            string recipientLastNameFailure =
+        //                                                CommonHelper.UppercaseFirst(
+        //                                                    CommonHelper.GetDecryptedData(recepientdetails.LastName));
+
+
+        //                                            // for TransferAttemptFailure email notification
+        //                                            if (senderNotificationSettings != null &&
+        //                                                (senderNotificationSettings.EmailTransferAttemptFailure ?? false))
+        //                                            {
+        //                                                string s2 = trans.Amount.ToString("n2");
+        //                                                string[] s3 = s2.Split('.');
+
+        //                                                var tokensF = new Dictionary<string, string>
+        //                                                {
+        //                                                    {
+        //                                                        Constants.PLACEHOLDER_FIRST_NAME,
+        //                                                        senderFirstNameFailure + " " + senderLastNameFailure
+        //                                                    },
+        //                                                    {
+        //                                                        Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
+        //                                                        CommonHelper.GetDecryptedData(recepientdetails.UserName)
+        //                                                    },
+        //                                                    {Constants.PLACEHOLDER_TRANSFER_AMOUNT, s3[0].ToString()},
+        //                                                    {Constants.PLACEHLODER_CENTS, s3[1].ToString()},
+        //                                                };
+
+        //                                                var fromAddress = Utility.GetValueFromConfig("transfersMail");
+        //                                                var toAddress = CommonHelper.GetDecryptedData(adminUserDetails.UserName);
+
+        //                                                try
+        //                                                {
+        //                                                    // email notification
+        //                                                    Utility.SendEmail("transferFailure",
+        //                                                        fromAddress, toAddress, null,
+        //                                                        "Nooch transfer failure", tokensF, null, null, null);
+
+        //                                                    Logger.Info(
+        //                                                        "Add fund to member new admin panel --> Transfer FAILED --> Email sent to Sender: [" +
+        //                                                        toAddress + "] successfully.");
+        //                                                }
+        //                                                catch (Exception)
+        //                                                {
+        //                                                    Logger.Error(
+        //                                                        "Add fund to member new admin panel --> Error: TransferAttemptFailure mail not sent to [" +
+        //                                                        toAddress + "]");
+        //                                                }
+        //                                            }
+        //                                        }
+
+        //                                        #endregion
+
+        //                                        lr.IsSuccess = false;
+        //                                        lr.Message = "Knox payment failed.";
+        //                                    }
+
+
+        //                                    */
+        //                                    #endregion
+        //                                }
+        //                                else
+        //                                {
+        //                                    #region emailSendingonTransferAttemtFailure
+        //                                    /*
+
+        //                                    // for push notification in case of failure
+
+        //                                    var senderNotificationSettings =
+        //                                        CommonHelper.GetMemberNotificationSettings(adminUserDetails.MemberId.ToString());
+
+        //                                    if (senderNotificationSettings != null)
+        //                                    {
+        //                                        string senderFirstNameFailure =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(adminUserDetails.FirstName));
+        //                                        string senderLastNameFailure =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(adminUserDetails.LastName));
+        //                                        string recipientFirstNameFailure =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(recepientdetails.FirstName));
+        //                                        string recipientLastNameFailure =
+        //                                            CommonHelper.UppercaseFirst(
+        //                                                CommonHelper.GetDecryptedData(recepientdetails.LastName));
+
+
+        //                                        // for TransferAttemptFailure email notification
+        //                                        if (senderNotificationSettings != null &&
+        //                                            (senderNotificationSettings.EmailTransferAttemptFailure ?? false))
+        //                                        {
+        //                                            string s2 = trans.Amount.ToString("n2");
+        //                                            string[] s3 = s2.Split('.');
+
+        //                                            var tokensF = new Dictionary<string, string>
+        //                                            {
+        //                                                {
+        //                                                    Constants.PLACEHOLDER_FIRST_NAME,
+        //                                                    senderFirstNameFailure + " " + senderLastNameFailure
+        //                                                },
+        //                                                {
+        //                                                    Constants.PLACEHOLDER_FRIEND_FIRST_NAME,
+        //                                                    CommonHelper.GetDecryptedData(recepientdetails.UserName)
+        //                                                },
+        //                                                {Constants.PLACEHOLDER_TRANSFER_AMOUNT, s3[0].ToString()},
+        //                                                {Constants.PLACEHLODER_CENTS, s3[1].ToString()},
+        //                                            };
+
+        //                                            var fromAddress = Utility.GetValueFromConfig("transfersMail");
+        //                                            var toAddress = CommonHelper.GetDecryptedData(adminUserDetails.UserName);
+
+        //                                            try
+        //                                            {
+        //                                                // email notification
+        //                                                Utility.SendEmail("transferFailure",
+        //                                                    fromAddress, toAddress, null,
+        //                                                    "Nooch transfer failure", tokensF, null, null, null);
+
+        //                                                Logger.Info(
+        //                                                    "Add fund to member new admin panel --> Transfer FAILED --> Email sent to Sender: [" +
+        //                                                    toAddress + "] successfully.");
+        //                                            }
+        //                                            catch (Exception)
+        //                                            {
+        //                                                Logger.Error(
+        //                                                    "Add fund to member new admin panel --> Error: TransferAttemptFailure mail not sent to [" +
+        //                                                    toAddress + "]");
+        //                                            }
+        //                                        }
+        //                                    }
+        //*/
+        //                                    #endregion
+
+        //                                    lr.IsSuccess = false;
+        //                                    lr.Message = "Synapse payment failed.";
+        //                                }
+        //                            }
+        //                            else
+        //                            {
+        //                                lr.IsSuccess = false;
+        //                                lr.Message = "Recepeint Synapse account not available.";
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            lr.IsSuccess = false;
+        //                            lr.Message = "Given username/nooch id not found or give username/nooch id not active.";
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        lr.IsSuccess = false;
+        //                        lr.Message = "Admin Synapse account not available.";
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    lr.IsSuccess = false;
+        //                    lr.Message = "Admin account team@nooch.com not active or invalid admin PIN passed.";
+        //                }
+        //            }
+        //            return Json(lr);
+        //        }
 
 
         [HttpPost]
@@ -1519,7 +1534,7 @@ namespace noochAdminNew.Controllers
                         {
                             #region Query Synapse Order API
 
-                            string sender_oauth = CommonHelper.GetDecryptedData( adminSynapseDetails.UserDetails.access_token);
+                            string sender_oauth = CommonHelper.GetDecryptedData(adminSynapseDetails.UserDetails.access_token);
                             string sender_fingerPrint = adminUserDetails.UDID1;
                             string sender_bank_node_id = adminSynapseDetails.BankDetails.oid.ToString();
                             string amount = transferAmount;
