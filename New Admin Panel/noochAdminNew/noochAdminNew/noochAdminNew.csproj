@@ -380,6 +380,9 @@
     <Compile Include="Models\TransactionReportEntity.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TransactionsStatusAtSynapse.cs">
+      <DependentUpon>NoochDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\UnitsOccupiedByTenant.cs">
       <DependentUpon>NoochDbModel.tt</DependentUpon>
     </Compile>
