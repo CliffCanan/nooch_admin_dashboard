@@ -971,6 +971,7 @@
                                                             <span class="pull-right">
                                                                 <strong>@synpsDetail.virtual_doc</strong>
                                                             </span>
+                                                            <button data-val="@mdc.memberId" type="button" onclick="Member.submitSsn()" class="btn btn-xs btn-danger pull-right m-r-10">Submit SSN to Synapse</button>
                                                         </li>
 
                                                         <li class="list-group-item">
@@ -1663,8 +1664,8 @@
                 <img id="idImageBig" class="center-block" src="" />
             </div>
             <div class="modal-footer">
-                <button type="button" onclick="Member.submitDocManual()" class="btn btn-danger">Submit To Synapse</button>
-                <button data-dismiss="modal" class="btn btn-white">Close</button>
+                <button data-dismiss="modal" type="button" onclick="Member.submitDocManual()" class="btn btn-danger">Submit To Synapse</button>
+                <button data-dismiss="modal" type="button" class="btn btn-white">Close</button>
             </div>
         </div>
     </div>

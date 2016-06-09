@@ -3,6 +3,23 @@ var operationtoperform = 0;
 var escapeKeyPressed = false;
 
 $(document).ready(function () {
+    if ($('#DocStatus').val() == "Success") {
+        swal("Awesome!", "File Uploaded Successfully!", "success");
+        $('#DocStatus').val('');
+    }
+    else if ($('#DocStatus').val() == "Failed") {
+        sweetAlert("Oops...", "Something went wrong!", "error");
+    }
+
+    $('#generatePwBtn').change(function () {
+        if ($('#pwd').val().length > 0) {
+            $('#pwd').val('');
+        }
+        if ($(this).is(':checked')) {
+            Member.GenerateNewPassword();
+        }
+    })
+
     $("#MemberMenuExpander").trigger("click");
 
 	$('[data-toggle="tooltip"]').tooltip()
@@ -79,11 +96,6 @@ $(document).ready(function () {
             escapeKeyPressed = true;
         }
     });
-
-    //setTimeout(function () {
-        //checkIfUserLocationExists();
-    //}, 500);
-
 });
 
 
@@ -162,26 +174,6 @@ $('#DeleteUser').click(function () {
 
 $('#ChangePassword').click(function () {
     $('#changePwd').modal('show');
-});
-
-
-$(document).ready(function () {
-    if ($('#DocStatus').val() == "Success") {
-        swal("Awesome!", "File Uploaded Successfully!", "success");
-        $('#DocStatus').val('');
-    }
-    else if ($('#DocStatus').val() == "Failed") {
-        sweetAlert("Oops...", "Something went wrong!", "error");
-    }
-
-    $('#generatePwBtn').change(function () {
-        if ($('#pwd').val().length > 0) {
-            $('#pwd').val('');
-        }
-        if ($(this).is(':checked')) {
-            Member.GenerateNewPassword();
-        }
-    })
 });
 
 
@@ -565,6 +557,8 @@ var Member = function ()
     {
         var memId = $('#memId').attr('data-val');
         var imgUrl = $('#idImageBig').attr('src');
+		
+		console.log("MemID: [" + memId + "], ImgUrl: [" + imgUrl + "]")
 
         if (NoochId == '') {
             toastr.error('No NoochID was selected...', 'Error');
@@ -574,18 +568,38 @@ var Member = function ()
             toastr.error('No MemberID selected', 'Error');
             return;
         }
-        else if (imgUrl = '') {
+        else if (imgUrl == '') {
             toastr.error('No Img URL found', 'Error');
             return;
         }
+
+        $.blockUI({
+            message: '<span><i class="fa fa-refresh fa-spin fa-loading"></i></span><br/><span class="loadingMsg">Submitting Doc Img...</span>',
+            css: {
+                border: 'none',
+                padding: '26px 8px 20px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '16px',
+                '-moz-border-radius': '16px',
+                'border-radius': '16px',
+                opacity: '.75',
+                margin: '0 auto',
+                color: '#fff'
+            }
+        });
 
         var url = "../Member/submitDocToSynapseV3_manual";
         var data = {};
         data.memid = memId;
         data.docUrl = imgUrl;
 
+		console.log("Data.docUrl: [" + data.docUrl + "]");
+
         $.post(url, data, function (result)
         {
+			$.unblockUI();
+			console.log(result.msg);
+
             if (result.isSuccess == true) {
                 toastr.success(result.msg, 'Succcess');
             }
@@ -596,6 +610,48 @@ var Member = function ()
     }
 
 
+    function submitSsn() {
+		var memId = $('#memId').attr('data-val');
+		
+        if (NoochId == '') {
+            toastr.error('No NoochId was selected...', 'Error');
+            return;
+        }
+		if (memId == '' || memId.length < 20) {
+            toastr.error('No MemberID was selected...', 'Error');
+            return;
+        }
+
+        $.blockUI({
+            message: '<span><i class="fa fa-refresh fa-spin fa-loading"></i></span><br/><span class="loadingMsg">Submitting Doc Img...</span>',
+            css: {
+                border: 'none',
+                padding: '26px 8px 20px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '16px',
+                '-moz-border-radius': '16px',
+                'border-radius': '16px',
+                opacity: '.75',
+                margin: '0 auto',
+                color: '#fff'
+            }
+        });
+
+        var url = "../Member/submitSsnToSynapseV3";
+        var data = {};
+        data.memid = memId;
+        $.post(url, data, function (result) {
+			$.unblockUI();
+			console.log(result.msg);
+            if (result.isSuccess == true) {
+                toastr.success(result.msg, 'SSN Submitted Successfully');
+            }
+            else {
+                toastr.error(result.msg, 'Error');
+            }
+        });
+    }
+	
     return {
         ApplyChoosenOperation: applyOperation,
         EditMember: editdetails,
@@ -610,5 +666,6 @@ var Member = function ()
         GenerateNewPassword: GenerateNewPassword,
         editCip: editCip,
         submitDocManual: submitDocManual,
+		submitSsn: submitSsn
     };
 }();

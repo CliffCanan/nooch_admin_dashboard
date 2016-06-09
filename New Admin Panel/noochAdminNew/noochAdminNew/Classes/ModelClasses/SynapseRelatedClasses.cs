@@ -338,15 +338,12 @@ namespace noochAdminNew.Classes.ModelClasses
         public createUser_login2 login { get; set; }
 
         public SynapseV3RefreshOAuthToken_User_Input user { get; set; }
-
-
     }
 
     public class SynapseV3RefreshOAuthToken_User_Input
     {
         public synapseSearchUserResponse_Id1 _id { get; set; }
         public string fingerprint { get; set; }
-
         public string ip { get; set; }
     }
 
@@ -355,11 +352,11 @@ namespace noochAdminNew.Classes.ModelClasses
         public string client_id { get; set; }
         public string client_secret { get; set; }
     }
+
     public class createUser_login2
     {
         public string email { get; set; }
         public string refresh_token { get; set; }
-
     }
 
     public class synapseCreateUserV3Result_int
@@ -384,6 +381,31 @@ namespace noochAdminNew.Classes.ModelClasses
         public string expires_in { get; set; }
         public string oauth_key { get; set; }
         public string refresh_token { get; set; }
+    }
+
+
+    public class synapseAddKycInfoInputV3Class
+    {
+        public SynapseV3Input_login login { get; set; }
+        public addKycInfoInput_user user { get; set; }
+    }
+    public class addKycInfoInput_user
+    {
+        public string fingerprint { get; set; }
+        public addKycInfoInput_user_doc doc { get; set; }
+    }
+    public class addKycInfoInput_user_doc
+    {
+        public string birth_day { get; set; }
+        public string birth_month { get; set; }
+        public string birth_year { get; set; }
+        public string name_first { get; set; }
+        public string name_last { get; set; }
+        public string address_street1 { get; set; }
+        public string address_postal_code { get; set; }
+        public string address_country_code { get; set; }
+        public string document_value { get; set; }
+        public string document_type { get; set; }
     }
 
 }
