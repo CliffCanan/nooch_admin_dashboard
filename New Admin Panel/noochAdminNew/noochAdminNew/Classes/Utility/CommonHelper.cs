@@ -267,10 +267,16 @@ namespace noochAdminNew.Classes.Utility
             try
             {
                 synapseSearchUserInputClass input = new synapseSearchUserInputClass();
+                Member member = GetMemberDetailsByUsername(userEmail);
+
+                List<string> clientIds = getClientSecretId(member.MemberId.ToString());
+
+                string SynapseClientId = clientIds[0];
+                string SynapseClientSecret = clientIds[1];
 
                 synapseSearchUser_Client client = new synapseSearchUser_Client();
-                client.client_id = Utility.GetValueFromConfig("SynapseClientId");
-                client.client_secret = Utility.GetValueFromConfig("SynapseClientSecret");
+                client.client_id = SynapseClientId;
+                client.client_secret = SynapseClientSecret;
 
                 synapseSearchUser_Filter filter = new synapseSearchUser_Filter();
                 filter.page = 1;

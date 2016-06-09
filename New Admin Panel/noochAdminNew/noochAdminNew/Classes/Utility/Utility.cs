@@ -216,6 +216,7 @@ namespace noochAdminNew.Classes.Utility
                 smtpClient.Host = serverProperties.MailServerName;
                 smtpClient.UseDefaultCredentials = false;
                 smtpClient.Credentials = nc;
+                smtpClient.Port = 587;
                 smtpClient.Send(mailMessage);
 
                 return true;

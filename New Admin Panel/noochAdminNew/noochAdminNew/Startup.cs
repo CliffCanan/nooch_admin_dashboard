@@ -26,11 +26,26 @@ namespace noochAdminNew
     public class Startup
     {
         public void Configuration(IAppBuilder app)
-        { 
+        {
             // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=316888
 
             // setting up hangfire
-            Hangfire.GlobalConfiguration.Configuration.UseSqlServerStorage("data source=54.201.43.89;initial catalog=NOOCH;user id=sa;password=Singh@123;");
+
+            bool isRunningOnSandbox = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox"));
+            string connString = "";
+            if (isRunningOnSandbox)
+            {
+                connString = Utility.GetValueFromConfig("HangFireSandboxConnectionString");
+
+            }
+            else
+            {
+                connString = Utility.GetValueFromConfig("HangFireProductionConnectionString");
+
+            }
+            Hangfire.GlobalConfiguration.Configuration.UseSqlServerStorage(connString);
+
+
 
             //app.UseHangfireDashboard();
             app.UseHangfireServer();
@@ -119,7 +134,7 @@ namespace noochAdminNew
                     transInput.filter = filter;
 
                     string baseAddress = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) ? "https://sandbox.synapsepay.com/api/v3/trans/show" : "https://synapsepay.com/api/v3/trans/show";
-                    
+
                     try
                     {
                         var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));

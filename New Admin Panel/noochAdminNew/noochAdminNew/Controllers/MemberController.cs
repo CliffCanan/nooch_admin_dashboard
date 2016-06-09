@@ -1645,6 +1645,7 @@ namespace noochAdminNew.Controllers
                     DocumentDetails.AccessToken = SynapseCreateUserResult.access_token;
                     string pic = MemberId.ToString() + ".png";
                     string path = System.IO.Path.Combine(Server.MapPath("~/UploadedPhotos/SynapseDocuments"), pic);
+                   
 
                     // file is uploaded
                     file.SaveAs(path);
