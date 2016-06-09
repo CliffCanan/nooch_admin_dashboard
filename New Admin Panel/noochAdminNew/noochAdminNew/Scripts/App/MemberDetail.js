@@ -561,6 +561,41 @@ var Member = function ()
     }
 
 
+    function submitDocManual()
+    {
+        var memId = $('#memId').attr('data-val');
+        var imgUrl = $('#idImageBig').attr('src');
+
+        if (NoochId == '') {
+            toastr.error('No NoochID was selected...', 'Error');
+            return;
+        }
+        else if (memId == '') {
+            toastr.error('No MemberID selected', 'Error');
+            return;
+        }
+        else if (imgUrl = '') {
+            toastr.error('No Img URL found', 'Error');
+            return;
+        }
+
+        var url = "../Member/submitDocToSynapseV3_manual";
+        var data = {};
+        data.memid = memId;
+        data.docUrl = imgUrl;
+
+        $.post(url, data, function (result)
+        {
+            if (result.isSuccess == true) {
+                toastr.success(result.msg, 'Succcess');
+            }
+            else {
+                toastr.error(result.msg, 'Error');
+            }
+        });
+    }
+
+
     return {
         ApplyChoosenOperation: applyOperation,
         EditMember: editdetails,
@@ -573,6 +608,7 @@ var Member = function ()
         sendSmsReminder: sendSmsReminderForVerification,
         ChangePassword: ChangePassword,
         GenerateNewPassword: GenerateNewPassword,
-        editCip: editCip
+        editCip: editCip,
+        submitDocManual: submitDocManual,
     };
 }();

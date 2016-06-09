@@ -1930,6 +1930,33 @@ namespace noochAdminNew.Controllers
         }
 
 
+        [HttpPost]
+        [ActionName("submitDocToSynapseV3_manual")]
+        public synapseV3GenericResponse submitDocToSynapseV3_manual(string memid, string docUrl)
+        {
+            synapseV3GenericResponse res = new synapseV3GenericResponse();
+            res.isSuccess = false;
+
+            try
+            {
+                Logger.Info("Member Cntrlr  -> submitDocumentToSynapseV3 - [MemberId: " + memid + "]");
+
+                var submitDocResult = submitDocumentToSynapseV3(memid, docUrl);
+
+                res.isSuccess = submitDocResult.isSuccess;
+                res.msg = submitDocResult.msg;
+
+                return res;
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Member Cntrlr  - submitDocumentToSynapseV3 FAILED - [userName: " + memid + "]. Exception: [" + ex + "]");
+                res.msg = ex.Message;
+                return res;
+            }
+        }
+
+
         public List<Tenants> GetTenants(String NoochId)
         {
             using (NOOCHEntities obj = new NOOCHEntities())
