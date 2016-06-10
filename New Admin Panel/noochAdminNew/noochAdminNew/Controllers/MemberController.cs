@@ -1633,8 +1633,12 @@ namespace noochAdminNew.Controllers
                 {
                     DocumentDetails.AccessToken = SynapseCreateUserResult.access_token;
                     string pic = MemberId.ToString() + ".png";
-                    string path = System.IO.Path.Combine(Server.MapPath("~/UploadedPhotos/SynapseDocuments"), pic);
 
+                    // CLIFF (6/10/16): THIS WAS SAVING TO A FOLDER IN THE 'noochnewadmin' PROJECT, BUT IT NEEDS TO BE IN noochservices
+                    //                  SINCE THAT'S WHERE ALL OTHER USER'S DOCS ARE SAVED AND IT'S WHERE THERE SERVER EXPECTS TO FIND THE DOC
+                    //                  WHEN SUBMITTING TO SYNAPSE.  I TRIED TO FIX THIS BELOW BUT CAUSED AN ERROR:
+                    string path = System.IO.Path.Combine(Server.MapPath("~/UploadedPhotos/SynapseDocuments"), pic);
+                    //string path = "https://www.noochme.com/noochservice/UploadedPhotos/SynapseIdDocs/" + pic;
 
                     // file is uploaded
                     file.SaveAs(path);

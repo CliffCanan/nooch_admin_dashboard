@@ -1545,7 +1545,7 @@ namespace noochAdminNew.Classes.Utility
         {
             if (!String.IsNullOrEmpty(url))
             {
-                Logger.Info("MDA -> ConvertImageURLToBase64 Initiated - Photo URL is: [" + url + "]");
+                Logger.Info("Admin Common Helper -> ConvertImageURLToBase64 Initiated - Photo URL is: [" + url + "]");
 
                 StringBuilder _sb = new StringBuilder();
 
