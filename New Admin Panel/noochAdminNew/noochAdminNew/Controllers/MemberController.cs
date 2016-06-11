@@ -562,7 +562,7 @@ namespace noochAdminNew.Controllers
         public ActionResult Detail(string NoochId)
         {
             CheckSession();
-
+   
             MemberDetailsClass mdc = new MemberDetailsClass();
 
             using (NOOCHEntities obj = new NOOCHEntities())
@@ -1637,9 +1637,9 @@ namespace noochAdminNew.Controllers
                     // CLIFF (6/10/16): THIS WAS SAVING TO A FOLDER IN THE 'noochnewadmin' PROJECT, BUT IT NEEDS TO BE IN noochservices
                     //                  SINCE THAT'S WHERE ALL OTHER USER'S DOCS ARE SAVED AND IT'S WHERE THERE SERVER EXPECTS TO FIND THE DOC
                     //                  WHEN SUBMITTING TO SYNAPSE.  I TRIED TO FIX THIS BELOW BUT CAUSED AN ERROR:
-                    string path = System.IO.Path.Combine(Server.MapPath("~/UploadedPhotos/SynapseDocuments"), pic);
-                    //string path = "https://www.noochme.com/noochservice/UploadedPhotos/SynapseIdDocs/" + pic;
-
+                   // string path = System.IO.Path.Combine(Server.MapPath("~/UploadedPhotos/SynapseDocuments"), pic);
+                   // string path = "https://www.noochme.com/noochservice/UploadedPhotos/SynapseIdDocs/" + pic;
+                    string path = "C:\\nooch_new_architecture\\Nooch\\Nooch.API\\UploadedPhotos\\SynapseIdDocs\\"+pic;
                     // file is uploaded
                     file.SaveAs(path);
                     DocumentDetails.imgPath = path;
@@ -1648,6 +1648,8 @@ namespace noochAdminNew.Controllers
                     if (submitDocToSynapseRes.isSuccess == true)
                     {
                         Session["status"] = "Success";
+                        member.VerificationDocumentPath = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") +pic;
+                        noochConnection.SaveChanges();
                     }
                     else
                     {
@@ -1678,14 +1680,19 @@ namespace noochAdminNew.Controllers
 
                 if (DocumentDetails.imgPath != "")
                 {
-                    ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + DocumentDetails.MemberId + ".png";
+
+                     
+                     ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + DocumentDetails.MemberId + ".png";
+                
                 }
                 else
                 {
-                    ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + "gv_no_photo.png";
+                   
+                     ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + "gv_no_photo.png";
                 }
 
                 var submitDocResult = submitDocumentToSynapseV3(DocumentDetails.MemberId, ImageUrlMade);
+                 
 
                 res.isSuccess = submitDocResult.isSuccess;
                 res.msg = submitDocResult.msg;
