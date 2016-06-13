@@ -638,8 +638,8 @@ namespace noochAdminNew.Classes.Utility
         /// <summary>
         /// For checking if a user's Synapse Oauth Key (access_token) is still valid, and refreshing if not.
         /// NOTE: In the NoochServices version of this method, it will trigger Synapse's 2FA if the user's Fingerprint
-        ///       is new or has changed.  Since this is triggerent only by an admin, we do not want to trigger Synapse's
-        ///       2FA because the user would not be expecting an SMS and would be confused or possibly upset.
+        ///       is new or has changed. Since this method here is triggered only by an admin, we do not want to trigger
+        ///       Synapse's 2FA because the user would not be expecting an SMS and would be confused or possibly upset.
         /// </summary>
         /// <param name="oauthKey"></param>
         /// <returns></returns>

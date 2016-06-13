@@ -176,6 +176,23 @@ $('#ChangePassword').click(function () {
     $('#changePwd').modal('show');
 });
 
+function showBlockUI(text)
+{
+    $.blockUI({
+        message: '<span><i class="fa fa-refresh fa-spin fa-loading"></i></span><br/><span class="loadingMsg">' + text + '</span>',
+        css: {
+            border: 'none',
+            padding: '26px 8px 20px',
+            backgroundColor: '#000',
+            '-webkit-border-radius': '16px',
+            '-moz-border-radius': '16px',
+            'border-radius': '16px',
+            opacity: '.75',
+            margin: '0 auto',
+            color: '#fff'
+        }
+    });
+}
 
 var Member = function ()
 {
@@ -573,20 +590,7 @@ var Member = function ()
             return;
         }
 
-        $.blockUI({
-            message: '<span><i class="fa fa-refresh fa-spin fa-loading"></i></span><br/><span class="loadingMsg">Submitting Doc Img...</span>',
-            css: {
-                border: 'none',
-                padding: '26px 8px 20px',
-                backgroundColor: '#000',
-                '-webkit-border-radius': '16px',
-                '-moz-border-radius': '16px',
-                'border-radius': '16px',
-                opacity: '.75',
-                margin: '0 auto',
-                color: '#fff'
-            }
-        });
+        showBlockUI("Submitting Doc Img...");
 
         var url = "../Member/submitDocToSynapseV3_manual";
         var data = {};
@@ -622,20 +626,7 @@ var Member = function ()
             return;
         }
 
-        $.blockUI({
-            message: '<span><i class="fa fa-refresh fa-spin fa-loading"></i></span><br/><span class="loadingMsg">Submitting Doc Img...</span>',
-            css: {
-                border: 'none',
-                padding: '26px 8px 20px',
-                backgroundColor: '#000',
-                '-webkit-border-radius': '16px',
-                '-moz-border-radius': '16px',
-                'border-radius': '16px',
-                opacity: '.75',
-                margin: '0 auto',
-                color: '#fff'
-            }
-        });
+		showBlockUI("Submitting SSN");
 
         var url = "../Member/submitSsnToSynapseV3";
         var data = {};
@@ -652,6 +643,34 @@ var Member = function ()
         });
     }
 	
+    
+    function refreshSynapse()
+    {
+        var memId = $('#memId').attr('data-val');
+
+        if (memId == '' || memId.length < 20) {
+            toastr.error('No MemberID was selected...', 'Error');
+            return;
+        }
+
+        showBlockUI("Refreshing With Synapse...");
+
+        var url = "../Member/refreshSynapseV3";
+        var data = {};
+        data.memid = memId;
+        $.post(url, data, function (result)
+        {
+            $.unblockUI();
+            console.log(result.msg);
+            if (result.isSuccess == true) {
+                toastr.success(result.msg, 'Synapse refreshed successfully');
+            }
+            else {
+                toastr.error(result.msg, 'Error');
+            }
+        });
+    }
+
     return {
         ApplyChoosenOperation: applyOperation,
         EditMember: editdetails,
@@ -666,6 +685,7 @@ var Member = function ()
         GenerateNewPassword: GenerateNewPassword,
         editCip: editCip,
         submitDocManual: submitDocManual,
-		submitSsn: submitSsn
+        submitSsn: submitSsn,
+        refreshSynapse: refreshSynapse
     };
 }();

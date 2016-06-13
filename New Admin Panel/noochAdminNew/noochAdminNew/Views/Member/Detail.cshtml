@@ -893,6 +893,10 @@
                                                 {
                                                     <label class="text-primary m-b-10">Admin Details</label>
 
+                                                    <button class="btn btn-link p-0 pull-right" type="button" onclick="Member.refreshSynapse()" data-toggle="tooltip" title="Refresh Synapse Details">
+                                                        <i class="fa fa-refresh"></i>
+                                                    </button>
+
                                                     <ul class="list-group">
                                                         <li class="list-group-item">
                                                             <b>Date Created</b>
@@ -1000,7 +1004,7 @@
                                                                         {
                                                                             <a href="#" id="idDocLnk" data-toggle="tooltip" title="SynapseCreateUserRes Table - Click to expand"><img src="@synpsDetail.photos" class="idDocImg" /></a>
                                                                         }
-                                                                        else if (mdc.idDocUrl != null)
+                                                                        if (mdc.idDocUrl != null)
                                                                         {
                                                                             <a href="#" id="idDocLnk-Member" class="m-l-20" data-toggle="tooltip" title="Members Table - Click to expand"><img src="@mdc.idDocUrl" class="idDocImg" /></a>
                                                                         }

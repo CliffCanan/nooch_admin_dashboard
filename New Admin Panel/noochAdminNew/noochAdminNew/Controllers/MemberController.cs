@@ -667,7 +667,21 @@ namespace noochAdminNew.Controllers
                         payment.Longitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Longitude).SingleOrDefault().ToString();
                         payment.Latitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Latitude).SingleOrDefault().ToString();
 
-                        payment.SynapseStatus = (!String.IsNullOrEmpty(t.SynapseStatus)) ? t.SynapseStatus.ToString() : "-";
+                        if (!String.IsNullOrEmpty(t.SynapseStatus))
+                        {
+                            payment.SynapseStatus = t.SynapseStatus.ToString();
+
+                            // Get the note for the most recent Synapse Status
+                            var statusList = (from status in obj.TransactionsStatusAtSynapses
+                                              where status.Nooch_Transaction_Id == t.TransactionId.ToString()
+                                              select status.status_note).ToList();
+
+                            if (statusList != null)
+                            {
+                            }
+                        }
+                        else
+                            payment.SynapseStatus = "-";
 
                         if (payment.TransactionType == "Request")
                         {
@@ -1641,7 +1655,7 @@ namespace noochAdminNew.Controllers
                     //string path = "C:\\nooch_new_architecture\\Nooch\\Nooch.API\\UploadedPhotos\\SynapseIdDocs\\" + pic;
                     string path = "C:\\noochweb.venturepact.com\\noochservice\\UploadedPhotos\\SynapseIdDocs\\" + pic;
                     // file is uploaded
-                    
+
                     file.SaveAs(path);
                     DocumentDetails.imgPath = path;
 
@@ -1718,10 +1732,9 @@ namespace noochAdminNew.Controllers
                 {
                     #region Get User's Synapse OAuth Consumer Key
 
-                    SynapseCreateUserResult synapseUserObj = new SynapseCreateUserResult();
-
                     string usersSynapseOauthKey = "";
 
+                    SynapseCreateUserResult synapseUserObj = new SynapseCreateUserResult();
                     synapseUserObj = noochConnection.SynapseCreateUserResults.FirstOrDefault(m => m.MemberId == id && m.IsDeleted == false);
 
                     if (synapseUserObj == null)
@@ -2421,6 +2434,71 @@ namespace noochAdminNew.Controllers
                     Logger.Error("Common Helper -> sendUserSsnInfoToSynapseV3 FAILED: Member not found - [MemberId: " + memid + "]");
                     res.msg = "Member not found";
                 }
+            }
+
+            return Json(res);
+        }
+
+
+        [HttpPost]
+        [ActionName("refreshSynapseV3")]
+        public ActionResult refreshSynapseV3(string memid)
+        {
+            Logger.Info("Member Cntrlr -> refreshSynapseV3 Initialized - [MemberId: " + memid + "]");
+
+            synapseV3GenericResponse res = new synapseV3GenericResponse();
+            res.isSuccess = false;
+
+            try
+            {
+                Guid id = Utility.ConvertToGuid(memid);
+
+                using (var noochConnection = new NOOCHEntities())
+                {
+                    #region Get User's Synapse OAuth Consumer Key
+
+                    SynapseCreateUserResult synapseUserObj = new SynapseCreateUserResult();
+                    synapseUserObj = noochConnection.SynapseCreateUserResults.FirstOrDefault(m => m.MemberId == id && m.IsDeleted == false);
+
+                    if (synapseUserObj == null)
+                    {
+                        Logger.Error("Member Cntrlr -> refreshSynapseV3 ABORTED: Member's Synapse User Details not found. [MemberId: " + memid + "]");
+                        res.msg = "Could not find this member's account info";
+                        return Json(res);
+                    }
+                    else
+                    {
+                        synapseV3checkUsersOauthKey checkTokenResult = CommonHelper.refreshSynapseV3OautKey(synapseUserObj.access_token);
+
+                        if (checkTokenResult != null)
+                        {
+                            if (checkTokenResult.success == true)
+                            {
+                                res.isSuccess = true;
+                                res.msg = "Refreshed Successfully: [" + checkTokenResult.msg + "]";
+                            }
+                            else
+                            {
+                                Logger.Error("Member Cntrlr -> refreshSynapseV3 FAILED on Checking User's Synapse OAuth Token - " +
+                                             "CheckTokenResult.msg: [" + checkTokenResult.msg + "], MemberID: [" + memid + "]");
+                                res.msg = checkTokenResult.msg;
+                            }
+                        }
+                        else
+                        {
+                            Logger.Error("Member Cntrlr -> refreshSynapseV3 FAILED on Checking User's Synapse OAuth Token - " +
+                                         "CheckTokenResult was NULL, MemberID: [" + memid + "]");
+                            res.msg = "Unable to check user's Oauth Token";
+                        }
+                    }
+
+                    #endregion Get User's Synapse OAuth Consumer Key
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Member Cntrlr -> refreshSynapseV3 FAILED - Outer Exception - " +
+                             "MemberID: [" + memid + "], Exception: [" + ex.Message + "]");
             }
 
             return Json(res);
