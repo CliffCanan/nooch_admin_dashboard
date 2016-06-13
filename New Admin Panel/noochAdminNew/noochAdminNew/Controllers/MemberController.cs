@@ -1639,8 +1639,9 @@ namespace noochAdminNew.Controllers
                     //                  WHEN SUBMITTING TO SYNAPSE.  I TRIED TO FIX THIS BELOW BUT CAUSED AN ERROR:
                     // string path = System.IO.Path.Combine(Server.MapPath("~/UploadedPhotos/SynapseDocuments"), pic);
                     //string path = "C:\\nooch_new_architecture\\Nooch\\Nooch.API\\UploadedPhotos\\SynapseIdDocs\\" + pic;
-                    string path = "C:\\noochweb.venturepact.com\\noochservice\\UploadedPhotos\\SynapseIdDocs" + pic;
+                    string path = "C:\\noochweb.venturepact.com\\noochservice\\UploadedPhotos\\SynapseIdDocs\\" + pic;
                     // file is uploaded
+                    
                     file.SaveAs(path);
                     DocumentDetails.imgPath = path;
 
