@@ -565,440 +565,448 @@ namespace noochAdminNew.Controllers
 
             MemberDetailsClass mdc = new MemberDetailsClass();
 
-            using (NOOCHEntities obj = new NOOCHEntities())
+            try
             {
-                Member Member = new Member();
 
-                if (NoochId.Length < 20) // it's a Nooch_Id and not a MemberID
+                using (NOOCHEntities obj = new NOOCHEntities())
                 {
-                    Member = (from m in obj.Members
-                              where m.Nooch_ID == NoochId
-                              select m).SingleOrDefault();
-                }
-                else
-                {
-                    Guid memGuid = new Guid(NoochId);
+                    Member Member = new Member();
 
-                    Member = (from m in obj.Members
-                              where m.MemberId == memGuid
-                              select m).SingleOrDefault();
-                }
-
-                if (Member != null)
-                {
-                    mdc.memberId = Member.MemberId.ToString();
-                    mdc.DateCreated = Convert.ToDateTime(Member.DateCreated);
-                    mdc.DateCreatedFormatted = String.Format("{0: MMM d, yyyy}", Member.DateCreated);
-                    mdc.FBID = !String.IsNullOrEmpty(Member.FacebookAccountLogin) ? CommonHelper.GetDecryptedData(Member.FacebookAccountLogin) : "";
-                    mdc.FirstName = !String.IsNullOrEmpty(Member.FirstName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.FirstName)) : "";
-                    mdc.LastName = !String.IsNullOrEmpty(Member.LastName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.LastName)) : "";
-                    mdc.UserName = !String.IsNullOrEmpty(Member.UserName) ? CommonHelper.GetDecryptedData(Member.UserName) : "";
-                    mdc.SecondaryEmail = !String.IsNullOrEmpty(Member.SecondaryEmail) && Member.SecondaryEmail.Length > 40
-                                         ? CommonHelper.GetDecryptedData(Member.SecondaryEmail)
-                                         : Member.SecondaryEmail;
-                    mdc.RecoveryEmail = !String.IsNullOrEmpty(Member.RecoveryEmail) && Member.RecoveryEmail.Length > 40
-                                        ? CommonHelper.GetDecryptedData(Member.RecoveryEmail)
-                                        : Member.RecoveryEmail;
-                    mdc.ContactNumber = !String.IsNullOrEmpty(Member.ContactNumber) ? CommonHelper.FormatPhoneNumber(Member.ContactNumber) : "";
-                    mdc.ImageURL = Member.Photo ?? "https://www.noochme.com/noochweb/Assets/Images/userpic-default.png";
-                    mdc.Address = !String.IsNullOrEmpty(Member.Address) ? CommonHelper.GetDecryptedData(Member.Address) : "";
-                    mdc.City = !String.IsNullOrEmpty(Member.City) ? CommonHelper.GetDecryptedData(Member.City) : "";
-                    mdc.State = !String.IsNullOrEmpty(Member.State) ? CommonHelper.GetDecryptedData(Member.State) : "";
-                    mdc.Zipcode = !String.IsNullOrEmpty(Member.Zipcode) ? CommonHelper.GetDecryptedData(Member.Zipcode) : "";
-                    mdc.Status = Member.Status;
-                    mdc.PinNumber = !String.IsNullOrEmpty(Member.PinNumber) ? CommonHelper.GetDecryptedData(Member.PinNumber) : "";
-                    mdc.IsPhoneVerified = Member.IsVerifiedPhone ?? false;
-                    mdc.Nooch_ID = Member.Nooch_ID;
-                    mdc.type = Member.Type;
-                    mdc.dob = Convert.ToDateTime(Member.DateOfBirth).ToString("M/d/yyyy");
-                    mdc.ssn = !String.IsNullOrEmpty(Member.SSN) ? CommonHelper.GetDecryptedData(Member.SSN) : "";
-                    mdc.idDocUrl = Member.VerificationDocumentPath;
-                    mdc.adminNote = Member.AdminNotes;
-                    mdc.isSdnSafe = Member.IsSDNSafe ?? false;
-                    mdc.IsVerifiedWithSynapse = Member.IsVerifiedWithSynapse;
-                    mdc.UDID1 = !String.IsNullOrEmpty(Member.UDID1) ? Member.UDID1 : "NULL";
-                    mdc.DeviceToken = !String.IsNullOrEmpty(Member.DeviceToken) ? Member.DeviceToken : "NULL";
-                    mdc.AccessToken = !String.IsNullOrEmpty(Member.AccessToken) ? Member.AccessToken : "NULL";
-                    mdc.lastlat = (Member.LastLocationLat != null && Member.LastLocationLat != 0) ? Member.LastLocationLat.ToString() : "none";
-                    mdc.lastlong = (Member.LastLocationLat != null && Member.LastLocationLng != 0) ? Member.LastLocationLng.ToString() : "none";
-                    mdc.TransferLimit = Member.TransferLimit ?? "0.00";
-                    mdc.cipTag = !String.IsNullOrEmpty(Member.cipTag) ? Member.cipTag : "NULL";
-                    mdc.isRentScene = Member.isRentScene ?? false;
-
-                    //Get the Refered Code Used
-                    mdc.ReferCodeUsed = (from Membr in obj.Members
-                                         join Code in obj.InviteCodes
-                                         on Membr.InviteCodeIdUsed equals Code.InviteCodeId
-                                         where Membr.Nooch_ID == NoochId
-                                         select Code.code).SingleOrDefault();
-
-
-                    #region Get User's Transactions
-
-                    var memberFullName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.FirstName)) + " " +
-                                         CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.LastName));
-
-                    var transList = (from t in obj.Transactions
-                                     where (t.Member.MemberId == Member.MemberId ||
-                                            t.RecipientId == Member.MemberId ||
-                                            t.SenderId == Member.MemberId ||
-                                            t.InvitationSentTo == Member.UserName)
-                                     select t).OrderByDescending(r => r.TransactionDate).Take(40).ToList();
-
-
-                    List<MemberDetailsTrans> mm = new List<MemberDetailsTrans>();
-
-                    foreach (Transaction t in transList)
+                    if (NoochId.Length < 20) // it's a Nooch_Id and not a MemberID
                     {
-                        MemberDetailsTrans payment = new MemberDetailsTrans();
+                        Member = (from m in obj.Members
+                                  where m.Nooch_ID == NoochId
+                                  select m).SingleOrDefault();
+                    }
+                    else
+                    {
+                        Guid memGuid = new Guid(NoochId);
 
-                        payment.AmountNew = t.Amount.ToString();
-                        payment.TransID = t.TransactionTrackingId.ToString();
-                        payment.TransDate = Convert.ToDateTime(t.TransactionDate).ToString("MMM d, yyyy");
+                        Member = (from m in obj.Members
+                                  where m.MemberId == memGuid
+                                  select m).SingleOrDefault();
+                    }
 
-                        payment.TransDatePaid = t.DateAccepted != null ? "PAID ON:  " + Convert.ToDateTime(t.DateAccepted).ToString("MMM d, yyyy") : null;
-                        payment.TransTime = Convert.ToDateTime(t.TransactionDate).ToString("h:mm tt");
-                        payment.TransactionStatus = t.TransactionStatus == "Success" && t.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw=="
-                                                    ? "Complete (Paid)"
-                                                    : t.TransactionStatus;
-                        payment.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
-                        payment.Memo = t.Memo;
-                        payment.GeoLocation = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.City + " , " + Geo_loc.State).SingleOrDefault();
-                        payment.Longitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Longitude).SingleOrDefault().ToString();
-                        payment.Latitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Latitude).SingleOrDefault().ToString();
+                    if (Member != null)
+                    {
+                        mdc.memberId = Member.MemberId.ToString();
+                        mdc.DateCreated = Convert.ToDateTime(Member.DateCreated);
+                        mdc.DateCreatedFormatted = String.Format("{0: MMM d, yyyy}", Member.DateCreated);
+                        mdc.FBID = !String.IsNullOrEmpty(Member.FacebookAccountLogin) ? CommonHelper.GetDecryptedData(Member.FacebookAccountLogin) : "";
+                        mdc.FirstName = !String.IsNullOrEmpty(Member.FirstName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.FirstName)) : "";
+                        mdc.LastName = !String.IsNullOrEmpty(Member.LastName) ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.LastName)) : "";
+                        mdc.UserName = !String.IsNullOrEmpty(Member.UserName) ? CommonHelper.GetDecryptedData(Member.UserName) : "";
+                        mdc.SecondaryEmail = !String.IsNullOrEmpty(Member.SecondaryEmail) && Member.SecondaryEmail.Length > 40
+                                             ? CommonHelper.GetDecryptedData(Member.SecondaryEmail)
+                                             : Member.SecondaryEmail;
+                        mdc.RecoveryEmail = !String.IsNullOrEmpty(Member.RecoveryEmail) && Member.RecoveryEmail.Length > 40
+                                            ? CommonHelper.GetDecryptedData(Member.RecoveryEmail)
+                                            : Member.RecoveryEmail;
+                        mdc.ContactNumber = !String.IsNullOrEmpty(Member.ContactNumber) ? CommonHelper.FormatPhoneNumber(Member.ContactNumber) : "";
+                        mdc.ImageURL = Member.Photo ?? "https://www.noochme.com/noochweb/Assets/Images/userpic-default.png";
+                        mdc.Address = !String.IsNullOrEmpty(Member.Address) ? CommonHelper.GetDecryptedData(Member.Address) : "";
+                        mdc.City = !String.IsNullOrEmpty(Member.City) ? CommonHelper.GetDecryptedData(Member.City) : "";
+                        mdc.State = !String.IsNullOrEmpty(Member.State) ? CommonHelper.GetDecryptedData(Member.State) : "";
+                        mdc.Zipcode = !String.IsNullOrEmpty(Member.Zipcode) ? CommonHelper.GetDecryptedData(Member.Zipcode) : "";
+                        mdc.Status = Member.Status;
+                        mdc.PinNumber = !String.IsNullOrEmpty(Member.PinNumber) ? CommonHelper.GetDecryptedData(Member.PinNumber) : "";
+                        mdc.IsPhoneVerified = Member.IsVerifiedPhone ?? false;
+                        mdc.Nooch_ID = Member.Nooch_ID;
+                        mdc.type = Member.Type;
+                        mdc.dob = Convert.ToDateTime(Member.DateOfBirth).ToString("M/d/yyyy");
+                        mdc.ssn = !String.IsNullOrEmpty(Member.SSN) ? CommonHelper.GetDecryptedData(Member.SSN) : "";
+                        mdc.idDocUrl = Member.VerificationDocumentPath;
+                        mdc.adminNote = Member.AdminNotes;
+                        mdc.isSdnSafe = Member.IsSDNSafe ?? false;
+                        mdc.IsVerifiedWithSynapse = Member.IsVerifiedWithSynapse;
+                        mdc.UDID1 = !String.IsNullOrEmpty(Member.UDID1) ? Member.UDID1 : "NULL";
+                        mdc.DeviceToken = !String.IsNullOrEmpty(Member.DeviceToken) ? Member.DeviceToken : "NULL";
+                        mdc.AccessToken = !String.IsNullOrEmpty(Member.AccessToken) ? Member.AccessToken : "NULL";
+                        mdc.lastlat = (Member.LastLocationLat != null && Member.LastLocationLat != 0) ? Member.LastLocationLat.ToString() : "none";
+                        mdc.lastlong = (Member.LastLocationLat != null && Member.LastLocationLng != 0) ? Member.LastLocationLng.ToString() : "none";
+                        mdc.TransferLimit = Member.TransferLimit ?? "0.00";
+                        mdc.cipTag = !String.IsNullOrEmpty(Member.cipTag) ? Member.cipTag : "NULL";
+                        mdc.isRentScene = Member.isRentScene ?? false;
 
-                        if (!String.IsNullOrEmpty(t.SynapseStatus))
+                        //Get the Refered Code Used
+                        mdc.ReferCodeUsed = (from Membr in obj.Members
+                                             join Code in obj.InviteCodes
+                                             on Membr.InviteCodeIdUsed equals Code.InviteCodeId
+                                             where Membr.Nooch_ID == NoochId
+                                             select Code.code).SingleOrDefault();
+
+
+                        #region Get User's Transactions
+
+                        var memberFullName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.FirstName)) + " " +
+                                             CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.LastName));
+
+                        var transList = (from t in obj.Transactions
+                                         where (t.Member.MemberId == Member.MemberId ||
+                                                t.RecipientId == Member.MemberId ||
+                                                t.SenderId == Member.MemberId ||
+                                                t.InvitationSentTo == Member.UserName)
+                                         select t).OrderByDescending(r => r.TransactionDate).Take(40).ToList();
+
+
+                        List<MemberDetailsTrans> mm = new List<MemberDetailsTrans>();
+
+                        foreach (Transaction t in transList)
                         {
-                            payment.SynapseStatus = t.SynapseStatus.ToString();
+                            MemberDetailsTrans payment = new MemberDetailsTrans();
 
-                            // Get the note for the most recent Synapse Status
-                            var statusList = (from status in obj.TransactionsStatusAtSynapses
-                                              where status.Nooch_Transaction_Id == t.TransactionId.ToString()
-                                              select status.status_note).ToList();
+                            payment.AmountNew = t.Amount.ToString();
+                            payment.TransID = t.TransactionTrackingId.ToString();
+                            payment.TransDate = Convert.ToDateTime(t.TransactionDate).ToString("MMM d, yyyy");
 
-                            if (statusList != null)
+                            payment.TransDatePaid = t.DateAccepted != null ? "PAID ON:  " + Convert.ToDateTime(t.DateAccepted).ToString("MMM d, yyyy") : null;
+                            payment.TransTime = Convert.ToDateTime(t.TransactionDate).ToString("h:mm tt");
+                            payment.TransactionStatus = t.TransactionStatus == "Success" && t.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw=="
+                                                        ? "Complete (Paid)"
+                                                        : t.TransactionStatus;
+                            payment.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
+                            payment.Memo = t.Memo;
+                            payment.GeoLocation = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.City + " , " + Geo_loc.State).SingleOrDefault();
+                            payment.Longitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Longitude).SingleOrDefault().ToString();
+                            payment.Latitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Latitude).SingleOrDefault().ToString();
+
+                            if (!String.IsNullOrEmpty(t.SynapseStatus))
                             {
+                                payment.SynapseStatus = t.SynapseStatus.ToString();
+
+                                var transIdString = t.TransactionId.ToString().ToLower();
+
+                                // Get the note for the most recent Synapse Status
+                                var lastStatusObj = (from statusObj in obj.TransactionsStatusAtSynapses
+                                                     where statusObj.Nooch_Transaction_Id == transIdString
+                                                     select statusObj).OrderByDescending(n => n.Id).FirstOrDefault();
+
+                                payment.SynapseStatusNote = !String.IsNullOrEmpty(lastStatusObj.status_note) ? lastStatusObj.status_note : "Note Not Found";
                             }
-                        }
-                        else
-                            payment.SynapseStatus = "-";
+                            else
+                                payment.SynapseStatus = "-";
 
-                        if (payment.TransactionType == "Request")
-                        {
-                            #region Requests
-
-                            // Note: The 'SenderId' & 'RecipientId' would both be the SENDER if it's a request to a Non-Nooch user.
-                            //       So if the RecipientID matches this user's MemberID, then we know for sure that this user sent the request,
-                            //       b/c a non-Nooch user couldn't have sent the request to this user.
-                            if (t.RecipientId == Member.MemberId)
+                            if (payment.TransactionType == "Request")
                             {
-                                // This member SENT the request, so he is considered the "Recipient" for requests, since the other user will pay (send $ to) him.
-                                payment.RecipientId = Member.Nooch_ID;
-                                payment.RecipientName = memberFullName;
+                                #region Requests
 
-                                // Now determine if it was sent to an existing user or a Non-Nooch user
-                                if (String.IsNullOrEmpty(t.InvitationSentTo) && t.IsPhoneInvitation != true)
+                                // Note: The 'SenderId' & 'RecipientId' would both be the SENDER if it's a request to a Non-Nooch user.
+                                //       So if the RecipientID matches this user's MemberID, then we know for sure that this user sent the request,
+                                //       b/c a non-Nooch user couldn't have sent the request to this user.
+                                if (t.RecipientId == Member.MemberId)
                                 {
-                                    // Request to an EXISTING user
-                                    payment.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
-                                                         CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
-                                    payment.SenderId = t.Member1.Nooch_ID;
-                                }
-                                else if (!String.IsNullOrEmpty(t.InvitationSentTo)) // Request to Non-Nooch user via EMAIL
-                                {
-                                    // Now check if the request has been paid already or not
-                                    if (t.TransactionStatus == "Success")
-                                    {
-                                        // Completed request, so get the new user's Member Details from the InvitationSentTo value
-                                        // Note: even if the new user entered a diff email to pay the request, the server saves the original Invited email as the SecondaryEmail.
-                                        Member newUserWhoPaidTheRequest = CommonHelper.GetMemberDetailsByUsername(CommonHelper.GetDecryptedData(t.InvitationSentTo));
+                                    // This member SENT the request, so he is considered the "Recipient" for requests, since the other user will pay (send $ to) him.
+                                    payment.RecipientId = Member.Nooch_ID;
+                                    payment.RecipientName = memberFullName;
 
-                                        payment.SenderId = newUserWhoPaidTheRequest != null ? newUserWhoPaidTheRequest.Nooch_ID : "";
-                                        payment.SenderName = newUserWhoPaidTheRequest != null
-                                                             ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.FirstName)) + " " +
-                                                               CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.LastName))
-                                                             : CommonHelper.GetDecryptedData(t.InvitationSentTo);
-                                    }
-                                    else
+                                    // Now determine if it was sent to an existing user or a Non-Nooch user
+                                    if (String.IsNullOrEmpty(t.InvitationSentTo) && t.IsPhoneInvitation != true)
                                     {
-                                        // Request is either still pending, or was rejected/cancelled... so there isn't a New Member to get, so just use the InvitationSentTo email
-                                        payment.SenderId = "";
-                                        payment.SenderName = CommonHelper.GetDecryptedData(t.InvitationSentTo);
+                                        // Request to an EXISTING user
+                                        payment.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
+                                                             CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
+                                        payment.SenderId = t.Member1.Nooch_ID;
                                     }
-                                }
-                                else if (t.IsPhoneInvitation == true) // Request to Non-Nooch user via PHONE
-                                {
-                                    // Now check if the request has been paid already or not
-                                    if (t.TransactionStatus == "Success")
+                                    else if (!String.IsNullOrEmpty(t.InvitationSentTo)) // Request to Non-Nooch user via EMAIL
                                     {
-                                        // Completed request, so get the new user's Member Details from the PhoneNumberInvited value
-                                        Member newUserWhoPaidTheRequest = CommonHelper.GetMemberDetailsByPhone(CommonHelper.GetDecryptedData(t.InvitationSentTo));
+                                        // Now check if the request has been paid already or not
+                                        if (t.TransactionStatus == "Success")
+                                        {
+                                            // Completed request, so get the new user's Member Details from the InvitationSentTo value
+                                            // Note: even if the new user entered a diff email to pay the request, the server saves the original Invited email as the SecondaryEmail.
+                                            Member newUserWhoPaidTheRequest = CommonHelper.GetMemberDetailsByUsername(CommonHelper.GetDecryptedData(t.InvitationSentTo));
 
-                                        payment.SenderId = newUserWhoPaidTheRequest != null ? newUserWhoPaidTheRequest.Nooch_ID : "";
-                                        payment.SenderName = newUserWhoPaidTheRequest != null
-                                                             ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.FirstName)) + " " +
-                                                               CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.LastName))
-                                                             : CommonHelper.FormatPhoneNumber(CommonHelper.GetDecryptedData(t.PhoneNumberInvited));
+                                            payment.SenderId = newUserWhoPaidTheRequest != null ? newUserWhoPaidTheRequest.Nooch_ID : "";
+                                            payment.SenderName = newUserWhoPaidTheRequest != null
+                                                                 ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.FirstName)) + " " +
+                                                                   CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.LastName))
+                                                                 : CommonHelper.GetDecryptedData(t.InvitationSentTo);
+                                        }
+                                        else
+                                        {
+                                            // Request is either still pending, or was rejected/cancelled... so there isn't a New Member to get, so just use the InvitationSentTo email
+                                            payment.SenderId = "";
+                                            payment.SenderName = CommonHelper.GetDecryptedData(t.InvitationSentTo);
+                                        }
                                     }
-                                    else
+                                    else if (t.IsPhoneInvitation == true) // Request to Non-Nooch user via PHONE
                                     {
-                                        // Request is either still pending, or was rejected/cancelled... so there isn't a New Member to get, so just use the PhoneNumberInvited
-                                        payment.SenderId = "";
-                                        payment.SenderName = !String.IsNullOrEmpty(t.PhoneNumberInvited)
-                                                             ? CommonHelper.FormatPhoneNumber(CommonHelper.GetDecryptedData(t.PhoneNumberInvited))
-                                                             : "No Phone # Found";
+                                        // Now check if the request has been paid already or not
+                                        if (t.TransactionStatus == "Success")
+                                        {
+                                            // Completed request, so get the new user's Member Details from the PhoneNumberInvited value
+                                            Member newUserWhoPaidTheRequest = CommonHelper.GetMemberDetailsByPhone(CommonHelper.GetDecryptedData(t.InvitationSentTo));
+
+                                            payment.SenderId = newUserWhoPaidTheRequest != null ? newUserWhoPaidTheRequest.Nooch_ID : "";
+                                            payment.SenderName = newUserWhoPaidTheRequest != null
+                                                                 ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.FirstName)) + " " +
+                                                                   CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.LastName))
+                                                                 : CommonHelper.FormatPhoneNumber(CommonHelper.GetDecryptedData(t.PhoneNumberInvited));
+                                        }
+                                        else
+                                        {
+                                            // Request is either still pending, or was rejected/cancelled... so there isn't a New Member to get, so just use the PhoneNumberInvited
+                                            payment.SenderId = "";
+                                            payment.SenderName = !String.IsNullOrEmpty(t.PhoneNumberInvited)
+                                                                 ? CommonHelper.FormatPhoneNumber(CommonHelper.GetDecryptedData(t.PhoneNumberInvited))
+                                                                 : "No Phone # Found";
+                                        }
                                     }
                                 }
+                                else
+                                {
+                                    // This member RECEIVED the request, so he is considered the "sender" for requests, since he must pay (send $ to) the other user.
+
+                                    //payment.RecipientName = memberFullName;
+                                    //payment.RecipientId = Member.Nooch_ID;
+
+                                    payment.SenderName = memberFullName;
+                                    payment.SenderId = Member.Nooch_ID;
+                                    payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
+                                                            CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
+                                    payment.RecipientId = t.Member1.Nooch_ID;
+                                }
+
+                                #endregion Requests
                             }
                             else
                             {
-                                // This member RECEIVED the request, so he is considered the "sender" for requests, since he must pay (send $ to) the other user.
+                                #region Transfers
 
-                                //payment.RecipientName = memberFullName;
-                                //payment.RecipientId = Member.Nooch_ID;
+                                if (t.SenderId == Member.MemberId) // This member SENT the transfer
+                                {
+                                    payment.SenderName = memberFullName;
+                                    payment.SenderId = Member.Nooch_ID;
+                                    payment.RecipientId = t.Member1.Nooch_ID;
+                                    payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
+                                                            CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
+                                }
+                                else // This member RECEIVED the transfer
+                                {
+                                    payment.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.FirstName)) + " " +
+                                                         CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.LastName));
+                                    payment.SenderId = t.Member.Nooch_ID;
+                                    payment.RecipientName = memberFullName;
+                                    payment.RecipientId = Member.Nooch_ID;
+                                }
 
-                                payment.SenderName = memberFullName;
-                                payment.SenderId = Member.Nooch_ID;
-                                payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
-                                                        CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
-                                payment.RecipientId = t.Member1.Nooch_ID;
+                                #endregion Transfers
                             }
 
-                            #endregion Requests
+                            mm.Add(payment);
                         }
-                        else
+
+                        #endregion Get User's Transactions
+
+
+                        #region Get Last 5 Disputes
+
+                        var disputeTrans = (from t in obj.Transactions
+                                            where
+                                                (t.Member.MemberId == Member.MemberId || t.Member1.MemberId == Member.MemberId)
+                                                && (t.DisputeStatus != null) &&
+                                 (t.DisputeTrackingId != null)
+                                            select t).OrderByDescending(r => r.TransactionDate).Take(10).ToList();
+
+
+                        List<MemberDetailsDisputeTrans> mm2 = new List<MemberDetailsDisputeTrans>();
+                        foreach (Transaction t in disputeTrans)
                         {
-                            #region Transfers
+                            MemberDetailsDisputeTrans merc = new MemberDetailsDisputeTrans();
+                            merc.Dispute_ID = t.DisputeTrackingId.ToString();
+                            merc.Transaction_ID = t.TransactionTrackingId.ToString();
+                            merc.Dispute_Date = t.DisputeDate.ToString();
+                            merc.Status = CommonHelper.GetDecryptedData(t.DisputeStatus);
+                            merc.Admin_Notes = t.AdminNotes;
+                            merc.Resolved_Date = Convert.ToDateTime(t.ResolvedDate).ToString();
+                            merc.Review_Date = Convert.ToDateTime(t.ReviewDate).ToString();
+                            merc.Subject = t.Subject;
 
-                            if (t.SenderId == Member.MemberId) // This member SENT the transfer
-                            {
-                                payment.SenderName = memberFullName;
-                                payment.SenderId = Member.Nooch_ID;
-                                payment.RecipientId = t.Member1.Nooch_ID;
-                                payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
-                                                        CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
-                            }
-                            else // This member RECEIVED the transfer
-                            {
-                                payment.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.FirstName)) + " " +
-                                                     CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.LastName));
-                                payment.SenderId = t.Member.Nooch_ID;
-                                payment.RecipientName = memberFullName;
-                                payment.RecipientId = Member.Nooch_ID;
-                            }
+                            merc.RecepientId = t.Member1.Nooch_ID.ToString();
+                            merc.TransDateTime = Convert.ToDateTime(t.TransactionDate).ToString();
+                            merc.RecepientUserName = CommonHelper.GetDecryptedData(t.Member1.UserName.ToString());
 
-                            #endregion Transfers
+                            merc.GeoLocation = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.City + " , " + Geo_loc.State).SingleOrDefault();
+                            merc.Longitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Longitude).SingleOrDefault().ToString();
+                            merc.Latitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Latitude).SingleOrDefault().ToString();
+
+                            merc.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
+                            merc.TransactionStatus = t.TransactionStatus;
+
+                            mm2.Add(merc);
                         }
 
-                        mm.Add(payment);
-                    }
+                        mdc.Transactions = mm;
+                        mdc.DisputeTransactions = mm2;
 
-                    #endregion Get User's Transactions
-
-
-                    #region Get Last 5 Disputes
-
-                    var disputeTrans = (from t in obj.Transactions
-                                        where
-                                            (t.Member.MemberId == Member.MemberId || t.Member1.MemberId == Member.MemberId)
-                                            && (t.DisputeStatus != null) &&
-                             (t.DisputeTrackingId != null)
-                                        select t).OrderByDescending(r => r.TransactionDate).Take(10).ToList();
+                        #endregion Get Last 5 Disputes
 
 
-                    List<MemberDetailsDisputeTrans> mm2 = new List<MemberDetailsDisputeTrans>();
-                    foreach (Transaction t in disputeTrans)
-                    {
-                        MemberDetailsDisputeTrans merc = new MemberDetailsDisputeTrans();
-                        merc.Dispute_ID = t.DisputeTrackingId.ToString();
-                        merc.Transaction_ID = t.TransactionTrackingId.ToString();
-                        merc.Dispute_Date = t.DisputeDate.ToString();
-                        merc.Status = CommonHelper.GetDecryptedData(t.DisputeStatus);
-                        merc.Admin_Notes = t.AdminNotes;
-                        merc.Resolved_Date = Convert.ToDateTime(t.ResolvedDate).ToString();
-                        merc.Review_Date = Convert.ToDateTime(t.ReviewDate).ToString();
-                        merc.Subject = t.Subject;
+                        #region Stats-Related Operations
 
-                        merc.RecepientId = t.Member1.Nooch_ID.ToString();
-                        merc.TransDateTime = Convert.ToDateTime(t.TransactionDate).ToString();
-                        merc.RecepientUserName = CommonHelper.GetDecryptedData(t.Member1.UserName.ToString());
+                        // Cliff (5/24/16): These need updating... they aren't counting initial payments when the user is created from a request/invite.
 
-                        merc.GeoLocation = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.City + " , " + Geo_loc.State).SingleOrDefault();
-                        merc.Longitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Longitude).SingleOrDefault().ToString();
-                        merc.Latitude = (from Geo_loc in obj.GeoLocations where Geo_loc.LocationId == t.LocationId select Geo_loc.Latitude).SingleOrDefault().ToString();
+                        MemberDetailsStats ms = new MemberDetailsStats();
 
-                        merc.TransactionType = CommonHelper.GetDecryptedData(t.TransactionType);
-                        merc.TransactionStatus = t.TransactionStatus;
+                        ms.TotalTransfer = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_P2P_transfers").SingleOrDefault();
 
-                        mm2.Add(merc);
-                    }
+                        string TotalSent = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Sent").SingleOrDefault();
+                        ms.TotalSent = TotalSent != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(TotalSent)) : "0";
+                        string TotalReceived = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Received").SingleOrDefault();
+                        ms.TotalReceived = TotalReceived != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(TotalReceived)) : "0";
 
-                    mdc.Transactions = mm;
-                    mdc.DisputeTransactions = mm2;
+                        string LargestSent = obj.GetReportsForMember(Member.MemberId.ToString(), "Largest_sent_transfer").SingleOrDefault();
+                        ms.LargestSent = LargestSent != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(LargestSent)) : "0";
 
-                    #endregion Get Last 5 Disputes
+                        mdc.MemberStats = ms;
+
+                        #endregion Stats-Related Operations
+
+                        // Calculate number of weeks since the user created an account
+                        double no_Of_Since_Joined = (DateTime.Now - Convert.ToDateTime(Member.DateCreated)).TotalDays / 7;
+                        mdc.WeeksSinceJoined = Convert.ToInt16(no_Of_Since_Joined);
 
 
-                    #region Stats-Related Operations
+                        #region Get Synapse Details
 
-                    // Cliff (5/24/16): These need updating... they aren't counting initial payments when the user is created from a request/invite.
+                        // Check whether the user has a Synapse Account
+                        var synapseCreateUserObj = (from Syn in obj.SynapseCreateUserResults
+                                                    where Syn.IsDeleted == false && Syn.MemberId == Member.MemberId
+                                                    select Syn).FirstOrDefault();
 
-                    MemberDetailsStats ms = new MemberDetailsStats();
+                        mdc.IsSynapseDetailAvailable = (synapseCreateUserObj != null);
 
-                    ms.TotalTransfer = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_P2P_transfers").SingleOrDefault();
-
-                    string TotalSent = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Sent").SingleOrDefault();
-                    ms.TotalSent = TotalSent != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(TotalSent)) : "0";
-                    string TotalReceived = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Received").SingleOrDefault();
-                    ms.TotalReceived = TotalReceived != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(TotalReceived)) : "0";
-
-                    string LargestSent = obj.GetReportsForMember(Member.MemberId.ToString(), "Largest_sent_transfer").SingleOrDefault();
-                    ms.LargestSent = LargestSent != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(LargestSent)) : "0";
-
-                    mdc.MemberStats = ms;
-
-                    #endregion Stats-Related Operations
-
-                    // Calculate number of weeks since the user created an account
-                    double no_Of_Since_Joined = (DateTime.Now - Convert.ToDateTime(Member.DateCreated)).TotalDays / 7;
-                    mdc.WeeksSinceJoined = Convert.ToInt16(no_Of_Since_Joined);
-
-
-                    #region Get Synapse Details
-
-                    // Check whether the user has a Synapse Account
-                    var synapseCreateUserObj = (from Syn in obj.SynapseCreateUserResults
-                                                where Syn.IsDeleted == false && Syn.MemberId == Member.MemberId
-                                                select Syn).FirstOrDefault();
-
-                    mdc.IsSynapseDetailAvailable = (synapseCreateUserObj != null);
-
-                    if (mdc.IsSynapseDetailAvailable)
-                    {
-                        SynapseDetailOFMember synapseDetail = new SynapseDetailOFMember();
-
-                        synapseDetail.userDateCreated = Convert.ToDateTime(synapseCreateUserObj.DateCreated).ToString("MMM dd, yyyy");
-                        synapseDetail.synapseRefreshKey = !String.IsNullOrEmpty(synapseCreateUserObj.refresh_token)
-                                                              ? CommonHelper.GetDecryptedData(synapseCreateUserObj.refresh_token)
-                                                              : "REFRESH TOKEN NOT FOUND";
-                        synapseDetail.synapseConsumerKey = !String.IsNullOrEmpty(synapseCreateUserObj.access_token)
-                                                           ? CommonHelper.GetDecryptedData(synapseCreateUserObj.access_token)
-                                                           : "AUTH TOKEN NOT FOUND";
-                        synapseDetail.synapseUserId = synapseCreateUserObj.user_id.ToString();
-                        synapseDetail.isBusiness = synapseCreateUserObj.is_business ?? false;
-                        synapseDetail.userPermission = synapseCreateUserObj.permission;
-                        synapseDetail.photos = synapseCreateUserObj.photos;
-                        synapseDetail.physical_doc = synapseCreateUserObj.physical_doc;
-                        synapseDetail.virtual_doc = synapseCreateUserObj.virtual_doc;
-                        synapseDetail.extra_security = synapseCreateUserObj.extra_security;
-
-                        // Now get the user's Synapse Bank details
-                        var synapseBankDetails = (from Syn in obj.SynapseBanksOfMembers
-                                                  where Syn.IsDefault == true && Syn.MemberId == Member.MemberId
-                                                  select Syn).FirstOrDefault();
-
-                        if (synapseBankDetails != null)
+                        if (mdc.IsSynapseDetailAvailable)
                         {
-                            synapseDetail.SynapseBankName = !String.IsNullOrEmpty(synapseBankDetails.bank_name)
-                                                            ? CommonHelper.GetDecryptedData(synapseBankDetails.bank_name)
-                                                            : "Not Found";
-                            synapseDetail.BankId = synapseBankDetails.Id; // This is the Nooch DB "ID", which is just the row number of the account... NOT the same as the Synapse Bank ID
-                            synapseDetail.synapseBankId = synapseBankDetails.oid;
+                            SynapseDetailOFMember synapseDetail = new SynapseDetailOFMember();
 
-                            synapseDetail.SynapseBankStatus = (String.IsNullOrEmpty(synapseBankDetails.Status)
-                                                              ? "Not Verified"
-                                                              : synapseBankDetails.Status);
-                            synapseDetail.mfaVerified = synapseBankDetails.mfa_verifed ?? false;
-                            synapseDetail.SynapseBankNickName = !String.IsNullOrEmpty(synapseBankDetails.nickname)
-                                                                ? CommonHelper.GetDecryptedData(synapseBankDetails.nickname)
-                                                                : "";
-                            synapseDetail.nameFromSynapseBank = !String.IsNullOrEmpty(synapseBankDetails.name_on_account)
-                                                                ? CommonHelper.GetDecryptedData(synapseBankDetails.name_on_account)
-                                                                : "No Name Returned";
-                            synapseDetail.SynpaseBankAddedOn = synapseBankDetails.AddedOn != null
-                                                               ? Convert.ToDateTime(synapseBankDetails.AddedOn).ToString("MMM dd, yyyy")
-                                                               : "";
-                            synapseDetail.SynpaseBankVerifiedOn = synapseBankDetails.VerifiedOn != null
-                                                                  ? Convert.ToDateTime(synapseBankDetails.VerifiedOn).ToString("MMM dd, yyyy")
-                                                                  : "";
+                            synapseDetail.userDateCreated = Convert.ToDateTime(synapseCreateUserObj.DateCreated).ToString("MMM dd, yyyy");
+                            synapseDetail.synapseRefreshKey = !String.IsNullOrEmpty(synapseCreateUserObj.refresh_token)
+                                                                  ? CommonHelper.GetDecryptedData(synapseCreateUserObj.refresh_token)
+                                                                  : "REFRESH TOKEN NOT FOUND";
+                            synapseDetail.synapseConsumerKey = !String.IsNullOrEmpty(synapseCreateUserObj.access_token)
+                                                               ? CommonHelper.GetDecryptedData(synapseCreateUserObj.access_token)
+                                                               : "AUTH TOKEN NOT FOUND";
+                            synapseDetail.synapseUserId = synapseCreateUserObj.user_id.ToString();
+                            synapseDetail.isBusiness = synapseCreateUserObj.is_business ?? false;
+                            synapseDetail.userPermission = synapseCreateUserObj.permission;
+                            synapseDetail.photos = synapseCreateUserObj.photos;
+                            synapseDetail.physical_doc = synapseCreateUserObj.physical_doc;
+                            synapseDetail.virtual_doc = synapseCreateUserObj.virtual_doc;
+                            synapseDetail.extra_security = synapseCreateUserObj.extra_security;
 
-                            // CLIFF (5/8/16): Added these V3 fields so we can display on the Member Details page of Admin Dash
-                            synapseDetail.allowed = !String.IsNullOrEmpty(synapseBankDetails.allowed)
-                                                    ? synapseBankDetails.allowed
-                                                    : "no value";
-                            synapseDetail.bankClass = !String.IsNullOrEmpty(synapseBankDetails.@class)
-                                                    ? synapseBankDetails.@class
-                                                    : " - ";
-                            synapseDetail.bankType = !String.IsNullOrEmpty(synapseBankDetails.type_bank)
-                                                    ? synapseBankDetails.type_bank
-                                                    : " - ";
-                            synapseDetail.nodeType = !String.IsNullOrEmpty(synapseBankDetails.type_synapse)
-                                                    ? synapseBankDetails.type_synapse
-                                                    : " - ";
+                            // Now get the user's Synapse Bank details
+                            var synapseBankDetails = (from Syn in obj.SynapseBanksOfMembers
+                                                      where Syn.IsDefault == true && Syn.MemberId == Member.MemberId
+                                                      select Syn).FirstOrDefault();
 
-                            // CLIFF (5/8/16): I don't think these are needed anymore with V3 b/c Synapse no longer sends these data
-                            synapseDetail.emailFromSynapseBank = !String.IsNullOrEmpty(synapseBankDetails.email) // CLIFF (5/8/16): I don't think this is needed anymore with V3
-                                     ? synapseBankDetails.email : "";
-                            synapseDetail.phoneFromSynapseBank = !String.IsNullOrEmpty(synapseBankDetails.phone_number)
-                                     ? CommonHelper.FormatPhoneNumber(synapseBankDetails.phone_number) : "";
-                        }
-
-                        mdc.SynapseDetails = synapseDetail;
-                    }
-
-                    #endregion Get Synapse Details
-
-                    // Get the 3 most recent IP Addresses for this user
-                    mdc.MemberIpAddr = (from memIpADD in obj.MembersIPAddresses
-                                        where memIpADD.MemberId == Member.MemberId
-                                        select new MemberIpAddrreses
-                                        {
-                                            IpAddress = memIpADD.Ip,
-                                            Date = (DateTime)memIpADD.ModifiedOn
-                                        }
-                                          ).OrderByDescending(r => r.Date).Take(5).ToList();
-
-
-                    #region Get any members referred by this user
-
-                    if (Member.InviteCodeId != null)
-                    {
-                        Guid g = Utility.ConvertToGuid(Member.InviteCodeId.ToString());
-
-                        var allreferrals = (from c in obj.Members
-                                            where c.InviteCodeIdUsed == g && c.IsDeleted == false
-                                            select c)
-                                                    .Take(5).OrderByDescending(m => m.DateCreated).ToList();
-
-                        List<ReferredMembers> memreferred = new List<ReferredMembers>();
-
-                        if (allreferrals.Count > 0)
-                        {
-                            foreach (Member m in allreferrals)
+                            if (synapseBankDetails != null)
                             {
-                                ReferredMembers rm = new ReferredMembers();
-                                rm.MemberName = CommonHelper.GetDecryptedData(m.FirstName);
-                                rm.ImageUrl = m.Photo;
-                                memreferred.Add(rm);
+                                synapseDetail.SynapseBankName = !String.IsNullOrEmpty(synapseBankDetails.bank_name)
+                                                                ? CommonHelper.GetDecryptedData(synapseBankDetails.bank_name)
+                                                                : "Not Found";
+                                synapseDetail.BankId = synapseBankDetails.Id; // This is the Nooch DB "ID", which is just the row number of the account... NOT the same as the Synapse Bank ID
+                                synapseDetail.synapseBankId = synapseBankDetails.oid;
+
+                                synapseDetail.SynapseBankStatus = (String.IsNullOrEmpty(synapseBankDetails.Status)
+                                                                  ? "Not Verified"
+                                                                  : synapseBankDetails.Status);
+                                synapseDetail.mfaVerified = synapseBankDetails.mfa_verifed ?? false;
+                                synapseDetail.SynapseBankNickName = !String.IsNullOrEmpty(synapseBankDetails.nickname)
+                                                                    ? CommonHelper.GetDecryptedData(synapseBankDetails.nickname)
+                                                                    : "";
+                                synapseDetail.nameFromSynapseBank = !String.IsNullOrEmpty(synapseBankDetails.name_on_account)
+                                                                    ? CommonHelper.GetDecryptedData(synapseBankDetails.name_on_account)
+                                                                    : "No Name Returned";
+                                synapseDetail.SynpaseBankAddedOn = synapseBankDetails.AddedOn != null
+                                                                   ? Convert.ToDateTime(synapseBankDetails.AddedOn).ToString("MMM dd, yyyy")
+                                                                   : "";
+                                synapseDetail.SynpaseBankVerifiedOn = synapseBankDetails.VerifiedOn != null
+                                                                      ? Convert.ToDateTime(synapseBankDetails.VerifiedOn).ToString("MMM dd, yyyy")
+                                                                      : "";
+
+                                // CLIFF (5/8/16): Added these V3 fields so we can display on the Member Details page of Admin Dash
+                                synapseDetail.allowed = !String.IsNullOrEmpty(synapseBankDetails.allowed)
+                                                        ? synapseBankDetails.allowed
+                                                        : "no value";
+                                synapseDetail.bankClass = !String.IsNullOrEmpty(synapseBankDetails.@class)
+                                                        ? synapseBankDetails.@class
+                                                        : " - ";
+                                synapseDetail.bankType = !String.IsNullOrEmpty(synapseBankDetails.type_bank)
+                                                        ? synapseBankDetails.type_bank
+                                                        : " - ";
+                                synapseDetail.nodeType = !String.IsNullOrEmpty(synapseBankDetails.type_synapse)
+                                                        ? synapseBankDetails.type_synapse
+                                                        : " - ";
+
+                                // CLIFF (5/8/16): I don't think these are needed anymore with V3 b/c Synapse no longer sends these data
+                                synapseDetail.emailFromSynapseBank = !String.IsNullOrEmpty(synapseBankDetails.email) // CLIFF (5/8/16): I don't think this is needed anymore with V3
+                                         ? synapseBankDetails.email : "";
+                                synapseDetail.phoneFromSynapseBank = !String.IsNullOrEmpty(synapseBankDetails.phone_number)
+                                         ? CommonHelper.FormatPhoneNumber(synapseBankDetails.phone_number) : "";
                             }
+
+                            mdc.SynapseDetails = synapseDetail;
                         }
 
-                        mdc.Referrals = memreferred;
+                        #endregion Get Synapse Details
 
+                        // Get the 3 most recent IP Addresses for this user
+                        mdc.MemberIpAddr = (from memIpADD in obj.MembersIPAddresses
+                                            where memIpADD.MemberId == Member.MemberId
+                                            select new MemberIpAddrreses
+                                            {
+                                                IpAddress = memIpADD.Ip,
+                                                Date = (DateTime)memIpADD.ModifiedOn
+                                            }
+                                              ).OrderByDescending(r => r.Date).Take(5).ToList();
+
+
+                        #region Get any members referred by this user
+
+                        if (Member.InviteCodeId != null)
+                        {
+                            Guid g = Utility.ConvertToGuid(Member.InviteCodeId.ToString());
+
+                            var allreferrals = (from c in obj.Members
+                                                where c.InviteCodeIdUsed == g && c.IsDeleted == false
+                                                select c)
+                                                        .Take(5).OrderByDescending(m => m.DateCreated).ToList();
+
+                            List<ReferredMembers> memreferred = new List<ReferredMembers>();
+
+                            if (allreferrals.Count > 0)
+                            {
+                                foreach (Member m in allreferrals)
+                                {
+                                    ReferredMembers rm = new ReferredMembers();
+                                    rm.MemberName = CommonHelper.GetDecryptedData(m.FirstName);
+                                    rm.ImageUrl = m.Photo;
+                                    memreferred.Add(rm);
+                                }
+                            }
+
+                            mdc.Referrals = memreferred;
+
+                        }
+                        #endregion Get any members referred by this user
+
+                        if (mdc.type == "Tenant")
+                        {
+                            List<Tenants> tenants = GetTenants(Member.Nooch_ID);
+                            mdc.tenant = tenants.FirstOrDefault();
+                        }
                     }
-                    #endregion Get any members referred by this user
-
-                    if (mdc.type == "Tenant")
+                    if (Session["status"] != null)
                     {
-                        List<Tenants> tenants = GetTenants(Member.Nooch_ID);
-                        mdc.tenant = tenants.FirstOrDefault();
+                        mdc.DocStatus = Session["status"].ToString();
+                        Session["status"] = null;
                     }
                 }
-                if (Session["status"] != null)
-                {
-                    mdc.DocStatus = Session["status"].ToString();
-                    Session["status"] = null;
-                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Admin Member Cntrlr - Detail FAILED - Nooch_ID: [" + NoochId + "], Exception: [" + ex + "]");
             }
 
             return View(mdc);

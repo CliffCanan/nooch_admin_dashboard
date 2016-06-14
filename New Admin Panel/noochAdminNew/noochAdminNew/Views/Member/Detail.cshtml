@@ -15,7 +15,7 @@
     List<MemberIpAddrreses> MemIpAddr = new List<MemberIpAddrreses>();
     MemIpAddr = mdc.MemberIpAddr;
 
-    List<MemberDetailsTrans> Transactionsss = new List<MemberDetailsTrans>();
+    List<MemberDetailsTrans> Transactions = new List<MemberDetailsTrans>();
 
     List<Tenants> tn = new List<Tenants>();
     tn = mdc.tenants;
@@ -39,7 +39,8 @@
         ms.Memo = mdtt.Memo;
         ms.SynapseStatus = mdtt.SynapseStatus;
         ms.TransDatePaid = mdtt.TransDatePaid;
-        Transactionsss.Add(ms);
+        ms.SynapseStatusNote = mdtt.SynapseStatusNote;
+        Transactions.Add(ms);
     }
 
     List<MemberDetailsDisputeTrans> DisputeTransactions = Model.DisputeTransactions;
@@ -1344,7 +1345,7 @@
                             </div>
                             <div class="ibox-content">
                                 @{
-                                    if (Transactionsss.Count > 0)
+                                    if (Transactions.Count > 0)
                                     {
                                         <table class="table table-striped">
                                             <thead>
@@ -1362,7 +1363,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (MemberDetailsTrans mn in Transactionsss)
+                                                @foreach (MemberDetailsTrans mn in Transactions)
                                                 {
                                                     <tr>
                                                         <td>@mn.TransID</td>
@@ -1408,7 +1409,6 @@
                                                             {
                                                                 @mn.SenderName
                                                             }
-
                                                         </td>
                                                         <td>
                                                             @if (mn.AmountNew != "0")
@@ -1429,15 +1429,26 @@
                                                             }
                                                         </td>
                                                         <td>@mn.Memo</td>
-                                                        @if (!String.IsNullOrEmpty(@mn.GeoLocation))
-                                                        {
-                                                            <td><button class="btn btn-link locLink" data-lat="@mn.Latitude" data-long="@mn.Longitude" data-loctext="@mn.GeoLocation.Trim().TrimEnd(',').Trim()">@mn.GeoLocation.Trim().TrimEnd(',').Trim()</button></td>
-                                                        }
-                                                        else
-                                                        {
-                                                            <td><span class="text-muted"> - </span></td>
-                                                        }
-                                                        <td>@mn.SynapseStatus</td>
+                                                        <td>
+                                                            @if (!String.IsNullOrEmpty(@mn.GeoLocation))
+                                                            {
+                                                                <button class="btn btn-link locLink" data-lat="@mn.Latitude" data-long="@mn.Longitude" data-loctext="@mn.GeoLocation.Trim().TrimEnd(',').Trim()">@mn.GeoLocation.Trim().TrimEnd(',').Trim()</button>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="text-muted"> - </span>
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            @if (@mn.GeoLocation != "SynapseStatus")
+                                                            {
+                                                                <span data-toggle="popover" data-trigger="hover" data-title="Synapse Status" data-content="@mn.SynapseStatusNote" data-placement="left">@mn.SynapseStatus</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="text-muted"> - </span>
+                                                            }
+                                                        </td>
                                                     </tr>
                                                 }
                                             </tbody>
@@ -1451,8 +1462,6 @@
 
                             </div>
                         </div>
-
-
 
                     </div>
                 </div>

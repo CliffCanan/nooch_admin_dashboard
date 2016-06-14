@@ -90,6 +90,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string DeviceToken { get; set; }
         public string AccessToken { get; set; }
         public string SynapseStatus { get; set; }
+        public string SynapseStatusNote { get; set; }
     }
 
     public class MemberDetailsStats
