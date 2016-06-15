@@ -653,9 +653,36 @@ var Member = function ()
             return;
         }
 
-        showBlockUI("Refreshing With Synapse...");
+        showBlockUI("Refreshing User With Synapse...");
 
-        var url = "../Member/refreshSynapseV3";
+        var url = "../Member/refreshSynapseUserV3";
+        var data = {};
+        data.memid = memId;
+        $.post(url, data, function (result)
+        {
+            $.unblockUI();
+            console.log(result.msg);
+            if (result.isSuccess == true) {
+                toastr.success(result.msg, 'Synapse refreshed successfully');
+            }
+            else {
+                toastr.error(result.msg, 'Error');
+            }
+        });
+    }
+
+    function refreshSynapseBank()
+    {
+        var memId = $('#memId').attr('data-val');
+
+        if (memId == '' || memId.length < 20) {
+            toastr.error('No MemberID was selected...', 'Error');
+            return;
+        }
+
+        showBlockUI("Refreshing Banks With Synapse...");
+
+        var url = "../Member/refreshSynapseBankV3";
         var data = {};
         data.memid = memId;
         $.post(url, data, function (result)
@@ -686,6 +713,7 @@ var Member = function ()
         editCip: editCip,
         submitDocManual: submitDocManual,
         submitSsn: submitSsn,
-        refreshSynapse: refreshSynapse
+        refreshSynapse: refreshSynapse,
+        refreshSynapseBank: refreshSynapseBank
     };
 }();

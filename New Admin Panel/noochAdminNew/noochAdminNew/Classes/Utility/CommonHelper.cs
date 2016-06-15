@@ -261,6 +261,8 @@ namespace noochAdminNew.Classes.Utility
 
         public static synapseSearchUserResponse getUserPermissionsForSynapseV3(string userEmail)
         {
+            Logger.Info("Admin Common Helper -> getUserPermissionsForSynapseV3 Fired - Email: [" + userEmail + "]");
+
             synapseSearchUserResponse res = new synapseSearchUserResponse();
             res.success = false;
 
@@ -286,23 +288,27 @@ namespace noochAdminNew.Classes.Utility
                 input.client = client;
                 input.filter = filter;
 
-                string UrlToHit = Utility.GetValueFromConfig("Synapse_Api_User_Search");
-
-                var http = (HttpWebRequest)WebRequest.Create(new Uri(UrlToHit));
-                http.Accept = "application/json";
-                http.ContentType = "application/json";
-                http.Method = "POST";
-
-                string parsedContent = JsonConvert.SerializeObject(input);
-                ASCIIEncoding encoding = new ASCIIEncoding();
-                Byte[] bytes = encoding.GetBytes(parsedContent);
-
-                Stream newStream = http.GetRequestStream();
-                newStream.Write(bytes, 0, bytes.Length);
-                newStream.Close();
+                //string UrlToHit = Utility.GetValueFromConfig("Synapse_Api_User_Search");
+                string UrlToHit = "https://synapsepay.com/api/v3/user/search";
 
                 try
                 {
+                    var http = (HttpWebRequest)WebRequest.Create(new Uri(UrlToHit));
+                    http.Accept = "application/json";
+                    http.ContentType = "application/json";
+                    http.Method = "POST";
+
+                    string parsedContent = JsonConvert.SerializeObject(input);
+                    Logger.Info("Admin Common Helper -> getUserPermissionsForSynapseV3 - Payload to send to Synapse: [" + parsedContent +
+                                "], URL: [" + UrlToHit + "]");
+
+                    ASCIIEncoding encoding = new ASCIIEncoding();
+                    Byte[] bytes = encoding.GetBytes(parsedContent);
+
+                    Stream newStream = http.GetRequestStream();
+                    newStream.Write(bytes, 0, bytes.Length);
+                    newStream.Close();
+
                     var response = http.GetResponse();
                     var stream = response.GetResponseStream();
                     var sr = new StreamReader(stream);
@@ -330,20 +336,19 @@ namespace noochAdminNew.Classes.Utility
 
                     var response = new StreamReader(we.Response.GetResponseStream()).ReadToEnd();
                     JObject errorJsonFromSynapse = JObject.Parse(response);
-
+                    Logger.Error("Admin Common Helper -> getUserPermissionsForSynapseV3 FAILED - Synapse Response JSON: [" + errorJsonFromSynapse + "]");
 
                     res.error_code = errorJsonFromSynapse["error_code"].ToString();
                     res.errorMsg = errorJsonFromSynapse["error"]["en"].ToString();
 
                     if (!String.IsNullOrEmpty(res.error_code))
                     {
-                        Logger.Error("Landlords API -> Common Helper -> getUserPermissionsForSynapseV3 FAILED - [Synapse Error Code: " + res.error_code +
-                                               "], [Error Msg: " + res.errorMsg + "], [User Email: " + userEmail + "]");
+
                     }
                     else
                     {
-                        Logger.Error("Landlords API -> Common Helper -> getUserPermissionsForSynapseV3 FAILED: Synapse Error, but *error_code* was null for [User Email: " +
-                                               userEmail + "], [Exception: " + we.InnerException + "]");
+                        Logger.Error("Admin Common Helper -> getUserPermissionsForSynapseV3 FAILED: Synapse Error, but *error_code* was null for [User Email: " +
+                                     userEmail + "], [Exception: " + we.InnerException + "]");
                     }
 
                     #endregion Synapse V3 Get User Permissions Exception
@@ -351,9 +356,8 @@ namespace noochAdminNew.Classes.Utility
             }
             catch (Exception ex)
             {
-                Logger.Error("Landlords API -> Common Helper -> getUserPermissionsForSynapseV3 FAILED: Outer Catch Error - [User Email: " + userEmail +
-                                       "], [Exception: " + ex.InnerException + "]");
-
+                Logger.Error("Admin Common Helper -> getUserPermissionsForSynapseV3 FAILED: Outer Catch Error - [User Email: " + userEmail +
+                             "], [Exception: " + ex.InnerException + "]");
                 res.error_code = "Nooch Server Error: Outer Exception.";
             }
 

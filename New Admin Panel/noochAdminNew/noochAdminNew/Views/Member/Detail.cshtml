@@ -70,15 +70,15 @@
                 @{
                     if (mdc.type == "Landlord")
                     {
-                        <a href="ListAllLandlords">Landlords</a>
+                <a href="ListAllLandlords">Landlords</a>
                     }
                     else if (mdc.type == "Tenant")
                     {
-                        <a href="ListAllTenants">Tenants</a>
+                <a href="ListAllTenants">Tenants</a>
                     }
                     else
                     {
-                        <a href="ListAll">Members</a>
+                <a href="ListAll">Members</a>
                     }
                 }
             </li>
@@ -99,36 +99,36 @@
                         @{
                             if (mdc.type == "Landlord")
                             {
-                                <span>Landlord </span>
+                        <span>Landlord </span>
                             }
                             else if (mdc.type == "Tenant")
                             {
-                                <span>TENANT </span>
+                        <span>TENANT </span>
                             }
                             else
                             {
-                                <span>MEMBER </span>
+                        <span>MEMBER </span>
                             }
                         }
                         Details | <small>@mdc.FirstName @mdc.LastName</small>
                     </h5>
                     @if (mdc.isRentScene == true)
                     {
-                        <img src="https://noochme.com/noochweb/Assets/Images/rentscene.png" style="max-height:30px;margin-top:-6px;" alt="Rent Scene" data-toggle="tooltip" title="@mdc.FirstName @mdc.LastName is a Rent Scene user." />
+                    <img src="https://noochme.com/noochweb/Assets/Images/rentscene.png" style="max-height:30px;margin-top:-6px;" alt="Rent Scene" data-toggle="tooltip" title="@mdc.FirstName @mdc.LastName is a Rent Scene user." />
                     }
                     <span class="pull-right" id="memId" data-val="@mdc.memberId">@mdc.memberId</span>
                     <div class="pull-right">
                         <a href="#" class="btn btn-link p-0 m-r-25" onclick="Member.OpenPopupForAdminNote();">
                             @if (mdc.adminNote != null)
                             {
-                                <i class="fa fa-sticky-note" data-toggle="popover" data-trigger="click hover" data-title="Admin Note" data-content="@mdc.adminNote"></i>
+                            <i class="fa fa-sticky-note" data-toggle="popover" data-trigger="click hover" data-title="Admin Note" data-content="@mdc.adminNote"></i>
                             }
                             else
                             {
-                                <span data-toggle="tooltip" title="Add a note about @mdc.FirstName @mdc.LastName.">
-                                    <i class="fa fa-plus f-10"></i>
-                                    <i class="fa fa-sticky-note-o" title="@mdc.adminNote"></i>
-                                </span>
+                            <span data-toggle="tooltip" title="Add a note about @mdc.FirstName @mdc.LastName.">
+                                <i class="fa fa-plus f-10"></i>
+                                <i class="fa fa-sticky-note-o" title="@mdc.adminNote"></i>
+                            </span>
                             }
                         </a>
                     </div>
@@ -148,19 +148,19 @@
                                         Status:  @{
                                             if (mdc.Status == "Suspended" || mdc.Status == "Temporarily_Blocked")
                                             {
-                                                <span class="label label-danger"><strong>Suspended</strong></span>
+                                        <span class="label label-danger"><strong>Suspended</strong></span>
                                             }
                                             else if (mdc.Status == "Registered")
                                             {
-                                                <strong class="label label-info">Registered</strong>
+                                        <strong class="label label-info">Registered</strong>
                                             }
                                             else if (mdc.Status == "Active")
                                             {
-                                                <strong class="text-navy">Active</strong>
+                                        <strong class="text-navy">Active</strong>
                                             }
                                             else
                                             {
-                                                <span class="label label-danger">@mdc.Status</span>
+                                        <span class="label label-danger">@mdc.Status</span>
                                             }
                                         }
                                     </span>
@@ -168,11 +168,11 @@
                                         Type:@{
                                             if (mdc.type != null)
                                             {
-                                                <strong class="text-navy">@mdc.type</strong>
+                                        <strong class="text-navy">@mdc.type</strong>
                                             }
                                             else
                                             {
-                                                <strong class="label label-danger">-</strong>
+                                        <strong class="label label-danger">-</strong>
                                             }
                                         }
                                     </span>
@@ -180,21 +180,21 @@
                                         Phone Verified:@{
                                             if (mdc.IsPhoneVerified == true)
                                             {
-                                                <span class="label label-success">Verified</span>
+                                        <span class="label label-success">Verified</span>
                                             }
                                             else
                                             {
-                                                <strong class="label label-danger">Not Verified</strong>
+                                        <strong class="label label-danger">Not Verified</strong>
                                             }
                                         }
                                     </span>
                                     @if (!String.IsNullOrEmpty(mdc.ReferCodeUsed))
                                     {
-                                        <span class="help-block m-b-none">Refer Code Used:<a href="../Referrals/JoinningsWithGivenReferralCode?RefCode=@mdc.ReferCodeUsed" class="text-navy">@mdc.ReferCodeUsed.ToUpper()</a></span>
+                                    <span class="help-block m-b-none">Refer Code Used:<a href="../Referrals/JoinningsWithGivenReferralCode?RefCode=@mdc.ReferCodeUsed" class="text-navy">@mdc.ReferCodeUsed.ToUpper()</a></span>
                                     }
                                     else
                                     {
-                                        <span class="help-block m-b-none">Refer Code Used: <em>None</em></span>
+                                    <span class="help-block m-b-none">Refer Code Used: <em>None</em></span>
                                     }
                                 </div>
                             </div>
@@ -219,7 +219,7 @@
                                             {
                                                 double d = (Convert.ToDouble(mdc.MemberStats.TotalTransfer)) / mdc.WeeksSinceJoined;
                                                 string transPerWeek = string.Format("{0:0.00}", d);
-                                                <h4>@transPerWeek</h4>
+                                            <h4>@transPerWeek</h4>
                                             }
                                             else
                                             {<h4>-</h4>}
@@ -242,11 +242,11 @@
                                             <h4>
                                                 @if (stats.LargestSent != "0.00")
                                                 {
-                                                    <span>$ @stats.LargestSent</span>
+                                                <span>$ @stats.LargestSent</span>
                                                 }
                                                 else
                                                 {
-                                                    <span>-</span>
+                                                <span>-</span>
                                                 }
                                             </h4>
                                         </div>
@@ -273,27 +273,27 @@
                                             @{
                                                 if (MemIpAddr.Count > 0)
                                                 {
-                                                    <table class="table table-striped">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Ip Address</th>
-                                                                <th>Date</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach (MemberIpAddrreses mn in MemIpAddr)
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Ip Address</th>
+                                                        <th>Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (MemberIpAddrreses mn in MemIpAddr)
                                                             {
-                                                                <tr>
-                                                                    <td>@mn.IpAddress</td>
-                                                                    <td>@mn.Date</td>
-                                                                </tr>
+                                                            <tr>
+                                                                <td>@mn.IpAddress</td>
+                                                                <td>@mn.Date</td>
+                                                            </tr>
                                                             }
-                                                        </tbody>
-                                                    </table>
+                                                </tbody>
+                                            </table>
                                                 }
                                                 else
                                                 {
-                                                    <p class="text-danger text-center m-t-md"> There are no IP Addresses for<em>@mdc.FirstName @mdc.LastName</em> </p>
+                                            <p class="text-danger text-center m-t-md"> There are no IP Addresses for<em>@mdc.FirstName @mdc.LastName</em> </p>
                                                 }
                                             }
                                         </div>
@@ -388,11 +388,11 @@
                                             @{
                                                 if (mdc.FBID == null || mdc.FBID == "")
                                                 {
-                                                    <span class="text-danger">FB Not Linked</span>
+                                            <span class="text-danger">FB Not Linked</span>
                                                 }
                                                 else
                                                 {
-                                                    <a href="https://www.facebook.com/@mdc.FBID" class="text-navy" target="_blank" data-toggle="tooltip" title="Open @mdc.FirstName's FB profile (new tab).">Facebook</a>
+                                            <a href="https://www.facebook.com/@mdc.FBID" class="text-navy" target="_blank" data-toggle="tooltip" title="Open @mdc.FirstName's FB profile (new tab).">Facebook</a>
                                                 }
                                             }
                                         </span>
@@ -415,11 +415,11 @@
                                                             @{
                                                                 if (mdc.IsPhoneVerified == true)
                                                                 {
-                                                                    <i class="fa fa-check text-success"></i>
+                                                            <i class="fa fa-check text-success"></i>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <i class="fa fa-remove text-danger"></i>
+                                                            <i class="fa fa-remove text-danger"></i>
                                                                 }
                                                             }
                                                         </div>
@@ -439,11 +439,11 @@
                                                             @{
                                                                 if (mdc.Status != "Suspended")
                                                                 {
-                                                                    <i class="fa fa-check text-success"></i>
+                                                            <i class="fa fa-check text-success"></i>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <i class="fa fa-remove text-danger"></i>
+                                                            <i class="fa fa-remove text-danger"></i>
                                                                 }
                                                             }
                                                         </div>
@@ -477,11 +477,11 @@
                                                                 <span class="input-group-addon"><i class="fa fa-fw fa-envelope-o"></i></span>
                                                                 @if (!String.IsNullOrEmpty(mdc.SecondaryEmail.Trim()) && mdc.SecondaryEmail != " " && mdc.SecondaryEmail != "")
                                                                 {
-                                                                    <input type="email" value="@mdc.SecondaryEmail" class="form-control" id="secondaryemail1">
+                                                                <input type="email" value="@mdc.SecondaryEmail" class="form-control" id="secondaryemail1">
                                                                 }
                                                                 else
                                                                 {
-                                                                    <input type="email" class="form-control" id="secondaryemail2">
+                                                                <input type="email" class="form-control" id="secondaryemail2">
                                                                 }
                                                             </div>
                                                         </div>
@@ -673,167 +673,165 @@
 
                                                 @if (mdc.tenant != null)
                                                 {
-                                                    <form class="form-horizontal" method="get">
+                                                <form class="form-horizontal" method="get">
 
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                                        <b>Property</b>
-                                                                    </span>
-                                                                    <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                                        <div class="input-group">
-                                                                            <span class="input-group-addon"><i class="fa fa-fw fa-building"></i></span>
-                                                                            @*<input type="text" id="property" class="form-control" value="@mdc.tenant.Property">*@
-                                                                            <p class="form-control-static" id="property">@mdc.tenant.Property</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                                        <b>Status</b>
-                                                                    </span>
-                                                                    <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                                        <p class="form-control-static">@mdc.tenant.Status</p>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Property</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><i class="fa fa-fw fa-building"></i></span>
+                                                                        @*<input type="text" id="property" class="form-control" value="@mdc.tenant.Property">*@
+                                                                        <p class="form-control-static" id="property">@mdc.tenant.Property</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
 
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                                        <b>Unit</b>
-                                                                    </span>
-                                                                    <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                                        <div class="input-group">
-                                                                            <span class="input-group-addon"><i class="fa fa-fw fa-home"></i></span>
-                                                                            @*<input type="text" value="@mdc.tenant.Unit" class="form-control" id="unitNum">*@
-                                                                            <p class="form-control-static" id="unitNum">@mdc.tenant.Unit</p>
-                                                                        </div>
-                                                                    </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Status</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <p class="form-control-static">@mdc.tenant.Status</p>
                                                                 </div>
                                                             </div>
+                                                        </div>
+                                                    </div>
 
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                                        <b>Last Payment</b>
-                                                                    </span>
-                                                                    <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                                        @*@if (!String.IsNullOrEmpty(mdc.SecondaryEmail.Trim()))
-                                                                            {
-                                                                                <p id="lastPayment" class="form-control-static">@mdc.SecondaryEmail</p>
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <p id="lastPayment" class="form-control-static">@mdc.SecondaryEmail</p>
-                                                                            }*@
-                                                                        <p id="lastPayment" class="form-control-static">
-                                                                            @mdc.tenant.LastPayment &nbsp;
-                                                                            @if (mdc.tenant.LastPaymentDate1 != null)
-                                                                            {
-                                                                                @mdc.tenant.LastPaymentDate1 }
-                                                                        </p>
-
-
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Unit</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><i class="fa fa-fw fa-home"></i></span>
+                                                                        @*<input type="text" value="@mdc.tenant.Unit" class="form-control" id="unitNum">*@
+                                                                        <p class="form-control-static" id="unitNum">@mdc.tenant.Unit</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
 
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                                        <b>Rent</b>
-                                                                    </span>
-                                                                    <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                                        <div class="input-group">
-                                                                            <span class="input-group-addon"><i class="fa fa-fw fa-usd"></i></span>
-                                                                            @*<input type="text" value="@mdc.tenant.Rent" class="form-control" id="rentAmount">*@
-                                                                            <p id="rentAmount" class="form-control-static"> @mdc.tenant.Rent</p>
-
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                                        <b>Auto Pay</b>
-                                                                    </span>
-                                                                    <div class="col-xs-9 col-sm-8 col-lg-7">
-
-                                                                        @if (mdc.tenant.AutoPay != null)
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Last Payment</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    @*@if (!String.IsNullOrEmpty(mdc.SecondaryEmail.Trim()))
                                                                         {
-                                                                            <input type="checkbox" class="form-control" id="autoPay" checked>
+                                                                            <p id="lastPayment" class="form-control-static">@mdc.SecondaryEmail</p>
                                                                         }
                                                                         else
                                                                         {
-                                                                            <input type="checkbox" class="form-control" id="autoPay">
+                                                                            <p id="lastPayment" class="form-control-static">@mdc.SecondaryEmail</p>
+                                                                        }*@
+                                                                    <p id="lastPayment" class="form-control-static">
+                                                                        @mdc.tenant.LastPayment &nbsp;
+                                                                        @if (mdc.tenant.LastPaymentDate1 != null)
+                                                                            {
+                                                                            @mdc.tenant.LastPaymentDate1 }
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Rent</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon"><i class="fa fa-fw fa-usd"></i></span>
+                                                                        @*<input type="text" value="@mdc.tenant.Rent" class="form-control" id="rentAmount">*@
+                                                                        <p id="rentAmount" class="form-control-static"> @mdc.tenant.Rent</p>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Auto Pay</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+
+                                                                    @if (mdc.tenant.AutoPay != null)
+                                                                        {
+                                                                        <input type="checkbox" class="form-control" id="autoPay" checked>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                        <input type="checkbox" class="form-control" id="autoPay">
                                                                         }
 
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-
-                                                        <div class="row">
-
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                                        <b>Due On</b>
-                                                                    </span>
-                                                                    <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                                        <p class="form-control-static" id="dueOn">@mdc.tenant.dueDate</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                                        <b>Admin Notes</b>
-                                                                    </span>
-                                                                    <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                                        <p class="form-control-static" style="word-wrap:break-word;">@mdc.tenant.AdminNote</p>
-                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
 
-                                                        <div class="row">
+                                                    </div>
 
-                                                            <div class="col-md-6">
-                                                                <div class="form-group">
-                                                                    <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
-                                                                        <b>Lease Length</b>
-                                                                    </span>
-                                                                    <div class="col-xs-9 col-sm-8 col-lg-7">
-                                                                        <p class="form-control-static" id="leaseLength">@mdc.tenant.LeaseLength</p>
-                                                                    </div>
+                                                    <div class="row">
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Due On</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <p class="form-control-static" id="dueOn">@mdc.tenant.dueDate</p>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4 m-t-md">
-                                                                @*<a class="btn btn-danger btn-lg center-block" onclick="Member.UpdateTenantInfo()"><i class="fa fa-save"></i> Save Changes</a>*@
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Admin Notes</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <p class="form-control-static" style="word-wrap:break-word;">@mdc.tenant.AdminNote</p>
+                                                                </div>
                                                             </div>
                                                         </div>
+                                                    </div>
 
-                                                    </form>
+                                                    <div class="row">
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <span class="col-xs-3 col-sm-4 col-lg-5 control-label">
+                                                                    <b>Lease Length</b>
+                                                                </span>
+                                                                <div class="col-xs-9 col-sm-8 col-lg-7">
+                                                                    <p class="form-control-static" id="leaseLength">@mdc.tenant.LeaseLength</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4 m-t-md">
+                                                            @*<a class="btn btn-danger btn-lg center-block" onclick="Member.UpdateTenantInfo()"><i class="fa fa-save"></i> Save Changes</a>*@
+                                                        </div>
+                                                    </div>
+
+                                                </form>
                                                 }
                                                 else
                                                 {
-                                                    <h1>No Record found for this tenant</h1>
+                                                <h1>No Record found for this tenant</h1>
                                                 }
                                             </div>
                                         </div>
@@ -894,7 +892,7 @@
                                                 {
                                                     <label class="text-primary m-b-10">Admin Details</label>
 
-                                                    <button class="btn btn-link p-0 pull-right" type="button" onclick="Member.refreshSynapse()" data-toggle="tooltip" title="Refresh Synapse Details">
+                                                    <button class="btn btn-link p-0 pull-right" type="button" onclick="Member.refreshSynapse()" data-toggle="tooltip" title="Refresh Synapse User Details">
                                                         <i class="fa fa-refresh"></i>
                                                     </button>
 
@@ -1067,6 +1065,10 @@
                                                     <span class="f-16">
                                                         <b>Synapse Bank Info</b>
                                                     </span>
+
+                                                    <button class="btn btn-link p-0 pull-right" type="button" onclick="Member.refreshSynapseBank()" data-toggle="tooltip" title="Refresh Synapse Bank Details">
+                                                        <i class="fa fa-refresh"></i>
+                                                    </button>
                                                 </div>
 
                                                 @if (mdc.IsSynapseDetailAvailable && synpsDetail.SynapseBankName != null)
@@ -1171,8 +1173,6 @@
                                                             </span>
                                                             <span class="pull-right">
                                                                 <span class="f-600">@synpsDetail.nameFromSynapseBank </span>
-                                                                <!--<p><i class="fa fa-fw fa-envelope m-r-sm f-13"></i> @synpsDetail.emailFromSynapseBank </p>
-                                                                <p><i class="fa fa-fw fa-mobile-phone m-r-xs f-19"></i> @synpsDetail.phoneFromSynapseBank </p>-->
                                                             </span>
                                                         </li>
 

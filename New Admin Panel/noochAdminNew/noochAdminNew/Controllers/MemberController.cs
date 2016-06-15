@@ -906,7 +906,7 @@ namespace noochAdminNew.Controllers
                                                                 ? CommonHelper.GetDecryptedData(synapseBankDetails.bank_name)
                                                                 : "Not Found";
                                 synapseDetail.BankId = synapseBankDetails.Id; // This is the Nooch DB "ID", which is just the row number of the account... NOT the same as the Synapse Bank ID
-                                synapseDetail.synapseBankId = synapseBankDetails.oid;
+                                synapseDetail.synapseBankId = CommonHelper.GetDecryptedData(synapseBankDetails.oid);
 
                                 synapseDetail.SynapseBankStatus = (String.IsNullOrEmpty(synapseBankDetails.Status)
                                                                   ? "Not Verified"
@@ -942,8 +942,6 @@ namespace noochAdminNew.Controllers
                                 // CLIFF (5/8/16): I don't think these are needed anymore with V3 b/c Synapse no longer sends these data
                                 synapseDetail.emailFromSynapseBank = !String.IsNullOrEmpty(synapseBankDetails.email) // CLIFF (5/8/16): I don't think this is needed anymore with V3
                                          ? synapseBankDetails.email : "";
-                                synapseDetail.phoneFromSynapseBank = !String.IsNullOrEmpty(synapseBankDetails.phone_number)
-                                         ? CommonHelper.FormatPhoneNumber(synapseBankDetails.phone_number) : "";
                             }
 
                             mdc.SynapseDetails = synapseDetail;
@@ -2449,10 +2447,10 @@ namespace noochAdminNew.Controllers
 
 
         [HttpPost]
-        [ActionName("refreshSynapseV3")]
-        public ActionResult refreshSynapseV3(string memid)
+        [ActionName("refreshSynapseUserV3")]
+        public ActionResult refreshSynapseUserV3(string memid)
         {
-            Logger.Info("Member Cntrlr -> refreshSynapseV3 Initialized - [MemberId: " + memid + "]");
+            Logger.Info("Member Cntrlr -> refreshSynapseUserV3 Initialized - [MemberId: " + memid + "]");
 
             synapseV3GenericResponse res = new synapseV3GenericResponse();
             res.isSuccess = false;
@@ -2470,7 +2468,7 @@ namespace noochAdminNew.Controllers
 
                     if (synapseUserObj == null)
                     {
-                        Logger.Error("Member Cntrlr -> refreshSynapseV3 ABORTED: Member's Synapse User Details not found. [MemberId: " + memid + "]");
+                        Logger.Error("Member Cntrlr -> refreshSynapseUserV3 ABORTED: Member's Synapse User Details not found. [MemberId: " + memid + "]");
                         res.msg = "Could not find this member's account info";
                         return Json(res);
                     }
@@ -2487,14 +2485,14 @@ namespace noochAdminNew.Controllers
                             }
                             else
                             {
-                                Logger.Error("Member Cntrlr -> refreshSynapseV3 FAILED on Checking User's Synapse OAuth Token - " +
+                                Logger.Error("Member Cntrlr -> refreshSynapseUserV3 FAILED on Checking User's Synapse OAuth Token - " +
                                              "CheckTokenResult.msg: [" + checkTokenResult.msg + "], MemberID: [" + memid + "]");
                                 res.msg = checkTokenResult.msg;
                             }
                         }
                         else
                         {
-                            Logger.Error("Member Cntrlr -> refreshSynapseV3 FAILED on Checking User's Synapse OAuth Token - " +
+                            Logger.Error("Member Cntrlr -> refreshSynapseUserV3 FAILED on Checking User's Synapse OAuth Token - " +
                                          "CheckTokenResult was NULL, MemberID: [" + memid + "]");
                             res.msg = "Unable to check user's Oauth Token";
                         }
@@ -2505,7 +2503,107 @@ namespace noochAdminNew.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Error("Member Cntrlr -> refreshSynapseV3 FAILED - Outer Exception - " +
+                Logger.Error("Member Cntrlr -> refreshSynapseUserV3 FAILED - Outer Exception - " +
+                             "MemberID: [" + memid + "], Exception: [" + ex.Message + "]");
+            }
+
+            return Json(res);
+        }
+
+
+        [HttpPost]
+        [ActionName("refreshSynapseBankV3")]
+        public ActionResult refreshSynapseBankV3(string memid)
+        {
+            Logger.Info("Member Cntrlr -> refreshSynapseBankV3 Initialized - [MemberId: " + memid + "]");
+
+            synapseV3GenericResponse res = new synapseV3GenericResponse();
+            res.isSuccess = false;
+
+            try
+            {
+                var memberObj = CommonHelper.GetMemberDetails(memid);
+
+                using (var noochConnection = new NOOCHEntities())
+                {
+                    #region Get User's Synapse OAuth Consumer Key
+
+                    SynapseBanksOfMember synapseBankObj = new SynapseBanksOfMember();
+                    synapseBankObj = noochConnection.SynapseBanksOfMembers.FirstOrDefault(m => m.MemberId == memberObj.MemberId &&
+                                                                                               m.IsDefault == true);
+
+                    if (synapseBankObj == null)
+                    {
+                        Logger.Error("Member Cntrlr -> refreshSynapseBankV3 ABORTED: Member's Synapse Bank Details not found - [MemberId: " + memid + "]");
+                        res.msg = "Could not find this member's Synapse Bank info";
+                        return Json(res);
+                    }
+                    else
+                    {
+                        var email = CommonHelper.GetDecryptedData(memberObj.UserName);
+
+                        synapseSearchUserResponse checkBankResult = CommonHelper.getUserPermissionsForSynapseV3(email);
+
+                        Logger.Info("Member Cntrlr -> refreshSynapseBankV3 - Synapse Search Response -> Sucess: [" + checkBankResult.success +
+                                    "], Error Msg: [" + checkBankResult.errorMsg + "]");
+
+                        if (checkBankResult == null || !checkBankResult.success)
+                        {
+                            Logger.Error("Member Cntrlr -> refreshSynapseBankV3 - User's Synapse Bank Permissions were NULL or not successful :-(");
+                            res.msg = "Failed to check user's bank permissions with Synapse";
+                            return Json(res);
+                        }
+
+                        // 2. Check BANK/NODE permission for SENDER
+                        if (checkBankResult.users != null && checkBankResult.users.Length > 0)
+                        {
+                            foreach (synapseSearchUserResponse_User userObj in checkBankResult.users)
+                            {
+                                // iterating each node inside
+                                if (userObj.nodes != null && userObj.nodes.Length > 0)
+                                {
+                                    var oidToCheck = CommonHelper.GetDecryptedData(synapseBankObj.oid);
+
+                                    NodePermissionCheckResult nodePermCheckRes = CommonHelper.IsNodeActiveInGivenSetOfNodes(userObj.nodes, oidToCheck);
+
+                                    if (nodePermCheckRes.IsPermissionfound == true && !String.IsNullOrEmpty(nodePermCheckRes.PermissionType))
+                                    {
+                                        if (nodePermCheckRes.PermissionType != synapseBankObj.allowed)
+                                        {
+                                            res.msg = "Bank Permission Updated Successfully - OLD: [" + synapseBankObj.allowed +
+                                                      "], NEW: [" + nodePermCheckRes.PermissionType + "]";
+
+                                            // Update Bank in DB
+                                            synapseBankObj.allowed = nodePermCheckRes.PermissionType;
+
+                                            noochConnection.SaveChanges();
+                                        }
+                                        else
+                                        {
+                                            res.msg = "Bank Permission Confirmed as [" + nodePermCheckRes.PermissionType + "]";
+                                        }
+
+                                        Logger.Info("Member Cntrlr -> refreshSynapseBankV3 SUCCESS - " + res.msg);
+                                        res.isSuccess = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var error = "Couldn't parse user objects in Synapse /user/search response";
+                            Logger.Error("Member Cntrlr -> refreshSynapseBankV3 - " + error);
+                            res.msg = error;
+                        }
+                    }
+
+                    #endregion Get User's Synapse OAuth Consumer Key
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("Member Cntrlr -> refreshSynapseBankV3 FAILED - Outer Exception - " +
                              "MemberID: [" + memid + "], Exception: [" + ex.Message + "]");
             }
 
