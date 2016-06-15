@@ -887,6 +887,9 @@ namespace noochAdminNew.Controllers
                             synapseDetail.synapseConsumerKey = !String.IsNullOrEmpty(synapseCreateUserObj.access_token)
                                                                ? CommonHelper.GetDecryptedData(synapseCreateUserObj.access_token)
                                                                : "AUTH TOKEN NOT FOUND";
+                            synapseDetail.synapseUserName = !String.IsNullOrEmpty(synapseCreateUserObj.username)
+                                                            ? CommonHelper.GetDecryptedData(synapseCreateUserObj.username)
+                                                            : "NO USERNAME FOUND";
                             synapseDetail.synapseUserId = synapseCreateUserObj.user_id.ToString();
                             synapseDetail.isBusiness = synapseCreateUserObj.is_business ?? false;
                             synapseDetail.userPermission = synapseCreateUserObj.permission;

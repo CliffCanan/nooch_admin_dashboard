@@ -141,19 +141,15 @@ namespace noochAdminNew.Classes.ModelClasses
         // Bank-Related
         public int BankId { get; set; }
         public string synapseBankId { get; set; }
-
         public string SynapseBankStatus { get; set; }
         public string SynapseBankName { get; set; }
         public string SynapseBankNickName { get; set; }
         public bool mfaVerified { get; set; }
-
         public string nameFromSynapseBank { get; set; }
         public string emailFromSynapseBank { get; set; } // No longer passed by Synapse in V3
-
         public string SynpaseBankAddedOn { get; set; }
         public string SynpaseBankVerifiedOn { get; set; }
         public string allowed { get; set; }
-
         public string bankClass { get; set; }
         public string bankType { get; set; }
         public string nodeType { get; set; }
@@ -163,7 +159,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string synapseConsumerKey { get; set; }
         public string synapseRefreshKey { get; set; }
         public string synapseUserId { get; set; }
-
+        public string synapseUserName { get; set; }
         public bool isBusiness { get; set; }
         public string userPermission { get; set; }
         public string physical_doc { get; set; }
