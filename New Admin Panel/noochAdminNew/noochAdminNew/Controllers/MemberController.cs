@@ -688,9 +688,9 @@ namespace noochAdminNew.Controllers
                                 payment.SynapseStatus = "-";
 
 
-                            // CC (6/16/15): STARTED TO COPY THE LOGIC FROM NoochController in the other Solution
                             if (String.IsNullOrEmpty(t.InvitationSentTo) && t.IsPhoneInvitation != true)
                             {
+                                // Payment Request or Transfer to an EXISTING Nooch user... straight forward.
                                 payment.SenderId = t.SenderId.ToString();
                                 payment.SenderName = CommonHelper.GetDecryptedData(t.Member.FirstName) + " " + CommonHelper.GetDecryptedData(t.Member.LastName);
                                 payment.SenderNoochId = t.Member.Nooch_ID;
@@ -699,117 +699,72 @@ namespace noochAdminNew.Controllers
                                 payment.RecipientName = CommonHelper.GetDecryptedData(t.Member1.FirstName) + " " + CommonHelper.GetDecryptedData(t.Member1.LastName);
                                 payment.RecipientNoochId = t.Member1.Nooch_ID;
                             }
-                            else
+                            else // REQUEST OR INVITE TO NON-NOOCH USER
                             {
+                                var existingMembersName = CommonHelper.GetDecryptedData(t.Member.FirstName) + " " +
+                                                          CommonHelper.GetDecryptedData(t.Member.LastName);
 
-                            }
-
-                            // CC (6/16/16): Existing logic that was alreayd here, but which is not catching all cases.
-                            if (payment.TransactionType == "Request")
-                            {
-                                #region Requests
-
-                                // Note: The 'SenderId' & 'RecipientId' would both be the SENDER if it's a request to a Non-Nooch user.
-                                //       So if the RecipientID matches this user's MemberID, then we know for sure that this user sent the request,
-                                //       b/c a non-Nooch user couldn't have sent the request to this user.
-                                if (t.RecipientId == Member.MemberId)
+                                // Request/Invite via Email
+                                if (t.TransactionStatus == "Success")
                                 {
-                                    // This member SENT the request, so he is considered the "Recipient" for requests, since the other user will pay (send $ to) him.
-                                    payment.RecipientId = Member.Nooch_ID;
-                                    payment.RecipientName = memberFullName;
+                                    #region New User Has Accepted & Has A Nooch Account
 
-                                    // Now determine if it was sent to an existing user or a Non-Nooch user
-                                    if (String.IsNullOrEmpty(t.InvitationSentTo) && t.IsPhoneInvitation != true)
+                                    Member newMember = new Member();
+
+                                    if (!String.IsNullOrEmpty(t.InvitationSentTo))
                                     {
-                                        // Request to an EXISTING user
-                                        payment.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
-                                                             CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
-                                        payment.SenderId = t.Member1.Nooch_ID;
+                                        // Payment was Accepted, so the invited member must have created a Nooch account.
+                                        newMember = CommonHelper.GetMemberDetailsByUsername(CommonHelper.GetDecryptedData(t.InvitationSentTo));
                                     }
-                                    else if (!String.IsNullOrEmpty(t.InvitationSentTo)) // Request to Non-Nooch user via EMAIL
+                                    else if (!String.IsNullOrEmpty(t.PhoneNumberInvited))
                                     {
-                                        // Now check if the request has been paid already or not
-                                        if (t.TransactionStatus == "Success")
-                                        {
-                                            // Completed request, so get the new user's Member Details from the InvitationSentTo value
-                                            // Note: even if the new user entered a diff email to pay the request, the server saves the original Invited email as the SecondaryEmail.
-                                            Member newUserWhoPaidTheRequest = CommonHelper.GetMemberDetailsByUsername(CommonHelper.GetDecryptedData(t.InvitationSentTo));
+                                        newMember = CommonHelper.GetMemberDetailsByPhone(CommonHelper.GetDecryptedData(t.PhoneNumberInvited));
+                                    }
 
-                                            payment.SenderId = newUserWhoPaidTheRequest != null ? newUserWhoPaidTheRequest.Nooch_ID : "";
-                                            payment.SenderName = newUserWhoPaidTheRequest != null
-                                                                 ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.FirstName)) + " " +
-                                                                   CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.LastName))
-                                                                 : CommonHelper.GetDecryptedData(t.InvitationSentTo);
+                                    if (newMember != null)
+                                    {
+                                        var invitedMembersName = CommonHelper.GetDecryptedData(newMember.FirstName) + " " +
+                                                                 CommonHelper.GetDecryptedData(newMember.LastName);
+
+                                        if (payment.TransactionType == "Request")
+                                        {
+                                            payment.SenderName = invitedMembersName;
+                                            payment.SenderId = newMember.MemberId.ToString();
+                                            payment.SenderNoochId = newMember.Nooch_ID;
+
+                                            payment.RecipientName = existingMembersName;
+                                            payment.RecipientId = t.RecipientId.ToString();
+                                            payment.RecipientNoochId = t.Member.Nooch_ID;
                                         }
                                         else
                                         {
-                                            // Request is either still pending, or was rejected/cancelled... so there isn't a New Member to get, so just use the InvitationSentTo email
-                                            payment.SenderId = "";
-                                            payment.SenderName = CommonHelper.GetDecryptedData(t.InvitationSentTo);
-                                        }
-                                    }
-                                    else if (t.IsPhoneInvitation == true) // Request to Non-Nooch user via PHONE
-                                    {
-                                        // Now check if the request has been paid already or not
-                                        if (t.TransactionStatus == "Success")
-                                        {
-                                            // Completed request, so get the new user's Member Details from the PhoneNumberInvited value
-                                            Member newUserWhoPaidTheRequest = CommonHelper.GetMemberDetailsByPhone(CommonHelper.GetDecryptedData(t.InvitationSentTo));
+                                            payment.SenderName = existingMembersName;
+                                            payment.SenderId = t.SenderId.ToString();
+                                            payment.SenderNoochId = t.Member.Nooch_ID;
 
-                                            payment.SenderId = newUserWhoPaidTheRequest != null ? newUserWhoPaidTheRequest.Nooch_ID : "";
-                                            payment.SenderName = newUserWhoPaidTheRequest != null
-                                                                 ? CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.FirstName)) + " " +
-                                                                   CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(newUserWhoPaidTheRequest.LastName))
-                                                                 : CommonHelper.FormatPhoneNumber(CommonHelper.GetDecryptedData(t.PhoneNumberInvited));
-                                        }
-                                        else
-                                        {
-                                            // Request is either still pending, or was rejected/cancelled... so there isn't a New Member to get, so just use the PhoneNumberInvited
-                                            payment.SenderId = "";
-                                            payment.SenderName = !String.IsNullOrEmpty(t.PhoneNumberInvited)
-                                                                 ? CommonHelper.FormatPhoneNumber(CommonHelper.GetDecryptedData(t.PhoneNumberInvited))
-                                                                 : "No Phone # Found";
+                                            payment.RecipientName = invitedMembersName;
+                                            payment.RecipientId = newMember.MemberId.ToString();
+                                            payment.RecipientNoochId = newMember.Nooch_ID;
                                         }
                                     }
+
+                                    #endregion New User Has Accepted & Has A Nooch Account
                                 }
                                 else
                                 {
-                                    // This member RECEIVED the request, so he is considered the "sender" for requests, since he must pay (send $ to) the other user.
+                                    // Payment was not (yet) Accepted, so the invited member does NOT have a Nooch account,
+                                    // so use the invited email / phone
 
-                                    //payment.RecipientName = memberFullName;
-                                    //payment.RecipientId = Member.Nooch_ID;
+                                    payment.SenderName = existingMembersName;
+                                    payment.SenderId = t.SenderId.ToString();
+                                    payment.SenderNoochId = t.Member.Nooch_ID;
 
-                                    payment.SenderName = memberFullName;
-                                    payment.SenderId = Member.Nooch_ID;
-                                    payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
-                                                            CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
-                                    payment.RecipientId = t.Member1.Nooch_ID;
+                                    payment.RecipientName = !String.IsNullOrEmpty(t.PhoneNumberInvited)
+                                                        ? CommonHelper.FormatPhoneNumber(CommonHelper.GetDecryptedData(t.PhoneNumberInvited))
+                                                        : CommonHelper.GetDecryptedData(t.InvitationSentTo);
+                                    payment.RecipientId = null;
+                                    payment.RecipientNoochId = null;
                                 }
-
-                                #endregion Requests
-                            }
-                            else
-                            {
-                                #region Transfers
-
-                                if (t.SenderId == Member.MemberId) // This member SENT the transfer
-                                {
-                                    payment.SenderName = memberFullName;
-                                    payment.SenderId = Member.Nooch_ID;
-                                    payment.RecipientId = t.Member1.Nooch_ID;
-                                    payment.RecipientName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.FirstName)) + " " +
-                                                            CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member1.LastName));
-                                }
-                                else // This member RECEIVED the transfer
-                                {
-                                    payment.SenderName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.FirstName)) + " " +
-                                                         CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(t.Member.LastName));
-                                    payment.SenderId = t.Member.Nooch_ID;
-                                    payment.RecipientName = memberFullName;
-                                    payment.RecipientId = Member.Nooch_ID;
-                                }
-
-                                #endregion Transfers
                             }
 
                             mm.Add(payment);
