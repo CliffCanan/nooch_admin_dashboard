@@ -76,10 +76,12 @@ namespace noochAdminNew.Classes.ModelClasses
         public string Amount { get; set; }
         public string AmountNew { get; set; }
         public string RecipientId { get; set; }
+        public string RecipientNoochId { get; set; }
         public string RecipientName { get; set; }
         public string RecipientUserName { get; set; }
         public string SenderId { get; set; }
         public string SenderName { get; set; }
+        public string SenderNoochId { get; set; }
         public string GeoLocation { get; set; }
         public string Longitude { get; set; }
         public string Latitude { get; set; }
@@ -140,11 +142,12 @@ namespace noochAdminNew.Classes.ModelClasses
     {
         // Bank-Related
         public int BankId { get; set; }
+        public bool mfaVerified { get; set; }
+        public bool IsAddedUsingRoutingNumber { get; set; }
         public string synapseBankId { get; set; }
         public string SynapseBankStatus { get; set; }
         public string SynapseBankName { get; set; }
         public string SynapseBankNickName { get; set; }
-        public bool mfaVerified { get; set; }
         public string nameFromSynapseBank { get; set; }
         public string emailFromSynapseBank { get; set; } // No longer passed by Synapse in V3
         public string SynpaseBankAddedOn { get; set; }

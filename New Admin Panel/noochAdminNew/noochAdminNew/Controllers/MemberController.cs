@@ -642,10 +642,11 @@ namespace noochAdminNew.Controllers
                                              CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(Member.LastName));
 
                         var transList = (from t in obj.Transactions
-                                         where (t.Member.MemberId == Member.MemberId ||
+                                         where (t.SenderId == Member.MemberId ||
                                                 t.RecipientId == Member.MemberId ||
-                                                t.SenderId == Member.MemberId ||
-                                                t.InvitationSentTo == Member.UserName)
+                                                t.Member.MemberId == Member.MemberId ||
+                                                t.InvitationSentTo == Member.UserName ||
+                                                t.InvitationSentTo == Member.UserNameLowerCase)
                                          select t).OrderByDescending(r => r.TransactionDate).Take(40).ToList();
 
 
@@ -686,6 +687,24 @@ namespace noochAdminNew.Controllers
                             else
                                 payment.SynapseStatus = "-";
 
+
+                            // CC (6/16/15): STARTED TO COPY THE LOGIC FROM NoochController in the other Solution
+                            if (String.IsNullOrEmpty(t.InvitationSentTo) && t.IsPhoneInvitation != true)
+                            {
+                                payment.SenderId = t.SenderId.ToString();
+                                payment.SenderName = CommonHelper.GetDecryptedData(t.Member.FirstName) + " " + CommonHelper.GetDecryptedData(t.Member.LastName);
+                                payment.SenderNoochId = t.Member.Nooch_ID;
+
+                                payment.RecipientId = t.RecipientId.ToString();
+                                payment.RecipientName = CommonHelper.GetDecryptedData(t.Member1.FirstName) + " " + CommonHelper.GetDecryptedData(t.Member1.LastName);
+                                payment.RecipientNoochId = t.Member1.Nooch_ID;
+                            }
+                            else
+                            {
+
+                            }
+
+                            // CC (6/16/16): Existing logic that was alreayd here, but which is not catching all cases.
                             if (payment.TransactionType == "Request")
                             {
                                 #region Requests
@@ -910,7 +929,7 @@ namespace noochAdminNew.Controllers
                                                                 : "Not Found";
                                 synapseDetail.BankId = synapseBankDetails.Id; // This is the Nooch DB "ID", which is just the row number of the account... NOT the same as the Synapse Bank ID
                                 synapseDetail.synapseBankId = CommonHelper.GetDecryptedData(synapseBankDetails.oid);
-
+                                synapseDetail.IsAddedUsingRoutingNumber = synapseBankDetails.IsAddedUsingRoutingNumber ?? false;
                                 synapseDetail.SynapseBankStatus = (String.IsNullOrEmpty(synapseBankDetails.Status)
                                                                   ? "Not Verified"
                                                                   : synapseBankDetails.Status);
@@ -1825,14 +1844,14 @@ namespace noochAdminNew.Controllers
 
                         submitDocToSynapse_user user = new submitDocToSynapse_user();
                         submitDocToSynapse_user_doc doc = new submitDocToSynapse_user_doc();
-                        doc.attachment = "data:text/csv;base64," + CommonHelper.ConvertImageURLToBase64(ImageUrl).Replace("\\", "");
+                        doc.attachment = "data:image/png;base64," + CommonHelper.ConvertImageURLToBase64(ImageUrl).Replace("\\", "");
 
                         user.fingerprint = usersFingerprint;
                         user.doc = doc;
 
                         submitDocObj.user = user;
 
-                        Logger.Info("Member Cntrlr -> submitDocumentToSynapseV3 - Payload to submit to Synapse: Fingerpring: [" + user.fingerprint +
+                        Logger.Info("Member Cntrlr -> submitDocumentToSynapseV3 - Payload to submit to Synapse: Fingerprint: [" + user.fingerprint +
                                     "], Oauth Key: [" + login.oauth_key + "]");
 
                         string baseAddress = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) ? "https://sandbox.synapsepay.com/api/v3/user/doc/attachments/add" : "https://synapsepay.com/api/v3/user/doc/attachments/add";
