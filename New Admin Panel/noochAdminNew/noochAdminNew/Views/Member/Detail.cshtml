@@ -881,20 +881,18 @@
                                                     <span class="control-label m-l-15">
                                                         <b>CIP Tag</b>
                                                     </span>
-                                                    <div class="pull-right m-r-15">
-                                                        <span class="form-control-static" id="spnCip_Tag" style="word-wrap:break-word;">@mdc.cipTag</span>
-
+                                                    <div class="pull-right">
+                                                        <strong class="form-control-static" id="spnCip_Tag" style="word-wrap:break-word; text-transform:capitalize;">@mdc.cipTag</strong>
                                                         @{
                                                             var listItems = new List<SelectListItem>
                                                             {
-                                                                  new SelectListItem { Text = "Renter", Value = "Renter" },
-                                                                  new SelectListItem { Text = "Landlord", Value = "Landlord" },
-                                                                  new SelectListItem { Text = "Vendor", Value = "Vendor" }
+                                                                  new SelectListItem { Text = "Renter", Value = "renter" },
+                                                                  new SelectListItem { Text = "Landlord", Value = "landlord" },
+                                                                  new SelectListItem { Text = "Vendor", Value = "vendor" }
                                                             };
                                                         }
-
                                                         @Html.DropDownListFor(m => @mdc.cipTag, listItems, new { style = "display:none" })
-                                                        <button type="button" class="btn btn-link" onclick="Member.editCip(); ">Edit</button>
+                                                        <button type="button" class="btn btn-link p-r-5" onclick="Member.editCip(); ">Edit</button>
                                                     </div>
 
                                                 </div>
@@ -1155,10 +1153,18 @@
                                                                     {
                                                                         <div>
                                                                             <strong class="text-danger" style="display: inline-block"> @synpsDetail.SynapseBankStatus </strong>
-                                                                            <button type="button" class="btn btn-link m-l-15" onclick="Member.VerifyBankAccount(); ">
-                                                                                <i class="fa fa-check"></i>
-                                                                                Verify
-                                                                            </button>
+                                                                            @if (@synpsDetail.IsAddedUsingRoutingNumber)
+                                                                            {
+                                                                                <a href="http://noochme.com/noochweb/Nooch/MicroDepositsVerification?mid=@mdc.memberId.ToString()" class="btn btn-link m-l-15" target="_blank" data-toggle="tooltip" title="Open Microdeposit Verification Page">
+                                                                                    Verify<i class="fa fa-external-link m-l-10"></i>
+                                                                                </a>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <button type="button" class="btn btn-link m-l-15" onclick="Member.VerifyBankAccount(); ">
+                                                                                    <i class="fa fa-check"></i>Verify
+                                                                                </button>
+                                                                            }
                                                                         </div>
                                                                     }
                                                                     <input type="hidden" id="bnkIdHidden" value="@synpsDetail.BankId" />
@@ -1176,6 +1182,23 @@
                                                             <span class="pull-right f-600">@synpsDetail.allowed </span>
                                                         </li>
 
+                                                        <li class="list-group-item widePopover">
+                                                            <span>
+                                                                <b>Bank ID</b>
+                                                            </span>
+                                                            <i class="fa fa-fw fa-eye pull-right" data-toggle="popover" data-content="@synpsDetail.synapseBankId" data-placement="top"></i>
+                                                            <span class="pull-right truncate">@synpsDetail.synapseBankId</span>
+                                                        </li>
+
+                                                        <li class="list-group-item">
+                                                            <span>
+                                                                <b>Name on Account</b>
+                                                                <i class="fa fa-question-circle-o m-l-5"></i>
+                                                            </span>
+                                                            <span class="pull-right">
+                                                                <span class="f-600">@synpsDetail.nameFromSynapseBank </span>
+                                                            </span>
+                                                        </li>
 
                                                         <li class="list-group-item">
                                                             <span data-toggle="popover" title="Bank Account Class" data-content="Can be either be CHECKING or SAVINGS" data-trigger="hover" data-placement="auto">
@@ -1204,24 +1227,6 @@
                                                         <li class="list-group-item">
                                                             <b>MFA Verified</b>
                                                             <span class="pull-right">@synpsDetail.mfaVerified</span>
-                                                        </li>
-
-                                                        <li class="list-group-item widePopover">
-                                                            <span>
-                                                                <b>Bank ID</b>
-                                                            </span>
-                                                            <i class="fa fa-fw fa-eye pull-right" data-toggle="popover" data-content="@synpsDetail.synapseBankId" data-placement="top"></i>
-                                                            <span class="pull-right truncate">@synpsDetail.synapseBankId</span>
-                                                        </li>
-
-                                                        <li class="list-group-item">
-                                                            <span>
-                                                                <b>Name on Account</b>
-                                                                <i class="fa fa-question-circle-o m-l-5"></i>
-                                                            </span>
-                                                            <span class="pull-right">
-                                                                <span class="f-600">@synpsDetail.nameFromSynapseBank </span>
-                                                            </span>
                                                         </li>
 
                                                     </ul>

@@ -3,26 +3,30 @@ var operationtoperform = 0;
 var escapeKeyPressed = false;
 
 $(document).ready(function () {
-    if ($('#DocStatus').val() == "Success") {
+    if ($('#DocStatus').val() == "Success")
+    {
         swal("Awesome!", "File Uploaded Successfully!", "success");
         $('#DocStatus').val('');
     }
-    else if ($('#DocStatus').val() == "Failed") {
+    else if ($('#DocStatus').val() == "Failed")
+    {
         sweetAlert("Oops...", "Something went wrong!", "error");
     }
 
     $('#generatePwBtn').change(function () {
-        if ($('#pwd').val().length > 0) {
+        if ($('#pwd').val().length > 0)
+        {
             $('#pwd').val('');
         }
-        if ($(this).is(':checked')) {
+        if ($(this).is(':checked'))
+        {
             Member.GenerateNewPassword();
         }
     })
 
     $("#MemberMenuExpander").trigger("click");
 
-	$('[data-toggle="tooltip"]').tooltip()
+    $('[data-toggle="tooltip"]').tooltip()
 
     function getParameterByName(name) {
         name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -34,7 +38,8 @@ $(document).ready(function () {
     NoochId = getParameterByName('NoochId');
 
     // Format the contact number if present
-    if ($("#contactNumber").val().length > 1) {
+    if ($("#contactNumber").val().length > 1)
+    {
         $("#contactNumber").val(function (i, text) {
             text = text.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
             return text;
@@ -92,7 +97,8 @@ $(document).ready(function () {
     })
 
     $(document).keyup(function (e) {
-        if (e.keyCode == 27) { // escape key maps to keycode `27`
+        if (e.keyCode == 27)
+        { // escape key maps to keycode `27`
             escapeKeyPressed = true;
         }
     });
@@ -104,7 +110,8 @@ function checkIfUserLocationExists() {
     var lat = $('#userLoc').attr('data-lat');
     console.log(lat);
 
-    if (lat != "none") {
+    if (lat != "none")
+    {
         console.log("Lat did not = 'none'. ");
 
         var mapDiv = document.getElementById("userMap");
@@ -124,7 +131,8 @@ function checkIfUserLocationExists() {
 
         mapDiv.style.height = '180px';
     }
-    else {
+    else
+    {
         console.log("Lat = 'none' ");
 
         $('#userLoc').html('<span style="color:rgba(88,90,92,.8) !important;"><em class="center-block text-center m-t-md">No location available.</em></span>');
@@ -135,7 +143,7 @@ var notifySuspendedUser = false;
 
 function suspendUserPrompt() {
     swal({
-        title: "Notify " + firstName + "?",
+        title: "Notify this user about being suspended?",// + firstName + "?",
         text: "Should this user to be notified about being suspended?",
         type: "warning",
         showCancelButton: true,
@@ -144,18 +152,20 @@ function suspendUserPrompt() {
         confirmButtonText: "Yes",
         html: true,
         customClass: "securityAlert confirmBtnFullWidth"
-    }, function (isConfirm)
-    {
-        setTimeout(function ()
-        {
-            if (escapeKeyPressed == true) {
+    }, function (isConfirm) {
+        setTimeout(function () {
+            if (escapeKeyPressed == true)
+            {
                 escapeKeyPressed = false;
             }
-            else {
-                if (isConfirm) {
+            else
+            {
+                if (isConfirm)
+                {
                     notifySuspendedUser = true;
                 }
-                else {
+                else
+                {
                     notifySuspendedUser = false;
                 }
 
@@ -176,8 +186,7 @@ $('#ChangePassword').click(function () {
     $('#changePwd').modal('show');
 });
 
-function showBlockUI(text)
-{
+function showBlockUI(text) {
     $.blockUI({
         message: '<span><i class="fa fa-refresh fa-spin fa-loading"></i></span><br/><span class="loadingMsg">' + text + '</span>',
         css: {
@@ -194,11 +203,10 @@ function showBlockUI(text)
     });
 }
 
-var Member = function ()
-{
-    function applyOperation(operation)
-    {
-        if (NoochId == '') {
+var Member = function () {
+    function applyOperation(operation) {
+        if (NoochId == '')
+        {
             toastr.error('No NoochId was selected...', 'Error');
             return;
         }
@@ -213,24 +221,25 @@ var Member = function ()
             data.sendEmail = notifySuspendedUser;
         }
 
-        $.post(url, data, function (result)
-        {
-            if (result.IsSuccess == true) {
+        $.post(url, data, function (result) {
+            if (result.IsSuccess == true)
+            {
                 console.log(result.Message);
                 console.log(result.MemberOperationsOuterClass);
 
                 // iterating through all innerclass objects
 
-                $.each(result.MemberOperationsOuterClass, function (key, value)
-                {
+                $.each(result.MemberOperationsOuterClass, function (key, value) {
                     if (value.IsSuccess == true)
                     {
                         toastr.success(value.Message, value.NoochId);
 
-                        if (operation == 4) {
+                        if (operation == 4)
+                        {
                             $("#memberStatus").html('Active');
                         }
-                        else if (operation == 5) {
+                        else if (operation == 5)
+                        {
                             $('#myModalConfirmDelete').modal('hide');
                             window.location.replace("../Member/ListAll");
                         }
@@ -242,11 +251,13 @@ var Member = function ()
                     }
                 });
 
-                if (operation != 5) {
+                if (operation != 5)
+                {
                     location.reload(true);
                 }
             }
-            else {
+            else
+            {
                 toastr.error('An error occured on the server, please try again!', 'Error');
             }
         });
@@ -260,7 +271,8 @@ var Member = function ()
 
 
     function editdetails() {
-        if (NoochId == '') {
+        if (NoochId == '')
+        {
             toastr.error('No NoochId was selected...', 'Error');
             return;
         }
@@ -285,7 +297,8 @@ var Member = function ()
         console.log(data);
 
         $.post(url, data, function (result) {
-            if (result.IsSuccess == true) {
+            if (result.IsSuccess == true)
+            {
                 toastr.info('Reloading this page...', 'FYI', { timeOut: '2500' })
                 toastr.success(result.Message, 'Success');
 
@@ -301,7 +314,8 @@ var Member = function ()
 
                 setTimeout(function () { location.reload(true) }, 2500);
             }
-            else {
+            else
+            {
                 console.log("ERROR!");
                 console.log(result);
                 toastr.error(result.Message, 'Error');
@@ -311,7 +325,8 @@ var Member = function ()
 
 
     function restpin() {
-        if (NoochId == '') {
+        if (NoochId == '')
+        {
             toastr.error('No NoochId was selected...', 'Error');
             return;
         }
@@ -321,11 +336,13 @@ var Member = function ()
         data.noochId = NoochId;
 
         $.post(url, data, function (result) {
-            if (result.IsSuccess == true) {
+            if (result.IsSuccess == true)
+            {
                 toastr.success(result.Message, 'Succcess');
                 $("#pinNumber").html(result.Pin);
             }
-            else {
+            else
+            {
                 toastr.error(result.Message, 'Error');
             }
         });
@@ -336,7 +353,8 @@ var Member = function ()
     function verifyBankAccount() {
         var accountId = $('#bnkIdHidden').val();
 
-        if (accountId == '') {
+        if (accountId == '')
+        {
             toastr.error('No bank account was selected...', 'Error');
             return;
         }
@@ -356,7 +374,8 @@ var Member = function ()
         }, function (isConfirm) {
 
             setTimeout(function () {
-                if (escapeKeyPressed == true) {
+                if (escapeKeyPressed == true)
+                {
                     escapeKeyPressed = false;
                 }
                 else
@@ -364,10 +383,12 @@ var Member = function ()
                     var data = {};
                     data.accountId = accountId;
 
-                    if (isConfirm) {
+                    if (isConfirm)
+                    {
                         data.sendEmail = true;
                     }
-                    else {
+                    else
+                    {
                         data.sendEmail = false;
                     }
 
@@ -376,13 +397,15 @@ var Member = function ()
                     $.post(url, data, function (result) {
                         console.log(result);
 
-                        if (result.IsSuccess == true) {
+                        if (result.IsSuccess == true)
+                        {
                             toastr.success(result.Message, 'Success');
 
                             $('#bankAccountStatusDiv').html('');
                             $('#bankAccountStatusDiv').html("<span class='text-success' style='display: inline-block'>Verified</span>");
                         }
-                        else {
+                        else
+                        {
                             toastr.error(result.Message, 'Error');
                         }
                     });
@@ -395,7 +418,8 @@ var Member = function ()
     // Manually set bank account's status to 'Pending Review'
     function unVerifyBankAccount() {
         var accountId = $('#bnkIdHidden').val();
-        if (accountId == '') {
+        if (accountId == '')
+        {
             toastr.error('No bank account was selected...', 'Error');
             return;
         }
@@ -405,13 +429,15 @@ var Member = function ()
         data.accountId = accountId;
 
         $.post(url, data, function (result) {
-            if (result.IsSuccess == true) {
+            if (result.IsSuccess == true)
+            {
                 toastr.success(result.Message, 'Success');
 
                 $('#bankAccountStatusDiv').html('');
                 $('#bankAccountStatusDiv').html("<span class='text-warning' style='display: inline-block'>Pending Review</span>");
             }
-            else {
+            else
+            {
                 toastr.error(result.Message, 'Error');
             }
         });
@@ -420,7 +446,8 @@ var Member = function ()
 
     // Open AdminNotes Modal
     function AdminNoteAboutUserModalPopup() {
-        if (NoochId == '') {
+        if (NoochId == '')
+        {
             toastr.error('No NoochId was selected...', 'Error');
             return;
         }
@@ -430,11 +457,13 @@ var Member = function ()
         data.noochId = NoochId;
 
         $.post(url, data, function (result) {
-            if (result.IsSuccess == true) {
+            if (result.IsSuccess == true)
+            {
                 $('#Modal-AdminNotes').modal();
                 $("#AmdinNotesAboutUser").val(result.AdminNote);
             }
-            else {
+            else
+            {
                 toastr.error(result.Message, result.Message);
             }
         });
@@ -443,12 +472,14 @@ var Member = function ()
 
     // Provide Info About the User In ModalPopup
     function SaveAdminNoteForUser() {
-        if (NoochId == '') {
+        if (NoochId == '')
+        {
             toastr.error('No NoochId was selected...', 'Error');
             return;
         }
 
-        if ($("#AmdinNotesAboutUser").val() == " ") {
+        if ($("#AmdinNotesAboutUser").val() == " ")
+        {
             $('#Modal-AdminNotes').modal('hide');
         }
 
@@ -457,11 +488,13 @@ var Member = function ()
         data.noochid = NoochId;
         data.AdminNote = $("#AmdinNotesAboutUser").val();
         $.post(url, data, function (result) {
-            if (result == "Success") {
+            if (result == "Success")
+            {
                 toastr.success(result.Message, 'Admin Note edited successfully.');
                 $('#Modal-AdminNotes').modal('hide');
             }
-            else {
+            else
+            {
                 toastr.error(result.Message, 'Error');
                 $('#Modal-AdminNotes').modal('hide');
             }
@@ -474,7 +507,8 @@ var Member = function ()
 
         var authKey = $('#synAuthKey').text();
 
-        if (authKey == '') {
+        if (authKey == '')
+        {
             toastr.error('No Synapse Auth key was selected!', 'Error');
             return;
         }
@@ -489,11 +523,13 @@ var Member = function ()
             success: function (data) {
                 console.log(data);
 
-                if (data.success == true) {
+                if (data.success == true)
+                {
                     toastr.success(data.reason, 'Success');
                     alert(JSON.stringify(data));
                 }
-                else {
+                else
+                {
                     toastr.error(data.reason, 'Error');
                 }
             },
@@ -515,10 +551,12 @@ var Member = function ()
         var url = "../Member/ReSendVrificationSMS";
 
         $.post(url, data, function (result) {
-            if (result.IsSuccess) {
+            if (result.IsSuccess)
+            {
                 toastr.success(result.Message, 'Verification message sent successfully.');
             }
-            else {
+            else
+            {
                 toastr.error(result.Message, 'Error');
             }
         });
@@ -541,10 +579,12 @@ var Member = function ()
         var url = "../Member/UpdatePassword";
 
         $.post(url, data, function (result) {
-            if (result.IsSuccess) {
+            if (result.IsSuccess)
+            {
                 toastr.success(result.Message, 'Updated Successfully.');
             }
-            else {
+            else
+            {
                 toastr.error(result.Message, 'Error');
             }
             $('#changePwd').modal('toggle');
@@ -558,34 +598,37 @@ var Member = function ()
     function GenerateNewPassword() {
         var data = {};
         var url = "../Member/GenerateNewPassword";
-        $.post(url, data, function (result)
-        {
-            if (result.IsSuccess) {
+        $.post(url, data, function (result) {
+            if (result.IsSuccess)
+            {
                 $("#pwd").val(result.Message);
             }
-            else {
+            else
+            {
                 toastr.error(result.Message, 'Error');
             }
         });
     }
 
 
-    function submitDocManual()
-    {
+    function submitDocManual() {
         var memId = $('#memId').attr('data-val');
         var imgUrl = $('#idImageBig').attr('src');
-		
-		console.log("MemID: [" + memId + "], ImgUrl: [" + imgUrl + "]")
 
-        if (NoochId == '') {
+        console.log("MemID: [" + memId + "], ImgUrl: [" + imgUrl + "]")
+
+        if (NoochId == '')
+        {
             toastr.error('No NoochID was selected...', 'Error');
             return;
         }
-        else if (memId == '') {
+        else if (memId == '')
+        {
             toastr.error('No MemberID selected', 'Error');
             return;
         }
-        else if (imgUrl == '') {
+        else if (imgUrl == '')
+        {
             toastr.error('No Img URL found', 'Error');
             return;
         }
@@ -597,17 +640,18 @@ var Member = function ()
         data.memid = memId;
         data.docUrl = imgUrl;
 
-		console.log("Data.docUrl: [" + data.docUrl + "]");
+        console.log("Data.docUrl: [" + data.docUrl + "]");
 
-        $.post(url, data, function (result)
-        {
-			$.unblockUI();
-			console.log(result.msg);
+        $.post(url, data, function (result) {
+            $.unblockUI();
+            console.log(result.msg);
 
-            if (result.isSuccess == true) {
+            if (result.isSuccess == true)
+            {
                 toastr.success(result.msg, 'Succcess');
             }
-            else {
+            else
+            {
                 toastr.error(result.msg, 'Error');
             }
         });
@@ -615,40 +659,44 @@ var Member = function ()
 
 
     function submitSsn() {
-		var memId = $('#memId').attr('data-val');
-		
-        if (NoochId == '') {
+        var memId = $('#memId').attr('data-val');
+
+        if (NoochId == '')
+        {
             toastr.error('No NoochId was selected...', 'Error');
             return;
         }
-		if (memId == '' || memId.length < 20) {
+        if (memId == '' || memId.length < 20)
+        {
             toastr.error('No MemberID was selected...', 'Error');
             return;
         }
 
-		showBlockUI("Submitting SSN");
+        showBlockUI("Submitting SSN");
 
         var url = "../Member/submitSsnToSynapseV3";
         var data = {};
         data.memid = memId;
         $.post(url, data, function (result) {
-			$.unblockUI();
-			console.log(result.msg);
-            if (result.isSuccess == true) {
+            $.unblockUI();
+            console.log(result.msg);
+            if (result.isSuccess == true)
+            {
                 toastr.success(result.msg, 'SSN Submitted Successfully');
             }
-            else {
+            else
+            {
                 toastr.error(result.msg, 'Error');
             }
         });
     }
-	
-    
-    function refreshSynapse()
-    {
+
+
+    function refreshSynapse() {
         var memId = $('#memId').attr('data-val');
 
-        if (memId == '' || memId.length < 20) {
+        if (memId == '' || memId.length < 20)
+        {
             toastr.error('No MemberID was selected...', 'Error');
             return;
         }
@@ -658,24 +706,25 @@ var Member = function ()
         var url = "../Member/refreshSynapseUserV3";
         var data = {};
         data.memid = memId;
-        $.post(url, data, function (result)
-        {
+        $.post(url, data, function (result) {
             $.unblockUI();
             console.log(result.msg);
-            if (result.isSuccess == true) {
+            if (result.isSuccess == true)
+            {
                 toastr.success(result.msg, 'Synapse refreshed successfully');
             }
-            else {
+            else
+            {
                 toastr.error(result.msg, 'Error');
             }
         });
     }
 
-    function refreshSynapseBank()
-    {
+    function refreshSynapseBank() {
         var memId = $('#memId').attr('data-val');
 
-        if (memId == '' || memId.length < 20) {
+        if (memId == '' || memId.length < 20)
+        {
             toastr.error('No MemberID was selected...', 'Error');
             return;
         }
@@ -685,14 +734,15 @@ var Member = function ()
         var url = "../Member/refreshSynapseBankV3";
         var data = {};
         data.memid = memId;
-        $.post(url, data, function (result)
-        {
+        $.post(url, data, function (result) {
             $.unblockUI();
             console.log(result.msg);
-            if (result.isSuccess == true) {
+            if (result.isSuccess == true)
+            {
                 toastr.success(result.msg, 'Synapse refreshed successfully');
             }
-            else {
+            else
+            {
                 toastr.error(result.msg, 'Error');
             }
         });
