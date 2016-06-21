@@ -36,22 +36,17 @@ namespace noochAdminNew
             if (isRunningOnSandbox)
             {
                 connString = Utility.GetValueFromConfig("HangFireSandboxConnectionString");
-
             }
             else
             {
                 connString = Utility.GetValueFromConfig("HangFireProductionConnectionString");
-
             }
             Hangfire.GlobalConfiguration.Configuration.UseSqlServerStorage(connString);
-
-
 
             //app.UseHangfireDashboard();
             app.UseHangfireServer();
 
-          //  RecurringJob.AddOrUpdate(() => Logger.Info("Auto Task Running"), "0 12 * */2");
-           // RecurringJob.AddOrUpdate(() => Logger.Info("Auto Task Running"), Cron.Minutely);
+           
 
             RecurringJob.AddOrUpdate(() => updateTransactionStatusService(), Cron.Daily);
             RecurringJob.AddOrUpdate(() => notifyAdminOfBanksAwaitingVerification(), Cron.Daily);

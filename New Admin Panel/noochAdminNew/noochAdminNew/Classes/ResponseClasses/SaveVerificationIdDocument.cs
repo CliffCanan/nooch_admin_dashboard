@@ -11,5 +11,6 @@ namespace noochAdminNew.Classes.ResponseClasses
         public string imgPath { get; set; }
         public string MemberId { get; set; }
         public string AccessToken { get; set; }
+        public bool IsPdf { get; set; }
     }
 }
