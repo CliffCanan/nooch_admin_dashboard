@@ -1617,19 +1617,29 @@ namespace noochAdminNew.Controllers
         {
             SaveVerificationIdDocument DocumentDetails = new SaveVerificationIdDocument();
 
+            DocumentDetails.IsPdf = false;
+            string pic = "";
+
             using (var noochConnection = new NOOCHEntities())
             {
                 var member = noochConnection.Members.Where(m => m.Nooch_ID == NoochId).FirstOrDefault();
-
                 DocumentDetails.MemberId = member.MemberId.ToString();
-
                 var MemberId = Utility.ConvertToGuid(DocumentDetails.MemberId.ToString());
                 var SynapseCreateUserResult = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == MemberId).FirstOrDefault();
 
                 if (SynapseCreateUserResult != null)
                 {
                     DocumentDetails.AccessToken = SynapseCreateUserResult.access_token;
-                    string pic = MemberId.ToString() + ".png";
+
+                    if (file.ContentType.ToLower() == "application/pdf")
+                    {
+                         pic = MemberId.ToString() + ".pdf";
+                         DocumentDetails.IsPdf = true;
+                    }
+                    else
+                    {
+                         pic = MemberId.ToString() + ".png";
+                    }                 
 
                     // CLIFF (6/10/16): THIS WAS SAVING TO A FOLDER IN THE 'noochnewadmin' PROJECT, BUT IT NEEDS TO BE IN noochservices
                     //                  SINCE THAT'S WHERE ALL OTHER USER'S DOCS ARE SAVED AND IT'S WHERE THERE SERVER EXPECTS TO FIND THE DOC
@@ -1663,7 +1673,6 @@ namespace noochAdminNew.Controllers
             }
         }
 
-
         public synapseV3GenericResponse submitDocumentToSynapseV3(SaveVerificationIdDocument DocumentDetails)
         {
             synapseV3GenericResponse res = new synapseV3GenericResponse();
@@ -1678,7 +1687,15 @@ namespace noochAdminNew.Controllers
 
                 if (DocumentDetails.imgPath != "")
                 {
-                    ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + DocumentDetails.MemberId + ".png";
+                    if (DocumentDetails.IsPdf == true)
+                    {
+                        ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + DocumentDetails.MemberId + ".pdf";
+                        //ImageUrlMade = "C:\\nooch_new_architecture\\Nooch\\Nooch.API\\UploadedPhotos\\SynapseIdDocs\\" + DocumentDetails.MemberId + ".pdf";
+                    }
+                    else
+                    {
+                        ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + DocumentDetails.MemberId + ".png";                        
+                    }
                 }
                 else
                 {
@@ -1799,11 +1816,18 @@ namespace noochAdminNew.Controllers
 
                         submitDocToSynapse_user user = new submitDocToSynapse_user();
                         submitDocToSynapse_user_doc doc = new submitDocToSynapse_user_doc();
-                        doc.attachment = "data:image/png;base64," + CommonHelper.ConvertImageURLToBase64(ImageUrl).Replace("\\", "");
+                        string Extension = Path.GetExtension(ImageUrl);
 
+                        if(Extension== ".pdf")
+                        {
+                            doc.attachment = "data:text/csv;base64," + CommonHelper.ConvertPdfURLToBase64(ImageUrl).Replace("\\", "");
+                        }
+                        else
+                        {
+                            doc.attachment = "data:image/png;base64," + CommonHelper.ConvertImageURLToBase64(ImageUrl).Replace("\\", "");
+                        }
                         user.fingerprint = usersFingerprint;
                         user.doc = doc;
-
                         submitDocObj.user = user;
 
                         Logger.Info("Member Cntrlr -> submitDocumentToSynapseV3 - Payload to submit to Synapse: Fingerprint: [" + user.fingerprint +
@@ -1900,7 +1924,6 @@ namespace noochAdminNew.Controllers
                 Logger.Error("Member Cntrlr -> submitDocumentToSynapseV3 FAILED - Outer Exception - " +
                              "MemberID: [" + MemberId + "], Exception: [" + ex.Message + "]");
             }
-
             return res;
         }
 

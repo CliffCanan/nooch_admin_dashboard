@@ -1596,6 +1596,21 @@ namespace noochAdminNew.Classes.Utility
             return (buf);
         }
 
+        public static String ConvertPdfURLToBase64(String url)
+        {
+            if (!String.IsNullOrEmpty(url))
+            {
+                Logger.Info("Admin Common Helper -> ConvertPdfURLToBase64 Initiated - PDF URL is: [" + url + "]");
+
+                byte[] pdfBytes = File.ReadAllBytes(url);
+
+                string pdfBase64 = Convert.ToBase64String(pdfBytes);
+
+                return pdfBase64.ToString();
+            }
+            return "";
+        }
+
 
         public static GoogleGeolocationOutput GetStateNameByZipcode(string zipCode)
         {
