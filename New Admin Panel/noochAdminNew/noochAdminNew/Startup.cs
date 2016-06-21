@@ -41,17 +41,16 @@ namespace noochAdminNew
             {
                 connString = Utility.GetValueFromConfig("HangFireProductionConnectionString");
             }
-            //Hangfire.GlobalConfiguration.Configuration.UseSqlServerStorage(connString);
+            Hangfire.GlobalConfiguration.Configuration.UseSqlServerStorage(connString);
 
             //app.UseHangfireDashboard();
-            //app.UseHangfireServer();
+            app.UseHangfireServer();
 
-            //RecurringJob.AddOrUpdate(() => Logger.Info("Auto Task Running"), "0 12 * */2");
-           // RecurringJob.AddOrUpdate(() => Logger.Info("Auto Task Running"), Cron.Minutely);
+           
 
-            //RecurringJob.AddOrUpdate(() => updateTransactionStatusService(), Cron.Daily);
-            //RecurringJob.AddOrUpdate(() => notifyAdminOfBanksAwaitingVerification(), Cron.Daily);
-            //RecurringJob.AddOrUpdate(() => NoochChecks(), Cron.Daily);
+            RecurringJob.AddOrUpdate(() => updateTransactionStatusService(), Cron.Daily);
+            RecurringJob.AddOrUpdate(() => notifyAdminOfBanksAwaitingVerification(), Cron.Daily);
+            RecurringJob.AddOrUpdate(() => NoochChecks(), Cron.Daily);
         }
 
 
