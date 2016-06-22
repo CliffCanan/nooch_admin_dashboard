@@ -20,6 +20,7 @@
     List<Tenants> tn = new List<Tenants>();
     tn = mdc.tenants;
 
+     if (mdc.Transactions != null) { 
     foreach (MemberDetailsTrans mdtt in mdc.Transactions)
     {
         MemberDetailsTrans ms = new MemberDetailsTrans();
@@ -42,7 +43,7 @@
         ms.SynapseStatusNote = mdtt.SynapseStatusNote;
         Transactions.Add(ms);
     }
-
+    }
     List<MemberDetailsDisputeTrans> DisputeTransactions = Model.DisputeTransactions;
     MemberDetailsStats stats = Model.MemberStats;
 }
@@ -210,7 +211,8 @@
                                     <div class="row">
                                         <div class="col-xs-5 col-xs-offset-1">
                                             <small class="stats-label">Total Transfers</small>
-                                            <h4>@stats.TotalTransfer</h4>
+                                           @if(mdc.MemberStats!=null) {<h4>@stats.TotalTransfer</h4>} else
+                                            {<h4>-</h4>}
                                         </div>
 
                                         <div class="col-xs-5">
@@ -231,15 +233,17 @@
 
                                         <div class="col-xs-4">
                                             <small class="stats-label">Sent</small>
-                                            <h4>$ @stats.TotalSent</h4>
+                                            @if (mdc.MemberStats != null){ <h4>$ @stats.TotalSent</h4>} else
+                                            {<h4>-</h4>}
                                         </div>
                                         <div class="col-xs-4">
                                             <small class="stats-label">Received</small>
-                                            <h4>$ @stats.TotalReceived</h4>
+                                         @if (mdc.MemberStats != null){   <h4>$ @stats.TotalReceived</h4>} else
+                                            {<h4>-</h4>}
                                         </div>
                                         <div class="col-xs-4">
                                             <small class="stats-label">Largest Sent</small>
-                                            <h4>
+                                       @if (mdc.MemberStats != null){     <h4>
                                                 @if (stats.LargestSent != "0.00")
                                                 {
                                                     <span>$ @stats.LargestSent</span>
@@ -249,6 +253,8 @@
                                                     <span>-</span>
                                                 }
                                             </h4>
+                                       } else
+                                            {<h4>-</h4>}
                                         </div>
 
                                     </div>
@@ -271,7 +277,7 @@
 
                                         <div id="tab-a" class="tab-pane fade active in">
                                             @{
-                                                if (MemIpAddr.Count > 0)
+                                                if (MemIpAddr!=null && MemIpAddr.Count > 0)
                                                 {
                                                     <table class="table table-striped">
                                                         <thead>
@@ -857,11 +863,11 @@
                                             <strong class="m-l-10">@mdc.IsVerifiedWithSynapse</strong>
                                             @if (@mdc.IsVerifiedWithSynapse == true)
                                             {
-                                            <i class="fa fa-check text-success m-l-10"></i>
+                                                <i class="fa fa-check text-success m-l-10"></i>
                                             }
                                             else
                                             {
-                                            <i class="fa fa-remove text-danger m-l-10"></i>
+                                                <i class="fa fa-remove text-danger m-l-10"></i>
                                             }
                                         </span>
                                     </div>
@@ -881,214 +887,216 @@
                                                     <span class="control-label m-l-15">
                                                         <b>CIP Tag</b>
                                                     </span>
-                                                    <div class="pull-right">
-                                                        <strong class="form-control-static" id="spnCip_Tag" style="word-wrap:break-word; text-transform:capitalize;">@mdc.cipTag</strong>
+                                                    <div class="pull-right m-r-15">
+                                                        <span class="form-control-static" id="spnCip_Tag" style="word-wrap:break-word;">@mdc.cipTag</span>
+
                                                         @{
                                                             var listItems = new List<SelectListItem>
                                                             {
-                                                                  new SelectListItem { Text = "Renter", Value = "renter" },
-                                                                  new SelectListItem { Text = "Landlord", Value = "landlord" },
-                                                                  new SelectListItem { Text = "Vendor", Value = "vendor" }
+                                                                  new SelectListItem { Text = "Renter", Value = "Renter" },
+                                                                  new SelectListItem { Text = "Landlord", Value = "Landlord" },
+                                                                  new SelectListItem { Text = "Vendor", Value = "Vendor" }
                                                             };
                                                         }
+
                                                         @Html.DropDownListFor(m => @mdc.cipTag, listItems, new { style = "display:none" })
-                                                        <button type="button" class="btn btn-link p-r-5" onclick="Member.editCip(); ">Edit</button>
+                                                        <button type="button" class="btn btn-link" onclick="Member.editCip(); ">Edit</button>
                                                     </div>
 
                                                 </div>
 
                                                 @if (mdc.IsSynapseDetailAvailable)
                                                 {
-                                                <label class="text-primary m-b-10">Admin Details</label>
+                                                    <label class="text-primary m-b-10">Admin Details</label>
 
-                                                <button class="btn btn-link p-0 pull-right" type="button" onclick="Member.refreshSynapse()" data-toggle="tooltip" title="Refresh Synapse User Details">
-                                                    <i class="fa fa-refresh"></i>
-                                                </button>
+                                                    <button class="btn btn-link p-0 pull-right" type="button" onclick="Member.refreshSynapse()" data-toggle="tooltip" title="Refresh Synapse User Details">
+                                                        <i class="fa fa-refresh"></i>
+                                                    </button>
 
-                                                <ul class="list-group">
-                                                    <li class="list-group-item">
-                                                        <b>Date Created</b>
-                                                        <span class="pull-right" data-toggle="tooltip" title="Date this user first created a Synapse account.">@synpsDetail.userDateCreated</span>
-                                                    </li>
-                                                    <li class="list-group-item">
-                                                        <b>Account Type</b>
-                                                        <span class="pull-right">
-                                                            @if (@synpsDetail.isBusiness == true)
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item">
+                                                            <b>Date Created</b>
+                                                            <span class="pull-right" data-toggle="tooltip" title="Date this user first created a Synapse account.">@synpsDetail.userDateCreated</span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <b>Account Type</b>
+                                                            <span class="pull-right">
+                                                                @if (@synpsDetail.isBusiness == true)
                                                                 {
-                                                                <i class="fa fa-fw fa-building m-r-5"></i>
-                                                                <span>Business</span>
+                                                                    <i class="fa fa-fw fa-building m-r-5"></i>
+                                                                    <span>Business</span>
                                                                 }
                                                                 else
                                                                 {
-                                                                <i class="fa fa-fw fa-user m-r-5"></i>
-                                                                <span>Personal</span>
-                                                                }
-                                                        </span>
-                                                    </li>
-                                                    <li class="list-group-item">
-                                                        <b>Synapse Username</b>
-                                                        <span class="pull-right truncate">@synpsDetail.synapseUserName</span>
-                                                    </li>
-                                                    <li class="list-group-item">
-                                                        <b>Synapse User ID</b>
-                                                        <span class="pull-right truncate">@synpsDetail.synapseUserId</span>
-                                                    </li>
-                                                    <li class="list-group-item widePopover">
-                                                        <b>OAuth Token</b>
-                                                        <i class="fa fa-fw fa-eye pull-right" data-toggle="popover" data-content="@synpsDetail.synapseConsumerKey" data-placement="top"></i>
-                                                        <a href="javascript:Member.getSynapseInfo();" id="synAuthKey" class="pull-right truncate">@synpsDetail.synapseConsumerKey</a>
-                                                    </li>
-                                                    <li class="list-group-item widePopover">
-                                                        <b>Refresh Token</b>
-                                                        <i class="fa fa-fw fa-eye pull-right" data-toggle="popover" data-content="@synpsDetail.synapseRefreshKey" data-placement="top"></i>
-                                                        <span class="pull-right truncate">@synpsDetail.synapseRefreshKey</span>
-                                                    </li>
-                                                </ul>
-
-                                                <label class="text-primary m-b-10">ID Validation</label>
-
-                                                <ul class="list-group">
-                                                    @*<li class="list-group-item">
-                                                            <b>IsVerifiedWithSynapse</b>
-                                                            <span class="pull-right">
-                                                                <strong>@mdc.IsVerifiedWithSynapse</strong>
-                                                                @if (@mdc.IsVerifiedWithSynapse == true)
-                                                                {
-                                                                    <i class="fa fa-check text-success m-l-10"></i>
+                                                                    <i class="fa fa-fw fa-user m-r-5"></i>
+                                                                    <span>Personal</span>
                                                                 }
                                                             </span>
-                                                        </li>*@
-                                                    <li class="list-group-item">
-                                                        <span class="widePopover">
-                                                            <span data-toggle="popover" title="Synapse User Permissions" data-content='<span class="show m-t-10"><span class="text-success">SEND-AND-RECEIVE</span>: &nbsp;User may send or receive funds; SSN info &amp; photo ID or EIN letter have been submitted.</span><span class="show m-t-10"><span class="text-primary">RECEIVE</span>: &nbsp;User may only receive funds (only SSN info has been submitted).</span><span class="show m-t-10"><span class="text-danger">UNVERIFIED</span>: &nbsp;exists but is not verified (no KYC info has been supplied).</span><span class="show m-t-10"><span class="text-danger">LOCKED</span>: &nbsp;User has been locked by SynapsePay (Can happen for multiple reasons, only some they can disclose).</span>' data-trigger="hover" data-placement="top" data-html="true">
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <b>Synapse Username</b>
+                                                            <span class="pull-right truncate">@synpsDetail.synapseUserName</span>
+                                                        </li>
+                                                        <li class="list-group-item">
+                                                            <b>Synapse User ID</b>
+                                                            <span class="pull-right truncate">@synpsDetail.synapseUserId</span>
+                                                        </li>
+                                                        <li class="list-group-item widePopover">
+                                                            <b>OAuth Token</b>
+                                                            <i class="fa fa-fw fa-eye pull-right" data-toggle="popover" data-content="@synpsDetail.synapseConsumerKey" data-placement="top"></i>
+                                                            <a href="javascript:Member.getSynapseInfo();" id="synAuthKey" class="pull-right truncate">@synpsDetail.synapseConsumerKey</a>
+                                                        </li>
+                                                        <li class="list-group-item widePopover">
+                                                            <b>Refresh Token</b>
+                                                            <i class="fa fa-fw fa-eye pull-right" data-toggle="popover" data-content="@synpsDetail.synapseRefreshKey" data-placement="top"></i>
+                                                            <span class="pull-right truncate">@synpsDetail.synapseRefreshKey</span>
+                                                        </li>
+                                                    </ul>
+
+                                                    <label class="text-primary m-b-10">ID Validation</label>
+
+                                                    <ul class="list-group">
+                                                        @*<li class="list-group-item">
+                                                                <b>IsVerifiedWithSynapse</b>
+                                                                <span class="pull-right">
+                                                                    <strong>@mdc.IsVerifiedWithSynapse</strong>
+                                                                    @if (@mdc.IsVerifiedWithSynapse == true)
+                                                                    {
+                                                                        <i class="fa fa-check text-success m-l-10"></i>
+                                                                    }
+                                                                </span>
+                                                            </li>*@
+                                                        <li class="list-group-item">
+                                                            <span class="widePopover">
+                                                                <span data-toggle="popover" title="Synapse User Permissions" data-content='<span class="show m-t-10"><span class="text-success">SEND-AND-RECEIVE</span>: &nbsp;User may send or receive funds; SSN info &amp; photo ID or EIN letter have been submitted.</span><span class="show m-t-10"><span class="text-primary">RECEIVE</span>: &nbsp;User may only receive funds (only SSN info has been submitted).</span><span class="show m-t-10"><span class="text-danger">UNVERIFIED</span>: &nbsp;exists but is not verified (no KYC info has been supplied).</span><span class="show m-t-10"><span class="text-danger">LOCKED</span>: &nbsp;User has been locked by SynapsePay (Can happen for multiple reasons, only some they can disclose).</span>' data-trigger="hover" data-placement="top" data-html="true">
                                                                     <b>Permission</b>
                                                                     <i class="fa fa-question-circle-o m-l-5"></i>
                                                                 </span>
-                                                        </span>
-                                                        @if (@synpsDetail.userPermission == "UNVERIFIED" || @synpsDetail.userPermission == "LOCKED")
+                                                            </span>
+                                                            @if (@synpsDetail.userPermission == "UNVERIFIED" || @synpsDetail.userPermission == "LOCKED")
                                                             {
-                                                            <strong class="text-danger pull-right">@synpsDetail.userPermission</strong>
+                                                                <strong class="text-danger pull-right">@synpsDetail.userPermission</strong>
                                                             }
                                                             else if (@synpsDetail.userPermission == "SEND-AND-RECEIVE")
                                                             {
-                                                            <strong class="pull-right text-success">
-                                                                @synpsDetail.userPermission
-                                                                <i class="fa fa-check m-l-10"></i>
-                                                            </strong>
+                                                                <strong class="pull-right text-success">
+                                                                    @synpsDetail.userPermission
+                                                                    <i class="fa fa-check m-l-10"></i>
+                                                                </strong>
                                                             }
                                                             else
                                                             {
-                                                            <strong class="pull-right">@synpsDetail.userPermission</strong>
+                                                                <strong class="pull-right">@synpsDetail.userPermission</strong>
                                                             }
-                                                    </li>
+                                                        </li>
 
-                                                    <li class="list-group-item">
-                                                        <b>Virtual Doc</b>
-                                                        @if (@synpsDetail.virtual_doc == "SUBMITTED|VALID")
+                                                        <li class="list-group-item">
+                                                            <b>Virtual Doc</b>
+                                                            @if (@synpsDetail.virtual_doc == "SUBMITTED|VALID")
                                                             {
-                                                            <span class="pull-right">
-                                                                <strong>@synpsDetail.virtual_doc</strong>
-                                                                <i class="fa fa-check text-success m-l-5"></i>
-                                                            </span>
-                                                            <button data-val="@mdc.memberId" type="button" onclick="Member.submitSsn()" class="btn btn-xs btn-danger pull-right m-r-10">Re-Submit SSN</button>
+                                                                <span class="pull-right">
+                                                                    <strong>@synpsDetail.virtual_doc</strong>
+                                                                    <i class="fa fa-check text-success m-l-5"></i>
+                                                                </span>
+                                                                <button data-val="@mdc.memberId" type="button" onclick="Member.submitSsn()" class="btn btn-xs btn-danger pull-right m-r-10">Re-Submit SSN</button>
                                                             }
                                                             else
                                                             {
-                                                            <span class="pull-right">
-                                                                <strong>@synpsDetail.virtual_doc</strong>
-                                                                <i class="fa fa-remove text-danger m-l-5"></i>
-                                                            </span>
-                                                            <button data-val="@mdc.memberId" type="button" onclick="Member.submitSsn()" class="btn btn-xs btn-danger pull-right m-r-10">Submit SSN</button>
+                                                                <span class="pull-right">
+                                                                    <strong>@synpsDetail.virtual_doc</strong>
+                                                                    <i class="fa fa-remove text-danger m-l-5"></i>
+                                                                </span>
+                                                                <button data-val="@mdc.memberId" type="button" onclick="Member.submitSsn()" class="btn btn-xs btn-danger pull-right m-r-10">Submit SSN</button>
                                                             }
-                                                    </li>
+                                                        </li>
 
-                                                    <li class="list-group-item">
-                                                        <b>Physical Doc</b>
-                                                        <span class="pull-right">
-                                                            @if (@synpsDetail.physical_doc == "SUBMITTED|VALID")
+                                                        <li class="list-group-item">
+                                                            <b>Physical Doc</b>
+                                                            <span class="pull-right">
+                                                                @if (@synpsDetail.physical_doc == "SUBMITTED|VALID")
                                                                 {
-                                                                <strong>@synpsDetail.physical_doc</strong>
-                                                                <i class="fa fa-check text-success m-l-5"></i>
+                                                                    <strong>@synpsDetail.physical_doc</strong>
+                                                                    <i class="fa fa-check text-success m-l-5"></i>
                                                                 }
                                                                 else
                                                                 {
-                                                                <strong>@synpsDetail.physical_doc</strong>
-                                                                <i class="fa fa-remove text-danger m-l-5"></i>
+                                                                    <strong>@synpsDetail.physical_doc</strong>
+                                                                    <i class="fa fa-remove text-danger m-l-5"></i>
                                                                 }
-                                                        </span>
-                                                    </li>
+                                                            </span>
+                                                        </li>
 
-                                                    <li class="list-group-item">
-                                                        <b>Extra Security</b>
-                                                        <span class="pull-right">
-                                                            <strong>@synpsDetail.extra_security</strong>
-                                                        </span>
-                                                    </li>
+                                                        <li class="list-group-item">
+                                                            <b>Extra Security</b>
+                                                            <span class="pull-right">
+                                                                <strong>@synpsDetail.extra_security</strong>
+                                                            </span>
+                                                        </li>
 
-                                                    <li class="list-group-item" style="min-height: 120px;">
-                                                        <div class="row">
-                                                            <div class="col-xs-4">
-                                                                <b>ID Doc</b>
-                                                            </div>
-                                                            <div class="col-xs-8 text-right f-13">
-                                                                @if (synpsDetail.photos != null || mdc.idDocUrl != null)
+                                                        <li class="list-group-item" style="min-height: 120px;">
+                                                            <div class="row">
+                                                                <div class="col-xs-4">
+                                                                    <b>ID Doc</b>
+                                                                </div>
+                                                                <div class="col-xs-8 text-right f-13">
+                                                                    @if (synpsDetail.photos != null || mdc.idDocUrl != null)
                                                                     {
                                                                         if (synpsDetail.photos != null)
                                                                         {
-                                                                    <a href="#" id="idDocLnk" data-toggle="tooltip" title="SynapseCreateUserRes Table - Click to expand"><img src="@synpsDetail.photos" class="idDocImg" /></a>
+                                                                            <a href="#" id="idDocLnk" data-toggle="tooltip" title="SynapseCreateUserRes Table - Click to expand"><img src="@synpsDetail.photos" class="idDocImg" /></a>
                                                                         }
                                                                         if (mdc.idDocUrl != null)
                                                                         {
-                                                                    <a href="#" id="idDocLnk-Member" class="m-l-20" data-toggle="tooltip" title="Members Table - Click to expand"><img src="@mdc.idDocUrl" class="idDocImg" /></a>
+                                                                            <a href="#" id="idDocLnk-Member" class="m-l-20" data-toggle="tooltip" title="Members Table - Click to expand"><img src="@mdc.idDocUrl" class="idDocImg" /></a>
                                                                         }
                                                                     }
                                                                     else
                                                                     {
-                                                                    <span>No doc submitted</span>
+                                                                        <span>No doc submitted</span>
 
                                                                         using (Html.BeginForm("Details", "Member",
                                                                                 FormMethod.Post,
                                                                                 new { enctype = "multipart/form-data" }))
                                                                         {
-                                                                    <div class="input-group">
-                                                                        <input type="hidden" name="NoochId" value="@mdc.Nooch_ID" />
-                                                                        <input type="hidden" id="DocStatus" value=@mdc.DocStatus />
-                                                                        <input type="file" name="file" id="file" required />
-                                                                        <br />
-                                                                        <input type="Submit" class="btn btn-sm btn-primary" value="Upload Doc" id="btnUpload" />
-                                                                    </div>
+                                                                            <div class="input-group">
+                                                                                <input type="hidden" name="NoochId" value="@mdc.Nooch_ID" />
+                                                                                <input type="hidden" id="DocStatus" value=@mdc.DocStatus />
+                                                                                <input type="file" name="file" id="file" required />
+                                                                                <br />
+                                                                                <input type="Submit" class="btn btn-sm btn-primary" value="Upload Image" id="btnUpload" />
+                                                                            </div>
                                                                         }
                                                                     }
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+
+                                                    <!--<div class="form-group m-b-0">
+                                                            <span class="col-xs-4 col-sm-5 control-label">
+                                                                <b>Xtra Verification?</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 form-control-static">
+                                                                <span class="show">YES or NOT NEEDED</span>
+                                                                <small>Question Set ID:&nbsp; </small>
                                                             </div>
                                                         </div>
-                                                    </li>
-                                                </ul>
 
-                                                <!--<div class="form-group m-b-0">
-                                                        <span class="col-xs-4 col-sm-5 control-label">
-                                                            <b>Xtra Verification?</b>
-                                                        </span>
-                                                        <div class="col-xs-8 col-sm-7 form-control-static">
-                                                            <span class="show">YES or NOT NEEDED</span>
-                                                            <small>Question Set ID:&nbsp; </small>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group">
-                                                        <span class="col-xs-4 col-sm-5 control-label">
-                                                            <b>User Responses Submitted?</b>
-                                                        </span>
-                                                        <div class="col-xs-8 col-sm-7 form-control-static">
-                                                            <span class="show">YES or NOT NEEDED</span>
-                                                            <small>Submitted On:&nbsp; </small>
-                                                        </div>
-                                                    </div>-->
+                                                        <div class="form-group">
+                                                            <span class="col-xs-4 col-sm-5 control-label">
+                                                                <b>User Responses Submitted?</b>
+                                                            </span>
+                                                            <div class="col-xs-8 col-sm-7 form-control-static">
+                                                                <span class="show">YES or NOT NEEDED</span>
+                                                                <small>Submitted On:&nbsp; </small>
+                                                            </div>
+                                                        </div>-->
                                                 }
                                                 else
                                                 {
-                                                <div class="m-t-15 text-center">
-                                                    <em>No Synapse User Found</em>
-                                                </div>
+                                                    <div class="m-t-15 text-center">
+                                                        <em>No Synapse User Found</em>
+                                                    </div>
                                                 }
                                             </div>
 
@@ -1107,139 +1115,132 @@
 
                                                 @if (mdc.IsSynapseDetailAvailable && synpsDetail.SynapseBankName != null)
                                                 {
-                                                <ul class="list-group">
-                                                    <li class="list-group-item" data-toggle="tooltip" title="Date that this bank was linked to Nooch.">
-                                                        <b>Date Added</b>
-                                                        <span class="pull-right">@synpsDetail.SynpaseBankAddedOn</span>
-                                                    </li>
+                                                    <ul class="list-group">
+                                                        <li class="list-group-item" data-toggle="tooltip" title="Date that this bank was linked to Nooch.">
+                                                            <b>Date Added</b>
+                                                            <span class="pull-right">@synpsDetail.SynpaseBankAddedOn</span>
+                                                        </li>
 
-                                                    <li class="list-group-item">
-                                                        <div class="row">
-                                                            <b class="col-xs-5">Bank Name</b>
+                                                        <li class="list-group-item">
+                                                            <div class="row">
+                                                                <b class="col-xs-5">Bank Name</b>
 
-                                                            <div class="col-xs-7 text-right">
-                                                                <span class="show f-600"> @synpsDetail.SynapseBankName </span>
-                                                                <span class="show"> @synpsDetail.SynapseBankNickName </span>
+                                                                <div class="col-xs-7 text-right">
+                                                                    <span class="show f-600"> @synpsDetail.SynapseBankName </span>
+                                                                    <span class="show"> @synpsDetail.SynapseBankNickName </span>
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                                                    </li>
+                                                        </li>
 
-                                                    <li class="list-group-item">
-                                                        <div class="row">
-                                                            <b class="col-xs-5">Added w/ Routing</b>
+                                                        <li class="list-group-item">
+                                                            <div class="row">
+                                                                <b class="col-xs-5">Added w/ Routing</b>
 
-                                                            <div class="col-xs-7 text-right">
-                                                                <strong> @synpsDetail.IsAddedUsingRoutingNumber</strong>
+                                                                <div class="col-xs-7 text-right">
+                                                                    <strong> @synpsDetail.IsAddedUsingRoutingNumber</strong>
+                                                                </div>
                                                             </div>
-                                                        </div>
 
-                                                    </li>
+                                                        </li>
 
-                                                    <li class="list-group-item">
-                                                        <div class="row">
-                                                            <b class="col-xs-5">Bank Status</b>
-                                                            <div id="bankAccountStatusDiv" class="col-xs-7 text-right">
+                                                        <li class="list-group-item">
+                                                            <div class="row">
+                                                                <b class="col-xs-5">Bank Status</b>
+                                                                <div id="bankAccountStatusDiv" class="col-xs-7 text-right">
 
-                                                                @if (synpsDetail.SynapseBankStatus == "Verified")
+                                                                    @if (synpsDetail.SynapseBankStatus == "Verified")
                                                                     {
-                                                                    <div>
-                                                                        <strong class="text-success" style="display: inline-block">Verified</strong>
-                                                                        <button type="button" class="btn btn-link" onclick="Member.UnVerifyBankAccount(); ">Un-Verify</button>
-                                                                    </div>
-                                                                    <small data-toggle="tooltip" title="Date that this bank was linked to Nooch.">Verified On:&nbsp; @synpsDetail.SynpaseBankVerifiedOn</small>
+                                                                        <div>
+                                                                            <strong class="text-success" style="display: inline-block">Verified</strong>
+                                                                            <button type="button" class="btn btn-link" onclick="Member.UnVerifyBankAccount(); ">Un-Verify</button>
+                                                                        </div>
+                                                                        <small data-toggle="tooltip" title="Date that this bank was linked to Nooch.">Verified On:&nbsp; @synpsDetail.SynpaseBankVerifiedOn</small>
                                                                     }
                                                                     else if (synpsDetail.SynapseBankName != null)
                                                                     {
-                                                                    <div>
-                                                                        <strong class="text-danger" style="display: inline-block"> @synpsDetail.SynapseBankStatus </strong>
-                                                                        @if (@synpsDetail.IsAddedUsingRoutingNumber)
-                                                                            {
-                                                                            <a href="http://noochme.com/noochweb/Nooch/MicroDepositsVerification?mid=@mdc.memberId.ToString()" class="btn btn-link m-l-15" target="_blank" data-toggle="tooltip" title="Open Microdeposit Verification Page">
-                                                                                Verify<i class="fa fa-external-link m-l-10"></i>
-                                                                            </a>
-                                                                            }
-                                                                            else
-                                                                            {
+                                                                        <div>
+                                                                            <strong class="text-danger" style="display: inline-block"> @synpsDetail.SynapseBankStatus </strong>
                                                                             <button type="button" class="btn btn-link m-l-15" onclick="Member.VerifyBankAccount(); ">
-                                                                                <i class="fa fa-check"></i>Verify
+                                                                                <i class="fa fa-check"></i>
+                                                                                Verify
                                                                             </button>
-                                                                            }
-                                                                    </div>
+                                                                        </div>
                                                                     }
-                                                                <input type="hidden" id="bnkIdHidden" value="@synpsDetail.BankId" />
+                                                                    <input type="hidden" id="bnkIdHidden" value="@synpsDetail.BankId" />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
+                                                        </li>
 
-                                                    <li class="list-group-item">
-                                                        <span class="widePopover">
-                                                            <span data-toggle="popover" title="Synapse Bank Permissions" data-content='CREDIT: &nbsp;Can only receive funds.<span class="show m-t-10">CREDIT-AND-DEBIT: &nbsp;Can be used for sending or receiving funds.</span><span class="show m-t-10">LOCKED: &nbsp;Node cannot be used for any transactions.</span>' data-trigger="hover" data-placement="top" data-html="true">
+                                                        <li class="list-group-item">
+                                                            <span class="widePopover">
+                                                                <span data-toggle="popover" title="Synapse Bank Permissions" data-content='CREDIT: &nbsp;Can only receive funds.<span class="show m-t-10">CREDIT-AND-DEBIT: &nbsp;Can be used for sending or receiving funds.</span><span class="show m-t-10">LOCKED: &nbsp;Node cannot be used for any transactions.</span>' data-trigger="hover" data-placement="top" data-html="true">
                                                                     <b>Allowed</b>
                                                                     <i class="fa fa-question-circle-o m-l-5"></i>
                                                                 </span>
-                                                        </span>
-                                                        <span class="pull-right f-600">@synpsDetail.allowed </span>
-                                                    </li>
+                                                            </span>
+                                                            <span class="pull-right f-600">@synpsDetail.allowed </span>
+                                                        </li>
 
-                                                    <li class="list-group-item widePopover">
-                                                        <span>
-                                                            <b>Bank ID</b>
-                                                        </span>
-                                                        <i class="fa fa-fw fa-eye pull-right" data-toggle="popover" data-content="@synpsDetail.synapseBankId" data-placement="top"></i>
-                                                        <span class="pull-right truncate">@synpsDetail.synapseBankId</span>
-                                                    </li>
 
-                                                    <li class="list-group-item">
-                                                        <span>
-                                                            <b>Name on Account</b>
-                                                            <i class="fa fa-question-circle-o m-l-5"></i>
-                                                        </span>
-                                                        <span class="pull-right">
-                                                            <span class="f-600">@synpsDetail.nameFromSynapseBank </span>
-                                                        </span>
-                                                    </li>
+                                                        <li class="list-group-item">
+                                                            <span data-toggle="popover" title="Bank Account Class" data-content="Can be either be CHECKING or SAVINGS" data-trigger="hover" data-placement="auto">
+                                                                <b>Class</b>
+                                                                <i class="fa fa-question-circle-o m-l-5"></i>
+                                                            </span>
+                                                            <span class="pull-right">@synpsDetail.bankClass</span>
+                                                        </li>
 
-                                                    <li class="list-group-item">
-                                                        <span data-toggle="popover" title="Bank Account Class" data-content="Can be either be CHECKING or SAVINGS" data-trigger="hover" data-placement="auto">
-                                                            <b>Class</b>
-                                                            <i class="fa fa-question-circle-o m-l-5"></i>
-                                                        </span>
-                                                        <span class="pull-right">@synpsDetail.bankClass</span>
-                                                    </li>
+                                                        <li class="list-group-item">
+                                                            <span data-toggle="popover" title="Bank Account Type" data-content="Can be either be PERSONAL or BUSINESS" data-trigger="hover" data-placement="auto">
+                                                                <b>Type</b>
+                                                                <i class="fa fa-question-circle-o m-l-5"></i>
+                                                            </span>
+                                                            <span class="pull-right">@synpsDetail.bankType</span>
+                                                        </li>
 
-                                                    <li class="list-group-item">
-                                                        <span data-toggle="popover" title="Bank Account Type" data-content="Can be either be PERSONAL or BUSINESS" data-trigger="hover" data-placement="auto">
-                                                            <b>Type</b>
-                                                            <i class="fa fa-question-circle-o m-l-5"></i>
-                                                        </span>
-                                                        <span class="pull-right">@synpsDetail.bankType</span>
-                                                    </li>
+                                                        <li class="list-group-item">
+                                                            <span data-toggle="popover" title="Synapse Node Type" data-content="Can be be: 'ACH-US', 'SYNAPSE-US', 'WIRE-US', or 'IOU'" data-trigger="hover" data-placement="auto">
+                                                                <b>Node Type</b>
+                                                                <i class="fa fa-question-circle-o m-l-5"></i>
+                                                            </span>
+                                                            <span class="pull-right">@synpsDetail.nodeType</span>
+                                                        </li>
 
-                                                    <li class="list-group-item">
-                                                        <span data-toggle="popover" title="Synapse Node Type" data-content="Can be be: 'ACH-US', 'SYNAPSE-US', 'WIRE-US', or 'IOU'" data-trigger="hover" data-placement="auto">
-                                                            <b>Node Type</b>
-                                                            <i class="fa fa-question-circle-o m-l-5"></i>
-                                                        </span>
-                                                        <span class="pull-right">@synpsDetail.nodeType</span>
-                                                    </li>
+                                                        <li class="list-group-item">
+                                                            <b>MFA Verified</b>
+                                                            <span class="pull-right">@synpsDetail.mfaVerified</span>
+                                                        </li>
 
-                                                    <li class="list-group-item">
-                                                        <b>MFA Verified</b>
-                                                        <span class="pull-right">@synpsDetail.mfaVerified</span>
-                                                    </li>
+                                                        <li class="list-group-item widePopover">
+                                                            <span>
+                                                                <b>Bank ID</b>
+                                                            </span>
+                                                            <i class="fa fa-fw fa-eye pull-right" data-toggle="popover" data-content="@synpsDetail.synapseBankId" data-placement="top"></i>
+                                                            <span class="pull-right truncate">@synpsDetail.synapseBankId</span>
+                                                        </li>
 
-                                                </ul>
+                                                        <li class="list-group-item">
+                                                            <span>
+                                                                <b>Name on Account</b>
+                                                                <i class="fa fa-question-circle-o m-l-5"></i>
+                                                            </span>
+                                                            <span class="pull-right">
+                                                                <span class="f-600">@synpsDetail.nameFromSynapseBank </span>
+                                                            </span>
+                                                        </li>
+
+                                                    </ul>
                                                 }
                                                 else
                                                 {
-                                                <div class="m-t-15 text-center">
-                                                    <em>No Synapse Bank Found</em>
-                                                </div>
+                                                    <div class="m-t-15 text-center">
+                                                        <em>No Synapse Bank Found</em>
+                                                    </div>
 
-                                                <div class="m-t-15 text-center">
-                                                    <a href="https://www.noochme.com/noochweb/Nooch/AddBank?MemberId=@mdc.memberId" class="btn btn-primary" target="_blank"><i class="fa fa-plus m-r-10"></i>Add Bank</a>
-                                                </div>
+                                                    <div class="m-t-15 text-center">
+                                                        <a href="https://www.noochme.com/noochweb/Nooch/AddBank?MemberId=@mdc.memberId" class="btn btn-primary" target="_blank"><i class="fa fa-plus m-r-10"></i>Add Bank</a>
+                                                    </div>
                                                 }
                                             </div>
 
@@ -1273,32 +1274,41 @@
                                                             <span class="col-xs-4 col-lg-3 control-label">
                                                                 <b>Change Member Status</b>
                                                             </span>
-                                                            <div class="col-xs-8 col-sm-9 form-control-static">
+                                                            <div class="col-xs-5 col-sm-4 form-control-static">
                                                                 <p style="margin-bottom: 0;">
                                                                     @{
                                                                         if (mdc.Status == "Registered")
                                                                         {
-                                                                            <a href="#" class="btn btn-sm btn-default m-r-10" onclick="Member.ApplyChoosenOperation(4)">Verify Email</a>
+                                                                            <a href="#" class="btn btn-sm btn-default" onclick="Member.ApplyChoosenOperation(4)">Verify Email</a>
                                                                         }
 
                                                                         if (!mdc.IsPhoneVerified && mdc.ContactNumber != null)
                                                                         {
-                                                                            <a href="#" class="btn btn-sm btn-primary m-r-10" onclick="Member.ApplyChoosenOperation(3)"> Verify Phone</a>
+                                                                            <a href="#" class="btn btn-sm btn-primary" onclick="Member.ApplyChoosenOperation(3)"> Verify Phone</a>
                                                                         }
 
                                                                         if (mdc.Status == "Active")
                                                                         {
-                                                                            <a href="#" class="btn btn-sm btn-danger m-r-10" onclick="suspendUserPrompt()">Suspend</a>
+                                                                            <a href="#" class="btn btn-sm btn-danger" onclick="suspendUserPrompt()">Suspend</a>
                                                                         }
 
                                                                         if (mdc.Status == "Suspended" || mdc.Status == "Temporarily_Blocked")
                                                                         {
-                                                                            <a href="#" class="btn btn-sm btn-primary m-r-10" onclick="Member.ApplyChoosenOperation(4)">Activate (Un-Suspend)</a>
+                                                                            <a href="#" class="btn btn-sm btn-primary" onclick="Member.ApplyChoosenOperation(4)">Activate (Un-Suspend)</a>
                                                                         }
                                                                     }
-                                                                    <a href="#" id="DeleteUser" class="btn btn-sm btn-default btn-danger m-r-10">Delete User</a>
-                                                                    <a href="#" id="ChangePassword" class="btn btn-sm btn-info">Change Password</a>
+                                                                    @*<a href="#" class="btn btn-warning btn-rounded">Warning</a>*@
+                                                                    @*<a href="#" class="btn btn-danger btn-rounded">Block</a>*@
+
                                                                 </p>
+                                                            </div>
+
+                                                            <div class="col-xs-3 col-lg-2 form-control-static">
+                                                                <a href="#" id="DeleteUser" class="btn btn-sm btn-default  btn-danger">Delete User</a>
+                                                            </div>
+
+                                                            <div class="col-xs-3 col-lg-2 form-control-static">
+                                                                <a href="#" id="ChangePassword" class="btn btn-sm btn-info">Change Password</a>
                                                             </div>
 
                                                         </div>
@@ -1311,7 +1321,7 @@
                                                             <span class="col-xs-4 col-lg-3 control-label">
                                                                 <b>SDN Status</b>
                                                             </span>
-                                                            <div class="col-xs-8 col-lg-9 form-control-static">
+                                                            <div class="col-xs-4 col-lg-4 form-control-static">
                                                                 @if (mdc.isSdnSafe)
                                                                 {
                                                                     <span class="">Already Marked SDN Safe<i class="fa fa-check text-success m-l-10"></i></span>
@@ -1320,12 +1330,13 @@
                                                                 {
                                                                     <a href="#" id="MarkSDNSafeUser" class="btn btn-sm btn-default" onclick=" Member.ApplyChoosenOperation(2) ">Mark SDN Safe</a>
                                                                 }
-
-                                                                @if (!mdc.IsPhoneVerified && mdc.ContactNumber != null)
-                                                                {
-                                                                    <a href="#" id="SmsReminder" class="btn btn-sm btn-primary m-l-10" onclick="Member.sendSmsReminder()">Resend SMS Verification</a>
-                                                                }
                                                             </div>
+                                                            @if (!mdc.IsPhoneVerified && mdc.ContactNumber != null)
+                                                            {
+                                                                <div class="col-xs-3 col-lg-4 form-control-static">
+                                                                    <a href="#" id="SmsReminder" class="btn btn-sm btn-primary" onclick="Member.sendSmsReminder()">Resend phone verification SMS</a>
+                                                                </div>
+                                                            }
 
                                                         </div>
                                                     </div>
@@ -1340,7 +1351,7 @@
                                                             <div class="col-xs-8 col-lg-8 form-control-static">
                                                                 <p style="margin-bottom: 0; max-width: 116px;">
                                                                     <span class="text-navy font-bold" id="pinNumber">@mdc.PinNumber</span>
-                                                                    <button type="button" class="btn btn-link f-14 p-t-0 pull-right" onclick="Member.ResetPin();">Reset</button>
+                                                                    <button type="button" class="btn btn-link btn-xs pull-right" onclick="Member.ResetPin();">Reset PIN</button>
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -1361,7 +1372,7 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    <a href="#" class="btn btn btn-link p-0" onclick="Member.OpenPopupForAdminNote();"><i class="fa fa-plus m-r-10"></i>Add Note</a>
+                                                                    <a href="#" class="btn btn-sm btn-default" onclick="Member.OpenPopupForAdminNote();">Add Note</a>
                                                                 }
                                                             </div>
                                                         </div>
@@ -1520,7 +1531,7 @@
                                     </div>
                                     <div class="ibox-content">
                                         @{
-                                            if (DisputeTransactions.Count > 0)
+                                            if (DisputeTransactions!=null && DisputeTransactions.Count > 0)
                                             {
                                                 <table class="table table-striped">
                                                     <thead>
