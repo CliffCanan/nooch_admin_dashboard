@@ -813,15 +813,25 @@ namespace noochAdminNew.Controllers
 
                         MemberDetailsStats ms = new MemberDetailsStats();
 
-                        ms.TotalTransfer = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_P2P_transfers").SingleOrDefault();
-
-                        string TotalSent = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Sent").SingleOrDefault();
+                       // ms.TotalTransfer = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_P2P_transfers").SingleOrDefault();
+                        ms.TotalTransfer = obj.Transactions.Where(t => (t.SenderId == Member.MemberId || t.RecipientId==Member.MemberId || t.InvitationSentTo == Member.UserName ||
+                                                t.InvitationSentTo == Member.UserNameLowerCase ||
+                                                t.InvitationSentTo == Member.SecondaryEmail) && t.TransactionStatus=="Success").Count().ToString();
+                            
+                        //string TotalSent = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Sent").SingleOrDefault();
+                        string TotalSent = obj.Transactions.Where(t => (t.SenderId == Member.MemberId || t.InvitationSentTo == Member.UserName || t.InvitationSentTo == Member.UserNameLowerCase ||
+                                                t.InvitationSentTo == Member.SecondaryEmail) && t.TransactionStatus == "Success").Select(t => t.Amount).Sum().ToString();
                         ms.TotalSent = TotalSent != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(TotalSent)) : "0";
                         
-                        string TotalReceived = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Received").SingleOrDefault();
+                       // string TotalReceived = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Received").SingleOrDefault();
+                        string TotalReceived = obj.Transactions.Where(t => (t.RecipientId == Member.MemberId || t.InvitationSentTo == Member.UserName || t.InvitationSentTo == Member.UserNameLowerCase ||
+                                                 t.InvitationSentTo == Member.SecondaryEmail) && t.TransactionStatus == "Success").Select(t => t.Amount).Sum().ToString();
                         ms.TotalReceived = TotalReceived != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(TotalReceived)) : "0";
 
-                        string LargestSent = obj.GetReportsForMember(Member.MemberId.ToString(), "Largest_sent_transfer").SingleOrDefault();
+                       // string LargestSent = obj.GetReportsForMember(Member.MemberId.ToString(), "Largest_sent_transfer").SingleOrDefault();
+                        string LargestSent = obj.Transactions.Where(t => (t.SenderId == Member.MemberId || t.InvitationSentTo == Member.UserName || t.InvitationSentTo == Member.UserNameLowerCase ||
+                                                t.InvitationSentTo == Member.SecondaryEmail) && t.TransactionStatus == "Success" && t.RecipientId!=Member.MemberId).Select(t => t.Amount).Max().ToString();
+                     
                         ms.LargestSent = LargestSent != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(LargestSent)) : "0";
 
                         mdc.MemberStats = ms;
