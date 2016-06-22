@@ -1694,7 +1694,7 @@ namespace noochAdminNew.Controllers
                     }
                     else
                     {
-                        ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + DocumentDetails.MemberId + ".png";                        
+                        ImageUrlMade = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + DocumentDetails.MemberId + ".png";
                     }
                 }
                 else
@@ -1820,7 +1820,7 @@ namespace noochAdminNew.Controllers
 
                         if(Extension== ".pdf")
                         {
-                            doc.attachment = "data:text/csv;base64," + CommonHelper.ConvertPdfURLToBase64(ImageUrl).Replace("\\", "");
+                            doc.attachment = "data:text/csv;base64," + CommonHelper.ConvertImageURLToBase64(ImageUrl).Replace("\\", "");
                         }
                         else
                         {
