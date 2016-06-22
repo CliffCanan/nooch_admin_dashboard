@@ -486,34 +486,25 @@ namespace noochAdminNew.Controllers
                 foreach (Member m in All_Members_In_Records)
                 {
                     int TransCount = (from tr in obj.Transactions
-                                      where (tr.Member.MemberId == m.MemberId || tr.Member1.MemberId == m.MemberId) &&
-                                             tr.TransactionStatus == "Success"
+                                      where ( tr.TransactionStatus == "Success" &&
+                                             (tr.SenderId == m.MemberId || tr.RecipientId == m.MemberId ||
+                                             tr.InvitationSentTo == m.UserName || tr.InvitationSentTo == m.UserNameLowerCase ||
+                                             tr.InvitationSentTo == m.SecondaryEmail))
                                       select tr).Count();
 
-                    // transaction - Transfer Type - 5dt4HUwCue532sNmw3LKDQ==
-                    // invite - DrRr1tU1usk7nNibjtcZkA==
-                    // request - T3EMY1WWZ9IscHIj3dbcNw==
+                    // transfer - 5dt4HUwCue532sNmw3LKDQ==
+                    // invite   - DrRr1tU1usk7nNibjtcZkA==
+                    // request  - T3EMY1WWZ9IscHIj3dbcNw==
 
-                    var sumofTransfers = (from tr in obj.Transactions
+                    var totalAmountSent = (from tr in obj.Transactions
                                           where tr.TransactionStatus == "Success" &&
-                                               (tr.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || tr.TransactionType == "DrRr1tU1usk7nNibjtcZkA==") &&
-                                                tr.Member.MemberId == m.MemberId
+                                             //(tr.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || tr.TransactionType == "DrRr1tU1usk7nNibjtcZkA==") &&
+                                               (tr.SenderId == m.MemberId ||
+                                               (tr.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw==" &&
+                                                tr.InvitationSentTo == m.UserName ||
+                                                tr.InvitationSentTo == m.UserNameLowerCase))
                                           select tr.Amount
                         ).Sum(tr => (decimal?)tr) ?? 0;
-
-                    var sumOfInvitations = (from tr in obj.Transactions
-                                            where tr.TransactionStatus == "Success" && tr.TransactionType == "DrRr1tU1usk7nNibjtcZkA=="
-                                                  && tr.Member1.MemberId == m.MemberId
-                                            select tr.Amount
-                        ).Sum(tr => (decimal?)tr) ?? 0;
-
-                    var sumOfRequests = (from tr in obj.Transactions
-                                         where tr.TransactionStatus == "Success" && tr.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw=="
-                                               && tr.Member.MemberId == m.MemberId
-                                         select tr.Amount
-                        ).Sum(tr => (decimal?)tr) ?? 0;
-
-                    var totalAmount = sumOfInvitations + sumOfRequests + sumofTransfers;
 
                     MembersListDataClass mdc = new MembersListDataClass();
                     mdc.Nooch_ID = m.Nooch_ID;
@@ -545,7 +536,7 @@ namespace noochAdminNew.Controllers
                     mdc.IsVerifiedPhone = m.IsVerifiedPhone ?? false;
                     mdc.City = !String.IsNullOrEmpty(m.City) ? CommonHelper.GetDecryptedData(m.City) : "";
 
-                    mdc.TotalAmountSent = mdc.TotalAmountSent != "0" ? Convert.ToDecimal(String.Format("{0:0.00}", Convert.ToDecimal(totalAmount))).ToString() : "0";
+                    mdc.TotalAmountSent = mdc.TotalAmountSent != "0" ? String.Format("{0:0.00}", totalAmountSent) : "0";
                     mdc.DateCreated = Convert.ToDateTime(m.DateCreated);
 
                     mdc.TotalTransactions = TransCount;
@@ -567,7 +558,6 @@ namespace noochAdminNew.Controllers
 
             try
             {
-
                 using (NOOCHEntities obj = new NOOCHEntities())
                 {
                     Member Member = new Member();
@@ -646,7 +636,8 @@ namespace noochAdminNew.Controllers
                                                 t.RecipientId == Member.MemberId ||
                                                 t.Member.MemberId == Member.MemberId ||
                                                 t.InvitationSentTo == Member.UserName ||
-                                                t.InvitationSentTo == Member.UserNameLowerCase)
+                                                t.InvitationSentTo == Member.UserNameLowerCase ||
+                                                t.InvitationSentTo == Member.SecondaryEmail)
                                          select t).OrderByDescending(r => r.TransactionDate).Take(40).ToList();
 
 
@@ -826,6 +817,7 @@ namespace noochAdminNew.Controllers
 
                         string TotalSent = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Sent").SingleOrDefault();
                         ms.TotalSent = TotalSent != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(TotalSent)) : "0";
+                        
                         string TotalReceived = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Received").SingleOrDefault();
                         ms.TotalReceived = TotalReceived != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(TotalReceived)) : "0";
 
