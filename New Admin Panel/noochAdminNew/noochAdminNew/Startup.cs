@@ -29,26 +29,20 @@ namespace noochAdminNew
         {
             // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=316888
 
-            // setting up hangfire
+            // Set Up Hangfire
 
             bool isRunningOnSandbox = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox"));
-            string connString = "";
-            if (isRunningOnSandbox)
-            {
-                connString = Utility.GetValueFromConfig("HangFireSandboxConnectionString");
-            }
-            else
-            {
-                connString = Utility.GetValueFromConfig("HangFireProductionConnectionString");
-            }
+            string connString = isRunningOnSandbox ? Utility.GetValueFromConfig("HangFireSandboxConnectionString")
+                                                   : Utility.GetValueFromConfig("HangFireProductionConnectionString");
+
             Hangfire.GlobalConfiguration.Configuration.UseSqlServerStorage(connString);
 
             //app.UseHangfireDashboard();
             app.UseHangfireServer();
 
-           
-
-            RecurringJob.AddOrUpdate(() => updateTransactionStatusService(), Cron.Daily);
+            // CC (6/23/16): Commenting out the first job for updating transactions' status w/ Synapse b/c now we are
+            //               using WebHooks which should keep all transaction statuses updated as Synapse sends each WebHook.
+            //RecurringJob.AddOrUpdate(() => updateTransactionStatusService(), Cron.Daily);
             RecurringJob.AddOrUpdate(() => notifyAdminOfBanksAwaitingVerification(), Cron.Daily);
             RecurringJob.AddOrUpdate(() => NoochChecks(), Cron.Daily);
         }
@@ -194,8 +188,8 @@ namespace noochAdminNew
                     var nonVerifiedBanks = (from c in noochConnection.SynapseBanksOfMembers
                                             where c.IsDefault == true &&
                                                  (c.Status == "Not Verified" || c.Status == "Pending Review") && // Bank status would be 'Pending Review' if they have submitted ID documentation inside the Nooch app.
-                                                 (c.name_on_account != "VsubAZ/orNwSN1SiJ/TEPQ==" && // "Test User"
-                                                  c.email != "test@synapsepay.com")
+                                                  c.oid != null &&
+                                                 (c.name_on_account != "VsubAZ/orNwSN1SiJ/TEPQ==" && c.email != "test@synapsepay.com") // "Test User"
                                             select c).ToList();
 
                     if (nonVerifiedBanks != null)
@@ -288,7 +282,6 @@ namespace noochAdminNew
                 }
             }
         }
-
 
 
         public bool NoochChecks()

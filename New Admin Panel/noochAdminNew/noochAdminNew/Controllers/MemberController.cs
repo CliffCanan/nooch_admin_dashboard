@@ -47,7 +47,7 @@ namespace noochAdminNew.Controllers
                 noochIds = noochIds.TrimEnd(',');
                 List<string> allNoochIdsChoosen = noochIds.Split(',').ToList<string>();
 
-                List<MemberOperationsInnerClass> allinnerclass = new List<MemberOperationsInnerClass>();
+                List<MemberOperationsInnerClass> resInnerClass = new List<MemberOperationsInnerClass>();
 
                 #region Suspend
 
@@ -115,13 +115,13 @@ namespace noochAdminNew.Controllers
                                     Logger.Info("Admin Dash -> MemberController - 'sendEmail' flag was FALSE, so NOT sending Suspended Email notification");
                                 }
 
-                                allinnerclass.Add(mic);
+                                resInnerClass.Add(mic);
                             }
                             else
                             {
                                 mic.Message = "Member already Suspended";
                                 mic.NoochId = s;
-                                allinnerclass.Add(mic);
+                                resInnerClass.Add(mic);
                             }
                             #endregion
                         }
@@ -129,7 +129,7 @@ namespace noochAdminNew.Controllers
 
                     res.IsSuccess = true;
                     res.Message = "all operations performed";
-                    res.MemberOperationsOuterClass = allinnerclass;
+                    res.MemberOperationsOuterClass = resInnerClass;
                 }
 
                 #endregion Suspend
@@ -165,7 +165,7 @@ namespace noochAdminNew.Controllers
                                     mic.Message = "Member marked SDN safe Successfully. ";
                                     mic.NoochId = member.Nooch_ID;
                                     mic.IsSuccess = true;
-                                    allinnerclass.Add(mic);
+                                    resInnerClass.Add(mic);
                                 }
                                 catch (Exception)
                                 {
@@ -176,14 +176,14 @@ namespace noochAdminNew.Controllers
                                     mic.Message = "Member SDN mark safe failed!";
                                     mic.NoochId = member.Nooch_ID;
                                     mic.IsSuccess = false;
-                                    allinnerclass.Add(mic);
+                                    resInnerClass.Add(mic);
                                 }
                             }
                             else
                             {
                                 mic.Message = "Member already SDN Safe ";
                                 mic.NoochId = s;
-                                allinnerclass.Add(mic);
+                                resInnerClass.Add(mic);
                             }
                             #endregion
                         }
@@ -191,7 +191,7 @@ namespace noochAdminNew.Controllers
 
                     res.IsSuccess = true;
                     res.Message = "all operations performed";
-                    res.MemberOperationsOuterClass = allinnerclass;
+                    res.MemberOperationsOuterClass = resInnerClass;
                 }
 
                 #endregion SDN Safe
@@ -230,7 +230,7 @@ namespace noochAdminNew.Controllers
                                     mic.Message = "Contact no. verified Successfully. ";
                                     mic.NoochId = member.Nooch_ID;
                                     mic.IsSuccess = true;
-                                    allinnerclass.Add(mic);
+                                    resInnerClass.Add(mic);
 
                                 }
                                 catch (Exception)
@@ -242,14 +242,14 @@ namespace noochAdminNew.Controllers
                                     mic.Message = "Verify Phone Failed unfortunately :-(";
                                     mic.NoochId = member.Nooch_ID;
                                     mic.IsSuccess = false;
-                                    allinnerclass.Add(mic);
+                                    resInnerClass.Add(mic);
                                 }
                             }
                             else
                             {
                                 mic.Message = "Contact no. not available ";
                                 mic.NoochId = s;
-                                allinnerclass.Add(mic);
+                                resInnerClass.Add(mic);
                             }
                             #endregion
                         }
@@ -257,7 +257,7 @@ namespace noochAdminNew.Controllers
 
                     res.IsSuccess = true;
                     res.Message = "all operations performed";
-                    res.MemberOperationsOuterClass = allinnerclass;
+                    res.MemberOperationsOuterClass = resInnerClass;
                 }
 
                 #endregion Verify Phone
@@ -298,7 +298,7 @@ namespace noochAdminNew.Controllers
                                     mic.Message = "Member activated Successfully. ";
                                     mic.NoochId = member.Nooch_ID;
                                     mic.IsSuccess = true;
-                                    allinnerclass.Add(mic);
+                                    resInnerClass.Add(mic);
                                 }
                                 catch (Exception)
                                 {
@@ -309,14 +309,14 @@ namespace noochAdminNew.Controllers
                                     mic.Message = "Member activation Failed!";
                                     mic.NoochId = member.Nooch_ID;
                                     mic.IsSuccess = false;
-                                    allinnerclass.Add(mic);
+                                    resInnerClass.Add(mic);
                                 }
                             }
                             else
                             {
                                 mic.Message = "Member already Active ";
                                 mic.NoochId = s;
-                                allinnerclass.Add(mic);
+                                resInnerClass.Add(mic);
                             }
                             #endregion
                         }
@@ -324,7 +324,7 @@ namespace noochAdminNew.Controllers
 
                     res.IsSuccess = true;
                     res.Message = "all operations performed";
-                    res.MemberOperationsOuterClass = allinnerclass;
+                    res.MemberOperationsOuterClass = resInnerClass;
                 }
 
                 #endregion activate account - verify email
@@ -335,65 +335,81 @@ namespace noochAdminNew.Controllers
                 if (operation == "5")
                 {
                     // Delete User
-
-                    foreach (string s in allNoochIdsChoosen)
+                    try
                     {
-                        using (NOOCHEntities obj = new NOOCHEntities())
+                        foreach (string s in allNoochIdsChoosen)
                         {
-                            var member = (from t in obj.Members where t.Nooch_ID == s && t.IsDeleted == false select t).SingleOrDefault();
-                            MemberOperationsInnerClass mic = new MemberOperationsInnerClass();
+                            Logger.Info("MemberController -> ApplyOperation - Delete User Block Fired - Nooch_ID: [" + s + "]");
 
-                            #region IfMemberNotNull
-
-                            if (member != null)
+                            using (NOOCHEntities obj = new NOOCHEntities())
                             {
-                                try
+                                var member = (from t in obj.Members
+                                              where t.Nooch_ID == s
+                                              select t).FirstOrDefault();
+
+                                MemberOperationsInnerClass mic = new MemberOperationsInnerClass();
+                                mic.IsSuccess = false;
+
+                                #region IfMemberNotNull
+
+                                if (member != null)
                                 {
-                                    member.Status = "Deleted";
-                                    member.DateModified = DateTime.Now;
-                                    Guid dd = Utility.ConvertToGuid(Session["UserId"].ToString());
-                                    member.ModifiedBy = Utility.ConvertToGuid(Session["UserId"].ToString());
-                                    member.IsDeleted = true;
-                                    obj.SaveChanges();
+                                    if (member.IsDeleted != true)
+                                    {
+                                        try
+                                        {
+                                            member.Status = "Deleted";
+                                            member.IsDeleted = true;
+                                            member.DateModified = DateTime.Now;
+                                            member.ModifiedBy = Utility.ConvertToGuid(Session["UserId"].ToString());
+                                            obj.SaveChanges();
 
-                                    Logger.Error("DeleteMembers - Attempt to Delete member [ memberId:" +
-                                                member.MemberId + "].");
+                                            Logger.Error("MemberController -> ApplyOperation - Member Marked Deleted - MemberID:" + member.MemberId + "]");
 
-                                    mic.Message = "Member Deleted Successfully. ";
-                                    mic.NoochId = member.Nooch_ID;
-                                    mic.IsSuccess = true;
-                                    allinnerclass.Add(mic);
+                                            mic.Message = "Member Deleted Successfully";
+                                            mic.NoochId = member.Nooch_ID;
+                                            mic.IsSuccess = true;
+                                            resInnerClass.Add(mic);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            // to return the status without inserting records in notifications or friends tables, when mail is not sent successfully.
+                                            Logger.Error("MemberController -> ApplyOperation - Attempt to delete user failed - MemberID: [" + member.MemberId +
+                                                         "], Exception: [" + ex.Message + "]");
+
+                                            mic.Message = ex.Message;
+                                            mic.NoochId = member.Nooch_ID;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        mic.Message = "Member already deleted";
+                                        mic.NoochId = s;
+                                    }
                                 }
-                                catch (Exception)
+                                else
                                 {
-                                    // to return the status without inserting records in notifications or friends tables, when mail is not sent successfully.
-                                    Logger.Error("DeleteMembers - Attempt to Delete member failed [" + member.MemberId +
-                                                           "]. Problem occured in setting status true. ");
-
-                                    mic.Message = "Member Deletion failed!";
-                                    mic.NoochId = member.Nooch_ID;
-                                    mic.IsSuccess = false;
-                                    allinnerclass.Add(mic);
+                                    mic.Message = "Member not found";
+                                    mic.NoochId = s;
                                 }
-                            }
-                            else
-                            {
-                                mic.Message = "Member already Deleted";
-                                mic.NoochId = s;
-                                allinnerclass.Add(mic);
-                            }
 
-                            #endregion
+                                resInnerClass.Add(mic);
+
+                                #endregion
+                            }
                         }
-                    }
 
-                    res.IsSuccess = true;
-                    res.Message = "all operations performed";
-                    res.MemberOperationsOuterClass = allinnerclass;
+                        res.IsSuccess = true;
+                        res.Message = "all operations performed";
+                        res.MemberOperationsOuterClass = resInnerClass;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Info("MemberController - ApplyOperation - Delete User Block FAILED - Exception: [" + ex + "]");
+                    }
                 }
 
                 #endregion Delete User
-
 
                 return Json(res);
             }
@@ -402,7 +418,7 @@ namespace noochAdminNew.Controllers
                 res.IsSuccess = false;
                 res.Message = "Error";
 
-                Logger.Info("Admin Dash -> MemberController - ApplyOperation FAILED - Exception: [" + ex.Message + "]");
+                Logger.Info("MemberController - ApplyOperation FAILED - Exception: [" + ex.Message + "]");
 
                 return Json(res);
             }
@@ -486,7 +502,7 @@ namespace noochAdminNew.Controllers
                 foreach (Member m in All_Members_In_Records)
                 {
                     int TransCount = (from tr in obj.Transactions
-                                      where ( tr.TransactionStatus == "Success" &&
+                                      where (tr.TransactionStatus == "Success" &&
                                              (tr.SenderId == m.MemberId || tr.RecipientId == m.MemberId ||
                                              tr.InvitationSentTo == m.UserName || tr.InvitationSentTo == m.UserNameLowerCase ||
                                              tr.InvitationSentTo == m.SecondaryEmail))
@@ -497,13 +513,13 @@ namespace noochAdminNew.Controllers
                     // request  - T3EMY1WWZ9IscHIj3dbcNw==
 
                     var totalAmountSent = (from tr in obj.Transactions
-                                          where tr.TransactionStatus == "Success" &&
-                                             //(tr.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || tr.TransactionType == "DrRr1tU1usk7nNibjtcZkA==") &&
-                                               (tr.SenderId == m.MemberId ||
-                                               (tr.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw==" &&
-                                                tr.InvitationSentTo == m.UserName ||
-                                                tr.InvitationSentTo == m.UserNameLowerCase))
-                                          select tr.Amount
+                                           where tr.TransactionStatus == "Success" &&
+                                               //(tr.TransactionType == "5dt4HUwCue532sNmw3LKDQ==" || tr.TransactionType == "DrRr1tU1usk7nNibjtcZkA==") &&
+                                                (tr.SenderId == m.MemberId ||
+                                                (tr.TransactionType == "T3EMY1WWZ9IscHIj3dbcNw==" &&
+                                                 tr.InvitationSentTo == m.UserName ||
+                                                 tr.InvitationSentTo == m.UserNameLowerCase))
+                                           select tr.Amount
                         ).Sum(tr => (decimal?)tr) ?? 0;
 
                     MembersListDataClass mdc = new MembersListDataClass();
@@ -813,30 +829,45 @@ namespace noochAdminNew.Controllers
 
                         MemberDetailsStats ms = new MemberDetailsStats();
 
-                       // ms.TotalTransfer = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_P2P_transfers").SingleOrDefault();
-                        ms.TotalTransfer = obj.Transactions.Where(t => (t.SenderId == Member.MemberId || t.RecipientId==Member.MemberId || t.InvitationSentTo == Member.UserName ||
-                                                t.InvitationSentTo == Member.UserNameLowerCase ||
-                                                t.InvitationSentTo == Member.SecondaryEmail) && t.TransactionStatus=="Success").Count().ToString();
-                            
-                        //string TotalSent = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Sent").SingleOrDefault();
-                        decimal decTotalSent=   obj.Transactions.Where(t => (t.SenderId == Member.MemberId || t.InvitationSentTo == Member.UserName || t.InvitationSentTo == Member.UserNameLowerCase ||
-                                                  t.InvitationSentTo == Member.SecondaryEmail) && t.TransactionStatus == "Success").Select(t => t.Amount).Sum(t => (decimal?)t) ?? 0;
+                        ms.TotalTransfer = obj.Transactions.Where(t => t.TransactionStatus == "Success" &&
+                                                                      (t.SenderId == Member.MemberId ||
+                                                                       t.RecipientId == Member.MemberId ||
+                                                                       t.InvitationSentTo == Member.UserName ||
+                                                                       t.InvitationSentTo == Member.UserNameLowerCase ||
+                                                                       t.InvitationSentTo == Member.SecondaryEmail))
+                                                                       .Count().ToString();
+
+                        decimal decTotalSent = obj.Transactions.Where(t => t.TransactionStatus == "Success" &&
+                                                                          (t.SenderId == Member.MemberId ||
+                                                                           t.InvitationSentTo == Member.UserName ||
+                                                                           t.InvitationSentTo == Member.UserNameLowerCase ||
+                                                                           t.InvitationSentTo == Member.SecondaryEmail))
+                                                                           .Select(t => t.Amount).Sum(t => (decimal?)t) ?? 0;
 
                         string TotalSent = decTotalSent.ToString();
                         ms.TotalSent = TotalSent != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(TotalSent)) : "0";
-                        
-                       // string TotalReceived = obj.GetReportsForMember(Member.MemberId.ToString(), "Total_$_Received").SingleOrDefault();
-                        decimal DectotalReceived = obj.Transactions.Where(t => (t.RecipientId == Member.MemberId || t.InvitationSentTo == Member.UserName || t.InvitationSentTo == Member.UserNameLowerCase ||
-                                               t.InvitationSentTo == Member.SecondaryEmail) && t.TransactionStatus == "Success").Select(t => t.Amount).Sum(t => (decimal?)t) ?? 0;
-                        string TotalReceived = DectotalReceived.ToString();
+
+                        decimal decLargestSent = obj.Transactions.Where(t => t.TransactionStatus == "Success" &&
+                                                                            (t.SenderId == Member.MemberId ||
+                                                                             t.InvitationSentTo == Member.UserName ||
+                                                                             t.InvitationSentTo == Member.UserNameLowerCase ||
+                                                                             t.InvitationSentTo == Member.SecondaryEmail))
+                                                                             .Select(t => t.Amount).Max(t => (decimal?)t) ?? 0;
+                        string LargestSent = decLargestSent.ToString();
+                        ms.LargestSent = LargestSent != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(LargestSent)) : "0";
+
+
+                        decimal totalReceivedDec = obj.Transactions.Where(t => t.TransactionStatus == "Success" &&
+                                                                              (t.RecipientId == Member.MemberId ||
+                                                                              (t.TransactionType == "DrRr1tU1usk7nNibjtcZkA==" &&
+                                                                              (t.InvitationSentTo == Member.UserName ||
+                                                                               t.InvitationSentTo == Member.UserNameLowerCase ||
+                                                                               t.InvitationSentTo == Member.SecondaryEmail))))
+                                                                               .Select(t => t.Amount).Sum(t => (decimal?)t) ?? 0;
+
+                        string TotalReceived = totalReceivedDec.ToString();
                         ms.TotalReceived = TotalReceived != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(TotalReceived)) : "0";
 
-                       // string LargestSent = obj.GetReportsForMember(Member.MemberId.ToString(), "Largest_sent_transfer").SingleOrDefault();
-                        decimal decLargestSent = obj.Transactions.Where(t => (t.SenderId == Member.MemberId || t.InvitationSentTo == Member.UserName || t.InvitationSentTo == Member.UserNameLowerCase ||
-                                                t.InvitationSentTo == Member.SecondaryEmail) && t.TransactionStatus == "Success" && t.RecipientId != Member.MemberId).Select(t => t.Amount).Max(t => (decimal?)t) ?? 0;
-                        string LargestSent = decLargestSent.ToString();
-                     
-                        ms.LargestSent = LargestSent != "0" ? String.Format("{0:###,###.##}", Convert.ToDecimal(LargestSent)) : "0";
 
                         mdc.MemberStats = ms;
 
@@ -1639,13 +1670,13 @@ namespace noochAdminNew.Controllers
 
                     if (file.ContentType.ToLower() == "application/pdf")
                     {
-                         pic = MemberId.ToString() + ".pdf";
-                         DocumentDetails.IsPdf = true;
+                        pic = MemberId.ToString() + ".pdf";
+                        DocumentDetails.IsPdf = true;
                     }
                     else
                     {
-                         pic = MemberId.ToString() + ".png";
-                    }                 
+                        pic = MemberId.ToString() + ".png";
+                    }
 
                     // CLIFF (6/10/16): THIS WAS SAVING TO A FOLDER IN THE 'noochnewadmin' PROJECT, BUT IT NEEDS TO BE IN noochservices
                     //                  SINCE THAT'S WHERE ALL OTHER USER'S DOCS ARE SAVED AND IT'S WHERE THERE SERVER EXPECTS TO FIND THE DOC
@@ -1824,7 +1855,7 @@ namespace noochAdminNew.Controllers
                         submitDocToSynapse_user_doc doc = new submitDocToSynapse_user_doc();
                         string Extension = Path.GetExtension(ImageUrl);
 
-                        if(Extension== ".pdf")
+                        if (Extension == ".pdf")
                         {
                             doc.attachment = "data:text/csv;base64," + CommonHelper.ConvertImageURLToBase64(ImageUrl).Replace("\\", "");
                         }
