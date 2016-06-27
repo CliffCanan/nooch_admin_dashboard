@@ -43,7 +43,6 @@ namespace noochAdminNew
             // CC (6/23/16): Commenting out the first job for updating transactions' status w/ Synapse b/c now we are
             //               using WebHooks which should keep all transaction statuses updated as Synapse sends each WebHook.
             //RecurringJob.AddOrUpdate(() => updateTransactionStatusService(), Cron.Daily);
-            RecurringJob.AddOrUpdate(() => notifyAdminOfBanksAwaitingVerification(), Cron.Daily);
             RecurringJob.AddOrUpdate(() => NoochChecks(), Cron.Daily);
         }
 
@@ -288,6 +287,9 @@ namespace noochAdminNew
         {
             Logger.Info("*****  DAILY SCAN -> NoochChecks Initiated  *****");
 
+            
+            var isDevServer = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox"));
+            if (isDevServer) return false;
 
             List<Member> membersList = CommonHelper.GetAllMembers();
 
@@ -306,7 +308,7 @@ namespace noochAdminNew
 
                         if ((mem.Status == "Registered" || mem.Status == "Active") &&    // If user isn't suspended, blocked
                             (string.IsNullOrEmpty(mem.Address) || mem.IsVerifiedPhone == false) &&  // If they haven't entered an address yet or verified a phone number
-                            mem.IsDeleted == false)
+                            mem.isRentScene != true && mem.IsDeleted == false)
                         {
                             var days = (DateTime.Now - mem.DateCreated.Value).TotalDays;
 
@@ -529,237 +531,6 @@ namespace noochAdminNew
                             //    }
                             //}
                             #endregion Automatically Cancel any Pending Requests that older than X days
-
-
-                            #region Micro Deposit Reminders (NOT CURRENTLY USED)
-                            //--------------------------	Micro Deposit Reminders (For confirming a bank account)  --------------------------
-                            //-------------------------- 					NOT USED FOR NOW						 --------------------------
-
-                            //output.InnerHtml += "Getting List of Banks for member" + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + ".<br/>";
-
-                            /*List<BankAccountDetails> bankList = obj.GetMemberBanks(mem.MemberId.ToString());
-
-                              if (bankList != null)
-                              {
-                                  if (bankList.Count > 0)
-                                  {
-                                      //output.InnerHtml += "Member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + " Has bank details.<br/>";
-                                      foreach (BankAccountDetails bank in bankList)
-                                      {
-                                          //output.InnerHtml += "Checking if the Member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + " Has non verfied bank details.<br/>";
-                                          if (bank != null)
-                                          {
-                                              if (bank.IsVerified.Value == false)
-                                              {
-                                                  //output.InnerHtml += "Yes, Member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + " Has non verified bank details.<br/>";
-                                                  mailBodyText = "Hi " + CommonHelper.GetDecryptedData(mem.FirstName) + " Check you bank account for 2 small deposits from Nooch that should arrive on " + bank.DateCreated.ToString();
-                                                  days = (DateTime.Now - mem.DateCreated.Value).TotalDays;
-                                                  if ((days >= 3.0 && days <= 3.23) || (days >= 7.0 && days <= 7.23) || (days >= 14.0 && days <= 14.23))
-                                                  {
-                                                      if (mem.DeviceToken != null && mem.DeviceToken != "")
-                                                      {
-                                                          ApplePushNotification.SendNotificationMessage(mailBodyText, 203, null, mem.DeviceToken, Utility.GetValueFromConfig("AppKey"), Utility.GetValueFromConfig("MasterSecret"));
-                                                          Logger.LogDebugMessage("Micro Deposit Reminder Status - Push notification sent to [" + mem.DeviceToken + "].");
-                                                          //output.InnerHtml += "<font color='green'>Push sent to Member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + " who has non verfied bank details.</font><br/>";
-                                                      }
-                                                  }
-                                                  else if ((days >= 21.0))
-                                                  {
-                                                      //output.InnerHtml += "Request is more than 21 days for member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + ", Therefore deleting bank detail for non verified bank account.<br/>";
-                                                      //If the account remains un-verified after 21 days, update the dbo.BankAccountDetails table for that bank account by assign the field
-                                                      // IsDeleted a value of 1.
-                                                      bool isdeleted = obj.DeleteMemberBank(bank.BankAccountId.ToString());
-                                                  }
-                                              }
-                                          }
-                                      }
-                                  }
-                              }*/
-                            #endregion Automatic Withdrawals (NOT USED FOR NOW)
-
-
-                            #region Automatic Withdrawals (NOT USED FOR NOW)
-                            //---------------------------				For Automatic Withdrawal				---------------------------------------
-                            /*  var transactionDataAccess = new TransactionDataAccess();
-                                decimal currentBalance = decimal.Parse(CommonHelper.GetDecryptedData(mem.Deposit));
-                                var noochConnection = new NoochDataEntities();
-                                var membersAccountRepository = new Repository<Members, NoochDataEntities>(noochConnection);
-                                string adminUserName = CommonHelper.GetEncryptedData(Utility.GetValueFromConfig("transfersMail"));
-                                //output.InnerHtml += "Admin User Name is " + adminUserName + "<br/>";
-                                var adminAccountSpecification = new Specification<Members>
-                                {
-                                    Predicate = accountTemp => accountTemp.UserName.Equals(adminUserName)
-                                };
-                                var admin = membersAccountRepository.SelectAll(adminAccountSpecification).FirstOrDefault();
-                                //output.InnerHtml += "Inside Automatic Withdrawal for admin " + admin.MemberId + "<br/>";
-                                //output.InnerHtml += "Inside Automatic Withdrawal for member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + " and admin id is " + admin.MemberId + "<br/>";
-
-                                //If IsFrequencyOn then take the value of WithdrawalId column from members table and get the current scheme of withdrawal from WithdrawalFrequency table.
-
-                                //output.InnerHtml += "Checking if the frequency is ON/OFF for member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + "<br/>";
-                                if ((mem.IsFrequencyOn == null) ? false : mem.IsFrequencyOn.Value)
-                                {
-                                    //output.InnerHtml += "Great Member Frequency is ON for member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + "<br/>";
-                                    WithdrawalFrequency wf = obj.GetWithdrawalFrequency(mem.WithdrawalId.Value.ToString());
-                                    if (wf != null)
-                                    {
-                                        //output.InnerHtml += "Member Frequency Settings are not null for member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + "<br/>";
-                                        int day = (int)DateTime.Today.DayOfWeek;
-                                        if (wf.Days != null)
-                                        {
-                                            //output.InnerHtml += "Member Frequency Settings is set to " + wf.Days + " for member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + "<br/>";
-                                            if (wf.Days.Contains(day.ToString()) && DateTime.Now.Hour >= wf.Time.Value.Hours)
-                                            {
-                                                //output.InnerHtml += "Yes  " + wf.Days + " for member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + "<br/>";
-                                                TransactionEntity transactionEntity = new TransactionEntity
-                                                {
-                                                    MemberId = admin.MemberId.ToString(),
-                                                    RecipientId = mem.MemberId.ToString(),
-                                                    Amount = currentBalance,
-                                                    IsPrePaidTransaction = false,
-                                                    Location = new LocationEntity
-                                                    {
-                                                        Latitude = float.Parse(mem.LastLocationLat.Value.ToString()),
-                                                        Longitude = float.Parse(mem.LastLocationLng.Value.ToString()),
-                                                        Altitude = 0.00f,
-                                                        AddressLine1 = CommonHelper.GetDecryptedData(mem.Address),
-                                                        AddressLine2 = CommonHelper.GetDecryptedData(mem.Address2),
-                                                        City = CommonHelper.GetDecryptedData(mem.City),
-                                                        State = CommonHelper.GetDecryptedData(mem.State),
-                                                        Country = mem.Country,
-                                                        ZipCode = CommonHelper.GetDecryptedData(mem.Zipcode),
-                                                    },
-                                                    TransactionDateTime = DateTime.Now.ToString()
-                                                };
-                                                string result = transactionDataAccess.WithDrawFund(transactionEntity);
-                                                //output.InnerHtml += "<font color='green'>Transaction For Member Frequency Done With Output " + result + ".</font><br/>";
-                                                //After success send email notification.
-                                                var fromAddress = Utility.GetValueFromConfig("adminMail");
-                                                var toAddress = CommonHelper.GetDecryptedData(mem.UserName);
-                                                try
-                                                {
-                                                    UtilityDataAccess.SendEmail(null, MailPriority.High, fromAddress, toAddress, null, "Nooch - automatic withdrawl settings.", null, null, null, null, result);
-                                                    //output.InnerHtml += "<font color='green'>Email sent to Member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + ", to email " + toAddress + " For automatic withdrawal.</font><br/>";
-                                                }
-                                                catch (Exception)
-                                                {
-                                                    Logger.LogDebugMessage("CheckAutomaticWithdrawal - CheckAutomaticWithdrawal.");
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            //Monthly Frequency
-                                            //Withdrawal generated at 05:00PM on the last day of the month
-                                            TransactionEntity transactionEntity = new TransactionEntity
-                                            {
-                                                MemberId = admin.MemberId.ToString(),
-                                                RecipientId = mem.MemberId.ToString(),
-                                                Amount = currentBalance,
-                                                IsPrePaidTransaction = false,
-                                                Location = new LocationEntity
-                                                {
-                                                    Latitude = float.Parse(mem.LastLocationLat.Value.ToString()),
-                                                    Longitude = float.Parse(mem.LastLocationLng.Value.ToString()),
-                                                    Altitude = 0.00f,
-                                                    AddressLine1 = CommonHelper.GetDecryptedData(mem.Address),
-                                                    AddressLine2 = CommonHelper.GetDecryptedData(mem.Address2),
-                                                    City = CommonHelper.GetDecryptedData(mem.City),
-                                                    State = CommonHelper.GetDecryptedData(mem.State),
-                                                    Country = mem.Country,
-                                                    ZipCode = CommonHelper.GetDecryptedData(mem.Zipcode),
-                                                }
-                                            };
-                                            string result = transactionDataAccess.WithDrawFund(transactionEntity);
-                                            //output.InnerHtml += "<font color='green'>Transaction For Member Monthly Frequency Done With Output " + result + ".</font><br/>";
-                                            //After success send email notification.
-                                            var fromAddress = Utility.GetValueFromConfig("adminMail");
-                                            var toAddress = CommonHelper.GetDecryptedData(mem.UserName);
-                                            try
-                                            {
-                                                UtilityDataAccess.SendEmail(null, MailPriority.High, fromAddress, toAddress, null, "Nooch - automatic withdrawl settings.", null, null, null, null, result);
-                                                //output.InnerHtml += "<font color='green'>Email sent to Member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + " on email " + toAddress + ", For automatic withdrawal.</font><br/>";
-                                            }
-                                            catch (Exception)
-                                            {
-                                                Logger.LogDebugMessage("CheckAutomaticWithdrawal - CheckAutomaticWithdrawal.");
-                                            }
-                                        }
-                                    }
-                                }//if mem.IsFrequencyOn
-                                else if ((mem.IsTriggerOn == null) ? false : mem.IsTriggerOn.Value)
-                                {
-                                    //Check if the members balance is over the amount set
-                                    decimal withdrawalFrequency = (mem.WithdrawalFrequency == null) ? 0 : mem.WithdrawalFrequency.Value;
-                                    if (currentBalance > withdrawalFrequency)
-                                    {
-                                        WithdrawalTrigger wt = obj.GetTriggerFrequency(mem.WithdrawalId.Value.ToString());
-                                        if (wt != null)
-                                        {
-                                            if (wt.AmountCredited != null)
-                                            {
-                                                //Step 5 : If the scheme rule matches then do the transaction (Withdraw Fund) based on the rule
-                                                TransactionEntity transactionEntity = new TransactionEntity
-                                                {
-                                                    MemberId = mem.MemberId.ToString(),
-                                                    RecipientId = mem.MemberId.ToString(),
-                                                    Amount = currentBalance,
-                                                    IsPrePaidTransaction = false,
-                                                };
-                                                string result = transactionDataAccess.WithDrawFund(transactionEntity);
-                                                //After success send email notification.
-                                                var fromAddress = Utility.GetValueFromConfig("adminMail");
-                                                var toAddress = CommonHelper.GetDecryptedData(mem.UserName);
-                                                try
-                                                {
-                                                    UtilityDataAccess.SendEmail(null, MailPriority.High, fromAddress, toAddress, null, "Nooch - automatic withdrawl settings.", null, null, null, null, result);
-                                                    //output.InnerHtml += "<font color='green'>Email sent to Member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + " on email " + toAddress + ", For automatic withdrawal.</font><br/>";
-                                                }
-                                                catch (Exception)
-                                                {
-                                                    Logger.LogDebugMessage("CheckAutomaticWithdrawal - CheckAutomaticWithdrawal.");
-                                                }
-                                            }
-                                            else
-                                            {
-                                                //Entire Balance
-                                                TransactionEntity transactionEntity = new TransactionEntity
-                                                {
-                                                    MemberId = mem.MemberId.ToString(),
-                                                    RecipientId = mem.MemberId.ToString(),
-                                                    Amount = decimal.Parse(CommonHelper.GetDecryptedData(mem.Deposit)),
-                                                    IsPrePaidTransaction = false,
-                                                    Location = new LocationEntity
-                                                    {
-                                                        Latitude = float.Parse(mem.LastLocationLat.Value.ToString()),
-                                                        Longitude = float.Parse(mem.LastLocationLng.Value.ToString()),
-                                                        Altitude = 0.00f,
-                                                        AddressLine1 = CommonHelper.GetDecryptedData(mem.Address),
-                                                        AddressLine2 = CommonHelper.GetDecryptedData(mem.Address2),
-                                                        City = CommonHelper.GetDecryptedData(mem.City),
-                                                        State = CommonHelper.GetDecryptedData(mem.State),
-                                                        Country = mem.Country,
-                                                        ZipCode = CommonHelper.GetDecryptedData(mem.Zipcode),
-                                                    }
-                                                };
-                                                string result = transactionDataAccess.WithDrawFund(transactionEntity);
-                                                //After success send email notification.
-                                                var fromAddress = Utility.GetValueFromConfig("adminMail");
-                                                var toAddress = CommonHelper.GetDecryptedData(mem.UserName);
-                                                try
-                                                {
-                                                    UtilityDataAccess.SendEmail(null, MailPriority.High, fromAddress, toAddress, null, "Nooch - automatic withdrawal settings.", null, null, null, null, result);
-                                                    //output.InnerHtml += "<font color='green'>Email sent to Member " + mem.MemberId + ":" + mem.FirstName + ":" + mem.LastName + " on email " + toAddress + ", For automatic withdrawal.</font><br/>";
-                                                }
-                                                catch (Exception)
-                                                {
-                                                    Logger.LogDebugMessage("CheckAutomaticWithdrawal - CheckAutomaticWithdrawal.");
-                                                }
-                                            }
-                                        }
-                                    }
-                                }*/
-                            #endregion Automatic Withdrawals (NOT USED FOR NOW)
                         }
 
                         membersList = null;
