@@ -639,6 +639,8 @@ namespace noochAdminNew.Controllers
             }
         }
 
+        /*
+         * Code from May 2016 when we upgraded to Synapse V3 for sending out notifications to existing users with a bank account attached.
         [HttpPost]
         public ActionResult SendReLinkEmail()
         {
@@ -718,7 +720,7 @@ namespace noochAdminNew.Controllers
                 Logger.Info("*****  Admin Cntrlr -> Completed Sending Upgrade Email Notification to [" + sentSuccessfullyCount + "] Users  *****");
                 Logger.Info("*****  Admin Cntrlr -> Skipped [" + skippedUsers + "] Users  *****");
             }
-        }
+        }*/
 
 
         public ActionResult CreditFundToMember()

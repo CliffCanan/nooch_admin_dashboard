@@ -385,6 +385,7 @@
                                         <h5>Contact Info</h5>
 
                                         <span class="pull-right">
+                                            <i class="fa fa-fw fa-facebook-square m-r-5" style="color: #3b5998"></i>
                                             @{
                                                 if (mdc.FBID == null || mdc.FBID == "")
                                                 {
@@ -990,7 +991,7 @@
                                                                     <strong>@synpsDetail.virtual_doc</strong>
                                                                     <i class="fa fa-check text-success m-l-5"></i>
                                                                 </span>
-                                                                <button data-val="@mdc.memberId" type="button" onclick="Member.submitSsn()" class="btn btn-xs btn-danger pull-right m-r-10">Re-Submit SSN</button>
+                                                                <button data-val="@mdc.memberId" type="button" onclick="Member.submitSsn()" class="btn btn-xs btn-danger pull-right m-r-10" data-toggle="tooltip" data-trigger="hover" title="Re-Submit SSN"><i class="fa fa-fw fa-refresh m-0"></i></button>
                                                             }
                                                             else
                                                             {
@@ -1000,6 +1001,24 @@
                                                                 </span>
                                                                 <button data-val="@mdc.memberId" type="button" onclick="Member.submitSsn()" class="btn btn-xs btn-danger pull-right m-r-10">Submit SSN</button>
                                                             }
+                                                        </li>
+
+                                                        <li class="list-group-item">
+                                                            <b>Facebook</b>
+                                                            <span class="pull-right">
+                                                                <i class="fa fa-fw fa-facebook-square m-r-5" style="color: #3b5998"></i>
+                                                                @{
+                                                                    if (mdc.FBID == null || mdc.FBID == "")
+                                                                    {
+                                                                        <strong class="text-danger">FB Not Linked</strong>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <a href="https://www.facebook.com/@mdc.FBID" class="text-navy" target="_blank" data-toggle="tooltip" title="Open @mdc.FirstName's FB profile (new tab).">Facebook</a>
+                                                                        <i class="fa fa-check text-success m-l-5"></i>
+                                                                    }
+                                                                }
+                                                            </span>
                                                         </li>
 
                                                         <li class="list-group-item">
@@ -1064,7 +1083,7 @@
                                                         </li>
                                                     </ul>
 
-                                                    <!--<div class="form-group m-b-0">
+                                                    @*<div class="form-group m-b-0">
                                                             <span class="col-xs-4 col-sm-5 control-label">
                                                                 <b>Xtra Verification?</b>
                                                             </span>
@@ -1082,7 +1101,7 @@
                                                                 <span class="show">YES or NOT NEEDED</span>
                                                                 <small>Submitted On:&nbsp; </small>
                                                             </div>
-                                                        </div>-->
+                                                        </div>*@
                                                 }
                                                 else
                                                 {
@@ -1654,7 +1673,7 @@
     </div>
 </div>
 
-<!-- Confirm Delete  -->
+@* Confirm Delete  *@
 <div id="myModalConfirmDelete" class="modal fade" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -1673,7 +1692,7 @@
     </div>
 </div>
 
-<!-- Change Password Modal -->
+@* Change Password Modal *@
 <div id="changePwd" class="modal fade" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -1707,7 +1726,7 @@
     </div>
 </div>
 
-<!-- View ID Doc  -->
+@* View ID Doc  *@
 <div id="idDocModal" class="modal fade" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1727,9 +1746,7 @@
 </div>
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBejM5FqN8AVj_JbZvCYCjoGwrmB7R-rT0&callback=checkIfUserLocationExists"></script>
-
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js" async></script>
-<!-- Input Mask-->
 <script src="../js/plugins/jasny/jasny-bootstrap.min.js"></script>
 <script>
     window.paceOptions = {
