@@ -77,15 +77,16 @@ namespace noochAdminNew.Classes.ModelClasses
         public synapseV3Result_user_id _id { get; set; }
         public synapseV3Result_user_client client { get; set; }
         public synapseV3Result_user_extra extra { get; set; }
-        public string[] legal_names { get; set; }
+        public synapseV3Result_user_docStatus doc_status { get; set; }
+        public List<synapseV3Result_documents> documents { get; set; }
         public synapseV3Result_user_logins[] logins { get; set; }
         public bool is_hidden { get; set; }
+        public string[] legal_names { get; set; }
 
         public string permission { get; set; }
-        public string[] photos { get; set; }
         public string[] phone_numbers { get; set; }
-
-        public synapseV3Result_user_docStatus doc_status { get; set; }
+        public string[] photos { get; set; }
+        public string refresh_token { get; set; }
     }
 
     public class synapseV3Result_user_client
@@ -106,6 +107,7 @@ namespace noochAdminNew.Classes.ModelClasses
     public class synapseV3Result_user_logins
     {
         public string email { get; set; }
+        public string scope { get; set; }
         public bool read_only { get; set; }
     }
 
@@ -116,7 +118,26 @@ namespace noochAdminNew.Classes.ModelClasses
 
     public class synapseV3Result_user_docStatus
     {
-        public string physical_doc { get; set; } // This is an integer ID
+        public string physical_doc { get; set; }
         public string virtual_doc { get; set; }
+    }
+
+
+    public class synapseV3Result_documents
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+        public string permission_scope { get; set; }
+        public synapseV3Result_documents_docobject[] physical_docs { get; set; }
+        public synapseV3Result_documents_docobject[] social_docs { get; set; }
+        public synapseV3Result_documents_docobject[] virtual_docs { get; set; }
+    }
+
+    public class synapseV3Result_documents_docobject
+    {
+        public string document_type { get; set; }
+        public string id { get; set; }
+        public string status { get; set; }
+        public synapseV3Result_user_extra_dateJoined last_updated { get; set; }
     }
 }

@@ -649,7 +649,7 @@ namespace noochAdminNew.Classes.Utility
         /// <returns></returns>
         public static synapseV3checkUsersOauthKey refreshSynapseV3OautKey(string oauthKey)
         {
-            Logger.Info("Admin Common Helper -> refreshSynapseV3OautKey Initiated - User's Original OAuth Key (enc): [" + oauthKey + "]");
+            Logger.Info("Common Helper -> refreshSynapseV3OautKey Fired - User's Original OAuth Key (enc): [" + oauthKey + "]");
 
             synapseV3checkUsersOauthKey res = new synapseV3checkUsersOauthKey();
             res.success = false;
@@ -727,12 +727,9 @@ namespace noochAdminNew.Classes.Utility
                             synapseCreateUserV3Result_int refreshResultFromSyn = new synapseCreateUserV3Result_int();
                             refreshResultFromSyn = JsonConvert.DeserializeObject<synapseCreateUserV3Result_int>(content);
 
-                            JObject refreshResponse = JObject.Parse(content);
+                            Logger.Info("Common Helper -> refreshSynapseV3OautKey - Just Parsed Synapse Response -> Permission: [" + refreshResultFromSyn.user.permission + "]");
 
-                            //Logger.Info("Admin Common Helper -> refreshSynapseV3OautKey - Just Parsed Synapse Response: [" + refreshResponse + "]");
-
-                            if ((refreshResponse["success"] != null && Convert.ToBoolean(refreshResponse["success"])) ||
-                                 refreshResultFromSyn.success == true)
+                            if (refreshResultFromSyn.success == true)
                             {
                                 // Check if Token from Synapse /user/signin is same as the one we already have saved in DB for this suer
                                 if (synCreateUserObject.access_token == GetEncryptedData(refreshResultFromSyn.oauth.oauth_key))
@@ -754,16 +751,77 @@ namespace noochAdminNew.Classes.Utility
                                 synCreateUserObject.virtual_doc = refreshResultFromSyn.user.doc_status != null ? refreshResultFromSyn.user.doc_status.virtual_doc : null;
                                 synCreateUserObject.extra_security = refreshResultFromSyn.user.extra != null ? refreshResultFromSyn.user.extra.extra_security.ToString() : null;
 
-                                if (!String.IsNullOrEmpty(refreshResultFromSyn.user.permission))
+                                if (refreshResultFromSyn.user.documents != null &&
+                                    refreshResultFromSyn.user.documents.Count > 0)
                                 {
-                                    synCreateUserObject.permission = refreshResultFromSyn.user.permission;
+                                    //Logger.Info("Common Helper -> refreshSynapseV3OautKey - DOCUMENTS OBJECT FOUND!");
+
+                                    #region Loop Through Outer Documents Object (Should Only Be 1)
+
+                                    foreach (synapseV3Result_documents doc in refreshResultFromSyn.user.documents)
+                                    {
+                                        // Check VIRTUAL_DOCS
+                                        if (doc.virtual_docs != null && doc.virtual_docs.Length > 0)
+                                        {
+                                            Logger.Info("Common Helper -> refreshSynapseV3OautKey - VIRTUAL_DOC ARRAY FOUND");
+                                            short n = 0;
+                                            foreach (synapseV3Result_documents_docobject docObject in doc.virtual_docs)
+                                            {
+                                                n += 1;
+                                                Logger.Info("Common Helper -> refreshSynapseV3OautKey - VIRTUAL_DOC #[" + n + "] - Type: [" + docObject.document_type + "], Status: [" + docObject.status + "]");
+                                                if (docObject.document_type == "SSN")
+                                                {
+                                                    synCreateUserObject.virtual_doc = docObject.status;
+                                                }
+                                            }
+                                        }
+
+                                        // Check PHYSICAL_DOCS
+                                        if (doc.physical_docs != null && doc.physical_docs.Length > 0)
+                                        {
+                                            Logger.Info("Common Helper -> refreshSynapseV3OautKey - PHYSICAL_DOC ARRAY FOUND");
+                                            short n = 0;
+                                            foreach (synapseV3Result_documents_docobject docObject in doc.physical_docs)
+                                            {
+                                                n += 1;
+                                                Logger.Info("Common Helper -> refreshSynapseV3OautKey - PHYSICAL_DOC #[" + n + "] - Type: [" + docObject.document_type + "], Status: [" + docObject.status + "]");
+                                                if (docObject.document_type == "GOVT_ID")
+                                                {
+                                                    synCreateUserObject.physical_doc = docObject.status;
+                                                }
+                                            }
+                                        }
+
+                                        // Check SOCIAL_DOCS
+                                        if (doc.social_docs != null && doc.social_docs.Length > 0)
+                                        {
+                                            Logger.Info("Common Helper -> refreshSynapseV3OautKey - SOCIAL_DOC ARRAY FOUND");
+                                            short n = 0;
+                                            foreach (synapseV3Result_documents_docobject docObject in doc.social_docs)
+                                            {
+                                                n += 1;
+                                                Logger.Info("Common Helper -> refreshSynapseV3OautKey - SOCIAL_DOC #[" + n + "] - Type: [" + docObject.document_type + "], Status: [" + docObject.status + "]");
+                                                if (docObject.document_type == "FACEBOOK")
+                                                {
+                                                    // CC (8/5/16): Need to add DB fields to handle new Document Type of "Social"
+                                                    //              Also for all 3 document types (Social, Virtual, Phsyical), we also need to store the "last updated" field to display in Admin Panel as a readable DateTime
+                                                    //synCreateUserObject.virtual_doc = docObject.status;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    #endregion Loop Through Outer Documents Object (Should Only Be 1)
                                 }
+
+                                if (!String.IsNullOrEmpty(refreshResultFromSyn.user.permission))
+                                    synCreateUserObject.permission = refreshResultFromSyn.user.permission;
 
                                 int save = db.SaveChanges();
 
                                 if (save > 0)
                                 {
-                                    Logger.Info("Admin Common Helper -> refreshSynapseV3OautKey - SUCCESS From Synapse and Successfully saved updates to Nooch DB.");
+                                    Logger.Info("Common Helper -> refreshSynapseV3OautKey - SUCCESS From Synapse and Successfully saved updates to Nooch DB.");
 
                                     res.success = true;
                                     res.oauth_consumer_key = synCreateUserObject.access_token;
@@ -773,7 +831,7 @@ namespace noochAdminNew.Classes.Utility
                                 }
                                 else
                                 {
-                                    Logger.Error("Admin Common Helper -> refreshSynapseV3OautKey FAILED - Error saving new key in Nooch DB - " +
+                                    Logger.Error("Common Helper -> refreshSynapseV3OautKey FAILED - Error saving new key in Nooch DB - " +
                                                  "Original Oauth Key: [" + oauthKey + "], " +
                                                  "Refreshed OAuth Key: [" + synCreateUserObject.access_token + "]");
                                     res.msg = "Failed to save new OAuth key in Nooch DB.";
@@ -781,7 +839,7 @@ namespace noochAdminNew.Classes.Utility
                             }
                             else
                             {
-                                Logger.Error("Admin Common Helper -> refreshSynapseV3OautKey FAILED - Attempted to Sign user into Synapse, but got " +
+                                Logger.Error("Common Helper -> refreshSynapseV3OautKey FAILED - Attempted to Sign user into Synapse, but got " +
                                          "error from Synapse service, no 'success' key found - Orig. Oauth Key: [" + oauthKey + "]");
                                 res.msg = "Service error.";
                             }
