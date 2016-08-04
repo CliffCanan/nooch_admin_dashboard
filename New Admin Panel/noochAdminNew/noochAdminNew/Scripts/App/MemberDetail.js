@@ -299,7 +299,6 @@ var Member = function () {
         $.post(url, data, function (result) {
             if (result.IsSuccess == true)
             {
-                toastr.info('Reloading this page...', 'FYI', { timeOut: '2500' })
                 toastr.success(result.Message, 'Success');
 
                 $("#contactNumber").val(result.contactnum);
@@ -312,6 +311,7 @@ var Member = function () {
                 $("#ssninput").val(result.ssn);
                 $("#dobinput").val(result.dob);
 
+                toastr.info('Reloading this page...', 'FYI', { timeOut: '2500' });
                 setTimeout(function () { location.reload(true) }, 2500);
             }
             else
@@ -712,6 +712,8 @@ var Member = function () {
             if (result.isSuccess == true)
             {
                 toastr.success(result.msg, 'Synapse refreshed successfully');
+                toastr.info('Reloading this page...', 'FYI', { timeOut: '2500' });
+                setTimeout(function () { location.reload(true) }, 2500);
             }
             else
             {
