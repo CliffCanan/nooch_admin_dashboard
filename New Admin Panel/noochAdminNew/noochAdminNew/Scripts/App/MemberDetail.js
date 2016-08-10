@@ -647,13 +647,9 @@ var Member = function () {
             console.log(result.msg);
 
             if (result.isSuccess == true)
-            {
                 toastr.success(result.msg, 'Succcess');
-            }
             else
-            {
                 toastr.error(result.msg, 'Error');
-            }
         });
     }
 
@@ -716,9 +712,7 @@ var Member = function () {
                 setTimeout(function () { location.reload(true) }, 2500);
             }
             else
-            {
                 toastr.error(result.msg, 'Error');
-            }
         });
     }
 
@@ -740,13 +734,9 @@ var Member = function () {
             $.unblockUI();
             console.log(result.msg);
             if (result.isSuccess == true)
-            {
                 toastr.success(result.msg, 'Synapse refreshed successfully');
-            }
             else
-            {
                 toastr.error(result.msg, 'Error');
-            }
         });
     }
 
