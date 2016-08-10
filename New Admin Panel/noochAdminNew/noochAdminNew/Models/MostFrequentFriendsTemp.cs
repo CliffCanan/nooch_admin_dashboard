@@ -18,5 +18,8 @@ namespace noochAdminNew.Models
         public Nullable<int> Frequency { get; set; }
         public string SenderId { get; set; }
         public string RecepientId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Photo { get; set; }
     }
 }
