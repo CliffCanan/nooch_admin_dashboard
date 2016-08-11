@@ -328,6 +328,9 @@
           <Property Name="Frequency" Type="int" />
           <Property Name="SenderId" Type="varchar" MaxLength="50" />
           <Property Name="RecepientId" Type="varchar" MaxLength="50" />
+          <Property Name="FirstName" Type="varchar(max)" />
+          <Property Name="LastName" Type="varchar(max)" />
+          <Property Name="Photo" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="Notifications">
           <Key>
@@ -586,6 +589,11 @@
           <Property Name="physical_doc" Type="varchar(max)" />
           <Property Name="virtual_doc" Type="varchar(max)" />
           <Property Name="extra_security" Type="varchar(max)" />
+          <Property Name="cip_tag" Type="varchar(max)" />
+          <Property Name="social_doc" Type="varchar(max)" />
+          <Property Name="phys_doc_lastupdated" Type="datetime" />
+          <Property Name="virt_doc_lastupdated" Type="datetime" />
+          <Property Name="soc_doc_lastupdated" Type="datetime" />
         </EntityType>
         <EntityType Name="SynapseIdVerificationQuestions">
           <Key>
@@ -1092,12 +1100,12 @@
             <End Role="UnitsOccupiedByTenant" EntitySet="UnitsOccupiedByTenants" />
             <End Role="RentTransaction" EntitySet="RentTransactions" />
           </AssociationSet>
-          <EntitySet Name="SynapseCreateUserResults" EntityType="NOOCHModel.SynapseCreateUserResult" />
           <EntitySet Name="SynapseAddTransactionResults" EntityType="NOOCHModel.SynapseAddTransactionResult" />
           <FunctionImport Name="GetSDNListing" EntitySet="SDNSearchResults" ReturnType="Collection(NOOCHModel.SDNSearchResult)">
           <Parameter Name="searchtext" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="TransactionsStatusAtSynapses" EntityType="NOOCHModel.TransactionsStatusAtSynapse" />
+          <EntitySet Name="SynapseCreateUserResults" EntityType="NOOCHModel.SynapseCreateUserResult" />
           </EntityContainer>
         <ComplexType Name="GetTopReferringMembers_Result">
           <Property Type="Guid" Name="InviteCode" Nullable="true" />
@@ -1471,6 +1479,9 @@
           <Property Name="Frequency" Type="Int32" />
           <Property Name="SenderId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="RecepientId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Photo" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Notification">
           <Key>
@@ -1991,6 +2002,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="SynapseAddTransactionResult">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="TransactionId" Type="Guid" />
+          <Property Name="OidFromSynapse" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Status_DateTimeStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Status_Id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Status_Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Status_Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="TransactionsStatusAtSynapse">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nooch_Transaction_Id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Transaction_oid" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="status_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="status_note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="status_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
         <EntityType Name="SynapseCreateUserResult">
           <Key>
             <PropertyRef Name="Id" />
@@ -2021,30 +2056,11 @@
           <Property Name="physical_doc" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="virtual_doc" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="extra_security" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="SynapseAddTransactionResult">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="TransactionId" Type="Guid" />
-          <Property Name="OidFromSynapse" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Status_DateTimeStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Status_Id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Status_Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Status_Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-        </EntityType>
-        <EntityType Name="TransactionsStatusAtSynapse">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nooch_Transaction_Id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Transaction_oid" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="status_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="status_note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="status" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="status_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="cip_tag" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="social_doc" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="phys_doc_lastupdated" Type="DateTime" Precision="3" />
+          <Property Name="virt_doc_lastupdated" Type="DateTime" Precision="3" />
+          <Property Name="soc_doc_lastupdated" Type="DateTime" Precision="3" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2425,6 +2441,9 @@
           <EntitySetMapping Name="MostFrequentFriendsTemps">
             <EntityTypeMapping TypeName="NOOCHModel.MostFrequentFriendsTemp">
               <MappingFragment StoreEntitySet="MostFrequentFriendsTemp">
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="RecepientId" ColumnName="RecepientId" />
                 <ScalarProperty Name="SenderId" ColumnName="SenderId" />
                 <ScalarProperty Name="Frequency" ColumnName="Frequency" />
@@ -2842,9 +2861,41 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="SynapseAddTransactionResults">
+            <EntityTypeMapping TypeName="NOOCHModel.SynapseAddTransactionResult">
+              <MappingFragment StoreEntitySet="SynapseAddTransactionResults">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Status_Note" ColumnName="Status_Note" />
+                <ScalarProperty Name="Status_Text" ColumnName="Status_Text" />
+                <ScalarProperty Name="Status_Id" ColumnName="Status_Id" />
+                <ScalarProperty Name="Status_DateTimeStamp" ColumnName="Status_DateTimeStamp" />
+                <ScalarProperty Name="OidFromSynapse" ColumnName="OidFromSynapse" />
+                <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetSDNListing" FunctionName="NOOCHModel.Store.pGetSDNListing" />
+          <EntitySetMapping Name="TransactionsStatusAtSynapses">
+            <EntityTypeMapping TypeName="NOOCHModel.TransactionsStatusAtSynapse">
+              <MappingFragment StoreEntitySet="TransactionsStatusAtSynapse">
+                <ScalarProperty Name="status_id" ColumnName="status_id" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="status_note" ColumnName="status_note" />
+                <ScalarProperty Name="status_date" ColumnName="status_date" />
+                <ScalarProperty Name="Transaction_oid" ColumnName="Transaction_oid" />
+                <ScalarProperty Name="Nooch_Transaction_Id" ColumnName="Nooch_Transaction_Id" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="SynapseCreateUserResults">
             <EntityTypeMapping TypeName="NOOCHModel.SynapseCreateUserResult">
               <MappingFragment StoreEntitySet="SynapseCreateUserResults">
+                <ScalarProperty Name="soc_doc_lastupdated" ColumnName="soc_doc_lastupdated" />
+                <ScalarProperty Name="virt_doc_lastupdated" ColumnName="virt_doc_lastupdated" />
+                <ScalarProperty Name="phys_doc_lastupdated" ColumnName="phys_doc_lastupdated" />
+                <ScalarProperty Name="social_doc" ColumnName="social_doc" />
+                <ScalarProperty Name="cip_tag" ColumnName="cip_tag" />
                 <ScalarProperty Name="extra_security" ColumnName="extra_security" />
                 <ScalarProperty Name="virtual_doc" ColumnName="virtual_doc" />
                 <ScalarProperty Name="physical_doc" ColumnName="physical_doc" />
@@ -2870,33 +2921,6 @@
                 <ScalarProperty Name="access_token" ColumnName="access_token" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="MemberId" ColumnName="MemberId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SynapseAddTransactionResults">
-            <EntityTypeMapping TypeName="NOOCHModel.SynapseAddTransactionResult">
-              <MappingFragment StoreEntitySet="SynapseAddTransactionResults">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Status_Note" ColumnName="Status_Note" />
-                <ScalarProperty Name="Status_Text" ColumnName="Status_Text" />
-                <ScalarProperty Name="Status_Id" ColumnName="Status_Id" />
-                <ScalarProperty Name="Status_DateTimeStamp" ColumnName="Status_DateTimeStamp" />
-                <ScalarProperty Name="OidFromSynapse" ColumnName="OidFromSynapse" />
-                <ScalarProperty Name="TransactionId" ColumnName="TransactionId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetSDNListing" FunctionName="NOOCHModel.Store.pGetSDNListing" />
-          <EntitySetMapping Name="TransactionsStatusAtSynapses">
-            <EntityTypeMapping TypeName="NOOCHModel.TransactionsStatusAtSynapse">
-              <MappingFragment StoreEntitySet="TransactionsStatusAtSynapse">
-                <ScalarProperty Name="status_id" ColumnName="status_id" />
-                <ScalarProperty Name="status" ColumnName="status" />
-                <ScalarProperty Name="status_note" ColumnName="status_note" />
-                <ScalarProperty Name="status_date" ColumnName="status_date" />
-                <ScalarProperty Name="Transaction_oid" ColumnName="Transaction_oid" />
-                <ScalarProperty Name="Nooch_Transaction_Id" ColumnName="Nooch_Transaction_Id" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

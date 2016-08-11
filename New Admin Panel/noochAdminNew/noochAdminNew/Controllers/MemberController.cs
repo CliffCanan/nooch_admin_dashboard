@@ -17,6 +17,10 @@ using Newtonsoft.Json;
 using System.Web;
 using System.Drawing;
 using Newtonsoft.Json.Linq;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using ImageResizer;
 
 
 namespace noochAdminNew.Controllers
@@ -1666,12 +1670,19 @@ namespace noochAdminNew.Controllers
 
             DocumentDetails.IsPdf = false;
             string pic = "";
+            ResizeSettings resizeSetting = new ResizeSettings
+            {
+                Width = 500,
+                Height = 500,
+                Format = "png"
+            };
 
             using (var noochConnection = new NOOCHEntities())
             {
                 var member = noochConnection.Members.Where(m => m.Nooch_ID == NoochId).FirstOrDefault();
                 DocumentDetails.MemberId = member.MemberId.ToString();
                 
+             
                 var memGuid = member.MemberId;
                 var SynapseCreateUserResult = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == memGuid).FirstOrDefault();
 
@@ -1686,23 +1697,26 @@ namespace noochAdminNew.Controllers
                     }
                     else
                     {
-                        pic = memGuid.ToString() + ".png";
+                        pic = memGuid.ToString() + ".png";                       
                     }
 
                     // CLIFF (6/10/16): THIS WAS SAVING TO A FOLDER IN THE 'noochnewadmin' PROJECT, BUT IT NEEDS TO BE IN noochservices
                     //                  SINCE THAT'S WHERE ALL OTHER USER'S DOCS ARE SAVED AND IT'S WHERE THERE SERVER EXPECTS TO FIND THE DOC
                     //                  WHEN SUBMITTING TO SYNAPSE.  I TRIED TO FIX THIS BELOW BUT CAUSED AN ERROR:
                     // string path = System.IO.Path.Combine(Server.MapPath("~/UploadedPhotos/SynapseDocuments"), pic);
-                    //string path = "C:\\nooch_new_architecture\\Nooch\\Nooch.API\\UploadedPhotos\\SynapseIdDocs\\" + pic;
-                    string path = "C:\\noochweb.venturepact.com\\noochservice\\UploadedPhotos\\SynapseIdDocs\\" + pic;
+                    // string path = "C:\\nooch_new_architecture\\Nooch\\Nooch.API\\UploadedPhotos\\SynapseIdDocs\\" + pic;
+                     string path = "C:\\noochweb.venturepact.com\\noochservice\\UploadedPhotos\\SynapseIdDocs\\" + pic;
                     // file is uploaded
 
                     file.SaveAs(path);
                     DocumentDetails.imgPath = path;
 
+                    if (DocumentDetails.IsPdf != true)
+                    ImageBuilder.Current.Build(path, path, resizeSetting);  
 
-                    //member.VerificationDocumentPath = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + pic;
-                    member.VerificationDocumentPath = path;
+
+                    member.VerificationDocumentPath = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + pic;
+                   //member.VerificationDocumentPath = path;
                     noochConnection.SaveChanges();
 
                     //synapseV3GenericResponse submitDocToSynapseRes = submitDocumentToSynapseV3(DocumentDetails);
