@@ -1008,15 +1008,15 @@
                                                             <span class="pull-right">
                                                                 <i class="fa fa-fw fa-facebook-square m-r-5" style="color: #3b5998"></i>
                                                                 @{
-                                                                    if (mdc.FBID == null || mdc.FBID == "")
-                                                                    {
-                                                                        <strong class="text-danger">FB Not Linked</strong>
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        <a href="https://www.facebook.com/@mdc.FBID" class="text-navy" target="_blank" data-toggle="tooltip" title="Open @mdc.FirstName's FB profile (new tab).">Facebook</a>
-                                                                        <i class="fa fa-check text-success m-l-5"></i>
-                                                                    }
+                                                    if (mdc.FBID == null || mdc.FBID == "")
+                                                    {
+                                                        <strong class="text-danger">FB Not Linked</strong>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="https://www.facebook.com/@mdc.FBID" class="text-navy" target="_blank" data-toggle="tooltip" title="Open @mdc.FirstName's FB profile (new tab).">Facebook</a>
+                                                                    <i class="fa fa-check text-success m-l-5"></i>
+                                                    }
                                                                 }
                                                             </span>
                                                         </li>
@@ -1256,8 +1256,9 @@
                                                         <em>No Synapse Bank Found</em>
                                                     </div>
 
+                                                    var redUrl = mdc.isRentScene == true ? "rentscene" : "";
                                                     <div class="m-t-15 text-center">
-                                                        <a href="https://www.noochme.com/noochweb/Nooch/AddBank?MemberId=@mdc.memberId" class="btn btn-primary" target="_blank"><i class="fa fa-plus m-r-10"></i>Add Bank</a>
+                                                        <a href="https://www.noochme.com/noochweb/Nooch/AddBank?MemberId=@mdc.memberId&redUrl=@redUrl" class="btn btn-primary" target="_blank"><i class="fa fa-plus m-r-10"></i>Add Bank</a>
                                                     </div>
                                                 }
                                             </div>
