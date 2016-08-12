@@ -624,6 +624,7 @@ namespace noochAdminNew.Controllers
                         mdc.Zipcode = !String.IsNullOrEmpty(Member.Zipcode) ? CommonHelper.GetDecryptedData(Member.Zipcode) : "";
                         mdc.Status = Member.Status;
                         mdc.PinNumber = !String.IsNullOrEmpty(Member.PinNumber) ? CommonHelper.GetDecryptedData(Member.PinNumber) : "";
+                        mdc.PinEncrypted = Member.PinNumber;
                         mdc.IsPhoneVerified = Member.IsVerifiedPhone ?? false;
                         mdc.Nooch_ID = Member.Nooch_ID;
                         mdc.type = Member.Type;

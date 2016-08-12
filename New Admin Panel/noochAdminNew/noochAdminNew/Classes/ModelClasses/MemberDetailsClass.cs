@@ -17,6 +17,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string RecoveryEmail { get; set; }
         public string TertiaryEmail { get; set; }
         public string PinNumber { get; set; }
+        public string PinEncrypted { get; set; }
         public string Password { get; set; }
         public string ContactNumber { get; set; }
         public string Status { get; set; }
