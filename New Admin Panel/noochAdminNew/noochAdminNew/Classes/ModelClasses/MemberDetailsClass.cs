@@ -168,6 +168,10 @@ namespace noochAdminNew.Classes.ModelClasses
         public string userPermission { get; set; }
         public string physical_doc { get; set; }
         public string virtual_doc { get; set; }
+        public string social_doc { get; set; }
+        public string phys_doc_lastupdated { get; set; }
+        public string virt_doc_lastupdated { get; set; }
+        public string soc_doc_lastupdated { get; set; }
         public string extra_security { get; set; }
         public string photos { get; set; }
     }

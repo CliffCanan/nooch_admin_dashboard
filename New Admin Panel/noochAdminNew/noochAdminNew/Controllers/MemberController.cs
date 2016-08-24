@@ -576,7 +576,7 @@ namespace noochAdminNew.Controllers
 
             MemberDetailsClass mdc = new MemberDetailsClass();
 
-            Logger.Info("Admin Member Cntrlr - Detail Fired - Nooch_ID: [" + NoochId + "]");
+            // Logger.Info("Admin Member Cntrlr - Detail Fired - Nooch_ID: [" + NoochId + "]");
 
             try
             {
@@ -919,10 +919,20 @@ namespace noochAdminNew.Controllers
                             synapseDetail.synapseUserId = synapseCreateUserObj.user_id.ToString();
                             synapseDetail.isBusiness = synapseCreateUserObj.is_business ?? false;
                             synapseDetail.userPermission = synapseCreateUserObj.permission;
-                            synapseDetail.photos = synapseCreateUserObj.photos;
-                            synapseDetail.physical_doc = synapseCreateUserObj.physical_doc;
-                            synapseDetail.virtual_doc = synapseCreateUserObj.virtual_doc;
                             synapseDetail.extra_security = synapseCreateUserObj.extra_security;
+                            synapseDetail.photos = synapseCreateUserObj.photos;
+                            
+                            synapseDetail.physical_doc = synapseCreateUserObj.physical_doc;
+                            synapseDetail.phys_doc_lastupdated = synapseCreateUserObj.phys_doc_lastupdated != null
+                                ? Convert.ToDateTime(synapseCreateUserObj.phys_doc_lastupdated).ToString("MMM dd, yyyy") : "";
+                            
+                            synapseDetail.virtual_doc = synapseCreateUserObj.virtual_doc;
+                            synapseDetail.virt_doc_lastupdated = synapseCreateUserObj.virt_doc_lastupdated != null
+                                ? Convert.ToDateTime(synapseCreateUserObj.virt_doc_lastupdated).ToString("MMM dd, yyyy") : "";
+                            
+                            synapseDetail.social_doc = synapseCreateUserObj.social_doc;
+                            synapseDetail.soc_doc_lastupdated = synapseCreateUserObj.soc_doc_lastupdated != null
+                                ? Convert.ToDateTime(synapseCreateUserObj.soc_doc_lastupdated).ToString("MMM dd, yyyy") : "";
 
                             // Now get the user's Synapse Bank details
                             var synapseBankDetails = (from Syn in obj.SynapseBanksOfMembers

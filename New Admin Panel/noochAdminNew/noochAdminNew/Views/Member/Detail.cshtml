@@ -984,47 +984,34 @@
                                                         </li>
 
                                                         <li class="list-group-item">
-                                                            <b>Virtual Doc</b>
-                                                            @if (@synpsDetail.virtual_doc == "SUBMITTED|VALID")
-                                                            {
-                                                                <span class="pull-right">
-                                                                    <strong>@synpsDetail.virtual_doc</strong>
-                                                                    <i class="fa fa-check text-success m-l-5"></i>
-                                                                </span>
-                                                                <button data-val="@mdc.memberId" type="button" onclick="Member.submitSsn()" class="btn btn-xs btn-danger pull-right m-r-10" data-toggle="tooltip" data-trigger="hover" title="Re-Submit SSN"><i class="fa fa-fw fa-refresh m-0"></i></button>
-                                                            }
-                                                            else
-                                                            {
-                                                                <span class="pull-right">
-                                                                    <strong>@synpsDetail.virtual_doc</strong>
-                                                                    <i class="fa fa-remove text-danger m-l-5"></i>
-                                                                </span>
-                                                                <button data-val="@mdc.memberId" type="button" onclick="Member.submitSsn()" class="btn btn-xs btn-danger pull-right m-r-10">Submit SSN</button>
-                                                            }
+                                                            <b>Extra Security</b>
+                                                            <span class="pull-right">
+                                                                <strong>@synpsDetail.extra_security</strong>
+                                                            </span>
                                                         </li>
 
                                                         <li class="list-group-item">
-                                                            <b>Facebook</b>
-                                                            <span class="pull-right">
-                                                                <i class="fa fa-fw fa-facebook-square m-r-5" style="color: #3b5998"></i>
-                                                                @{
-                                                    if (mdc.FBID == null || mdc.FBID == "")
-                                                    {
-                                                        <strong class="text-danger">FB Not Linked</strong>
-                                                    }
-                                                    else
-                                                    {
-                                                        <a href="https://www.facebook.com/@mdc.FBID" class="text-navy" target="_blank" data-toggle="tooltip" title="Open @mdc.FirstName's FB profile (new tab).">Facebook</a>
+                                                            <b>Virtual Doc</b>
+                                                            <span class="pull-right" data-trigger="hover" title="@synpsDetail.virt_doc_lastupdated">
+                                                                @if (synpsDetail.virtual_doc == "SUBMITTED|VALID" || synpsDetail.virtual_doc == "SUBMITTED|INVALID")
+                                                                {
+                                                                    <strong data-toggle="tooltip">@synpsDetail.virtual_doc</strong>
                                                                     <i class="fa fa-check text-success m-l-5"></i>
-                                                    }
+                                                                <!--<button data-val="@mdc.memberId" type="button" onclick="Member.submitSsn()" class="btn btn-xs btn-danger pull-right m-r-10" data-toggle="tooltip" data-trigger="hover" title="Re-Submit SSN"><i class="fa fa-fw fa-refresh m-0"></i></button>-->
+                                                                }
+                                                                else
+                                                                {
+                                                                    <strong>@synpsDetail.virtual_doc</strong>
+                                                                    <i class="fa fa-remove text-danger m-l-5"></i>
+                                                                    <button data-val="@mdc.memberId" type="button" onclick="Member.submitSsn()" class="btn btn-xs btn-danger pull-right m-r-10">Submit SSN</button>
                                                                 }
                                                             </span>
                                                         </li>
 
                                                         <li class="list-group-item">
                                                             <b>Physical Doc</b>
-                                                            <span class="pull-right">
-                                                                @if (@synpsDetail.physical_doc == "SUBMITTED|VALID")
+                                                            <span class="pull-right" data-toggle="tooltip" data-trigger="hover" title="@synpsDetail.phys_doc_lastupdated">
+                                                                @if (synpsDetail.physical_doc == "SUBMITTED|VALID" || synpsDetail.physical_doc == "SUBMITTED|INVALID")
                                                                 {
                                                                     <strong>@synpsDetail.physical_doc</strong>
                                                                     <i class="fa fa-check text-success m-l-5"></i>
@@ -1038,9 +1025,25 @@
                                                         </li>
 
                                                         <li class="list-group-item">
-                                                            <b>Extra Security</b>
-                                                            <span class="pull-right">
-                                                                <strong>@synpsDetail.extra_security</strong>
+                                                            <b>Social Doc <i class="fa fa-fw fa-facebook-square m-l-10" style="color: #3b5998"></i></b>
+                                                            <span class="pull-right" data-toggle="tooltip" data-trigger="hover" title="@synpsDetail.soc_doc_lastupdated">
+                                                                @if (synpsDetail.social_doc == "SUBMITTED|VALID" || synpsDetail.social_doc == "SUBMITTED|INVALID")
+                                                                {
+                                                                    if (mdc.FBID == null || mdc.FBID == "")
+                                                                    {
+                                                                        <a href="https://www.facebook.com/@mdc.FBID" class="text-navy" target="_blank" data-toggle="tooltip" title="Open @mdc.FirstName's FB profile (new tab).">@synpsDetail.social_doc</a>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <strong>@synpsDetail.social_doc</strong>
+                                                                    }
+                                                                    <i class="fa fa-check text-success m-l-5"></i>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <strong>@synpsDetail.social_doc</strong>
+                                                                    <i class="fa fa-remove text-danger m-l-5"></i>
+                                                                }
                                                             </span>
                                                         </li>
 

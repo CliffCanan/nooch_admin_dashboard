@@ -41,10 +41,7 @@ namespace noochAdminNew.Classes.Utility
 
         public static string UppercaseFirst(string s)
         {
-            if (string.IsNullOrEmpty(s))
-            {
-                return string.Empty;
-            }
+            if (string.IsNullOrEmpty(s)) return string.Empty;
             // Return char and concat substring.
             return char.ToUpper(s[0]) + s.Substring(1);
         }
@@ -68,9 +65,7 @@ namespace noochAdminNew.Classes.Utility
                     }
                 }
                 else
-                {
-                    Logger.Error("GetDecryptedData FAILED -> SourceData was too short - [SourceData: " + sourceData + "]");
-                }
+                    Logger.Error("GetDecryptedData FAILED -> SourceData was too short - SourceData: [" + sourceData + "]");
             }
             return string.Empty;
         }
@@ -115,10 +110,7 @@ namespace noochAdminNew.Classes.Utility
                     return UppercaseFirst(GetDecryptedData(memberNotifications.FirstName)) + " " +
                     UppercaseFirst(GetDecryptedData(memberNotifications.LastName));
                 }
-                else
-                {
-                    return "";
-                }
+                else return "";
             }
         }
 
@@ -126,9 +118,7 @@ namespace noochAdminNew.Classes.Utility
         public static string FormatPhoneNumber(string sourcePhone)
         {
             if (String.IsNullOrEmpty(sourcePhone) || sourcePhone.ToString().Length != 10)
-            {
                 return sourcePhone;
-            }
 
             sourcePhone = "(" + sourcePhone;
             sourcePhone = sourcePhone.Insert(4, ")");
@@ -158,6 +148,7 @@ namespace noochAdminNew.Classes.Utility
         {
             var random = new Random();
             int j = 1;
+
             using (var noochConnection = new NOOCHEntities())
             {
                 for (int i = 0; i <= j; i++)
@@ -169,9 +160,7 @@ namespace noochAdminNew.Classes.Utility
 
                     var transactionEntity = (from c in noochConnection.Transactions where c.TransactionTrackingId == randomId select c).FirstOrDefault();
                     if (transactionEntity == null)
-                    {
                         return randomId;
-                    }
 
                     j += i + 1;
                 }
@@ -735,12 +724,10 @@ namespace noochAdminNew.Classes.Utility
                                 if (synCreateUserObject.access_token == GetEncryptedData(refreshResultFromSyn.oauth.oauth_key))
                                 {
                                     res.success = true;
-                                    Logger.Info("Common Helper -> refreshSynapseV3OautKey - Access_Token from Synapse MATCHES what we already had in DB.");
+                                    //Logger.Info("Common Helper -> refreshSynapseV3OautKey - Access_Token from Synapse MATCHES what we already had in DB.");
                                 }
                                 else // New Access Token...
-                                {
-                                    Logger.Info("Common Helper -> refreshSynapseV3OautKey - Access_Token from Synapse MATCHES what we already had in DB.");
-                                }
+                                    Logger.Info("Common Helper -> refreshSynapseV3OautKey - Access_Token from Synapse DID NOT MATCH what we already had in DB.");
 
                                 // Update all values no matter what, even if access_token hasn't changed - possible one of the other values did
                                 synCreateUserObject.access_token = GetEncryptedData(refreshResultFromSyn.oauth.oauth_key);
@@ -754,8 +741,6 @@ namespace noochAdminNew.Classes.Utility
                                 if (refreshResultFromSyn.user.documents != null &&
                                     refreshResultFromSyn.user.documents.Count > 0)
                                 {
-                                    //Logger.Info("Common Helper -> refreshSynapseV3OautKey - DOCUMENTS OBJECT FOUND!");
-
                                     #region Loop Through Outer Documents Object (Should Only Be 1)
 
                                     foreach (synapseV3Result_documents doc in refreshResultFromSyn.user.documents)
@@ -768,11 +753,9 @@ namespace noochAdminNew.Classes.Utility
                                             foreach (synapseV3Result_documents_docobject docObject in doc.virtual_docs)
                                             {
                                                 n += 1;
-                                                Logger.Info("Common Helper -> refreshSynapseV3OautKey - VIRTUAL_DOC #[" + n + "] - Type: [" + docObject.document_type + "], Status: [" + docObject.status + "]");
+                                                //Logger.Info("Common Helper -> refreshSynapseV3OautKey - VIRTUAL_DOC #[" + n + "] - Type: [" + docObject.document_type + "], Status: [" + docObject.status + "]");
                                                 if (docObject.document_type == "SSN")
-                                                {
                                                     synCreateUserObject.virtual_doc = docObject.status;
-                                                }
                                             }
                                         }
 
@@ -786,9 +769,7 @@ namespace noochAdminNew.Classes.Utility
                                                 n += 1;
                                                 Logger.Info("Common Helper -> refreshSynapseV3OautKey - PHYSICAL_DOC #[" + n + "] - Type: [" + docObject.document_type + "], Status: [" + docObject.status + "]");
                                                 if (docObject.document_type == "GOVT_ID")
-                                                {
                                                     synCreateUserObject.physical_doc = docObject.status;
-                                                }
                                             }
                                         }
 
@@ -803,6 +784,9 @@ namespace noochAdminNew.Classes.Utility
                                                 Logger.Info("Common Helper -> refreshSynapseV3OautKey - SOCIAL_DOC #[" + n + "] - Type: [" + docObject.document_type + "], Status: [" + docObject.status + "]");
                                                 if (docObject.document_type == "FACEBOOK")
                                                 {
+                                                    synCreateUserObject.social_doc = docObject.status;
+                                                    if (synCreateUserObject.soc_doc_lastupdated == null)
+                                                        synCreateUserObject.soc_doc_lastupdated = DateTime.Now;
                                                     // CC (8/5/16): Need to add DB fields to handle new Document Type of "Social"
                                                     //              Also for all 3 document types (Social, Virtual, Phsyical), we also need to store the "last updated" field to display in Admin Panel as a readable DateTime
                                                     //synCreateUserObject.virtual_doc = docObject.status;
