@@ -271,7 +271,7 @@
 
                                         <div id="tab-a" class="tab-pane fade active in">
                                             @{
-                                                if (MemIpAddr.Count > 0)
+                                                if (MemIpAddr != null && MemIpAddr.Count > 0)
                                                 {
                                                     <table class="table table-striped">
                                                         <thead>
@@ -898,7 +898,7 @@
 
                                                 </div>
 
-                                                @if (mdc.IsSynapseDetailAvailable)
+                                                @if (mdc.IsSynapseDetailAvailable && synpsDetail != null)
                                                 {
                                                     <label class="text-primary m-b-10">Admin Details</label>
 
@@ -1127,7 +1127,7 @@
                                                     </button>
                                                 </div>
 
-                                                @if (mdc.IsSynapseDetailAvailable && synpsDetail.SynapseBankName != null)
+                                                @if (mdc.IsSynapseDetailAvailable && synpsDetail != null && synpsDetail.SynapseBankName != null)
                                                 {
                                                     <ul class="list-group">
                                                         <li class="list-group-item" data-toggle="tooltip" title="Date that this bank was linked to Nooch.">
