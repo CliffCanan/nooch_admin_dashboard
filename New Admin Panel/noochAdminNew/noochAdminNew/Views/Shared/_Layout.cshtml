@@ -120,12 +120,6 @@
                             <span class="nav-label"> Transactions</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="http://support.nooch.com" target="_blank">
-                            <i class="fa fa-fw fa-book"></i>
-                            <span class="nav-label"> Knowledge Base</span>
-                        </a>
-                    </li>
                     <li id="platformsMaster">
                         <a href="~/Platforms/Index" id="">
                             <i class="fa fa-fw fa-copy"></i>
@@ -143,11 +137,6 @@
                 <nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
                     <div class="navbar-header">
                         <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i></a>
-                        @* <form role="search" class="navbar-form-custom" method="post" action="search_results.html">
-                                <div class="form-group">
-                                    <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
-                                </div>
-                            </form>*@
                     </div>
 
                     <ul class="nav navbar-top-links navbar-right">
@@ -283,31 +272,6 @@
         Pace.options = {
             ajax: false
         }
-
-        /*function rsendEmail()
-        {
-            console.log('ON DASHBOARD Calling resend email method');
-
-            swal({
-                title: "Send Email?",
-                text: "You are about to send an email to all users that have an active Synapse Bank account linked to their Nooch account. ARE YOU SURE?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3fabe1",
-                confirmButtonText: "Send Email",
-                //cancelButtonText: "",
-                allowEscapeKey: true,
-            }, function (isConfirm)
-            {
-                if (isConfirm) {
-                    $.post($('#reLinkUrl').val(), function (result)
-                    {
-                        console.log("Result: [" + result + "]");
-                        swal("Service Complete", "Process has completed: [" + result + "]", "success");
-                    });
-                }
-            });
-        }*/
     </script>
 </body>
 

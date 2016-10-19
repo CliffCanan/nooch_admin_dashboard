@@ -9,42 +9,28 @@ $(document).ready(function () {
         $('#DocStatus').val('');
     }
     else if ($('#DocStatus').val() == "Failed")
-    {
         sweetAlert("Oops...", "Something went wrong!", "error");
-    }
 
     $('#generatePwBtn').change(function () {
         if ($('#pwd').val().length > 0)
-        {
             $('#pwd').val('');
-        }
         if ($(this).is(':checked'))
-        {
             Member.GenerateNewPassword();
-        }
     })
 
     $("#MemberMenuExpander").trigger("click");
 
     $('[data-toggle="tooltip"]').tooltip()
 
-    function getParameterByName(name) {
-        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-            results = regex.exec(location.search);
-        return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
-
-    NoochId = getParameterByName('NoochId');
+    NoochId = $('#nId').attr('data-val');
+    console.log(NoochId);
 
     // Format the contact number if present
     if ($("#contactNumber").val().length > 1)
-    {
         $("#contactNumber").val(function (i, text) {
             text = text.replace(/(\d{3})(\d{3})(\d{4})/, "($1) $2-$3");
             return text;
         });
-    }
 
     $('.locLink').click(function () {
         var lat = $(this).attr('data-lat');
@@ -71,7 +57,6 @@ $(document).ready(function () {
 
         var mapDivInModal = document.getElementById("userMapInModal");
 
-
         var map = new google.maps.Map(mapDivInModal, {
             zoom: 11,
             center: latLong
@@ -97,10 +82,8 @@ $(document).ready(function () {
     })
 
     $(document).keyup(function (e) {
-        if (e.keyCode == 27)
-        { // escape key maps to keycode `27`
+        if (e.keyCode == 27) // escape key maps to keycode `27`
             escapeKeyPressed = true;
-        }
     });
 });
 
@@ -155,19 +138,11 @@ function suspendUserPrompt() {
     }, function (isConfirm) {
         setTimeout(function () {
             if (escapeKeyPressed == true)
-            {
                 escapeKeyPressed = false;
-            }
             else
             {
-                if (isConfirm)
-                {
-                    notifySuspendedUser = true;
-                }
-                else
-                {
-                    notifySuspendedUser = false;
-                }
+                if (isConfirm) notifySuspendedUser = true;
+                else notifySuspendedUser = false;
 
                 Member.ApplyChoosenOperation(1);
             }
@@ -217,15 +192,13 @@ var Member = function () {
         data.noochIds = NoochId;
 
         if (operation == 1) // Suspend User
-        {
             data.sendEmail = notifySuspendedUser;
-        }
 
         $.post(url, data, function (result) {
             if (result.IsSuccess == true)
             {
                 console.log(result.Message);
-                console.log(result.MemberOperationsOuterClass);
+                console.log(JSON.stringify(result));
 
                 // iterating through all innerclass objects
 
@@ -252,14 +225,10 @@ var Member = function () {
                 });
 
                 if (operation != 5)
-                {
                     location.reload(true);
-                }
             }
             else
-            {
                 toastr.error('An error occured on the server, please try again!', 'Error');
-            }
         });
     }
 
@@ -552,13 +521,9 @@ var Member = function () {
 
         $.post(url, data, function (result) {
             if (result.IsSuccess)
-            {
                 toastr.success(result.Message, 'Verification message sent successfully.');
-            }
             else
-            {
                 toastr.error(result.Message, 'Error');
-            }
         });
 
     }
@@ -580,13 +545,10 @@ var Member = function () {
 
         $.post(url, data, function (result) {
             if (result.IsSuccess)
-            {
                 toastr.success(result.Message, 'Updated Successfully.');
-            }
             else
-            {
                 toastr.error(result.Message, 'Error');
-            }
+
             $('#changePwd').modal('toggle');
             $("#btnChangePassword").text('Yes - Update');
             $('#pwd').val('');

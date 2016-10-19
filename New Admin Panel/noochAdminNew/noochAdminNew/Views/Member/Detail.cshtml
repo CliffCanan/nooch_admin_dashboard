@@ -58,7 +58,7 @@
                 <h2><strong>@mdc.FirstName @mdc.LastName</strong> | <small>@mdc.memberId</small></h2>
             </div>
             <div class="col-xs-3 col-sm-4 p-l-0 text-right">
-                <div class="m-t-25">@mdc.Nooch_ID</div>
+                <div class="m-t-25" id="nId">@mdc.Nooch_ID</div>
             </div>
         </div>
 
@@ -116,6 +116,7 @@
                     {
                         <img src="https://noochme.com/noochweb/Assets/Images/rentscene.png" style="max-height:30px;margin-top:-6px;" alt="Rent Scene" data-toggle="tooltip" title="@mdc.FirstName @mdc.LastName is a Rent Scene user." />
                     }
+                    <div class="m-l-10" style="display:inline-block;">Last Modified: @mdc.DateModified</div>
                     <span class="pull-right" id="memId" data-val="@mdc.memberId">@mdc.memberId</span>
                     <div class="pull-right">
                         <a href="#" class="btn btn-link p-0 m-r-25" onclick="Member.OpenPopupForAdminNote();">
@@ -1215,7 +1216,6 @@
                                                         <li class="list-group-item">
                                                             <span>
                                                                 <b>Name on Account</b>
-                                                                <i class="fa fa-question-circle-o m-l-5"></i>
                                                             </span>
                                                             <span class="pull-right">
                                                                 <span class="f-600">@synpsDetail.nameFromSynapseBank </span>

@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	$('#Username').focus();
+    $('#Username').focus();
 });
 
 var User = function () {
@@ -11,19 +11,22 @@ var User = function () {
         data.Password = $("#Password").val();
 
         $.post(url, data, function (result) {
-            if (result.IsSuccess == true) {
+            if (result.IsSuccess == true)
+            {
                 //console.log(result.Message);
+                toastr.success('Logging in...', 'Success');
                 window.location.replace($('#dashUrl').val());
             }
-			else {
+            else
+            {
                 toastr.error('Invalid username or password!', 'Error');
-                console.log('Login Attempt, Error occured');
                 console.log(result.Message);
-            } 
+            }
+            $.unblockUI();
         });
     }
 
     return {
-        GoIn: doLogin        
+        GoIn: doLogin
     };
 }();

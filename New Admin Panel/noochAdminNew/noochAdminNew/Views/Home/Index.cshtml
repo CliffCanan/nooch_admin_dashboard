@@ -53,11 +53,10 @@
     <script src="~/js/plugins/pace/pace.min.js"></script>
     <script src="~/js/plugins/jquery.blockUI.min.js"></script>
     <script type="text/javascript">
-        $("#logInform").submit(function (e)
-        {
+        $("#logInform").submit(function (e) {
             e.preventDefault();
             $.blockUI({
-                message: '<span><i class="fa fa-refresh fa-spin fa-loading"></i></span><br/><span class="loadingMsg">Connecting...</span>',
+                message: '<span><i class="fa fa-refresh fa-spin fa-loading"></i></span><br/><span class="loadingMsg">Submitting...</span>',
                 css: {
                     border: 'none',
                     padding: '26px 8px 20px',

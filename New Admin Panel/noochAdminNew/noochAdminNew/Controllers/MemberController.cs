@@ -642,6 +642,7 @@ namespace noochAdminNew.Controllers
                         mdc.TransferLimit = Member.TransferLimit ?? "0.00";
                         mdc.cipTag = !String.IsNullOrEmpty(Member.cipTag) ? Member.cipTag : "NULL";
                         mdc.isRentScene = Member.isRentScene ?? false;
+                        mdc.DateModified = Convert.ToDateTime(Member.DateModified).ToString("MMM d, yyyy");
 
                         //Get the Refered Code Used
                         mdc.ReferCodeUsed = (from Membr in obj.Members

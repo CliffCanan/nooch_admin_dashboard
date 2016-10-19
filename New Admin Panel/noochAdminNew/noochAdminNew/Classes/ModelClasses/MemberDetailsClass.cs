@@ -34,6 +34,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string cipTag { get; set; }
 
         public DateTime DateCreated { get; set; }
+        public string DateModified { get; set; }
         public string DateCreatedFormatted { get; set; }
         public int WeeksSinceJoined { get; set; }
 

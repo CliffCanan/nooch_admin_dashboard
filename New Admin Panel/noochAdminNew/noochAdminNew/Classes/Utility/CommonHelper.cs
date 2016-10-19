@@ -748,11 +748,9 @@ namespace noochAdminNew.Classes.Utility
                                         // Check VIRTUAL_DOCS
                                         if (doc.virtual_docs != null && doc.virtual_docs.Length > 0)
                                         {
-                                            Logger.Info("Common Helper -> refreshSynapseV3OautKey - VIRTUAL_DOC ARRAY FOUND");
-                                            short n = 0;
+                                            Logger.Info("Common Helper -> refreshSynapseV3OautKey - VIRTUAL_DOC ARRAY FOUND: [" + doc.virtual_docs.Length + "]");
                                             foreach (synapseV3Result_documents_docobject docObject in doc.virtual_docs)
                                             {
-                                                n += 1;
                                                 //Logger.Info("Common Helper -> refreshSynapseV3OautKey - VIRTUAL_DOC #[" + n + "] - Type: [" + docObject.document_type + "], Status: [" + docObject.status + "]");
                                                 if (docObject.document_type == "SSN")
                                                     synCreateUserObject.virtual_doc = docObject.status;
@@ -762,12 +760,12 @@ namespace noochAdminNew.Classes.Utility
                                         // Check PHYSICAL_DOCS
                                         if (doc.physical_docs != null && doc.physical_docs.Length > 0)
                                         {
-                                            Logger.Info("Common Helper -> refreshSynapseV3OautKey - PHYSICAL_DOC ARRAY FOUND");
-                                            short n = 0;
+                                            Logger.Info("Common Helper -> refreshSynapseV3OautKey - PHYSICAL_DOC ARRAY FOUND: [" + doc.physical_docs.Length + "]");
+                                            //short n = 0;
                                             foreach (synapseV3Result_documents_docobject docObject in doc.physical_docs)
                                             {
-                                                n += 1;
-                                                Logger.Info("Common Helper -> refreshSynapseV3OautKey - PHYSICAL_DOC #[" + n + "] - Type: [" + docObject.document_type + "], Status: [" + docObject.status + "]");
+                                                //n += 1;
+                                                //Logger.Info("Common Helper -> refreshSynapseV3OautKey - PHYSICAL_DOC #[" + n + "] - Type: [" + docObject.document_type + "], Status: [" + docObject.status + "]");
                                                 if (docObject.document_type == "GOVT_ID")
                                                     synCreateUserObject.physical_doc = docObject.status;
                                             }
@@ -776,12 +774,12 @@ namespace noochAdminNew.Classes.Utility
                                         // Check SOCIAL_DOCS
                                         if (doc.social_docs != null && doc.social_docs.Length > 0)
                                         {
-                                            Logger.Info("Common Helper -> refreshSynapseV3OautKey - SOCIAL_DOC ARRAY FOUND");
+                                            Logger.Info("Common Helper -> refreshSynapseV3OautKey - SOCIAL_DOC ARRAY FOUND: [" + doc.social_docs.Length + "]");
                                             short n = 0;
                                             foreach (synapseV3Result_documents_docobject docObject in doc.social_docs)
                                             {
-                                                n += 1;
-                                                Logger.Info("Common Helper -> refreshSynapseV3OautKey - SOCIAL_DOC #[" + n + "] - Type: [" + docObject.document_type + "], Status: [" + docObject.status + "]");
+                                                //n += 1;
+                                                //Logger.Info("Common Helper -> refreshSynapseV3OautKey - SOCIAL_DOC #[" + n + "] - Type: [" + docObject.document_type + "], Status: [" + docObject.status + "]");
                                                 if (docObject.document_type == "FACEBOOK")
                                                 {
                                                     synCreateUserObject.social_doc = docObject.status;
