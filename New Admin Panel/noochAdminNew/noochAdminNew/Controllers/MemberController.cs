@@ -34,6 +34,8 @@ namespace noochAdminNew.Controllers
             MemberOperationsResult res = new MemberOperationsResult();
             res.IsSuccess = false;
 
+            Logger.Info("MemberCntlr -> ApplyOperation - Operation: [" + operation + "], noochIds: [" + noochIds + "], sendEmail: [" + sendEmail + "]");
+
             if (operation == "0")
             {
                 res.Message = "No operation selected to perform";
@@ -53,6 +55,8 @@ namespace noochAdminNew.Controllers
 
                 List<MemberOperationsInnerClass> resInnerClass = new List<MemberOperationsInnerClass>();
 
+                Logger.Info("MemberCntlr -> ApplyOperation - Checkpoint #2");
+
                 #region Suspend
 
                 if (operation == "1")
@@ -63,6 +67,8 @@ namespace noochAdminNew.Controllers
                     {
                         using (NOOCHEntities obj = new NOOCHEntities())
                         {
+                            Logger.Info("MemberCntlr -> ApplyOperation - Checkpoint #3");
+
                             var member = (from t in obj.Members
                                           where t.Nooch_ID == s && t.Status != Constants.STATUS_SUSPENDED
                                           select t).SingleOrDefault();
@@ -628,6 +634,7 @@ namespace noochAdminNew.Controllers
                         mdc.IsPhoneVerified = Member.IsVerifiedPhone ?? false;
                         mdc.Nooch_ID = Member.Nooch_ID;
                         mdc.type = Member.Type;
+                        if (Member.Type == "business") mdc.bizType = Member.TimeZoneKey;// Using TimeZoneKey to store ent_type for Synapse
                         mdc.dob = Convert.ToDateTime(Member.DateOfBirth).ToString("M/d/yyyy");
                         mdc.ssn = !String.IsNullOrEmpty(Member.SSN) ? CommonHelper.GetDecryptedData(Member.SSN) : "";
                         mdc.idDocUrl = Member.VerificationDocumentPath;
@@ -922,15 +929,15 @@ namespace noochAdminNew.Controllers
                             synapseDetail.userPermission = synapseCreateUserObj.permission;
                             synapseDetail.extra_security = synapseCreateUserObj.extra_security;
                             synapseDetail.photos = synapseCreateUserObj.photos;
-                            
+
                             synapseDetail.physical_doc = synapseCreateUserObj.physical_doc;
                             synapseDetail.phys_doc_lastupdated = synapseCreateUserObj.phys_doc_lastupdated != null
                                 ? Convert.ToDateTime(synapseCreateUserObj.phys_doc_lastupdated).ToString("MMM dd, yyyy") : "";
-                            
+
                             synapseDetail.virtual_doc = synapseCreateUserObj.virtual_doc;
                             synapseDetail.virt_doc_lastupdated = synapseCreateUserObj.virt_doc_lastupdated != null
                                 ? Convert.ToDateTime(synapseCreateUserObj.virt_doc_lastupdated).ToString("MMM dd, yyyy") : "";
-                            
+
                             synapseDetail.social_doc = synapseCreateUserObj.social_doc;
                             synapseDetail.soc_doc_lastupdated = synapseCreateUserObj.soc_doc_lastupdated != null
                                 ? Convert.ToDateTime(synapseCreateUserObj.soc_doc_lastupdated).ToString("MMM dd, yyyy") : "";
@@ -1693,8 +1700,8 @@ namespace noochAdminNew.Controllers
             {
                 var member = noochConnection.Members.Where(m => m.Nooch_ID == NoochId).FirstOrDefault();
                 DocumentDetails.MemberId = member.MemberId.ToString();
-                
-             
+
+
                 var memGuid = member.MemberId;
                 var SynapseCreateUserResult = noochConnection.SynapseCreateUserResults.Where(m => m.MemberId == memGuid).FirstOrDefault();
 
@@ -1709,7 +1716,7 @@ namespace noochAdminNew.Controllers
                     }
                     else
                     {
-                        pic = memGuid.ToString() + ".png";                       
+                        pic = memGuid.ToString() + ".png";
                     }
 
                     // CLIFF (6/10/16): THIS WAS SAVING TO A FOLDER IN THE 'noochnewadmin' PROJECT, BUT IT NEEDS TO BE IN noochservices
@@ -1717,18 +1724,18 @@ namespace noochAdminNew.Controllers
                     //                  WHEN SUBMITTING TO SYNAPSE.  I TRIED TO FIX THIS BELOW BUT CAUSED AN ERROR:
                     // string path = System.IO.Path.Combine(Server.MapPath("~/UploadedPhotos/SynapseDocuments"), pic);
                     // string path = "C:\\nooch_new_architecture\\Nooch\\Nooch.API\\UploadedPhotos\\SynapseIdDocs\\" + pic;
-                     string path = "C:\\noochweb.venturepact.com\\noochservice\\UploadedPhotos\\SynapseIdDocs\\" + pic;
+                    string path = "C:\\noochweb.venturepact.com\\noochservice\\UploadedPhotos\\SynapseIdDocs\\" + pic;
                     // file is uploaded
 
                     file.SaveAs(path);
                     DocumentDetails.imgPath = path;
 
                     if (DocumentDetails.IsPdf != true)
-                    ImageBuilder.Current.Build(path, path, resizeSetting);  
+                        ImageBuilder.Current.Build(path, path, resizeSetting);
 
 
                     member.VerificationDocumentPath = Utility.GetValueFromConfig("SynapseUploadedDocPhotoUrl") + pic;
-                   //member.VerificationDocumentPath = path;
+                    //member.VerificationDocumentPath = path;
                     noochConnection.SaveChanges();
 
                     //synapseV3GenericResponse submitDocToSynapseRes = submitDocumentToSynapseV3(DocumentDetails);

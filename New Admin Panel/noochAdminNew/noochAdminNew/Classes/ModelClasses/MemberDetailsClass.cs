@@ -29,6 +29,7 @@ namespace noochAdminNew.Classes.ModelClasses
         public string DeviceToken { get; set; }
         public string AccessToken { get; set; }
         public string type { get; set; }
+        public string bizType { get; set; }
         public string ReferCodeUsed { get; set; }
         public bool IsPhoneVerified { get; set; }
         public string cipTag { get; set; }

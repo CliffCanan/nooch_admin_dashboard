@@ -180,7 +180,7 @@ function showBlockUI(text) {
 
 var Member = function () {
     function applyOperation(operation) {
-        if (NoochId == '')
+        if (NoochId == '' || NoochId == null)
         {
             toastr.error('No NoochId was selected...', 'Error');
             return;
@@ -207,10 +207,10 @@ var Member = function () {
                     {
                         toastr.success(value.Message, value.NoochId);
 
-                        if (operation == 4)
-                        {
-                            $("#memberStatus").html('Active');
-                        }
+                        if (operation == 1) // Suspend User
+                            $("#memberStatus > *").html('Suspended');
+                        else if (operation == 4)
+                            $("#memberStatus > *").html('Active');
                         else if (operation == 5)
                         {
                             $('#myModalConfirmDelete').modal('hide');
@@ -224,12 +224,18 @@ var Member = function () {
                     }
                 });
 
-                if (operation != 5)
+                if (operation < 4 && operation != 1)
                     location.reload(true);
             }
             else
                 toastr.error('An error occured on the server, please try again!', 'Error');
-        });
+        })
+		.done(function () {
+		    toastr.success('Operation ' + operation + ' Successful');
+		})
+		.fail(function () {
+		    toastr.error('Operation ' + operation + ' Failed');
+		});
     }
 
 
