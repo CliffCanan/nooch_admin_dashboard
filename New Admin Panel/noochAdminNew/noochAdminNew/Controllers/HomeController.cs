@@ -46,6 +46,7 @@ namespace noochAdminNew.Controllers
                         res.Message = "Success";
                         Session["UserId"] = query.UserId;
                         Session["RoleId"] = query.AdminLevel;
+                        Session["AdminName"] = query.FirstName + " " + query.LastName;
                     }
                     else
                     {

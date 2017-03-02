@@ -29,6 +29,10 @@
 
 <body>
 
+    @{
+        var AdminName = (string)Session["AdminName"];
+    }
+
     @*<input type="hidden" value="@Url.Action("SendReLinkEmail","Admin")" id="reLinkUrl" />*@
     <div id="wrapper">
 
@@ -43,7 +47,7 @@
                             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
                                     <span class="block m-t-xs">
-                                        <strong class="font-bold">Cliff Canan</strong>
+                                        <strong class="font-bold">@AdminName</strong>
                                     </span><span class="text-muted text-xs block">Nooch Admin<b class="caret"></b></span>
                                 </span>
                             </a>
@@ -62,8 +66,8 @@
                     </li>
 
                     @*<li id="ResendEmailMenu">
-                        <a href="#" onclick="rsendEmail()"><i class="fa fa-fw fa-th-large"></i><span class="nav-label"> Resend Bank Linking Emails</span></a>
-                    </li>*@
+                            <a href="#" onclick="rsendEmail()"><i class="fa fa-fw fa-th-large"></i><span class="nav-label"> Resend Bank Linking Emails</span></a>
+                        </li>*@
 
                     <li>
                         <a href="#" id="MemberMenuExpander"><i class="fa fa-fw fa-users"></i><span class="nav-label"> Members</span><span class="fa arrow"></span></a>
@@ -262,7 +266,7 @@
                     Found a bug? Write to <a href="mailto:adminbugs@nooch.com" style="font-weight:bold;">AdminBugs@nooch.com</a>.
                 </div>
                 <div>
-                    <strong>Copyright</strong> Nooch &copy; 2016
+                    <strong>Copyright</strong> Nooch &copy; 2017
                 </div>
             </div>
         </div>
