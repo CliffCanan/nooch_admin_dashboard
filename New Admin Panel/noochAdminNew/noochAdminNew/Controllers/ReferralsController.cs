@@ -12,78 +12,75 @@ namespace noochAdminNew.Controllers
 {
     public class ReferralsController : Controller
     {
+        public ActionResult Index()
+        {
+            Logger.Info("ReferralsCnrlr -> Loading Referral Page...");
+            List<InviteCodeDataClass> allinvitecodes = GetAllInviteCodes();
+
+            // Get top 5 recent referrals
+            ViewBag.RecentReffarals = GetMostRecent5Referrals();
+            ViewBag.TopReferringMembers = GetTopReferrals(1);
+            ViewBag.TopReferringMembersWeekly = GetTopReferrals(2);
+            ViewBag.TopReferringMembersDay = GetTopReferrals(3);
+
+            Logger.Info("ReferralsCnrlr -> About to return the View");
+            return View(allinvitecodes);
+        }
+
+
         // to read all invite codes from db
         private List<InviteCodeDataClass> GetAllInviteCodes()
         {
+            Logger.Info("ReferralsCntlr -> GetAllInviteCodes() Fired");
+
             List<InviteCodeDataClass> li = new List<InviteCodeDataClass>();
             using (NOOCHEntities obj = new NOOCHEntities())
             {
                 var all_invite_codes = (from t in obj.InviteCodes
                                         select t).ToList();
 
+                //Logger.Info("ReferralsCntlr -> GetAllInviteCodes -> Got [" + all_invite_codes.Count + "] Invite Codes from DB!");
+
                 foreach (InviteCode m in all_invite_codes)
                 {
                     InviteCodeDataClass idc = new InviteCodeDataClass();
-                    string createdby = "";
+                    var createdby = "";
+
                     if (m.CreatedBy != null)
                     {
                         Guid g = Utility.ConvertToGuid(m.CreatedBy.ToString());
-                        var cre = (from abc in obj.AdminUsers where abc.UserId.Equals(g) select abc).SingleOrDefault();
+                        var cre = (from abc in obj.AdminUsers
+                                   where abc.UserId.Equals(g)
+                                   select abc).SingleOrDefault();
 
                         if (cre != null)
-                        {
                             createdby = cre.FirstName;
-                        }
                     }
+
                     idc.createdbyadmin_name = createdby;
                     idc.InviteCode_Id = m.InviteCodeId.ToString();
-
                     idc.code = m.code;
                     idc.count = m.count.ToString();
                     idc.totalallowed = m.totalAllowed.ToString();
-
                     idc.adminnotes = m.AdminNotes;
-                    //String.Format("{0:ddd, MMM d, yyyy}", dt);    // "Sun, Mar 9, 2008"
+
                     DateTime? dt = m.CreatedOn;
-                    if (dt != null)
-                    {
-                        idc.DateCreated = String.Format("{0:MMM d, yyyy}", dt);
-                    }
-                    else
-                    {
-                        idc.DateCreated = "";
-                    }
+                    idc.DateCreated = dt != null ? String.Format("{0:MMM d, yyyy}", dt) : "";
 
                     DateTime? dt2 = m.ModifiedOn;
-                    if (dt != null)
-                    {
-                        idc.DateModified = String.Format("{0:MMM d, yyyy}", dt2);
-                    }
-                    else
-                    {
-                        idc.DateModified = "";
-                    }
+                    idc.DateModified = dt2 != null ? String.Format("{0:MMM d, yyyy}", dt2) : "";
 
                     // idc.createdbyadmin_id = m.CreatedBy.ToString();
 
                     li.Add(idc);
                 }
+
+                Logger.Info("ReferralsCntlr -> GetAllInviteCodes -> Returning [" + li.Count + "] objects");
             }
 
             return li;
         }
 
-
-        public ActionResult Index()
-        {
-            List<InviteCodeDataClass> allinvitecodes = GetAllInviteCodes();
-            // getting top 5 recent referrals
-            ViewBag.RecentReffarals = GetMostRecent5Referrals();
-            ViewBag.TopReferringMembers = GetTopReferrals(1);
-            ViewBag.TopReferringMembersWeekly = GetTopReferrals(2);
-            ViewBag.TopReferringMembersDay = GetTopReferrals(3);
-            return View(allinvitecodes);
-        }
 
         public ActionResult JoinningsWithGivenReferralCode(string RefCode)
         {
@@ -92,50 +89,82 @@ namespace noochAdminNew.Controllers
             return View(AllMemberFormtted);
         }
 
+
         private List<ReferralsResultClass> GetTopReferrals(int filterType)
         {
+            Logger.Info("ReferralsCntlr -> GetTopReferrals Fired - FilterType: [" + filterType + "]");
+
             List<ReferralsResultClass> li = new List<ReferralsResultClass>();
+
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-                 List<GetTopReferringMembers_Result> allRef = new List<GetTopReferringMembers_Result>();
+                List<GetTopReferringMembers_Result> allRef = new List<GetTopReferringMembers_Result>();
+
                 switch (filterType)
                 {
                     case 1:
                         allRef = obj.GetTopReferringMembers(1).ToList();
-                    break;
+                        break;
                     case 2:
-                    allRef = obj.GetTopReferringMembers(2).ToList();
-                    break;
+                        allRef = obj.GetTopReferringMembers(2).ToList();
+                        break;
                     case 3:
-                    allRef = obj.GetTopReferringMembers(3).ToList();
-                    break;
+                        allRef = obj.GetTopReferringMembers(3).ToList();
+                        break;
                     default:
                         allRef = obj.GetTopReferringMembers(1).ToList();
-                    break;
+                        break;
                 }
-               
+
                 foreach (GetTopReferringMembers_Result v in allRef)
                 {
-                    ReferralsResultClass rrc = new ReferralsResultClass();
-                    Guid icode = Utility.ConvertToGuid(v.InviteCode.ToString());
-                    // getting member of given invitecode
-                    var mem = (from mm in obj.Members where   mm.InviteCodeId == icode select mm).SingleOrDefault();
-
-                    //getting invite code info
-                    var icinfo = (from mm in obj.InviteCodes where mm.InviteCodeId == icode select mm).SingleOrDefault();
-
-                    if (mem!=null && icinfo!=null)
+                    try
                     {
-                        rrc.MemberName = CommonHelper.UppercaseFirst((CommonHelper.GetDecryptedData(mem.FirstName))) + " " + CommonHelper.UppercaseFirst((CommonHelper.GetDecryptedData(mem.LastName)));
-                        rrc.ReferralsCount = Convert.ToInt16( v.Referrals);
-                        rrc.RefCode = icinfo.code.ToUpper();
-                        rrc.NoochId = mem.Nooch_ID;
-                        li.Add(rrc);
+                        ReferralsResultClass rrc = new ReferralsResultClass();
+                        Guid icode = Utility.ConvertToGuid(v.InviteCode.ToString());
+
+                        //Logger.Info("ReferralsCntlr -> GetTopReferrals CHECKPOINT #2 - InviteCodeID: [" + v.InviteCode.ToString() + "]");
+
+                        // Get Member Object From Given Invite Code
+                        var mem = (from member in obj.Members
+                                   where member.InviteCodeId == icode &&
+                                         member.InviteCodeId != new Guid("00000000-0000-0000-0000-000000000000")
+                                   select new
+                                        {
+                                            member.FirstName,
+                                            member.LastName,
+                                            member.Nooch_ID
+                                        }).SingleOrDefault();
+
+                        if (mem != null)
+                        {
+                            // Get Invite Code Info
+                            var icinfo = (from code in obj.InviteCodes
+                                          where code.InviteCodeId == icode
+                                          select code.code).SingleOrDefault();
+
+                            if (icinfo != null)
+                            {
+                                rrc.MemberName = CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(mem.FirstName)) + " " +
+                                                 CommonHelper.UppercaseFirst(CommonHelper.GetDecryptedData(mem.LastName));
+                                rrc.ReferralsCount = Convert.ToInt16(v.Referrals);
+                                rrc.RefCode = icinfo.ToUpper();
+                                rrc.NoochId = mem.Nooch_ID;
+
+                                li.Add(rrc);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("ReferralsCntlr -> GetTopReferrals ERROR - Exception: [" + ex.Message + "]");
                     }
                 }
+
                 return li;
             }
         }
+
 
         private List<MembersListDataClass> GetAllMembersJoinedWithGivenRefCode(string RefCode)
         {
@@ -196,14 +225,10 @@ namespace noochAdminNew.Controllers
                                 mdc.ContactNumber = mdc.ContactNumber.Insert(9, "-");
                             }
                             else
-                            {
                                 mdc.ContactNumber = m.ContactNumber;
-                            }
                         }
                         else
-                        {
                             mdc.ContactNumber = m.ContactNumber;
-                        }
 
                         mdc.Status = m.Status;
                         mdc.IsDeleted = m.IsDeleted ?? false;
@@ -213,12 +238,11 @@ namespace noochAdminNew.Controllers
                         mdc.TotalAmountSent = mdc.TotalAmountSent != "0" ? Convert.ToDecimal(String.Format("{0:0.00}", Convert.ToDecimal(totalAmount))).ToString() : "0";
 
                         mdc.TotalTransactions = TransCount;
-                        mdc.DateCreated = Convert.ToDateTime( m.DateCreated);
+                        mdc.DateCreated = Convert.ToDateTime(m.DateCreated);
                         AllMemberFormtted.Add(mdc);
                     }
                 }
             }
-
 
 
             return AllMemberFormtted;
@@ -227,15 +251,21 @@ namespace noochAdminNew.Controllers
 
         private List<MembersListRefCodeUsedDataClass> GetMostRecent5Referrals()
         {
+            Logger.Info("ReferralsCntlr -> GetMostRecent5Referrals Fired");
+
             List<MembersListRefCodeUsedDataClass> AllMemberFormtted = new List<MembersListRefCodeUsedDataClass>();
-            
+
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-                var All_Members_In_Records = (from t in obj.Members
-                                              where t.IsDeleted == false && t.InviteCodeIdUsed != null
-                                              select t).ToList().OrderByDescending(m => m.DateCreated).Take(5);
+                var lastFiveMembers = (from member in obj.Members
+                                       where member.IsDeleted == false &&
+                                             member.InviteCodeIdUsed != null &&
+                                             member.InviteCodeIdUsed != new Guid("00000000-0000-0000-0000-000000000000")
+                                       select member)
+                                       .ToList()
+                                       .OrderByDescending(m => m.DateCreated).Take(5);
 
-                foreach (Member m in All_Members_In_Records)
+                foreach (Member m in lastFiveMembers)
                 {
                     MembersListRefCodeUsedDataClass mdc = new MembersListRefCodeUsedDataClass();
 
@@ -244,12 +274,20 @@ namespace noochAdminNew.Controllers
                     mdc.DateUsed = String.Format("{0: MMMM d, yyyy}", m.DateCreated);
                     mdc.NoochId = m.Nooch_ID;
 
-                    var codeused = (from c in obj.InviteCodes where c.InviteCodeId == m.InviteCodeIdUsed select c).SingleOrDefault();
-                    mdc.CodeUsed = codeused.code.Trim().ToUpper();
+                    var codeused = (from c in obj.InviteCodes
+                                    where c.InviteCodeId == m.InviteCodeIdUsed
+                                    select c).SingleOrDefault();
+
+                    if (codeused != null)
+                    {
+                        //Logger.Info("ReferralsCntlr -> GetMostRecent5Referrals - CHECKPOINT - NAME: [" + mdc.Name + "], Code Used: [" + codeused.code + "]");
+                        mdc.CodeUsed = codeused.code.Trim().ToUpper();
+                    }
 
                     AllMemberFormtted.Add(mdc);
                 }
 
+                Logger.Info("ReferralsCntlr -> GetMostRecent5Referrals -> Returning [" + AllMemberFormtted.Count + "] Objects");
             }
 
             return AllMemberFormtted;
@@ -341,6 +379,7 @@ namespace noochAdminNew.Controllers
             }
         }
 
+
         [HttpPost]
         [ActionName("CreateNewReferralCode")]
         public ActionResult CreateNewReferralCode(string newCode, string allowedUses, string newCodeNotes)
@@ -369,8 +408,8 @@ namespace noochAdminNew.Controllers
             }
 
             return Json(s);
-
         }
+
 
         private CreateNewReferralCodeResultClass createNewReferralCode(string newCode, int allowedUses, string newCodeNotes, Guid AdminGuid)
         {
@@ -378,8 +417,11 @@ namespace noochAdminNew.Controllers
             // checking if given referral code already exists
             using (NOOCHEntities obj = new NOOCHEntities())
             {
-                string trimmedcode = newCode.Trim();
-                var r = (from c in obj.InviteCodes where c.code == trimmedcode select c).ToList();
+                var trimmedcode = newCode.Trim();
+                var r = (from c in obj.InviteCodes
+                         where c.code == trimmedcode
+                         select c).ToList();
+
                 if (r.Count == 0)
                 {
                     InviteCode ivc = new InviteCode();
@@ -401,7 +443,7 @@ namespace noochAdminNew.Controllers
                 }
                 else
                 {
-                    // code to update existing invite code value
+                    // Update existing invite code value
                     var rxistingCode = r.ElementAt(0);
 
                     // checking if new value is greater or less then existing one
@@ -417,7 +459,7 @@ namespace noochAdminNew.Controllers
                     else
                     {
                         s2.IsSuccess = false;
-                        s2.Message = "Invite code already used "+rxistingCode.count + " times.";
+                        s2.Message = "Invite code already used " + rxistingCode.count + " times.";
                     }
                 }
 

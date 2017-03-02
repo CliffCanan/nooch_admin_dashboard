@@ -49,18 +49,23 @@ namespace noochAdminNew
 
         public void updateTransactionStatusService()
         {
-            Logger.Info("Background Task in Startups.cs -> updateTransactionStatusService ---------------- Job Initiated at [" + DateTime.Now + "] ----------------");
+            Logger.Info("Background Task in Startups.cs -> updateTransactionStatusService ---- Job Initiated at [" + DateTime.Now + "] ----");
             SynapseV3ShowTransInput transInput = new SynapseV3ShowTransInput();
 
             // Get Transaction Details
             using (var db = new NOOCHEntities())
             {
+                var oneMonthAgo = DateTime.Today.AddMonths(-1);
+
                 var transactions = (from tr in db.Transactions
                                     join sa in db.SynapseAddTransactionResults
                                     on tr.TransactionId equals sa.TransactionId
                                     join syn in db.SynapseCreateUserResults
                                     on tr.SenderId equals syn.MemberId
-                                    where tr.TransactionStatus == "Success"
+                                    where tr.TransactionDate > oneMonthAgo &&
+                                          tr.TransactionStatus == "Success" &&
+                                          tr.SynapseStatus != "SETTLED" &&
+                                          tr.SynapseStatus != "CANCELED"
                                     select new
                                     {
                                         tr,
@@ -70,7 +75,7 @@ namespace noochAdminNew
 
                 if (transactions != null)
                 {
-                    Logger.Info("**********  [" + transactions.Count + "] TRANSACTIONS FOUND w/ TransactionStatus of 'Success'  **********");
+                    Logger.Info("-----  [" + transactions.Count + "] TRANSACTIONS FOUND w/ TransactionStatus of 'Success' from past 1 Month  -----");
                 }
 
                 foreach (var objT in transactions)
@@ -121,7 +126,8 @@ namespace noochAdminNew
                     transInput.user = user;
                     transInput.filter = filter;
 
-                    string baseAddress = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) ? "https://sandbox.synapsepay.com/api/v3/trans/show" : "https://synapsepay.com/api/v3/trans/show";
+                    var baseAddress = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox")) ? "https://sandbox.synapsepay.com/api/v3/trans/show" :
+                                                                                                            "https://synapsepay.com/api/v3/trans/show";
 
                     try
                     {
@@ -287,7 +293,7 @@ namespace noochAdminNew
         {
             Logger.Info("*****  DAILY SCAN -> NoochChecks Initiated  *****");
 
-            
+
             var isDevServer = Convert.ToBoolean(Utility.GetValueFromConfig("IsRunningOnSandBox"));
             if (isDevServer) return false;
 
